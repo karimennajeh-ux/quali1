@@ -380,6 +380,18 @@
       min-height: 72px;
       resize: vertical
     }
+    /* Compact inputs for tighter layout in small sections */
+    .g4.compact input,
+    .g4.compact select,
+    .g4.compact textarea {
+      padding: 6px 8px;
+      font-size: 13px;
+      border-radius: 10px;
+    }
+
+    .g4.compact textarea {
+      min-height: 48px;
+    }
 
     .chart {
       display: grid;
@@ -5159,8 +5171,11 @@
           <button class="btn2 btn" id="planDownload" type="button">Telecharger</button>
         </div>
         <div class="card">
-          <h3>1. Planning d'audit interne</h3>
-          <div class="g4" style="margin-bottom:14px;max-width:980px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+            <h3 style="margin:0">1. Planning d'audit interne</h3>
+            <select id="planAuditEditRow" style="max-width:220px"></select>
+          </div>
+          <div class="g4 compact" style="margin-bottom:8px;max-width:1180px;align-items:end">
             <input id="planAuditYear" placeholder="Annee" style="max-width:120px">
             <input id="planAuditActivity" placeholder="Service / activite">
             <input id="planAuditResp" placeholder="Responsable">
@@ -5185,9 +5200,6 @@
               <option value="Reporte">Reporte</option>
             </select>
             <button class="btn" id="planAuditSave" type="button">Enregistrer</button>
-          </div>
-          <div class="acts">
-            <select id="planAuditEditRow" style="max-width:260px"></select>
             <button class="btn2 btn" id="planAuditEdit" type="button">Modifier</button>
             <button class="btn2 btn" id="planAuditPrint" type="button">Imprimer</button>
             <button class="btn2 btn" id="planAuditDownload" type="button">Telecharger</button>
