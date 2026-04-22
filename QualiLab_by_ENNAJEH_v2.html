@@ -5266,25 +5266,128 @@
               <option>Dimensionnelle</option>
               <option>Electricité &amp; Magnétisme</option>
             </select>
-            <input id="planHabNew" placeholder="Nouveau domaine" style="max-width:180px">
-            <button class="btn2 btn" id="planHabAdd" type="button">Ajouter</button>
-            <input id="planHabRemove" placeholder="Domaine a supprimer" style="max-width:180px">
-            <button class="btn3 btn" id="planHabDelete" type="button">Supprimer</button>
+            <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap">
+              <input id="planHabNew" placeholder="Nouveau domaine" style="max-width:180px">
+              <button class="btn2 btn" id="planHabAdd" type="button">Ajouter</button>
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap">
+              <input id="planHabRemove" placeholder="Domaine a supprimer" style="max-width:180px">
+              <button class="btn3 btn" id="planHabDelete" type="button">Supprimer</button>
+            </span>
           </div>
           <div class="g4 compact" style="margin:10px 0 8px;max-width:1180px;align-items:end">
             <select id="planHabOperatorFilter"></select>
-            <input id="planHabOperatorName" placeholder="Nom operateur">
-            <button class="btn2 btn" id="planHabOperatorAdd" type="button">Ajouter operateur</button>
-            <input id="planHabOperatorRemove" placeholder="Operateur a supprimer">
-            <button class="btn3 btn" id="planHabOperatorDelete" type="button">Supprimer operateur</button>
-            <input id="planHabSpec" placeholder="Specifier">
-            <input id="planHabDate" type="date">
+            <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap">
+              <input id="planHabSpecNew" placeholder="Nouvelle specialite">
+              <button class="btn2 btn" id="planHabSpecAdd" type="button">Ajouter</button>
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap">
+              <input id="planHabSpecRemove" placeholder="Specialite a supprimer">
+              <button class="btn3 btn" id="planHabSpecDelete" type="button">Supprimer</button>
+            </span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:10px 0 14px">
+            <section style="border:1px solid var(--line);border-radius:18px;padding:14px;background:#f8fbff">
+              <h4 style="margin:0 0 12px;color:var(--blue)">Creation des donnees</h4>
+              <div style="display:grid;gap:12px">
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Operateur</b>
+                  <div class="g2 compact">
+                    <input id="planHabCreateName" placeholder="Nom et prenom">
+                    <input id="planHabCreateCode" placeholder="Code de operateur">
+                  </div>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Domaine</b>
+                  <div class="g2 compact">
+                    <select id="planHabCreateDomain"></select>
+                    <select id="planHabCreateSpec"></select>
+                  </div>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Action de planification</b>
+                  <div class="g2 compact">
+                    <select id="planHabCreateAction">
+                      <option value="Planifie / realise">Planifie / realise</option>
+                      <option value="Planifie">Planifie</option>
+                      <option value="Reporte">Reporte</option>
+                      <option value="1ere habilitation">1ere habilitation</option>
+                    </select>
+                    <input id="planHabCreateDate" type="date">
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end">
+                  <button class="btn2 btn" id="planHabCreate" type="button">Creer</button>
+                </div>
+              </div>
+            </section>
+            <section style="border:1px solid var(--line);border-radius:18px;padding:14px;background:#f8fbff">
+              <h4 style="margin:0 0 12px;color:var(--blue)">Modification</h4>
+              <div style="display:grid;gap:12px">
+                <select id="planHabEditRow"></select>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Operateur</b>
+                  <div class="g2 compact">
+                    <input id="planHabUpdateName" placeholder="Nom et prenom">
+                    <input id="planHabUpdateCode" placeholder="Code de operateur">
+                  </div>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Domaine</b>
+                  <div class="g2 compact">
+                    <select id="planHabUpdateDomain"></select>
+                    <select id="planHabUpdateSpec"></select>
+                  </div>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Action de planification</b>
+                  <div class="g2 compact">
+                    <select id="planHabUpdateAction">
+                      <option value="Planifie / realise">Planifie / realise</option>
+                      <option value="Planifie">Planifie</option>
+                      <option value="Reporte">Reporte</option>
+                      <option value="1ere habilitation">1ere habilitation</option>
+                    </select>
+                    <input id="planHabUpdateDate" type="date">
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end">
+                  <button class="btn btn-ghost" id="planHabUpdate" type="button">Modifier</button>
+                </div>
+              </div>
+            </section>
+            <section style="border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff8f8">
+              <h4 style="margin:0 0 12px;color:#c23d4b">Suppression</h4>
+              <div style="display:grid;gap:12px">
+                <select id="planHabDeleteRow"></select>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Operateur</b>
+                  <div class="g2 compact">
+                    <input id="planHabDeleteName" placeholder="Nom et prenom" readonly>
+                    <input id="planHabDeleteCode" placeholder="Code de operateur" readonly>
+                  </div>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Domaine</b>
+                  <div class="g2 compact">
+                    <input id="planHabDeleteDomain" placeholder="Domaine" readonly>
+                    <input id="planHabDeleteSpec" placeholder="Specifier" readonly>
+                  </div>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+                  <b style="display:block;margin-bottom:8px">Action de planification</b>
+                  <div class="g2 compact">
+                    <input id="planHabDeleteAction" placeholder="Action" readonly>
+                    <input id="planHabDeleteDate" type="date" readonly>
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:flex-end">
+                  <button class="btn3 btn" id="planHabRowDelete" type="button">Supprimer</button>
+                </div>
+              </div>
+            </section>
           </div>
           <div id="planHabBoard" class="tb"></div>
-        </div>
-        <div class="card">
-          <h3>4. Planning de la revue de direction</h3>
-          <div id="planReviewBoard" class="tb"></div>
         </div>
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
@@ -5298,61 +5401,6 @@
             </select>
           </div>
           <div id="planCalBoard" class="tb"></div>
-        </div>
-        <div class="card">
-          <h3>Registre de planification editable</h3>
-          <div class="g4">
-            <select id="planType">
-              <option>Inter-comparaison</option>
-              <option>Audit interne</option>
-              <option>Maintien habilitation personnel</option>
-              <option>Revue de direction</option>
-              <option>Etalonnage laboratoire</option>
-            </select>
-            <input id="planRef" placeholder="Reference du planning">
-            <input id="planLab" placeholder="Laboratoire / service / processus">
-            <input id="planResp" placeholder="Responsable">
-            <input id="planStart" type="date" title="Date debut">
-            <input id="planEnd" type="date" title="Date fin">
-            <select id="planFreq">
-              <option>Mensuel</option>
-              <option>Trimestriel</option>
-              <option>Semestriel</option>
-              <option>Annuel</option>
-              <option>Selon besoin</option>
-            </select>
-            <select id="planStatus">
-              <option>Planifie</option>
-              <option>En cours</option>
-              <option>Termine</option>
-              <option>Reporte</option>
-            </select>
-            <textarea id="planScope" placeholder="Perimetre / instruments / activites prevues"></textarea>
-            <textarea id="planNotes" placeholder="Commentaires et observations"></textarea>
-            <button class="btn" id="planSave" type="button">Enregistrer</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Resume des planings</h3>
-          <div id="planStats" class="list"></div>
-        </div>
-        <div class="tb">
-          <table>
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Reference</th>
-                <th>Laboratoire / processus</th>
-                <th>Perimetre</th>
-                <th>Responsable</th>
-                <th>Periode</th>
-                <th>Periodicite</th>
-                <th>Statut</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="planTab"></tbody>
-          </table>
         </div>
       </section>
 
@@ -5671,7 +5719,7 @@
     const PLAN_INTER_SCOPE_DEFAULTS = ["IPFNA", "PRESSION", "TEMPERATURE", "DIMENSIONNEL", "ELECTRIQUE", "SMQ"];
     const PLAN_AUDIT_TEMPLATE = { year: "2025", rows: [{ id: "PA-001", activity: "IPFNA", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-002", activity: "PRESSION", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-003", activity: "TEMPERATURE", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-004", activity: "DIMENSIONNEL", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-005", activity: "ELECTRIQUE", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-006", activity: "SMQ", responsible: "Mongi SOUAYED : RMQ", auditors: "A definir", months: {} }] };
     const PLAN_INTERCOMP_TEMPLATE = [{ year: "2020", pression: "Chaine de mesure de basse pression gaz 0 a 20 bars au laboratoire", temperature: "Caracterisation enceinte climatique 10-40°C / 20-80%HR", pesage: "-", electrique: "-", dimensionnelle: "Pied a coulisse - Micrometre" }, { year: "2021", pression: "Manometre 20 bar gaz - Manometre 600 bars huile au laboratoire", temperature: "-", pesage: "-", electrique: "-", dimensionnelle: "Projecteur de profil" }, { year: "2022", pression: "-", temperature: "PT100 au laboratoire -30°C a 600°C", pesage: "-", electrique: "Multimetre - Pince amperometrique", dimensionnelle: "Comparateur - Micrometre" }, { year: "2023", pression: "-", temperature: "PT100 au laboratoire -30°C a 156°C", pesage: "IPFNA de precision 220 g", electrique: "Simulation electrique source / mesure - Calibreur", dimensionnelle: "Trusquin - Jauge de profondeur - Micrometre specifique" }, { year: "2024", pression: "Chaine de mesure de basse pression 0 a 600 bars sur site", temperature: "Caracterisation des enceintes thermostatiques <2m -20 a 200°C - Bain marie", pesage: "IPFNA 15 kg", electrique: "CIL au laboratoire -30 a 600 - Resistance", dimensionnelle: "Niveau a bulle - Rapporteur d'angle" }];
-    const PLAN_HABIL_TEMPLATE = { IPFNA: { item: "Etalons de classe E2", spec: "A definir", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "Température": { item: "Chaine de température - TC", spec: "A definir", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Pression: { item: "Classe superieure a 0.2", spec: "A definir", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Dimensionnelle: { item: "Pied a coulisse", spec: "A definir", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "Electricité & Magnétisme": { item: "Multimetres - Mesureur de tension", spec: "A definir", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] } };
+    const PLAN_HABIL_TEMPLATE = { IPFNA: { item: "Etalons de classe E2", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "Température": { item: "Chaine de température - TC", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Pression: { item: "Classe superieure a 0.2", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Dimensionnelle: { item: "Pied a coulisse", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "Electricité & Magnétisme": { item: "Multimetres - Mesureur de tension", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] } };
     const PLAN_REVIEW_TEMPLATE = { years: ["2024", "2025", "2026", "2027", "2028"], months: ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"] };
     const PLAN_CAL_TEMPLATE = { Dimensionnel: [{ no: "1", designation: "Cale etalon 500 mm", code: "D.Ca07", period: "1 an", cert: "C 220928-01", date: "28/09/2022" }, { no: "2", designation: "Cale etalon 400 mm", code: "D.Ca22", period: "1 an", cert: "C 220801-01", date: "01/08/2022" }, { no: "3", designation: "Cale etalon 300 mm", code: "D.Ca09", period: "1 an", cert: "C 221003-04", date: "03/10/2022" }, { no: "4", designation: "Cale etalon 200 mm", code: "D.Ca12", period: "1 an", cert: "C 221003-03", date: "03/10/2022" }, { no: "5", designation: "Cale etalon 150 mm", code: "D.Ca24", period: "1 an", cert: "C 220729-04", date: "29/07/2022" }, { no: "6", designation: "Cale etalon 25 mm", code: "D.Ca23", period: "1 an", cert: "C 220729-06", date: "29/07/2022" }, { no: "7", designation: "Bague Ø 5 mm", code: "D.Ba20", period: "1 an", cert: "C 221130-06", date: "30/11/2022" }, { no: "8", designation: "Bague Ø 50 mm", code: "D.Ba21", period: "1 an", cert: "C 221130-07", date: "30/11/2022" }, { no: "9", designation: "Micrometre", code: "D.Mc25", period: "1 an", cert: "C 221017-01", date: "17/10/2022" }, { no: "10", designation: "Marbre", code: "D.Mr08", period: "3 ans", cert: "C 21060-01", date: "20/06/2022" }, { no: "11", designation: "Regle en verre", code: "D.Rv15", period: "1 an", cert: "E-223-220608", date: "08/06/2022" }], Pression: [], "Température": [], Pesage: [], Electrique: [] };
     function planCell(v) { if (!v) return `<span class="mut">-</span>`; const cls = v === "Reporte" ? "er" : v === "Planifie" ? "wa" : "ok"; return `<span class="${cls}">${esc(v)}</span>` }
@@ -5710,14 +5758,25 @@
     function planHabOptionsHtml() { return planHabKeys().map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("") }
     function currentPlanHab() { const key = ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA"; return PLAN_HABIL_TEMPLATE[key] || PLAN_HABIL_TEMPLATE.IPFNA }
     function planHabOperatorOptionsHtml() { const data = currentPlanHab(), filter = ($("#planHabOperatorFilter") && $("#planHabOperatorFilter").value) || "all"; const opts = [`<option value="all">Tous les operateurs</option>`].concat((data.operators || []).map(op => `<option value="${esc(op.name)}">${esc(op.name)}</option>`)); return opts.join("") }
-    function renderPlanHabSheets(selected = "") { const select = $("#planHabSheet"), remove = $("#planHabRemove"); if (select) { const current = selected || select.value || planHabKeys()[0] || ""; select.innerHTML = planHabOptionsHtml(); select.value = planHabKeys().includes(current) ? current : (planHabKeys()[0] || "") } if (remove && !remove.value) remove.value = select && select.value ? select.value : (planHabKeys()[0] || ""); const data = currentPlanHab(), opFilter = $("#planHabOperatorFilter"), opRemove = $("#planHabOperatorRemove"), spec = $("#planHabSpec"), date = $("#planHabDate"); if (opFilter) { const selectedOp = opFilter.value || "all"; opFilter.innerHTML = planHabOperatorOptionsHtml(); opFilter.value = [...opFilter.options].some(o => o.value === selectedOp) ? selectedOp : "all" } if (opRemove && !opRemove.value) opRemove.value = data.operators && data.operators[0] ? data.operators[0].name : ""; if (spec) spec.value = data.spec || ""; if (date) date.value = data.date || "" }
+    function planHabRowOptionsHtml(placeholder = "Choisir une ligne") { const data = currentPlanHab(), opts = [`<option value="">${esc(placeholder)}</option>`].concat((data.operators || []).map(op => `<option value="${esc(op.code || "")}|${esc(op.name)}">${esc((op.code ? op.code + " - " : "") + op.name)}</option>`)); return opts.join("") }
+    function planHabSpecOptions() { const data = currentPlanHab(); if (!Array.isArray(data.specOptions) || !data.specOptions.length) data.specOptions = [data.spec || "A definir"]; return data.specOptions }
+    function planHabSpecOptionsForDomain(domain) { const data = PLAN_HABIL_TEMPLATE[domain] || currentPlanHab(); if (!Array.isArray(data.specOptions) || !data.specOptions.length) data.specOptions = [data.spec || "A definir"]; return data.specOptions }
+    function planHabSpecOptionsHtmlForDomain(domain) { return planHabSpecOptionsForDomain(domain).map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("") }
+    function planHabFindRow(domain, token) { const data = PLAN_HABIL_TEMPLATE[domain] || currentPlanHab(), [code = "", name = ""] = String(token || "").split("|"); return (data.operators || []).find(op => String(op.code || "") === code && op.name === name) || null }
+    function fillPlanHabUpdateFromSelection() { const domain = ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA", row = planHabFindRow(domain, $("#planHabEditRow") && $("#planHabEditRow").value); const name = $("#planHabUpdateName"), code = $("#planHabUpdateCode"), updateDomain = $("#planHabUpdateDomain"), updateSpec = $("#planHabUpdateSpec"), updateAction = $("#planHabUpdateAction"), updateDate = $("#planHabUpdateDate"); if (!row) { if (name) name.value = ""; if (code) code.value = ""; if (updateAction) updateAction.value = "Planifie"; if (updateDate) updateDate.value = ""; return } if (name) name.value = row.name || ""; if (code) code.value = row.code || ""; if (updateDomain) updateDomain.value = domain; if (updateSpec) updateSpec.value = row.spec || (planHabSpecOptionsForDomain(domain)[0] || "A definir"); if (updateAction) updateAction.value = row.action || "Planifie"; if (updateDate) updateDate.value = row.date || "" }
+    function fillPlanHabDeleteFromSelection() { const domain = ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA", row = planHabFindRow(domain, $("#planHabDeleteRow") && $("#planHabDeleteRow").value); const name = $("#planHabDeleteName"), code = $("#planHabDeleteCode"), delDomain = $("#planHabDeleteDomain"), delSpec = $("#planHabDeleteSpec"), delAction = $("#planHabDeleteAction"), delDate = $("#planHabDeleteDate"); if (!row) { if (name) name.value = ""; if (code) code.value = ""; if (delDomain) delDomain.value = ""; if (delSpec) delSpec.value = ""; if (delAction) delAction.value = ""; if (delDate) delDate.value = ""; return } if (name) name.value = row.name || ""; if (code) code.value = row.code || ""; if (delDomain) delDomain.value = domain; if (delSpec) delSpec.value = row.spec || "A definir"; if (delAction) delAction.value = row.action || "Planifie"; if (delDate) delDate.value = row.date || "" }
+    function syncPlanHabCreateDomain() { const domain = ($("#planHabCreateDomain") && $("#planHabCreateDomain").value) || ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA", spec = $("#planHabCreateSpec"); if (spec) { const current = spec.value || ""; spec.innerHTML = planHabSpecOptionsHtmlForDomain(domain); spec.value = [...spec.options].some(o => o.value === current) ? current : (planHabSpecOptionsForDomain(domain)[0] || "A definir") } }
+    function syncPlanHabUpdateDomain() { const domain = ($("#planHabUpdateDomain") && $("#planHabUpdateDomain").value) || ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA", spec = $("#planHabUpdateSpec"); if (spec) { const current = spec.value || ""; spec.innerHTML = planHabSpecOptionsHtmlForDomain(domain); spec.value = [...spec.options].some(o => o.value === current) ? current : (planHabSpecOptionsForDomain(domain)[0] || "A definir") } }
+    function renderPlanHabSheets(selected = "") { const select = $("#planHabSheet"), remove = $("#planHabRemove"); if (select) { const current = selected || select.value || planHabKeys()[0] || ""; select.innerHTML = planHabOptionsHtml(); select.value = planHabKeys().includes(current) ? current : (planHabKeys()[0] || "") } if (remove && !remove.value) remove.value = select && select.value ? select.value : (planHabKeys()[0] || ""); const data = currentPlanHab(), opFilter = $("#planHabOperatorFilter"), opEdit = $("#planHabEditRow"), delRow = $("#planHabDeleteRow"), specRemove = $("#planHabSpecRemove"), createDomain = $("#planHabCreateDomain"), updateDomain = $("#planHabUpdateDomain"); if (opFilter) { const selectedOp = opFilter.value || "all"; opFilter.innerHTML = planHabOperatorOptionsHtml(); opFilter.value = [...opFilter.options].some(o => o.value === selectedOp) ? selectedOp : "all" } if (opEdit) { const selectedEdit = opEdit.value || ""; opEdit.innerHTML = planHabRowOptionsHtml("Ligne a modifier"); opEdit.value = [...opEdit.options].some(o => o.value === selectedEdit) ? selectedEdit : "" } if (delRow) { const selectedDelete = delRow.value || ""; delRow.innerHTML = planHabRowOptionsHtml("Ligne a supprimer"); delRow.value = [...delRow.options].some(o => o.value === selectedDelete) ? selectedDelete : "" } if (specRemove && !specRemove.value) specRemove.value = data.spec || planHabSpecOptionsForDomain(select && select.value ? select.value : "")[0] || "A definir"; if (createDomain) { const currentCreate = createDomain.value || (select && select.value) || planHabKeys()[0] || ""; createDomain.innerHTML = planHabOptionsHtml(); createDomain.value = planHabKeys().includes(currentCreate) ? currentCreate : ((select && select.value) || planHabKeys()[0] || "") } if (updateDomain) { const currentUpdate = updateDomain.value || (select && select.value) || planHabKeys()[0] || ""; updateDomain.innerHTML = planHabOptionsHtml(); updateDomain.value = planHabKeys().includes(currentUpdate) ? currentUpdate : ((select && select.value) || planHabKeys()[0] || "") } syncPlanHabCreateDomain(); syncPlanHabUpdateDomain(); fillPlanHabUpdateFromSelection(); fillPlanHabDeleteFromSelection() }
     function syncPlanHabRemove() { const select = $("#planHabSheet"), remove = $("#planHabRemove"); if (select && remove) remove.value = select.value; renderPlanHabSheets(select && select.value ? select.value : "") }
-    function addPlanHabSheet() { if (!requirePerm("Ajouter")) return; const input = $("#planHabNew"); if (!input) return; const name = input.value.trim(); if (!name) { sync("Renseigne le nouveau domaine a ajouter"); return } if (PLAN_HABIL_TEMPLATE[name]) { sync("Ce domaine existe deja"); return } const baseKey = ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0], base = PLAN_HABIL_TEMPLATE[baseKey] || { item: "A definir", spec: "A definir", date: "", years: ["2025", "2026"], operators: [] }; PLAN_HABIL_TEMPLATE[name] = { item: "A definir", spec: base.spec || "A definir", date: base.date || "", years: c(base.years || ["2025", "2026"]), operators: c(base.operators || []) }; input.value = ""; renderPlanHabSheets(name); save("Domaine habilitation ajoute"); render() }
+    function addPlanHabSheet() { if (!requirePerm("Ajouter")) return; const input = $("#planHabNew"); if (!input) return; const name = input.value.trim(); if (!name) { sync("Renseigne le nouveau domaine a ajouter"); return } if (PLAN_HABIL_TEMPLATE[name]) { sync("Ce domaine existe deja"); return } const baseKey = ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0], base = PLAN_HABIL_TEMPLATE[baseKey] || { item: "A definir", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2025", "2026"], operators: [] }; PLAN_HABIL_TEMPLATE[name] = { item: "A definir", spec: base.spec || "A definir", specOptions: c(base.specOptions || [base.spec || "A definir"]), action: base.action || "Planifie", date: base.date || "", years: c(base.years || ["2025", "2026"]), operators: c(base.operators || []) }; input.value = ""; renderPlanHabSheets(name); save("Domaine habilitation ajoute"); render() }
     function deletePlanHabSheet() { if (!requirePerm("Supprimer")) return; const input = $("#planHabRemove"); if (!input) return; const name = input.value.trim(); const keys = planHabKeys(); if (!name) { sync("Renseigne le domaine a supprimer"); return } if (!PLAN_HABIL_TEMPLATE[name]) { sync("Ce domaine est introuvable"); return } if (keys.length === 1) { sync("Le dernier domaine ne peut pas etre supprime"); return } delete PLAN_HABIL_TEMPLATE[name]; const next = planHabKeys()[0] || "IPFNA"; renderPlanHabSheets(next); syncPlanHabRemove(); input.value = next; save("Domaine habilitation supprime"); render() }
-    function addPlanHabOperator() { if (!requirePerm("Ajouter")) return; const data = currentPlanHab(), input = $("#planHabOperatorName"); if (!input) return; const name = input.value.trim(); if (!name) { sync("Renseigne le nom de l'operateur a ajouter"); return } if ((data.operators || []).some(op => op.name.toLowerCase() === name.toLowerCase())) { sync("Cet operateur existe deja"); return } const nextCode = String(((data.operators || []).reduce((n, op) => Math.max(n, +op.code || 0), 0) || 0) + 1); data.operators = [...(data.operators || []), { code: nextCode, name }]; input.value = ""; renderPlanHabSheets(); save("Operateur habilitation ajoute"); render() }
-    function deletePlanHabOperator() { if (!requirePerm("Supprimer")) return; const data = currentPlanHab(), input = $("#planHabOperatorRemove"); if (!input) return; const name = input.value.trim(); if (!name) { sync("Renseigne l'operateur a supprimer"); return } const before = (data.operators || []).length; data.operators = (data.operators || []).filter(op => op.name.toLowerCase() !== name.toLowerCase()); if (data.operators.length === before) { sync("Cet operateur est introuvable"); return } input.value = data.operators[0] ? data.operators[0].name : ""; renderPlanHabSheets(); save("Operateur habilitation supprime"); render() }
-    function savePlanHabMeta() { const data = currentPlanHab(), spec = $("#planHabSpec"), date = $("#planHabDate"); if (!data) return; data.spec = spec ? (spec.value.trim() || "A definir") : (data.spec || "A definir"); data.date = date ? (date.value || "") : (data.date || ""); save("Parametres habilitation mis a jour"); render() }
-    function planHabHtml() { const key = ($("#planHabSheet") && $("#planHabSheet").value) || "IPFNA", data = PLAN_HABIL_TEMPLATE[key] || PLAN_HABIL_TEMPLATE.IPFNA, months = [...PLAN_MONTHS_SHORT, ...PLAN_MONTHS_SHORT.slice(0, 3)], years = [data.years[0], data.years[1]], filter = ($("#planHabOperatorFilter") && $("#planHabOperatorFilter").value) || "all", operators = (data.operators || []).filter(op => filter === "all" || op.name === filter); return `<div class="acts"><span class="bl">Specifier : ${esc(data.spec || "A definir")}</span><span class="bl">Date : ${esc(data.date || "-")}</span><span class="bl">Operateurs affiches : ${operators.length}</span></div><table><thead><tr><th colspan="2">Operateur</th><th colspan="12">${esc(years[0])}</th><th colspan="3">${esc(years[1])}</th></tr><tr><th>Code operateur</th><th>Nom d'operateur</th>${months.map(m => `<th>${esc(m)}</th>`).join("")}</tr></thead><tbody><tr><td colspan="${months.length + 2}"><b>${esc(data.item)}</b></td></tr>${operators.map(op => `<tr><td>${esc(op.code)}</td><td>${esc(op.name)}</td>${months.map(() => `<td>${planCell("")}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${months.length + 2}" class="e">Aucun operateur pour ce filtre.</td></tr>`}</tbody></table>${planLegendHtml()}` }
+    function addPlanHabSpec() { if (!requirePerm("Ajouter")) return; const data = currentPlanHab(), input = $("#planHabSpecNew"); if (!input) return; const name = input.value.trim(); if (!name) { sync("Renseigne la nouvelle specialite"); return } const specs = planHabSpecOptions(); if (specs.some(x => x.toLowerCase() === name.toLowerCase())) { sync("Cette specialite existe deja"); return } specs.push(name); data.spec = name; input.value = ""; renderPlanHabSheets(); save("Specialite habilitation ajoutee"); render() }
+    function deletePlanHabSpec() { if (!requirePerm("Supprimer")) return; const data = currentPlanHab(), input = $("#planHabSpecRemove"); if (!input) return; const name = input.value.trim(); const specs = planHabSpecOptions(); if (!name) { sync("Renseigne la specialite a supprimer"); return } if (!specs.some(x => x.toLowerCase() === name.toLowerCase())) { sync("Cette specialite est introuvable"); return } if (specs.length === 1) { sync("La derniere specialite ne peut pas etre supprimee"); return } data.specOptions = specs.filter(x => x.toLowerCase() !== name.toLowerCase()); data.spec = data.specOptions[0] || "A definir"; input.value = data.spec; renderPlanHabSheets(); save("Specialite habilitation supprimee"); render() }
+    function createPlanHabEntry() { if (!requirePerm("Ajouter")) return; const domain = ($("#planHabCreateDomain") && $("#planHabCreateDomain").value) || ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA", data = PLAN_HABIL_TEMPLATE[domain] || currentPlanHab(), name = ($("#planHabCreateName") && $("#planHabCreateName").value || "").trim(), code = ($("#planHabCreateCode") && $("#planHabCreateCode").value || "").trim(), spec = ($("#planHabCreateSpec") && $("#planHabCreateSpec").value) || "A definir", action = ($("#planHabCreateAction") && $("#planHabCreateAction").value) || "Planifie", date = ($("#planHabCreateDate") && $("#planHabCreateDate").value) || ""; if (!name || !code) { sync("Renseigne le nom, prenom et le code de l'operateur"); return } if ((data.operators || []).some(op => String(op.code || "").toLowerCase() === code.toLowerCase() || op.name.toLowerCase() === name.toLowerCase())) { sync("Cette ligne operateur existe deja"); return } data.operators = [...(data.operators || []), { code, name, spec, action, date }]; data.spec = spec; data.action = action; data.date = date; if ($("#planHabSheet")) $("#planHabSheet").value = domain; if ($("#planHabOperatorFilter")) $("#planHabOperatorFilter").value = name; if ($("#planHabCreateName")) $("#planHabCreateName").value = ""; if ($("#planHabCreateCode")) $("#planHabCreateCode").value = ""; if ($("#planHabCreateDate")) $("#planHabCreateDate").value = ""; renderPlanHabSheets(domain); save("Ligne de planning habilitation creee"); render() }
+    function updatePlanHabEntry() { if (!requirePerm("Modifier")) return; const currentDomain = ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA", targetDomain = ($("#planHabUpdateDomain") && $("#planHabUpdateDomain").value) || currentDomain, source = PLAN_HABIL_TEMPLATE[currentDomain] || currentPlanHab(), destination = PLAN_HABIL_TEMPLATE[targetDomain] || source, token = $("#planHabEditRow") && $("#planHabEditRow").value, row = planHabFindRow(currentDomain, token), name = ($("#planHabUpdateName") && $("#planHabUpdateName").value || "").trim(), code = ($("#planHabUpdateCode") && $("#planHabUpdateCode").value || "").trim(), spec = ($("#planHabUpdateSpec") && $("#planHabUpdateSpec").value) || "A definir", action = ($("#planHabUpdateAction") && $("#planHabUpdateAction").value) || "Planifie", date = ($("#planHabUpdateDate") && $("#planHabUpdateDate").value) || ""; if (!row) { sync("Choisis la ligne a modifier"); return } if (!name || !code) { sync("Renseigne le nom, prenom et le code de l'operateur"); return } const duplicate = (destination.operators || []).some(op => op !== row && (String(op.code || "").toLowerCase() === code.toLowerCase() || op.name.toLowerCase() === name.toLowerCase())); if (duplicate) { sync("Une ligne avec ce nom ou ce code existe deja"); return } if (source !== destination) source.operators = (source.operators || []).filter(op => op !== row); row.name = name; row.code = code; row.spec = spec; row.action = action; row.date = date; if (source !== destination) destination.operators = [...(destination.operators || []), row]; destination.spec = spec; destination.action = action; destination.date = date; if ($("#planHabSheet")) $("#planHabSheet").value = targetDomain; renderPlanHabSheets(targetDomain); save("Planning habilitation modifie"); render() }
+    function deletePlanHabEntry() { if (!requirePerm("Supprimer")) return; const domain = ($("#planHabSheet") && $("#planHabSheet").value) || planHabKeys()[0] || "IPFNA", data = PLAN_HABIL_TEMPLATE[domain] || currentPlanHab(), token = $("#planHabDeleteRow") && $("#planHabDeleteRow").value, row = planHabFindRow(domain, token); if (!row) { sync("Choisis la ligne a supprimer"); return } data.operators = (data.operators || []).filter(op => op !== row); renderPlanHabSheets(domain); save("Ligne de planning habilitation supprimee"); render() }
+    function planHabHtml() { const key = ($("#planHabSheet") && $("#planHabSheet").value) || "IPFNA", data = PLAN_HABIL_TEMPLATE[key] || PLAN_HABIL_TEMPLATE.IPFNA, months = [...PLAN_MONTHS_SHORT, ...PLAN_MONTHS_SHORT.slice(0, 3)], filter = ($("#planHabOperatorFilter") && $("#planHabOperatorFilter").value) || "all", operators = (data.operators || []).filter(op => filter === "all" || op.name === filter); return `<table><thead><tr><th>Code operateur</th><th>Nom d'operateur</th><th>Domaine</th><th>Specialite</th><th>Action</th>${months.map(m => `<th>${esc(m)}</th>`).join("")}</tr></thead><tbody>${operators.map(op => `<tr><td>${esc(op.code)}</td><td>${esc(op.name)}</td><td>${esc(key)}</td><td>${esc(op.spec || data.spec || "A definir")}</td><td>${planCell(op.action || data.action || "Planifie")}</td>${months.map(() => `<td>${planCell("")}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${months.length + 5}" class="e">Aucun operateur pour ce filtre.</td></tr>`}</tbody></table>${planLegendHtml()}` }
     function planReviewHtml() { return `<table><thead><tr><th>Annee</th>${PLAN_REVIEW_TEMPLATE.months.map(m => `<th>${esc(m)}</th>`).join("")}</tr></thead><tbody>${PLAN_REVIEW_TEMPLATE.years.map(y => `<tr><td><b>${esc(y)}</b></td>${PLAN_REVIEW_TEMPLATE.months.map(() => `<td>${planCell("")}</td>`).join("")}</tr>`).join("")}</tbody></table><div class="acts"><span class="ok">Revue planifiee et realisee</span><span class="wa">Revue planifiee</span><span class="er">Revue reportee</span></div>` }
     function planCalHtml() { const lab = ($("#planCalLab") && $("#planCalLab").value) || "Dimensionnel", rows = PLAN_CAL_TEMPLATE[lab] || []; if (!rows.length) return `<div class="e">Aucun instrument configure pour le laboratoire ${esc(lab)}.</div>`; return `<table><thead><tr><th>N°</th><th>Designation</th><th>Code</th><th>Periodicite</th><th>Certificat</th><th>Date d'etalonnage</th>${PLAN_MONTHS_SHORT.map(m => `<th>${esc(m)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.no)}</td><td><b>${esc(r.designation)}</b></td><td>${esc(r.code)}</td><td>${esc(r.period)}</td><td>${esc(r.cert)}</td><td>${esc(r.date)}</td>${PLAN_MONTHS_SHORT.map(() => `<td>${planCell("")}</td>`).join("")}</tr>`).join("")}</tbody></table><div class="acts"><span class="ok">Etalonnage</span><span class="bl">Verification</span></div>` }
     function planSupportExportSections() { const habCurrent = ($("#planHabSheet") && $("#planHabSheet").value) || "IPFNA", calCurrent = ($("#planCalLab") && $("#planCalLab").value) || "Dimensionnel"; const habBlocks = Object.keys(PLAN_HABIL_TEMPLATE).map(k => { const saved = $("#planHabSheet"); if (saved) saved.value = k; return `<h2>Planning habilitation - ${esc(k)}</h2>${planHabHtml()}` }).join(""); const calBlocks = Object.keys(PLAN_CAL_TEMPLATE).map(k => { const saved = $("#planCalLab"); if (saved) saved.value = k; return `<h2>Planning etalonnage - ${esc(k)}</h2>${planCalHtml()}` }).join(""); if ($("#planHabSheet")) $("#planHabSheet").value = habCurrent; if ($("#planCalLab")) $("#planCalLab").value = calCurrent; return `<h2>Planning d'audit interne</h2>${planAuditHtml()}<h2>Planning des inter-comparaisons</h2>${planInterHtml()}${habBlocks}<h2>Planning de la revue de direction</h2>${planReviewHtml()}${calBlocks}` }
@@ -5886,8 +5945,8 @@
     function planningStatsData() { return PLANNING_TYPES.map(type => ({ type, count: planningItems().filter(x => x.type === type).length })) }
     function planningStatsHtml() { return planningStatsData().map(x => `<div class="it"><b>${esc(x.type)}</b><p>${x.count} planning${x.count > 1 ? "s" : ""}</p></div>`).join("") }
     function planningRows(items, actions = true) { return items.length ? items.map(x => `<tr><td>${esc(x.type)}</td><td>${esc(x.ref)}</td><td><b>${esc(x.lab || "-")}</b><br><small>${esc(x.notes || "-")}</small></td><td>${esc(x.scope || "-")}</td><td>${esc(x.resp || "-")}</td><td>${esc(x.start || "-")}<br><small>${esc(x.end || "-")}</small></td><td>${esc(x.freq || "-")}</td><td><span class="${tag(x.status || "Planifie")}">${esc(x.status || "Planifie")}</span></td>${actions ? `<td><button class="btn2 btn" data-plan-edit="${esc(x.id)}" type="button">Modifier</button> <button class="btn3 btn" data-plan-del="${esc(x.id)}" type="button">Supprimer</button></td>` : ""}</tr>`).join("") : `<tr><td colspan="${actions ? 9 : 8}" class="e">Aucun planning enregistre.</td></tr>` }
-    function planningExportHtml(items) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Planning qualite et technique</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1,h2{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px;margin-bottom:20px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}.acts{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px}.ok,.wa,.er,.bl{display:inline-flex;padding:5px 10px;border-radius:999px;font-weight:700}.ok{background:#e8fff2;color:#1e8f5a}.wa{background:#fff3d8;color:#c4871f}.er{background:#ffe6e6;color:#d33f5a}.bl{background:#eef4ff;color:#245ccc}</style><body><h1>Planning qualite et technique</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre de planings :</b> ${items.length}</p>${planSupportExportSections()}<h2>Registre de planification editable</h2><table><thead><tr><th>Type</th><th>Reference</th><th>Laboratoire / processus</th><th>Perimetre</th><th>Responsable</th><th>Debut</th><th>Fin</th><th>Periodicite</th><th>Statut</th></tr></thead><tbody>${items.length ? items.map(x => `<tr><td>${esc(x.type)}</td><td>${esc(x.ref)}</td><td>${esc(x.lab || "-")}</td><td>${esc(x.scope || "-")}</td><td>${esc(x.resp || "-")}</td><td>${esc(x.start || "-")}</td><td>${esc(x.end || "-")}</td><td>${esc(x.freq || "-")}</td><td>${esc(x.status || "-")}</td></tr>`).join("") : `<tr><td colspan="9">Aucun planning enregistre.</td></tr>`}</tbody></table></body></html>` }
-    function planningView() { const items = filteredPlanning(); $("#planCount").textContent = `${items.length} planning${items.length > 1 ? "s" : ""}`; $("#planStats").innerHTML = planningStatsHtml(); $("#planTab").innerHTML = planningRows(items, true); $("#planAuditBoard").innerHTML = planAuditHtml(); $("#planInterBoard").innerHTML = planInterHtml(); $("#planHabBoard").innerHTML = planHabHtml(); $("#planReviewBoard").innerHTML = planReviewHtml(); $("#planCalBoard").innerHTML = planCalHtml(); renderPlanAuditActivities($("#planAuditActivity") && $("#planAuditActivity").value ? $("#planAuditActivity").value : ""); const auditSelect = $("#planAuditEditRow"); if (auditSelect) { auditSelect.innerHTML = planAuditOptionsHtml(); if (!auditSelect.value && planAuditItems()[0]) auditSelect.value = planAuditItems()[0].id } renderPlanInterScopes($("#planInterScope") && $("#planInterScope").value ? $("#planInterScope").value : ""); const interSelect = $("#planInterEditRow"); if (interSelect) { interSelect.innerHTML = planInterOptionsHtml(); if (!interSelect.value && planInterItems()[0]) interSelect.value = planInterItems()[0].id; syncPlanInterOptionPreview() } renderPlanHabSheets($("#planHabSheet") && $("#planHabSheet").value ? $("#planHabSheet").value : ""); const btn = $("#planSave"); if (btn) btn.textContent = editingPlanId ? "Modifier" : "Enregistrer" }
+    function planningExportHtml(items) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Planning qualite et technique</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1,h2{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px;margin-bottom:20px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}.acts{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px}.ok,.wa,.er,.bl{display:inline-flex;padding:5px 10px;border-radius:999px;font-weight:700}.ok{background:#e8fff2;color:#1e8f5a}.wa{background:#fff3d8;color:#c4871f}.er{background:#ffe6e6;color:#d33f5a}.bl{background:#eef4ff;color:#245ccc}</style><body><h1>Planning qualite et technique</h1><p><b>Date d'edition :</b> ${esc(now())}</p>${planSupportExportSections()}</body></html>` }
+    function planningView() { const items = filteredPlanning(); const planCount = $("#planCount"), planAuditBoard = $("#planAuditBoard"), planInterBoard = $("#planInterBoard"), planHabBoard = $("#planHabBoard"), planCalBoard = $("#planCalBoard"); if (planCount) planCount.textContent = `${items.length} planning${items.length > 1 ? "s" : ""}`; if (planAuditBoard) planAuditBoard.innerHTML = planAuditHtml(); if (planInterBoard) planInterBoard.innerHTML = planInterHtml(); if (planHabBoard) planHabBoard.innerHTML = planHabHtml(); if (planCalBoard) planCalBoard.innerHTML = planCalHtml(); renderPlanAuditActivities($("#planAuditActivity") && $("#planAuditActivity").value ? $("#planAuditActivity").value : ""); const auditSelect = $("#planAuditEditRow"); if (auditSelect) { auditSelect.innerHTML = planAuditOptionsHtml(); if (!auditSelect.value && planAuditItems()[0]) auditSelect.value = planAuditItems()[0].id } renderPlanInterScopes($("#planInterScope") && $("#planInterScope").value ? $("#planInterScope").value : ""); const interSelect = $("#planInterEditRow"); if (interSelect) { interSelect.innerHTML = planInterOptionsHtml(); if (!interSelect.value && planInterItems()[0]) interSelect.value = planInterItems()[0].id; syncPlanInterOptionPreview() } renderPlanHabSheets($("#planHabSheet") && $("#planHabSheet").value ? $("#planHabSheet").value : "") }
     function resetPlanningForm() { editingPlanId = ""; clearFields(["#planRef", "#planLab", "#planResp", "#planStart", "#planEnd", "#planScope", "#planNotes"]); $("#planType").value = "Inter-comparaison"; $("#planFreq").value = "Mensuel"; $("#planStatus").value = "Planifie"; const btn = $("#planSave"); if (btn) btn.textContent = "Enregistrer" }
     function savePlanning() { if (!requirePerm(editingPlanId ? "Modifier" : "Ajouter")) return; const ref = $("#planRef").value.trim(), lab = $("#planLab").value.trim(), type = $("#planType").value; if (!ref || !lab) { sync("Renseigne la reference et le laboratoire ou processus du planning"); return } const x = markSaved({ id: editingPlanId || "PLAN-" + stamp(), type, ref, lab, scope: $("#planScope").value.trim() || "-", resp: $("#planResp").value.trim() || s.u.name, start: $("#planStart").value || "-", end: $("#planEnd").value || "-", freq: $("#planFreq").value, status: $("#planStatus").value, notes: $("#planNotes").value.trim() || "-" }); const items = planningItems(), i = items.findIndex(v => v.id === editingPlanId); if (i >= 0) { items[i] = { ...items[i], ...x }; log("Modification", "Planning", ref + " mis a jour"); save("Planning modifie automatiquement") } else { items.unshift(x); log("Creation", "Planning", ref + " ajoute"); save("Planning enregistre automatiquement") } resetPlanningForm(); render() }
     function editPlanning(id) { if (!requirePerm("Modifier")) return; const x = planningItems().find(v => v.id === id); if (!x) return; editingPlanId = id; $("#planType").value = x.type || "Inter-comparaison"; $("#planRef").value = x.ref || ""; $("#planLab").value = x.lab || ""; $("#planResp").value = x.resp || ""; $("#planStart").value = x.start && x.start !== "-" ? x.start : ""; $("#planEnd").value = x.end && x.end !== "-" ? x.end : ""; $("#planFreq").value = x.freq || "Mensuel"; $("#planStatus").value = x.status || "Planifie"; $("#planScope").value = x.scope || ""; $("#planNotes").value = x.notes || ""; const btn = $("#planSave"); if (btn) btn.textContent = "Modifier"; sync("Planning charge pour modification"); $("#planRef").scrollIntoView({ behavior: "smooth", block: "center" }) }
@@ -5928,10 +5987,10 @@
     const planInterScope = $("#planInterScope"); if (planInterScope) { planInterScope.addEventListener("input", () => syncPlanInterScope("form")); planInterScope.addEventListener("change", () => syncPlanInterScope("form")) }
     const planInterScopeQuick = $("#planInterScopeQuick"); if (planInterScopeQuick) { planInterScopeQuick.addEventListener("input", () => syncPlanInterScope("quick")); planInterScopeQuick.addEventListener("change", () => syncPlanInterScope("quick")) }
     const planHabSheet = $("#planHabSheet"); if (planHabSheet) { planHabSheet.addEventListener("input", syncPlanHabRemove); planHabSheet.addEventListener("change", syncPlanHabRemove) }
-    ["#planHabOperatorFilter", "#planHabSpec", "#planHabDate"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
-    ["#planHabSpec", "#planHabDate"].forEach(id => { const el = $(id); if (el) el.addEventListener("change", savePlanHabMeta) });
+    ["#planHabOperatorFilter", "#planHabCreateDomain", "#planHabCreateSpec", "#planHabCreateAction", "#planHabCreateDate", "#planHabUpdateDomain", "#planHabUpdateSpec", "#planHabUpdateAction", "#planHabUpdateDate", "#planHabEditRow", "#planHabDeleteRow"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
+    [["#planHabCreateDomain", syncPlanHabCreateDomain], ["#planHabUpdateDomain", syncPlanHabUpdateDomain], ["#planHabEditRow", fillPlanHabUpdateFromSelection], ["#planHabDeleteRow", fillPlanHabDeleteFromSelection]].forEach(([id, fn]) => { const el = $(id); if (el) { el.addEventListener("input", fn); el.addEventListener("change", fn) } });
     bindClick("planAuditActivityAdd", addPlanAuditActivity); bindClick("planAuditActivityDelete", deletePlanAuditActivity); bindClick("planInterScopeAdd", addPlanInterScope); bindClick("planInterScopeDelete", deletePlanInterScope);
-    bindClick("planHabAdd", addPlanHabSheet); bindClick("planHabDelete", deletePlanHabSheet); bindClick("planHabOperatorAdd", addPlanHabOperator); bindClick("planHabOperatorDelete", deletePlanHabOperator);
+    bindClick("planHabAdd", addPlanHabSheet); bindClick("planHabDelete", deletePlanHabSheet); bindClick("planHabSpecAdd", addPlanHabSpec); bindClick("planHabSpecDelete", deletePlanHabSpec); bindClick("planHabCreate", createPlanHabEntry); bindClick("planHabUpdate", updatePlanHabEntry); bindClick("planHabRowDelete", deletePlanHabEntry);
     ["dadd", "dsv"].forEach(id => bindClick(id, addDoc)); bindClick("dmaster", exportMasterList); bindClick("dprint", printDocsTable); bindClick("ddownload", downloadDocsTable);["odadd", "odsv"].forEach(id => bindClick(id, addOrgDoc)); bindClick("odImportBtn", () => { $("#odImportFile").value = ""; $("#odImportFile").click() });["eadd", "esv"].forEach(id => bindClick(id, addEq));["nadd", "nsv"].forEach(id => bindClick(id, addNc)); bindClick("naSave", addNcAudit); bindClick("naSaveInline", addNcAudit);["aadd", "asv"].forEach(id => bindClick(id, addAud));["radd", "rsv"].forEach(id => bindClick(id, addRevc)); bindClick("rprint", printRevc); bindClick("rdownload", downloadRevc);["pxadd", "pxsv"].forEach(id => bindClick(id, addPrest)); bindClick("planAuditSave", savePlanAudit); bindClick("planAuditDelete", deletePlanAudit); bindClick("planAuditEdit", loadPlanAuditForEdit); bindClick("planInterSave", savePlanInter); bindClick("planInterDelete", deletePlanInter); bindClick("planInterEdit", loadPlanInterForEdit); const planInterSelect = $("#planInterEditRow"); if (planInterSelect) planInterSelect.addEventListener("change", loadPlanInterForEdit); bindClick("planSave", savePlanning); bindClick("planPrint", printPlanning); bindClick("planDownload", downloadPlanning); bindClick("usv", addUsr); bindClick("riskSave", addRisk); bindClick("riskPrint", printRiskRegister); bindClick("riskDownload", downloadRiskExcel); bindClick("swotSave", addSwot); bindClick("swotPrint", printSwotRegister); bindClick("swotDownload", downloadSwotExcel); bindClick("satSave", saveSat); bindClick("satSearchBtn", satView); bindClick("satPrint", printSatList); bindClick("satDownload", downloadSatList); bindClick("recSave", saveReclamation); bindClick("recPrint", printReclamations); bindClick("recDownload", downloadReclamations); bindClick("recStatsPrint", printReclamationStats); bindClick("recStatsDownload", downloadReclamationStats); bindClick("perSave", addPersonnel); bindClick("perPrint", printPersonnel); bindClick("perDownload", downloadPersonnel); bindClick("perHabPrint", () => printPersonnelGrid("hab")); bindClick("perHabDownload", () => downloadPersonnelGrid("hab")); bindClick("perQualPrint", () => printPersonnelGrid("qual")); bindClick("perQualDownload", () => downloadPersonnelGrid("qual")); bindClick("aciSave", saveAci); bindClick("aciPrint", printAci); bindClick("aciDownload", downloadAci);
     $("#riskTab").addEventListener("click", e => { const edit = e.target.closest("[data-risk-edit]"), del = e.target.closest("[data-risk-del]"); if (edit) editRisk(edit.dataset.riskEdit); if (del) deleteRisk(del.dataset.riskDel) });
     $("#swotTab").addEventListener("click", e => { const edit = e.target.closest("[data-swot-edit]"), del = e.target.closest("[data-swot-del]"); if (edit) editSwot(edit.dataset.swotEdit); if (del) deleteSwot(del.dataset.swotDel) });
@@ -5939,7 +5998,7 @@
     $("#recTab").addEventListener("click", e => { const edit = e.target.closest("[data-rec-edit]"), del = e.target.closest("[data-rec-del]"); if (edit) editReclamation(edit.dataset.recEdit); if (del) deleteReclamation(del.dataset.recDel) });
     $("#perTab").addEventListener("click", e => { const edit = e.target.closest("[data-per-edit]"), del = e.target.closest("[data-per-del]"); if (edit) editPersonnel(edit.dataset.perEdit); if (del) deletePersonnel(del.dataset.perDel) });
     $("#pxtab").addEventListener("click", e => { const edit = e.target.closest("[data-px-edit]"), del = e.target.closest("[data-px-del]"); if (edit) editPrest(edit.dataset.pxEdit); if (del) deletePrest(del.dataset.pxDel) });
-    $("#planTab").addEventListener("click", e => { const edit = e.target.closest("[data-plan-edit]"), del = e.target.closest("[data-plan-del]"); if (edit) editPlanning(edit.dataset.planEdit); if (del) deletePlanning(del.dataset.planDel) });
+    const planTab = $("#planTab"); if (planTab) planTab.addEventListener("click", e => { const edit = e.target.closest("[data-plan-edit]"), del = e.target.closest("[data-plan-del]"); if (edit) editPlanning(edit.dataset.planEdit); if (del) deletePlanning(del.dataset.planDel) });
     $("#rtab").addEventListener("click", e => { const edit = e.target.closest("[data-re-edit]"); if (edit) editRevc(edit.dataset.reEdit) });
     $("#aciTab").addEventListener("click", e => { const edit = e.target.closest("[data-aci-edit]"), del = e.target.closest("[data-aci-del]"); if (edit) editAci(edit.dataset.aciEdit); if (del) deleteAci(del.dataset.aciDel) });
     $("#ncAuditGroups").addEventListener("click", e => { const ae = e.target.closest("[data-na-edit]"), ap = e.target.closest("[data-na-print]"), ad = e.target.closest("[data-na-download]"), lp = e.target.closest("[data-nalist-print]"), ld = e.target.closest("[data-nalist-download]"); if (ae) editNcAudit(ae.dataset.naEdit); if (ap) handleNcAuditExport(ap.dataset.naPrint, "print", false); if (ad) handleNcAuditExport(ad.dataset.naDownload, "download", false); if (lp) handleNcAuditExport(lp.dataset.nalistPrint, "print", true); if (ld) handleNcAuditExport(ld.dataset.nalistDownload, "download", true) });
