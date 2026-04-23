@@ -5033,59 +5033,76 @@
         </div>
         <div class="card">
           <h3>Demande de modification documentaire</h3>
-          <div class="g4">
-            <input id="aciNo" placeholder="Numero de la demande">
-            <input id="aciDate" type="date" title="Date de la demande">
-            <input id="aciRequester" placeholder="Nom du demandeur">
-            <input id="aciDept" placeholder="Service / departement">
-            <input id="aciContact" placeholder="Contact email / telephone">
-            <input id="aciDocTitle" placeholder="Titre du document">
-            <input id="aciDocRef" placeholder="Code / reference documentaire">
-            <input id="aciVersion" placeholder="Version actuelle">
-            <input id="aciVersionDate" type="date" title="Date version en vigueur">
-            <select id="aciType">
-              <option>Correction</option>
-              <option>Mise a jour</option>
-              <option>Suppression</option>
-              <option>Creation</option>
-            </select>
-            <textarea id="aciDesc" placeholder="Description claire des changements souhaites"></textarea>
-            <textarea id="aciPart" placeholder="Parties du document concernees"></textarea>
-            <select id="aciReason">
-              <option>Non-conformite</option>
-              <option>Audit interne/externe</option>
-              <option>Amelioration</option>
-              <option>Changement reglementaire</option>
-              <option>Retour client</option>
-            </select>
-            <input id="aciGoal" placeholder="Objectif attendu">
-            <input id="aciImpactProcess" placeholder="Impact sur le processus">
-            <input id="aciImpactService" placeholder="Impact sur les produits / services">
-            <input id="aciImpactPeople" placeholder="Impact sur le personnel / formation">
-            <input id="aciImpactEquip" placeholder="Impact sur les equipements / methodes">
-            <select id="aciCriticality">
-              <option>Faible</option>
-              <option>Moyenne</option>
-              <option>Critique</option>
-            </select>
-            <input id="aciQualityManager" placeholder="Responsable qualite">
-            <input id="aciProcessOwner" placeholder="Responsable du processus">
-            <select id="aciDecision">
-              <option>Acceptee</option>
-              <option>Refusee</option>
-              <option>A revoir</option>
-            </select>
-            <input id="aciValidationDate" type="date" title="Date validation">
-            <input id="aciImplOwner" placeholder="Responsable de la modification">
-            <input id="aciPlannedDate" type="date" title="Date prevue de mise a jour">
-            <input id="aciRevisedVersion" placeholder="Version revisee">
-            <input id="aciEffectiveDate" type="date" title="Date entree en vigueur">
-            <input id="aciVerification" placeholder="Verification apres mise en place">
-            <input id="aciTraceAction" placeholder="Reference action corrective">
-            <input id="aciTraceAudit" placeholder="Reference audit">
-            <input id="aciTraceComplaint" placeholder="Reference reclamation">
-            <input id="aciArchive" placeholder="Archivage / emplacement">
-            <button class="btn" id="aciSave" type="button">Enregistrer</button>
+          <div style="display:grid;gap:14px">
+            <div class="card">
+              <h3 style="margin:0 0 12px">1. Demandeur</h3>
+              <div class="g4">
+                <input id="aciNo" placeholder="Numero de la demande">
+                <input id="aciDate" type="date" title="Date de la demande">
+                <input id="aciRequester" placeholder="Nom du demandeur">
+                <input id="aciDept" placeholder="Service / departement">
+                <input id="aciContact" placeholder="Contact email / telephone">
+              </div>
+            </div>
+            <div class="card">
+              <h3 style="margin:0 0 12px">2. Demande</h3>
+              <div class="g4">
+                <input id="aciDocTitle" placeholder="Titre du document">
+                <input id="aciDocRef" placeholder="Code / reference documentaire">
+                <input id="aciVersion" placeholder="Version actuelle">
+                <input id="aciVersionDate" type="date" title="Date version en vigueur">
+                <select id="aciType">
+                  <option>Correction</option>
+                  <option>Mise a jour</option>
+                  <option>Suppression</option>
+                  <option>Creation</option>
+                </select>
+                <select id="aciReason">
+                  <option>Non-conformite</option>
+                  <option>Audit interne/externe</option>
+                  <option>Amelioration</option>
+                  <option>Changement reglementaire</option>
+                  <option>Retour client</option>
+                </select>
+                <textarea id="aciDesc" placeholder="Description claire des changements souhaites"></textarea>
+                <textarea id="aciPart" placeholder="Parties du document concernees"></textarea>
+                <input id="aciGoal" placeholder="Objectif attendu">
+              </div>
+            </div>
+            <div class="card">
+              <h3 style="margin:0 0 12px">3. Traitement</h3>
+              <div class="g4">
+                <input id="aciImpactProcess" placeholder="Impact sur le processus">
+                <input id="aciImpactService" placeholder="Impact sur les produits / services">
+                <input id="aciImpactPeople" placeholder="Impact sur le personnel / formation">
+                <input id="aciImpactEquip" placeholder="Impact sur les equipements / methodes">
+                <select id="aciCriticality">
+                  <option>Faible</option>
+                  <option>Moyenne</option>
+                  <option>Critique</option>
+                </select>
+                <input id="aciQualityManager" placeholder="Responsable qualite">
+                <input id="aciProcessOwner" placeholder="Responsable du processus">
+                <select id="aciDecision">
+                  <option>Acceptee</option>
+                  <option>Refusee</option>
+                  <option>A revoir</option>
+                </select>
+                <input id="aciValidationDate" type="date" title="Date validation">
+                <input id="aciImplOwner" placeholder="Responsable de la modification">
+                <input id="aciPlannedDate" type="date" title="Date prevue de mise a jour">
+                <input id="aciRevisedVersion" placeholder="Version revisee">
+                <input id="aciEffectiveDate" type="date" title="Date entree en vigueur">
+                <input id="aciVerification" placeholder="Verification apres mise en place">
+                <input id="aciTraceAction" placeholder="Reference action corrective">
+                <input id="aciTraceAudit" placeholder="Reference audit">
+                <input id="aciTraceComplaint" placeholder="Reference reclamation">
+                <input id="aciArchive" placeholder="Archivage / emplacement">
+              </div>
+              <div class="acts" style="justify-content:flex-end">
+                <button class="btn" id="aciSave" type="button">Enregistrer</button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="tb">
