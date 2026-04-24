@@ -3545,11 +3545,53 @@
                   src="assets/right arrow.png" alt="right arrow" class="arrow"></button></div>
           </div>
         </div>
-        <div id="stats" class="h"></div>
-        <div id="trailA" class="h"></div>
-        <div id="alerts" class="h"></div>
-        <div id="quick" class="h"></div>
-        <div id="diagDash" class="h"></div>
+        <div class="card">
+          <h3>Vue globale de l'organisme</h3>
+          <div class="mut" style="margin-bottom:12px">Indicateurs, alertes, conformite et activite des modules</div>
+          <div class="row s4" id="stats"></div>
+        </div>
+        <div class="row s2">
+          <div class="card">
+            <h3>Indicateurs qualite</h3>
+            <div id="quick" class="list"></div>
+          </div>
+          <div class="card">
+            <h3>Resultat du diagnostic ISO 17025</h3>
+            <div id="diagDash" class="list"></div>
+          </div>
+        </div>
+        <div class="row s2">
+          <div class="card">
+            <h3>Courbes et diagrammes de suivi</h3>
+            <div id="dbCharts"></div>
+          </div>
+          <div class="card">
+            <h3>Etat dynamique des modules</h3>
+            <div class="tb">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Module</th>
+                    <th>Volume</th>
+                    <th>Etat actuel</th>
+                    <th>Indicateur</th>
+                  </tr>
+                </thead>
+                <tbody id="dbModuleTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row s2">
+          <div class="card">
+            <h3>Alertes prioritaires</h3>
+            <div id="alerts" class="list"></div>
+          </div>
+          <div class="card">
+            <h3>Activite recente</h3>
+            <div id="trailA" class="list"></div>
+          </div>
+        </div>
       </section>
 
       <section id="docs" class="row h">
@@ -5684,11 +5726,128 @@
     function goBackPage() { if (pageHistory.length) { nextPageHistory.push(currentPage); page(pageHistory.pop(), true); return } if (sessionActive() && currentPage === "hub") { logout(); return } if (sessionActive()) { nextPageHistory.push(currentPage); page("hub", true) } }
     function goNextPage() { if (!sessionActive() || !nextPageHistory.length) return; page(nextPageHistory.pop(), true) }
     function render() { dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); repoView(); updateModuleHeadTitles(); updateModuleRails(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept }
-    function dashboardStats() { const a = [["Documents", s.docs.length, "DOC", "k-blue"], ["Equipements", s.eq.length, "EQ", "k-green"], ["Non-conformites ouvertes", s.nc.filter(x => x.st === "Ouverte").length, "NC", "k-orange"], ["Audits a realiser", s.aud.filter(x => x.st !== "Cloture").length, "AUD", "k-red"]]; $("#stats").innerHTML = a.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">Mise a jour locale</div></div></div></div>`).join("") }
+    function dashboardBarCard(title, value, max, color, note = "") { const pct = max > 0 ? Math.max(8, Math.min(100, Math.round((value / max) * 100))) : 0; return `<div class="mini" style="padding:14px 16px"><strong>${esc(title)}</strong><span class="bl">${esc(String(value))}</span><div style="margin-top:10px;height:10px;border-radius:999px;background:#edf3ff;overflow:hidden"><div style="width:${pct}%;height:100%;background:${color};border-radius:999px"></div></div>${note ? `<p class="mut" style="margin:8px 0 0">${esc(note)}</p>` : ""}</div>` }
+    function dashboardSparkline(values, color = "#3f6fd8", width = 280, height = 110) { const list = (values || []).map(v => Number(v) || 0), max = Math.max(...list, 1), min = Math.min(...list, 0), pad = 12, usableW = width - pad * 2, usableH = height - pad * 2, step = list.length > 1 ? usableW / (list.length - 1) : usableW, norm = v => { const ratio = max === min ? 0.5 : (v - min) / (max - min); return height - pad - (ratio * usableH) }, pts = list.map((v, i) => `${pad + i * step},${norm(v)}`), area = [`${pad},${height - pad}`, ...pts, `${pad + usableW},${height - pad}`].join(" "), line = pts.join(" "); return `<svg viewBox="0 0 ${width} ${height}" aria-label="Courbe de suivi"><defs><linearGradient id="dashFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".28"></stop><stop offset="100%" stop-color="${color}" stop-opacity=".04"></stop></linearGradient></defs><polyline points="${area}" fill="url(#dashFill)" stroke="none"></polyline><polyline points="${line}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>${pts.map(p => { const [x, y] = p.split(","); return `<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"></circle>` }).join("")}</svg>` }
+    function dashboardDonut(values, colors, size = 150) { const total = Math.max(values.reduce((n, v) => n + (Number(v) || 0), 0), 1), r = size * 0.34, c = size / 2, stroke = size * 0.16; let offset = 0; const segs = values.map((v, i) => { const value = Number(v) || 0, len = (value / total) * (Math.PI * 2 * r), dash = `${len} ${Math.PI * 2 * r - len}`, part = `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${colors[i] || "#3f6fd8"}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${c} ${c})"></circle>`; offset += len; return part }).join(""); return `<svg viewBox="0 0 ${size} ${size}" aria-label="Diagramme circulaire"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef3ff" stroke-width="${stroke}"></circle>${segs}<text x="${c}" y="${c - 2}" text-anchor="middle" font-size="26" font-weight="800" fill="#1f2d4d">${values.reduce((n, v) => n + (Number(v) || 0), 0)}</text><text x="${c}" y="${c + 20}" text-anchor="middle" font-size="11" fill="#6c7a96">elements</text></svg>` }
+    function dashboardModuleSummary() {
+      const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], aud = s.aud || [], recl = reclamationItems(), sat = satItems(), risk = riskItems(), pers = personnelItems(), prest = prestItems ? prestItems() : (s.prest || []), swot = swotItems ? swotItems() : [], aci = aciItems ? aciItems() : [], dm = diagMetrics();
+      return [
+        ["Maitrise documentaire", docs.length, docs.filter(x => ["Approuve", "Diffuse", "Valide"].includes(x.st)).length, "Documents valides ou diffuses"],
+        ["Gestion des equipements", eq.length, eq.filter(x => x.st === "Valide").length, "Equipements au statut valide"],
+        ["Non-conformites", nc.length, nc.filter(x => x.st !== "Cloturee").length, "NC ouvertes ou en cours"],
+        ["Audits", aud.length, aud.filter(x => x.st !== "Cloture").length, "Audits a suivre"],
+        ["Reclamations client", recl.length, recl.filter(x => x.status !== "Cloturee").length, "Reclamations non cloturees"],
+        ["Satisfaction client", sat.length, sat.length ? `${Math.round(sat.reduce((n, x) => n + (Number(x.score) || 0), 0) / sat.length)}%` : "0%", "Moyenne globale des enquetes"],
+        ["Analyse de risque", risk.length, risk.filter(x => riskScore(x) >= 15).length, "Risques critiques"],
+        ["Personnel", pers.length, pers.filter(x => x.status === "Actif").length, "Personnel actif"],
+        ["Prestateur externe", prest.length, prest.filter(x => x.evalDecision === "RETENU").length, "Prestataires retenus"],
+        ["Analyse SWOT", swot.length, swot.filter(x => x.follow === "en cours").length, "Actions SWOT en cours"],
+        ["Amelioration continue", aci.length, aci.filter(x => x.decision !== "Refusee").length, "Demandes actives"],
+        ["Diagnostic ISO 17025", `${dm.score}%`, `${dm.completion}%`, "Score global / completion"]
+      ]
+    }
+    function dashboardCharts() {
+      const box = $("#dbCharts"); if (!box) return;
+      const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], aud = s.aud || [], risk = riskItems(), recl = reclamationItems(), sat = satItems();
+      const docStatuses = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"].map(st => [st, docs.filter(x => (x.st || "Brouillon") === st).length, st === "Approuve" || st === "Diffuse" ? "#2bb673" : st === "Archive" ? "#ef4444" : "#4b7bec"]);
+      const eqStatuses = [["Valide", eq.filter(x => x.st === "Valide").length, "#2bb673"], ["A etalonner", eq.filter(x => x.st === "A etalonner").length, "#f59e0b"], ["Autres", eq.filter(x => !["Valide", "A etalonner"].includes(x.st)).length, "#6b7a96"]];
+      const ncStates = [["Ouvertes", nc.filter(x => x.st === "Ouverte").length, "#ef4444"], ["En cours", nc.filter(x => x.st === "En cours").length, "#f59e0b"], ["Cloturees", nc.filter(x => x.st === "Cloturee").length, "#2bb673"]];
+      const auditStates = [["Planifies", aud.filter(x => x.st === "Planifie").length, "#4b7bec"], ["En cours", aud.filter(x => x.st === "En cours").length, "#f59e0b"], ["Clotures", aud.filter(x => x.st === "Cloture").length, "#2bb673"]];
+      const riskStates = [["Critiques", risk.filter(x => riskScore(x) >= 15).length, "#ef4444"], ["A surveiller", risk.filter(x => riskScore(x) >= 6 && riskScore(x) < 15).length, "#f59e0b"], ["Acceptables", risk.filter(x => riskScore(x) < 6).length, "#2bb673"]];
+      const satSeries = (sat.length ? sat.slice(0, 6) : [{ score: 0 }, { score: 0 }, { score: 0 }, { score: 0 }]).map(x => Number(x.score) || 0).reverse();
+      const complaintSeries = [["Ouvertes", recl.filter(x => x.status === "Ouverte").length], ["En cours", recl.filter(x => x.status === "En cours").length], ["Cloturees", recl.filter(x => x.status === "Cloturee").length]];
+      box.innerHTML = `
+        <div class="row s2">
+          <div class="card">
+            <h3>Cycle documentaire</h3>
+            <div class="list">${docStatuses.map(x => dashboardBarCard(x[0], x[1], Math.max(docs.length, 1), x[2])).join("")}</div>
+          </div>
+          <div class="card">
+            <h3>Etat des non-conformites</h3>
+            <div style="display:grid;grid-template-columns:170px 1fr;gap:18px;align-items:center">
+              <div>${dashboardDonut(ncStates.map(x => x[1]), ncStates.map(x => x[2]))}</div>
+              <div class="list">${ncStates.map(x => dashboardBarCard(x[0], x[1], Math.max(nc.length, 1), x[2])).join("")}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row s2">
+          <div class="card">
+            <h3>Tendance satisfaction client</h3>
+            <div class="it">
+              ${dashboardSparkline(satSeries, "#3f6fd8")}
+              <p class="mut">Courbe des derniers scores de satisfaction enregistres.</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Risques et audits</h3>
+            <div class="list">${riskStates.map(x => dashboardBarCard(x[0], x[1], Math.max(risk.length, 1), x[2])).join("")}${auditStates.map(x => dashboardBarCard("Audit - " + x[0], x[1], Math.max(aud.length, 1), x[2])).join("")}</div>
+          </div>
+        </div>
+        <div class="row s2">
+          <div class="card">
+            <h3>Suivi des equipements</h3>
+            <div class="list">${eqStatuses.map(x => dashboardBarCard(x[0], x[1], Math.max(eq.length, 1), x[2])).join("")}</div>
+          </div>
+          <div class="card">
+            <h3>Reclamations client</h3>
+            <div class="list">${complaintSeries.map(x => dashboardBarCard(x[0], x[1], Math.max(recl.length, 1), x[0] === "Cloturees" ? "#2bb673" : x[0] === "En cours" ? "#f59e0b" : "#ef4444")).join("")}</div>
+          </div>
+        </div>`;
+    }
+    function dashboardStats() {
+      const stats = $("#stats"), moduleTable = $("#dbModuleTable");
+      const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], aud = s.aud || [], recl = reclamationItems(), sat = satItems(), risk = riskItems(), pers = personnelItems(), prest = prestItems ? prestItems() : (s.prest || []), dm = diagMetrics();
+      const kpis = [
+        ["Documents maitrises", docs.filter(x => ["Approuve", "Diffuse", "Valide"].includes(x.st)).length, "DOC", "k-blue", docs.length + " document(s) au total"],
+        ["Equipements valides", eq.filter(x => x.st === "Valide").length, "EQ", "k-green", eq.length + " equipement(s) suivis"],
+        ["NC ouvertes", nc.filter(x => x.st !== "Cloturee").length, "NC", "k-orange", nc.length + " NC au registre"],
+        ["Score ISO 17025", dm.score + "%", "ISO", "k-red", "Completion " + dm.completion + "%"],
+        ["Reclamations actives", recl.filter(x => x.status !== "Cloturee").length, "REC", "k-blue", recl.length + " reclamation(s)"],
+        ["Satisfaction moyenne", (sat.length ? Math.round(sat.reduce((n, x) => n + (Number(x.score) || 0), 0) / sat.length) : 0) + "%", "SAT", "k-green", sat.length + " enquete(s)"],
+        ["Risques critiques", risk.filter(x => riskScore(x) >= 15).length, "RSK", "k-red", risk.length + " risque(s) suivis"],
+        ["Prestataires retenus", prest.filter(x => x.evalDecision === "RETENU").length, "PRE", "k-orange", prest.length + " prestataire(s)"]
+      ];
+      if (stats) stats.innerHTML = kpis.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">${x[4]}</div></div></div></div>`).join("");
+      if (moduleTable) moduleTable.innerHTML = dashboardModuleSummary().map(x => `<tr><td><b>${esc(x[0])}</b></td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
+      dashboardCharts();
+    }
     function stats() { const a = [["Documents", s.docs.length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾", "k-blue"], ["Equipements", s.eq.length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "k-green"], ["Non-conformites ouvertes", s.nc.filter(x => x.st === "Ouverte").length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â", "k-orange"], ["Audits a realiser", s.aud.filter(x => x.st !== "Cloture").length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¹", "k-red"]]; $("#stats").innerHTML = a.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">Mise a jour locale</div></div></div></div>`).join("") }
-    function alerts() { let a = []; s.eq.filter(x => x.st !== "Valide").forEach(x => a.push([x.id + " - " + x.n, "Statut: " + x.st])); s.nc.filter(x => x.st !== "Cloturee").forEach(x => a.push([x.ref, x.desc])); (s.revc || []).filter(x => !(x.mail && x.mail !== "-") || !(x.phone && x.phone !== "-")).forEach(x => a.push([x.ref + " - " + x.client, "Liste client : coordonnees a completer"])); (s.prest || []).filter(x => x.st !== "Actif").forEach(x => a.push([x.ref + " - " + x.name, "Prestateur externe : " + x.st])); $("#alerts").innerHTML = a.length ? a.slice(0, 8).map(x => `<div class="it"><b>${x[0]}</b><p>${x[1]}</p></div>`).join("") : `<div class="e">Aucune alerte.</div>` }
-    function trail() { ensureTrailWeek(); const info = `<div class="mini"><strong>Semaine active</strong><span class="bl">${esc(s.trailWeek || weekKey())}</span></div><div class="mini"><strong>Actions enregistrees</strong><span class="bl">${(s.trail || []).length}</span></div>`, items = (s.trail || []).slice(0, 12).map(x => `<div class="it"><b>${esc(x.a)} - ${esc(x.m)}</b><p>${esc(x.u)}${x.email ? " - " + esc(x.email) : ""}${x.role ? " - " + esc(x.role) : ""}</p><p>${esc(x.t)} - ${esc(x.x)}</p></div>`).join("") || `<div class="e">Aucune modification cette semaine.</div>`; $("#trailA").innerHTML = info + items; $("#trailB").innerHTML = weeklyReportPreview() || items }
-    function quick() { const dm = diagMetrics(), st = diagState(), q = [["Documents maitrises", s.docs.filter(x => ["Valide", "Approuve", "Diffuse"].includes(x.st)).length], ["Equipements a etalonner", s.eq.filter(x => x.st === "A etalonner").length], ["NC ouvertes", s.nc.filter(x => x.st !== "Cloturee").length], ["Clients enregistres", (s.revc || []).length], ["Diagnostic ISO 17025", dm.score + "%"]]; $("#quick").innerHTML = q.map(x => `<div class="mini"><strong>${x[0]}</strong><span class="bl">${x[1]}</span></div>`).join(""); $("#diagDash").innerHTML = `<div class="dash-diag"><div class="it"><div class="diag-score">${dm.score}%</div><p>Niveau : ${diagLevel(dm.score)}</p><p>Evaluateur : ${st.person || "-"}</p><p>Date d'evaluation : ${st.date || "-"}</p><p>Taux de completion : ${dm.completion}%</p></div><div class="radar-box">${radarSvg(dm.chapters, 190)}</div></div><div class="mini"><strong>Chapitre prioritaire</strong><span class="${diagTheme([...dm.chapters].sort((a, b) => a.score - b.score)[0].score)}">${[...dm.chapters].sort((a, b) => a.score - b.score)[0].chapter}</span></div>` }
+    function alerts() {
+      const box = $("#alerts"); if (!box) return;
+      let a = [];
+      (s.eq || []).filter(x => x.st !== "Valide").forEach(x => a.push([`${x.id} - ${x.n}`, `Equipement a surveiller : ${x.st}`]));
+      (s.nc || []).filter(x => x.st !== "Cloturee").forEach(x => a.push([x.ref, x.desc || "Non-conformite a traiter"]));
+      reclamationItems().filter(x => x.status !== "Cloturee").forEach(x => a.push([`${x.no} - ${x.client}`, `Reclamation client : ${x.status}`]));
+      (s.revc || []).filter(x => !(x.mail && x.mail !== "-") || !(x.phone && x.phone !== "-")).forEach(x => a.push([`${x.ref} - ${x.client}`, "Liste client : coordonnees a completer"]));
+      (prestItems ? prestItems() : (s.prest || [])).filter(x => x.evalDecision === "NON RETENU" || x.st !== "Actif").forEach(x => a.push([`${x.ref} - ${x.name}`, `Prestateur externe : ${x.evalDecision || x.st}`]));
+      riskItems().filter(x => riskScore(x) >= 15).forEach(x => a.push([`Risque critique - ${x.chapter}`, x.risk]));
+      box.innerHTML = a.length ? a.slice(0, 10).map(x => `<div class="it"><b>${esc(x[0])}</b><p>${esc(x[1])}</p></div>`).join("") : `<div class="e">Aucune alerte prioritaire.</div>`;
+    }
+    function trail() {
+      ensureTrailWeek();
+      const info = `<div class="mini"><strong>Semaine active</strong><span class="bl">${esc(s.trailWeek || weekKey())}</span></div><div class="mini"><strong>Actions enregistrees</strong><span class="bl">${(s.trail || []).length}</span></div>`;
+      const items = (s.trail || []).slice(0, 12).map(x => `<div class="it"><b>${esc(x.a)} - ${esc(x.m)}</b><p>${esc(x.u)}${x.email ? " - " + esc(x.email) : ""}${x.role ? " - " + esc(x.role) : ""}</p><p>${esc(x.t)} - ${esc(x.x)}</p></div>`).join("") || `<div class="e">Aucune modification cette semaine.</div>`;
+      const boxA = $("#trailA"), boxB = $("#trailB");
+      if (boxA) boxA.innerHTML = info + items;
+      if (boxB) boxB.innerHTML = weeklyReportPreview() || items;
+    }
+    function quick() {
+      const dm = diagMetrics(), st = diagState(), sat = satItems(), risk = riskItems(), recl = reclamationItems();
+      const lowChapter = [...dm.chapters].sort((a, b) => a.score - b.score)[0];
+      const q = [
+        ["Documents maitrises", (s.docs || []).filter(x => ["Valide", "Approuve", "Diffuse"].includes(x.st)).length],
+        ["Equipements a etalonner", (s.eq || []).filter(x => x.st === "A etalonner").length],
+        ["NC ouvertes", (s.nc || []).filter(x => x.st !== "Cloturee").length],
+        ["Clients enregistres", (s.revc || []).length],
+        ["Satisfaction moyenne", (sat.length ? Math.round(sat.reduce((n, x) => n + (Number(x.score) || 0), 0) / sat.length) : 0) + "%"],
+        ["Risques critiques", risk.filter(x => riskScore(x) >= 15).length],
+        ["Reclamations ouvertes", recl.filter(x => x.status === "Ouverte").length],
+        ["Diagnostic ISO 17025", dm.score + "%"]
+      ];
+      const quickBox = $("#quick"), diagBox = $("#diagDash");
+      if (quickBox) quickBox.innerHTML = q.map(x => `<div class="mini"><strong>${esc(x[0])}</strong><span class="bl">${esc(String(x[1]))}</span></div>`).join("");
+      if (diagBox) diagBox.innerHTML = `<div class="dash-diag"><div class="it"><div class="diag-score">${dm.score}%</div><p>Niveau : ${diagLevel(dm.score)}</p><p>Evaluateur : ${st.person || "-"}</p><p>Date d'evaluation : ${st.date || "-"}</p><p>Taux de completion : ${dm.completion}%</p><p>Questions evaluees : ${dm.answered}/${DIAG_ITEMS.length}</p></div><div class="radar-box">${radarSvg(dm.chapters, 190)}</div></div><div class="mini"><strong>Chapitre prioritaire</strong><span class="${diagTheme(lowChapter.score)}">${lowChapter.chapter}</span></div>`;
+    }
     const DOC_PROCS = ["Processus pilotage", "Processus operationnel", "Processus support"], ORG_TOP_DOC_TYPES = ["Manuel qualite", "Politique qualite"], ORG_DOC_TYPES = ["Procedure", "Instruction", "Formulaire", "Enregistrement"], DOC_TYPES = [...ORG_TOP_DOC_TYPES, ...ORG_DOC_TYPES], DOC_FORMATS = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"], ORG_DIR_BASE = "D:\\QUALI_Organisme", ORG_TEMPLATES = { Procedure: "D:\\stage prjet fin d'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©tude 2026\\cahier de charge d'application\\modÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨le procÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dure.docx", Instruction: "D:\\stage prjet fin d'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©tude 2026\\cahier de charge d'application\\modÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨le instruction.docx", Formulaire: "D:\\stage prjet fin d'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©tude 2026\\cahier de charge d'application\\modÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨le formulaire.docx", Enregistrement: "D:\\stage prjet fin d'ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©tude 2026\\cahier de charge d'application\\modÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨le Enregistrement.docx" };
     function normDoc(x) { const st = x.st === "Valide" ? "Approuve" : x.st === "A valider" ? "En revue" : x.st || "Brouillon"; return { ...x, p: x.p || "Processus support", ie: x.ie || "-", st, verif: x.verif || "-", app: x.app || "-", review: x.review || "-", diff: x.diff || "-", body: x.body || "", history: x.history || [] } }
     const MODEL_BASE = String.raw`D:\stage prjet fin d'étude 2026\cahier de charge d'application`;
