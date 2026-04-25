@@ -3228,6 +3228,96 @@
       box-shadow: none;
     }
 
+    .notif-menu {
+      position: fixed;
+      z-index: 9999;
+      width: min(420px, calc(100vw - 20px));
+      max-height: min(70vh, 560px);
+      overflow: auto;
+      padding: 12px;
+      border: 1px solid #dbe6f5;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 18px 42px rgba(34, 55, 99, .18);
+    }
+
+    .notif-menu.h {
+      display: none;
+    }
+
+    .notif-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .notif-head b {
+      color: #25324b;
+      font-size: 16px;
+    }
+
+    .notif-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .notif-item {
+      border: 1px solid #dbe6f5;
+      border-left: 6px solid #236bd8;
+      border-radius: 14px;
+      padding: 12px;
+      background: #f8fbff;
+    }
+
+    .notif-item.overdue {
+      border-left-color: #ef4444;
+      background: #fff5f5;
+    }
+
+    .notif-item.soon {
+      border-left-color: #f59e0b;
+      background: #fff9ef;
+    }
+
+    .notif-item b {
+      display: block;
+      color: #25324b;
+      margin-bottom: 4px;
+    }
+
+    .notif-item p {
+      margin: 0;
+      color: #52627f;
+      line-height: 1.5;
+    }
+
+    .notif-menu .btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .hub-action-icon[data-notif-count]:not([data-notif-count="0"])::after {
+      content: attr(data-notif-count);
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-sizing: border-box;
+    }
+
     .hub-app-head b {
       display: block;
       color: #25324b;
@@ -5755,7 +5845,7 @@
     function page(id, skipHistory) { const m = { hub: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], db: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], docs: ["Maitrise documentaire", ""], docorg: ["Documentation", ""], eq: ["Gestion des equipements", ""], nc: ["Non-conformites", ""], aud: ["Audits", ""], revc: ["Liste client", ""], usr: ["Utilisateurs", ""], set: ["Parametres", ""], diag: ["Diagnostic ISO 17025", ""], risk: ["Analyse de risque", ""], swot: ["Analyse SWOT", ""], sat: ["Satisfaction client", ""], recl: ["Reclamation client", ""], pers: ["Personnel", ""], prest: ["Prestateur externe", ""], aci: ["Amelioration continue", ""], plan: ["Planning", ""], repo: ["Dossier principal", ""] }; if (!skipHistory && currentPage && currentPage !== id) { pageHistory.push(currentPage); nextPageHistory = [] } currentPage = id;["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== id)); $("#app").classList.toggle("hub-mode", id === "hub"); $all("#nav button").forEach(b => b.classList.toggle("on", b.dataset.p === id)); $("#pt").textContent = m[id][0]; $("#ps").textContent = m[id][1]; placeBackButton(); updateBackButton() }
     function goBackPage() { if (pageHistory.length) { nextPageHistory.push(currentPage); page(pageHistory.pop(), true); return } if (sessionActive() && currentPage === "hub") { logout(); return } if (sessionActive()) { nextPageHistory.push(currentPage); page("hub", true) } }
     function goNextPage() { if (!sessionActive() || !nextPageHistory.length) return; page(nextPageHistory.pop(), true) }
-    function render() { dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); repoView(); updateModuleHeadTitles(); updateModuleRails(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept }
+    function render() { dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); repoView(); updateModuleHeadTitles(); updateModuleRails(); updateNotificationBadges(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept }
     function dashboardBarCard(title, value, max, color, note = "") { const pct = max > 0 ? Math.max(8, Math.min(100, Math.round((value / max) * 100))) : 0; return `<div class="mini" style="padding:14px 16px"><strong>${esc(title)}</strong><span class="bl">${esc(String(value))}</span><div style="margin-top:10px;height:10px;border-radius:999px;background:#edf3ff;overflow:hidden"><div style="width:${pct}%;height:100%;background:${color};border-radius:999px"></div></div>${note ? `<p class="mut" style="margin:8px 0 0">${esc(note)}</p>` : ""}</div>` }
     function dashboardSparkline(values, color = "#3f6fd8", width = 280, height = 110) { const list = (values || []).map(v => Number(v) || 0), max = Math.max(...list, 1), min = Math.min(...list, 0), pad = 12, usableW = width - pad * 2, usableH = height - pad * 2, step = list.length > 1 ? usableW / (list.length - 1) : usableW, norm = v => { const ratio = max === min ? 0.5 : (v - min) / (max - min); return height - pad - (ratio * usableH) }, pts = list.map((v, i) => `${pad + i * step},${norm(v)}`), area = [`${pad},${height - pad}`, ...pts, `${pad + usableW},${height - pad}`].join(" "), line = pts.join(" "); return `<svg viewBox="0 0 ${width} ${height}" aria-label="Courbe de suivi"><defs><linearGradient id="dashFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".28"></stop><stop offset="100%" stop-color="${color}" stop-opacity=".04"></stop></linearGradient></defs><polyline points="${area}" fill="url(#dashFill)" stroke="none"></polyline><polyline points="${line}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>${pts.map(p => { const [x, y] = p.split(","); return `<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"></circle>` }).join("")}</svg>` }
     function dashboardDonut(values, colors, size = 150) { const total = Math.max(values.reduce((n, v) => n + (Number(v) || 0), 0), 1), r = size * 0.34, c = size / 2, stroke = size * 0.16; let offset = 0; const segs = values.map((v, i) => { const value = Number(v) || 0, len = (value / total) * (Math.PI * 2 * r), dash = `${len} ${Math.PI * 2 * r - len}`, part = `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${colors[i] || "#3f6fd8"}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${c} ${c})"></circle>`; offset += len; return part }).join(""); return `<svg viewBox="0 0 ${size} ${size}" aria-label="Diagramme circulaire"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef3ff" stroke-width="${stroke}"></circle>${segs}<text x="${c}" y="${c - 2}" text-anchor="middle" font-size="26" font-weight="800" fill="#1f2d4d">${values.reduce((n, v) => n + (Number(v) || 0), 0)}</text><text x="${c}" y="${c + 20}" text-anchor="middle" font-size="11" fill="#6c7a96">elements</text></svg>` }
@@ -5953,6 +6043,23 @@
     function storePlanningSection(id, label) { planSaveMeta()[id] = now(); log("Enregistrement", "Planning", label + " enregistre manuellement"); save(label + " enregistre"); render() }
     function renderPlanningSaveMeta() { const mapping = [["planAuditLastSaved", "audit"], ["planInterLastSaved", "inter"], ["planHabLastSaved", "habil"], ["planCalLastSaved", "cal"]]; mapping.forEach(([id, key]) => { const el = $("#" + id); if (el) el.textContent = "Derniere modification : " + planSaveLabel(key) }) }
     function planCell(v) { if (!v) return `<span class="mut">-</span>`; const cls = v === "Reporte" || v === "Operateur non habilite" ? "er" : v === "Planifie" || v === "Habilitation maintenue" ? "wa" : v === "1ere habilitation" ? "bl" : "ok"; return `<span class="${cls}">${esc(v)}</span>` }
+    function planMonthDate(year, monthLabel) { const idx = PLAN_MONTHS_FULL.indexOf(monthLabel), y = Number(year); if (idx < 0 || !y) return null; return new Date(y, idx + 1, 0) }
+    function planDaysLeft(date) { if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null; const today = new Date(); today.setHours(0, 0, 0, 0); const target = new Date(date); target.setHours(0, 0, 0, 0); return Math.round((target - today) / 86400000) }
+    function planningNotifications() {
+      const out = [];
+      const classify = days => days === null ? "" : days < 0 ? "overdue" : days <= 30 ? "soon" : "";
+      const add = (state, due, title, text) => { if (state) out.push({ state, due, title, text, page: "plan" }) };
+      planAuditItems().forEach(row => Object.entries(row.months || {}).forEach(([month, mark]) => { if (!mark) return; const due = planMonthDate(row.year || PLAN_AUDIT_TEMPLATE.year, month), days = planDaysLeft(due); add(classify(days), due, `Planning d'audit interne - ${row.activity || "-"}`, `${month} ${row.year || PLAN_AUDIT_TEMPLATE.year} : ${mark}. ${days < 0 ? "Date depassee." : "Echeance proche."}`) }));
+      planInterItems().forEach(row => Object.entries(row.months || {}).forEach(([month, mark]) => { if (!mark) return; const due = planMonthDate(row.year, month), days = planDaysLeft(due); add(classify(days), due, `Planning des inter-comparaisons - ${row.scope || "-"}`, `${month} ${row.year || "-"} : ${mark}${row.specify && row.specify !== "-" ? " - " + row.specify : ""}. ${days < 0 ? "Date depassee." : "Echeance proche."}`) }));
+      Object.entries(PLAN_HABIL_TEMPLATE).forEach(([domain, data]) => ((data && data.operators) || []).forEach(op => Object.entries(op.months || {}).forEach(([month, mark]) => { if (!mark) return; const due = planMonthDate(op.year, month), days = planDaysLeft(due); add(classify(days), due, `Planning de maintien d'habilitation - ${domain}`, `${op.name || "-"} / ${op.spec || "-"} - ${month} ${op.year || "-"} : ${mark}. ${days < 0 ? "Date depassee." : "Echeance proche."}`) })));
+      planCalKeys().forEach(domain => planCalRows(domain).forEach(row => { const iso = row.nextDate || planCalNextDate(row.lastDate || planCalDateValue(row.date), row.periodMonths || planCalPeriodMonths(row.period)); const due = iso && iso !== "-" ? new Date(iso) : null, days = planDaysLeft(due); add(classify(days), due, `Planning d'etalonnage - ${domain}`, `${row.designation || "-"} (${row.code || "-"}) - prochain etalonnage : ${iso || "-"}. ${days < 0 ? "Date depassee." : "Echeance proche."}`) }));
+      return out.sort((a, b) => { const pa = a.state === "overdue" ? 0 : 1, pb = b.state === "overdue" ? 0 : 1; return pa - pb || ((a.due && b.due) ? a.due - b.due : 0) }).slice(0, 25)
+    }
+    function notificationMenu() { let m = $("#notificationMenu"); if (!m) { m = document.createElement("div"); m.id = "notificationMenu"; m.className = "notif-menu h"; document.body.appendChild(m) } return m }
+    function closeNotificationMenu() { const m = $("#notificationMenu"); if (m) m.classList.add("h") }
+    function renderNotificationMenu() { const items = planningNotifications(), m = notificationMenu(); m.innerHTML = `<div class="notif-head"><b>Rappels Planning</b><span class="${items.some(x => x.state === "overdue") ? "er" : "bl"}">${items.length} notification${items.length > 1 ? "s" : ""}</span></div><div class="notif-list">${items.length ? items.map(x => `<div class="notif-item ${x.state}"><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div>`).join("") : `<div class="e">Aucune date proche ou depassee dans les plannings.</div>`}</div><button type="button" class="btn" data-go="plan">Ouvrir le module Planning</button>` }
+    function toggleNotificationMenu(btn) { const m = notificationMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } renderNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 580, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - Math.min(420, window.innerWidth - 20), r.right - 380)) + "px"; m.classList.remove("h") }
+    function updateNotificationBadges() { const count = planningNotifications().length; document.querySelectorAll('.hub-action-icon[aria-label^="Notifications"]').forEach(btn => { btn.dataset.notifCount = String(count); btn.title = count ? `Notifications (${count})` : "Notifications"; btn.setAttribute("aria-label", count ? `Notifications (${count})` : "Notifications") }) }
     function planLegendHtml() { return `<div class="acts"><span class="ok">Planifie / realise</span><span class="wa">Planifie</span><span class="er">Reporte</span><span class="bl">1ere habilitation</span></div>` }
     function planAuditItems() { if (!Array.isArray(s.planAudit)) s.planAudit = c(PLAN_AUDIT_TEMPLATE.rows); return s.planAudit }
     function planAuditOptionsHtml() { const items = planAuditItems(); return `<option value="">Ligne a modifier / supprimer</option>` + items.map(x => `<option value="${esc(x.id)}">${esc(x.activity)} - ${esc(x.year || PLAN_AUDIT_TEMPLATE.year)}</option>`).join("") }
@@ -6284,7 +6391,7 @@
     function bindClick(id, fn) { const el = $("#" + id); if (el) el.addEventListener("click", e => { e.preventDefault(); fn(e) }) }
     function profileMenu() { let m = $("#profileMenu"); if (!m) { m = document.createElement("div"); m.id = "profileMenu"; m.className = "profile-menu h"; m.innerHTML = `<button type="button" data-profile-action="modules">Page des modules</button><button type="button" data-profile-action="profile">Parametre de profil</button><button type="button" data-profile-action="logout">Deconnecter</button><button type="button" data-profile-action="switch">Connecter a autre compte</button>`; document.body.appendChild(m) } return m }
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
-    function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
+    function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametre de profil ouvert"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
     bindClick("lbtn", login); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport);
     ["#ds", "#dpf", "#dtf", "#df", "#ods", "#odpf", "#odtf", "#odf", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
@@ -6348,7 +6455,7 @@
       });
     })();
     bindClick("procClose", closeProcessWindow);
-    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
+    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
     async function restoreRepo() { const h = await idbGet("repoHandle"); if (!h) return; if (await verifyHandle(h, false)) { repoHandle = h; s.repo.folderName = h.name; s.repo.linked = true; s.repo.mode = "Dossier reconnecte"; await scanRepo(h) } else { s.repo.mode = "Reconnecter le dossier local"; repoView() } }
     async function restoreOrgDir() { const h = await idbGet("orgHandle"); if (!h) return; if (await verifyHandle(h, false)) { orgHandle = h; orgRootName = h.name || "QUALI_Organisme"; if (activeOrgProc) await scanOrgProc(activeOrgProc) } }
     ensurePilotAccount();
