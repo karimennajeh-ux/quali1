@@ -4525,6 +4525,7 @@
             <option value="all">Toutes les feuilles</option>
             <option>risques impartialite</option>
             <option>risques d'activite</option>
+            <option>risques de confidentialite</option>
           </select>
           <span class="mut" id="riskCount"></span>
         </div>
@@ -4545,8 +4546,45 @@
             <select id="riskCategory">
               <option>risques impartialite</option>
               <option>risques d'activite</option>
+              <option>risques de confidentialite</option>
             </select>
-            <input id="riskChapter" placeholder="Paragraphe / chapitre de la norme">
+            <input id="riskChapter" list="riskClauseList" placeholder="Paragraphe / chapitre de la norme ISO/IEC 17025:2017">
+            <datalist id="riskClauseList">
+              <option value="4.1 - Impartialite"></option>
+              <option value="4.2 - Confidentialite"></option>
+              <option value="5.1 - Entite juridique"></option>
+              <option value="5.2 - Identification de la direction"></option>
+              <option value="5.3 - Domaine d'activite des laboratoires"></option>
+              <option value="5.4 - Activites conformes a la norme"></option>
+              <option value="5.5 - Structure organisationnelle"></option>
+              <option value="5.6 - Integrite du systeme de management"></option>
+              <option value="6.1 - Ressources generales"></option>
+              <option value="6.2 - Personnel"></option>
+              <option value="6.3 - Installations et conditions ambiantes"></option>
+              <option value="6.4 - Equipements"></option>
+              <option value="6.5 - Raccordement metrologique"></option>
+              <option value="6.6 - Produits et services fournis par des prestataires externes"></option>
+              <option value="7.1 - Revue des demandes, appels d'offres et contrats"></option>
+              <option value="7.2 - Selection, verification et validation des methodes"></option>
+              <option value="7.3 - Echantillonnage"></option>
+              <option value="7.4 - Manutention des objets d'essai ou d'etalonnage"></option>
+              <option value="7.5 - Enregistrements techniques"></option>
+              <option value="7.6 - Evaluation de l'incertitude de mesure"></option>
+              <option value="7.7 - Assurance de la validite des resultats"></option>
+              <option value="7.8 - Rapport sur les resultats"></option>
+              <option value="7.9 - Reclamations"></option>
+              <option value="7.10 - Travaux non conformes"></option>
+              <option value="7.11 - Maitrise des donnees et gestion de l'information"></option>
+              <option value="8.1 - Options"></option>
+              <option value="8.2 - Documentation du systeme de management"></option>
+              <option value="8.3 - Maitrise de la documentation du systeme de management"></option>
+              <option value="8.4 - Maitrise des enregistrements"></option>
+              <option value="8.5 - Actions a mettre en oeuvre face aux risques et opportunites"></option>
+              <option value="8.6 - Amelioration"></option>
+              <option value="8.7 - Actions correctives"></option>
+              <option value="8.8 - Audits internes"></option>
+              <option value="8.9 - Revues de direction"></option>
+            </datalist>
             <input id="riskText" placeholder="Risque">
             <select id="riskP">
               <option>1</option>
