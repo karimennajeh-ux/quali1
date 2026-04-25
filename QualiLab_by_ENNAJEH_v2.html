@@ -3046,6 +3046,9 @@
       place-items: center;
       box-shadow: none;
       cursor: pointer;
+      position: relative;
+      overflow: visible;
+      flex: 0 0 60px;
     }
 
     .hub-action-icon svg {
@@ -3066,6 +3069,10 @@
       transform: translateY(-2px);
       background: #1b5fc2;
       box-shadow: none;
+    }
+
+    .hub-action-icon[aria-label^="Notifications"]:hover {
+      transform: none;
     }
 
     .hub-node {
@@ -3291,6 +3298,10 @@
       margin: 0;
       color: #52627f;
       line-height: 1.5;
+    }
+
+    .notif-item[data-notif-key] {
+      cursor: pointer;
     }
 
     .notif-menu .btn {
@@ -6045,10 +6056,12 @@
     function planCell(v) { if (!v) return `<span class="mut">-</span>`; const cls = v === "Reporte" || v === "Operateur non habilite" ? "er" : v === "Planifie" || v === "Habilitation maintenue" ? "wa" : v === "1ere habilitation" ? "bl" : "ok"; return `<span class="${cls}">${esc(v)}</span>` }
     function planMonthDate(year, monthLabel) { const idx = PLAN_MONTHS_FULL.indexOf(monthLabel), y = Number(year); if (idx < 0 || !y) return null; return new Date(y, idx + 1, 0) }
     function planDaysLeft(date) { if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null; const today = new Date(); today.setHours(0, 0, 0, 0); const target = new Date(date); target.setHours(0, 0, 0, 0); return Math.round((target - today) / 86400000) }
+    function planNotifStore() { if (!s.planNotifDone || typeof s.planNotifDone !== "object") s.planNotifDone = {}; return s.planNotifDone }
     function planningNotifications() {
       const out = [];
+      const done = planNotifStore();
       const classify = days => days === null ? "" : days < 0 ? "overdue" : days <= 30 ? "soon" : "";
-      const add = (state, due, title, text) => { if (state) out.push({ state, due, title, text, page: "plan" }) };
+      const add = (state, due, title, text) => { if (!state) return; const key = `${title}||${text}`; if (done[key]) return; out.push({ key, state, due, title, text, page: "plan" }) };
       planAuditItems().forEach(row => Object.entries(row.months || {}).forEach(([month, mark]) => { if (!mark) return; const due = planMonthDate(row.year || PLAN_AUDIT_TEMPLATE.year, month), days = planDaysLeft(due); add(classify(days), due, `Planning d'audit interne - ${row.activity || "-"}`, `${month} ${row.year || PLAN_AUDIT_TEMPLATE.year} : ${mark}. ${days < 0 ? "Date depassee." : "Echeance proche."}`) }));
       planInterItems().forEach(row => Object.entries(row.months || {}).forEach(([month, mark]) => { if (!mark) return; const due = planMonthDate(row.year, month), days = planDaysLeft(due); add(classify(days), due, `Planning des inter-comparaisons - ${row.scope || "-"}`, `${month} ${row.year || "-"} : ${mark}${row.specify && row.specify !== "-" ? " - " + row.specify : ""}. ${days < 0 ? "Date depassee." : "Echeance proche."}`) }));
       Object.entries(PLAN_HABIL_TEMPLATE).forEach(([domain, data]) => ((data && data.operators) || []).forEach(op => Object.entries(op.months || {}).forEach(([month, mark]) => { if (!mark) return; const due = planMonthDate(op.year, month), days = planDaysLeft(due); add(classify(days), due, `Planning de maintien d'habilitation - ${domain}`, `${op.name || "-"} / ${op.spec || "-"} - ${month} ${op.year || "-"} : ${mark}. ${days < 0 ? "Date depassee." : "Echeance proche."}`) })));
@@ -6057,9 +6070,10 @@
     }
     function notificationMenu() { let m = $("#notificationMenu"); if (!m) { m = document.createElement("div"); m.id = "notificationMenu"; m.className = "notif-menu h"; document.body.appendChild(m) } return m }
     function closeNotificationMenu() { const m = $("#notificationMenu"); if (m) m.classList.add("h") }
-    function renderNotificationMenu() { const items = planningNotifications(), m = notificationMenu(); m.innerHTML = `<div class="notif-head"><b>Rappels Planning</b><span class="${items.some(x => x.state === "overdue") ? "er" : "bl"}">${items.length} notification${items.length > 1 ? "s" : ""}</span></div><div class="notif-list">${items.length ? items.map(x => `<div class="notif-item ${x.state}"><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div>`).join("") : `<div class="e">Aucune date proche ou depassee dans les plannings.</div>`}</div><button type="button" class="btn" data-go="plan">Ouvrir le module Planning</button>` }
+    function renderNotificationMenu() { const items = planningNotifications(), m = notificationMenu(); m.innerHTML = `<div class="notif-head"><b>Rappels Planning</b><span class="${items.some(x => x.state === "overdue") ? "er" : "bl"}">${items.length} notification${items.length > 1 ? "s" : ""}</span></div><div class="notif-list">${items.length ? items.map(x => `<div class="notif-item ${x.state}" data-notif-key="${esc(x.key)}" data-go="${esc(x.page)}"><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div>`).join("") : `<div class="e">Aucune date proche ou depassee dans les plannings.</div>`}</div><button type="button" class="btn" data-go="plan">Ouvrir le module Planning</button>` }
     function toggleNotificationMenu(btn) { const m = notificationMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } renderNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 580, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - Math.min(420, window.innerWidth - 20), r.right - 380)) + "px"; m.classList.remove("h") }
     function updateNotificationBadges() { const count = planningNotifications().length; document.querySelectorAll('.hub-action-icon[aria-label^="Notifications"]').forEach(btn => { btn.dataset.notifCount = String(count); btn.title = count ? `Notifications (${count})` : "Notifications"; btn.setAttribute("aria-label", count ? `Notifications (${count})` : "Notifications") }) }
+    function openPlanningNotification(key) { if (!key) return; planNotifStore()[key] = now(); save("Notification planning traitee"); closeNotificationMenu(); page("plan"); render() }
     function planLegendHtml() { return `<div class="acts"><span class="ok">Planifie / realise</span><span class="wa">Planifie</span><span class="er">Reporte</span><span class="bl">1ere habilitation</span></div>` }
     function planAuditItems() { if (!Array.isArray(s.planAudit)) s.planAudit = c(PLAN_AUDIT_TEMPLATE.rows); return s.planAudit }
     function planAuditOptionsHtml() { const items = planAuditItems(); return `<option value="">Ligne a modifier / supprimer</option>` + items.map(x => `<option value="${esc(x.id)}">${esc(x.activity)} - ${esc(x.year || PLAN_AUDIT_TEMPLATE.year)}</option>`).join("") }
@@ -6455,7 +6469,7 @@
       });
     })();
     bindClick("procClose", closeProcessWindow);
-    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
+    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), notifItem = e.target.closest("[data-notif-key]"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
     async function restoreRepo() { const h = await idbGet("repoHandle"); if (!h) return; if (await verifyHandle(h, false)) { repoHandle = h; s.repo.folderName = h.name; s.repo.linked = true; s.repo.mode = "Dossier reconnecte"; await scanRepo(h) } else { s.repo.mode = "Reconnecter le dossier local"; repoView() } }
     async function restoreOrgDir() { const h = await idbGet("orgHandle"); if (!h) return; if (await verifyHandle(h, false)) { orgHandle = h; orgRootName = h.name || "QUALI_Organisme"; if (activeOrgProc) await scanOrgProc(activeOrgProc) } }
     ensurePilotAccount();
