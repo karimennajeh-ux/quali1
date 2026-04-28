@@ -4078,6 +4078,40 @@
         color: #1f547f;
       }
 
+      .module-org-card.module-org-compact {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 10px;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .module-org-card.module-org-compact::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .module-org-card.module-org-compact::-webkit-scrollbar-thumb {
+        background: #236bd8;
+        border-radius: 999px;
+      }
+
+      .module-org-card.module-org-compact .module-org-line {
+        min-width: 180px;
+        flex: 0 0 180px;
+        padding: 10px;
+        border: 1px solid #d7eaff;
+        border-radius: 14px;
+        background: #f8fcff;
+        border-bottom: 1px solid #d7eaff;
+        scroll-snap-align: start;
+      }
+
+      .module-org-card.module-org-compact .module-org-line:last-child {
+        border-bottom: 1px solid #d7eaff;
+      }
+
       .discussion-user,
       .discussion-message,
       .discussion-thread-box {
