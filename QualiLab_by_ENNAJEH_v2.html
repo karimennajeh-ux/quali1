@@ -1042,11 +1042,6 @@
       pointer-events: none
     }
 
-    .hub-app-head .back-nav .back-btn {
-      pointer-events: none !important;
-      cursor: default !important;
-    }
-
     .diag-score {
       font-size: 30px;
       font-weight: 800;
@@ -6513,16 +6508,17 @@
     function updateBackButton() {
       const b = $("#backBtn"), n = $("#nextBtn");
       if (!b || !n) return;
+      const active = sessionActive();
       b.classList.remove("h");
-      n.classList.remove("h");
-      b.classList.add("off");
-      n.classList.add("off");
-      b.disabled = true;
-      n.disabled = true;
-      b.setAttribute("title", "Fleche inactive");
-      n.setAttribute("title", "Fleche inactive");
-      b.setAttribute("aria-disabled", "true");
-      n.setAttribute("aria-disabled", "true");
+      n.classList.toggle("h", !active);
+      b.classList.remove("off");
+      n.classList.toggle("off", !active || !nextPageHistory.length);
+      b.disabled = false;
+      n.disabled = !active || !nextPageHistory.length;
+      b.setAttribute("title", "Page precedente");
+      n.setAttribute("title", "Page suivante");
+      b.setAttribute("aria-disabled", "false");
+      n.setAttribute("aria-disabled", String(!active || !nextPageHistory.length));
     }
     function fmtSize(n) { if (!n && n !== 0) return "-"; const u = ["o", "Ko", "Mo", "Go"]; let i = 0, v = n; while (v >= 1024 && i < u.length - 1) { v /= 1024; i++ } return (i ? v.toFixed(v >= 10 ? 1 : 2) : v) + " " + u[i] }
     function fmtDate(v) { if (!v) return "-"; try { return new Date(v).toLocaleString("fr-FR") } catch (e) { return v } }
@@ -7206,15 +7202,13 @@
     bindClick("pickDir", chooseRepoDir); bindClick("scanDir", () => scanRepo()); bindClick("fallbackDir", () => $("#repoDirFallback").click()); $("#repoDirFallback").onchange = e => scanFallbackDir(e.target.files); bindClick("pickFiles", () => $("#repoFiles").click()); $("#repoFiles").onchange = e => importRepoFiles(e.target.files, importTarget()); bindClick("exportDir", exportRepoData);
 
     enhanceModulePanels();
-    // Keep header arrows visible but inactive
+    // Wire header arrows to previous/next page navigation
     (function () {
       const bindArrow = (btn) => {
         if (btn.dataset.arrowBound) return;
         btn.addEventListener('click', e => {
           e.preventDefault();
           e.stopPropagation();
-          sync("Les fleches avant et arriere sont desactivees");
-          return;
           const title = (btn.getAttribute('aria-label') || btn.title || '').toLowerCase();
           const img = btn.querySelector('img');
           const imgAlt = (img && img.alt || '').toLowerCase();
@@ -7222,19 +7216,17 @@
           if (isBack) { if (typeof goBackPage === 'function') return goBackPage(); return window.history.back(); }
           else { if (typeof goNextPage === 'function') return goNextPage(); return window.history.forward(); }
         });
-        btn.classList.add('off');
-        btn.disabled = true;
-        btn.setAttribute('aria-disabled', 'true');
+        btn.classList.remove('off');
+        btn.disabled = false;
+        btn.setAttribute('aria-disabled', 'false');
         btn.dataset.arrowBound = '1';
       };
       document.querySelectorAll('.hub-app-head .back-nav button').forEach(bindArrow);
       // Keyboard shortcuts: Alt/Meta + ArrowLeft / ArrowRight
       document.addEventListener('keydown', e => {
         if (!(e.altKey || e.metaKey)) return;
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-          e.preventDefault();
-          sync("Les fleches avant et arriere sont desactivees");
-        }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); if (typeof goBackPage === 'function') goBackPage(); else window.history.back(); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); if (typeof goNextPage === 'function') goNextPage(); else window.history.forward(); }
       });
     })();
     bindClick("procClose", closeProcessWindow);
