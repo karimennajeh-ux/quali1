@@ -3597,6 +3597,386 @@
     .arrow:hover {
       transform: scale(1.15);
     }
+
+    /* Responsive application layer */
+    .main>section,
+    .main>.card,
+    .main>.row,
+    .card,
+    .tb,
+    .bar,
+    .discussion-shell,
+    .module-shell,
+    .module-content {
+      min-width: 0;
+    }
+
+    .tb {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tb table,
+    #planAuditBoard table,
+    #planInterBoard table,
+    #planHabBoard table,
+    #planCalBoard table {
+      min-width: 920px;
+    }
+
+    #dbCharts,
+    .chart {
+      min-width: 0;
+    }
+
+    @media (max-width: 1200px) {
+      .main {
+        padding: 14px;
+        gap: 14px;
+      }
+
+      .row.s4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .row.s2 {
+        grid-template-columns: 1fr;
+      }
+
+      .g {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .g4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .bar {
+        grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+      }
+
+      .hub-page {
+        min-width: 0 !important;
+      }
+
+      .hub-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .hub-app-head {
+        padding: 16px 20px;
+      }
+
+      .module-page-title {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .main {
+        padding: 12px;
+        gap: 12px;
+      }
+
+      .card,
+      .top,
+      .tb,
+      .bar {
+        border-radius: 18px;
+      }
+
+      .row,
+      .module-content,
+      .discussion-shell,
+      .discussion-thread,
+      .discussion-compose {
+        gap: 12px;
+      }
+
+      .row.s4,
+      .row.s2,
+      .g,
+      .g4,
+      .erp-intro,
+      .doc-proc-grid,
+      .org-summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bar,
+      .bar[style*="grid-template-columns:1fr auto auto"] {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .acts {
+        justify-content: flex-start;
+      }
+
+      .acts .btn,
+      .acts .btn2,
+      .acts .btn3 {
+        flex: 0 1 auto;
+      }
+
+      .hub-app-head {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+        padding: 14px 16px;
+        text-align: center;
+      }
+
+      .logo-header {
+        width: 128px;
+      }
+
+      .module-page-title {
+        order: 3;
+        width: 100%;
+        padding: 0;
+        font-size: 20px;
+      }
+
+      .hub-app-head .hub-top-actions {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .hub-top-actions {
+        right: auto;
+        top: auto;
+      }
+
+      .hub-action-icon {
+        width: 52px;
+        height: 52px;
+        flex-basis: 52px;
+      }
+
+      .hub-action-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .back-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .hub-page {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-content: start !important;
+        justify-items: stretch;
+        gap: 14px !important;
+        padding: 0 0 16px !important;
+      }
+
+      .hub-page:before,
+      .hub-page:after {
+        display: none;
+      }
+
+      .hub-node {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        height: 156px !important;
+        min-height: 156px !important;
+      }
+
+      .hub-img {
+        width: 74px;
+        height: 66px;
+        min-width: 74px;
+        min-height: 66px;
+      }
+
+      .hub-img img {
+        width: 58px;
+        height: 58px;
+      }
+
+      .module-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .module-rail {
+        position: relative;
+        top: auto;
+        grid-template-columns: 1fr;
+      }
+
+      .module-org {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .discussion-thread-box {
+        min-height: 320px;
+        max-height: 420px;
+      }
+
+      .chart {
+        grid-template-columns: repeat(6, minmax(42px, 1fr));
+        min-width: 420px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        font-size: 13px;
+      }
+
+      .main {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .card,
+      .top,
+      .tb,
+      .bar,
+      .authbox {
+        border-radius: 16px;
+      }
+
+      .card {
+        padding: 12px;
+      }
+
+      .top {
+        min-height: auto;
+        padding: 12px;
+      }
+
+      .row.s4 {
+        grid-template-columns: 1fr;
+      }
+
+      .g,
+      .g4,
+      .perm-grid,
+      .module-org,
+      .hub-page {
+        grid-template-columns: 1fr;
+      }
+
+      .g .btn,
+      .g .btn2,
+      .g .btn3,
+      .g4 .btn,
+      .g4 .btn2,
+      .g4 .btn3,
+      .acts .btn,
+      .acts .btn2,
+      .acts .btn3 {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .mini {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .hub-app-head {
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .logo-header {
+        width: 112px;
+      }
+
+      .module-page-title {
+        font-size: 18px;
+      }
+
+      .hub-top-actions {
+        gap: 8px;
+      }
+
+      .hub-action-icon {
+        width: 48px;
+        height: 48px;
+        flex-basis: 48px;
+      }
+
+      .hub-action-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .hub-node {
+        height: 148px !important;
+        min-height: 148px !important;
+        border-radius: 18px !important;
+      }
+
+      .hub-node b {
+        font-size: 13px !important;
+      }
+
+      .hub-node small {
+        font-size: 10px;
+      }
+
+      .hub-img {
+        width: 68px;
+        height: 62px;
+        min-width: 68px;
+        min-height: 62px;
+      }
+
+      .hub-img img {
+        width: 52px;
+        height: 52px;
+      }
+
+      .module-rail {
+        padding: 14px;
+        border-radius: 20px;
+      }
+
+      .module-rail-logo {
+        padding: 12px;
+      }
+
+      .module-rail-logo img {
+        width: 104px;
+      }
+
+      .module-org-card {
+        padding: 10px 12px;
+      }
+
+      .discussion-user,
+      .discussion-message,
+      .discussion-thread-box {
+        border-radius: 16px;
+      }
+
+      .discussion-message {
+        max-width: 100%;
+      }
+
+      th,
+      td {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .tb table,
+      #planAuditBoard table,
+      #planInterBoard table,
+      #planHabBoard table,
+      #planCalBoard table {
+        min-width: 760px;
+      }
+    }
   </style>
 </head>
 
