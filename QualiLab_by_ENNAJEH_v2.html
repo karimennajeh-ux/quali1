@@ -2061,8 +2061,7 @@
     .hub-page {
       width: 100%;
       position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow: visible;
       min-height: 100vh;
       min-width: 1180px;
       background: radial-gradient(circle at 50% 46%, rgba(255, 255, 255, .92) 0, rgba(248, 244, 255, .96) 33%, rgba(236, 231, 252, .98) 72%, rgba(233, 228, 251, .98) 100%);
@@ -3082,8 +3081,7 @@
       align-items: flex-start !important;
       align-content: flex-start !important;
       gap: 8px !important;
-      overflow-x: hidden !important;
-      overflow-y: auto !important;
+      overflow: visible !important;
     }
 
     .hub-page:before,
@@ -6507,7 +6505,18 @@
     function now() { const d = new Date(), p = n => String(n).padStart(2, "0"); return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()) }
     function esc(v) { return String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;") }
     function sessionActive() { const auth = $("#auth"), app = $("#app"); return !!(auth && app && auth.classList.contains("h") && !app.classList.contains("h")) }
-    function updateBackButton() { const b = $("#backBtn"), n = $("#nextBtn"); if (!b || !n) return; const active = sessionActive(); b.classList.remove("h"); n.classList.toggle("h", !active); b.classList.remove("off"); n.classList.toggle("off", !active || !nextPageHistory.length) }
+    function updateBackButton() {
+      const b = $("#backBtn"), n = $("#nextBtn");
+      if (!b || !n) return;
+      b.classList.remove("h");
+      n.classList.remove("h");
+      b.classList.add("off");
+      n.classList.add("off");
+      b.setAttribute("title", "Fleche inactive");
+      n.setAttribute("title", "Fleche inactive");
+      b.setAttribute("aria-disabled", "true");
+      n.setAttribute("aria-disabled", "true");
+    }
     function fmtSize(n) { if (!n && n !== 0) return "-"; const u = ["o", "Ko", "Mo", "Go"]; let i = 0, v = n; while (v >= 1024 && i < u.length - 1) { v /= 1024; i++ } return (i ? v.toFixed(v >= 10 ? 1 : 2) : v) + " " + u[i] }
     function fmtDate(v) { if (!v) return "-"; try { return new Date(v).toLocaleString("fr-FR") } catch (e) { return v } }
     function stamp() { const d = new Date(), p = n => String(n).padStart(2, "0"); return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" + p(d.getHours()) + p(d.getMinutes()) }
@@ -7190,12 +7199,15 @@
     bindClick("pickDir", chooseRepoDir); bindClick("scanDir", () => scanRepo()); bindClick("fallbackDir", () => $("#repoDirFallback").click()); $("#repoDirFallback").onchange = e => scanFallbackDir(e.target.files); bindClick("pickFiles", () => $("#repoFiles").click()); $("#repoFiles").onchange = e => importRepoFiles(e.target.files, importTarget()); bindClick("exportDir", exportRepoData);
 
     enhanceModulePanels();
-    // Wire header arrow buttons to in-app navigation (supports multiple duplicated headers)
+    // Keep header arrows visible but inactive
     (function () {
       const bindArrow = (btn) => {
         if (btn.dataset.arrowBound) return;
         btn.addEventListener('click', e => {
           e.preventDefault();
+          e.stopPropagation();
+          sync("Les fleches avant et arriere sont desactivees");
+          return;
           const title = (btn.getAttribute('aria-label') || btn.title || '').toLowerCase();
           const img = btn.querySelector('img');
           const imgAlt = (img && img.alt || '').toLowerCase();
@@ -7203,14 +7215,18 @@
           if (isBack) { if (typeof goBackPage === 'function') return goBackPage(); return window.history.back(); }
           else { if (typeof goNextPage === 'function') return goNextPage(); return window.history.forward(); }
         });
+        btn.classList.add('off');
+        btn.setAttribute('aria-disabled', 'true');
         btn.dataset.arrowBound = '1';
       };
       document.querySelectorAll('.hub-app-head .back-nav button').forEach(bindArrow);
       // Keyboard shortcuts: Alt/Meta + ArrowLeft / ArrowRight
       document.addEventListener('keydown', e => {
         if (!(e.altKey || e.metaKey)) return;
-        if (e.key === 'ArrowLeft') { e.preventDefault(); if (typeof goBackPage === 'function') goBackPage(); else window.history.back(); }
-        if (e.key === 'ArrowRight') { e.preventDefault(); if (typeof goNextPage === 'function') goNextPage(); else window.history.forward(); }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          sync("Les fleches avant et arriere sont desactivees");
+        }
       });
     })();
     bindClick("procClose", closeProcessWindow);
