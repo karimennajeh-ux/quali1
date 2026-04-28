@@ -1042,6 +1042,11 @@
       pointer-events: none
     }
 
+    .hub-app-head .back-nav .back-btn {
+      pointer-events: none !important;
+      cursor: default !important;
+    }
+
     .diag-score {
       font-size: 30px;
       font-weight: 800;
@@ -6512,6 +6517,8 @@
       n.classList.remove("h");
       b.classList.add("off");
       n.classList.add("off");
+      b.disabled = true;
+      n.disabled = true;
       b.setAttribute("title", "Fleche inactive");
       n.setAttribute("title", "Fleche inactive");
       b.setAttribute("aria-disabled", "true");
@@ -7216,6 +7223,7 @@
           else { if (typeof goNextPage === 'function') return goNextPage(); return window.history.forward(); }
         });
         btn.classList.add('off');
+        btn.disabled = true;
         btn.setAttribute('aria-disabled', 'true');
         btn.dataset.arrowBound = '1';
       };
