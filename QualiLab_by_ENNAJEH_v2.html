@@ -2558,7 +2558,8 @@
       }
 
       .module-rail {
-        grid-template-columns: 1fr
+        grid-template-columns: 1fr;
+        background: linear-gradient(180deg, #d9f0ff, #b8e0ff 58%, #9fd2f6);
       }
 
       .module-rail-logo {
@@ -2566,8 +2567,46 @@
         margin: 0 auto
       }
 
+      .module-rail:before {
+        opacity: .18;
+        right: 10px;
+        bottom: 10px;
+        width: 64px;
+        height: 64px;
+        font-size: 40px;
+      }
+
+      .module-rail-head {
+        text-align: center;
+      }
+
+      .module-rail-head b {
+        font-size: 20px;
+      }
+
+      .module-rail-head span {
+        font-size: 13px;
+        color: #245580;
+      }
+
       .module-org {
         grid-template-columns: 1fr
+      }
+
+      .module-org-card {
+        background: rgba(255, 255, 255, .88);
+        border: 1px solid rgba(255, 255, 255, .95);
+        box-shadow: 0 8px 18px rgba(27, 78, 126, .08);
+      }
+
+      .module-org-card strong {
+        font-size: 12px;
+        color: #17446d;
+      }
+
+      .module-org-card p {
+        font-size: 13px;
+        color: #194f7c;
       }
     }
 
@@ -3958,18 +3997,55 @@
       .module-rail {
         padding: 14px;
         border-radius: 20px;
+        gap: 12px;
+        background: linear-gradient(180deg, #e8f6ff, #cbe9ff 56%, #b0dcff);
+      }
+
+      .module-rail:before {
+        display: none;
       }
 
       .module-rail-logo {
-        padding: 12px;
+        padding: 10px;
+        border-radius: 18px;
       }
 
       .module-rail-logo img {
         width: 104px;
       }
 
+      .module-rail-head {
+        text-align: center;
+      }
+
+      .module-rail-head b {
+        font-size: 18px;
+        color: #143e65;
+      }
+
+      .module-rail-head span {
+        font-size: 12px;
+        color: #245580;
+      }
+
       .module-org-card {
-        padding: 10px 12px;
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, .96);
+        border: 1px solid #d7eaff;
+        backdrop-filter: none;
+      }
+
+      .module-org-card strong {
+        font-size: 12px;
+        color: #17446d;
+      }
+
+      .module-org-card p {
+        margin-top: 6px;
+        font-size: 13px;
+        line-height: 1.55;
+        color: #1f547f;
       }
 
       .discussion-user,
