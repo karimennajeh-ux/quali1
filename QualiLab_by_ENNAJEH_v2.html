@@ -156,8 +156,8 @@
 
     .app.hub-mode .main {
       padding: 0;
-      overflow: hidden;
-      scrollbar-gutter: auto
+      overflow: auto;
+      scrollbar-gutter: stable both-edges
     }
 
     .side {
@@ -179,9 +179,10 @@
       padding: 16px;
       display: grid;
       gap: 16px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      scrollbar-gutter: stable
+      overflow: auto;
+      scrollbar-gutter: stable both-edges;
+      scrollbar-width: auto;
+      scrollbar-color: #236bd8 #e8eef9
     }
 
     .top {
@@ -2052,8 +2053,9 @@
     .hub-page {
       width: 100%;
       position: relative;
-      overflow: hidden;
+      overflow: auto;
       min-height: 100vh;
+      min-width: 1180px;
       background: radial-gradient(circle at 50% 46%, rgba(255, 255, 255, .92) 0, rgba(248, 244, 255, .96) 33%, rgba(236, 231, 252, .98) 72%, rgba(233, 228, 251, .98) 100%);
       border: 0;
       border-radius: 0;
@@ -2061,6 +2063,28 @@
       flex-wrap: wrap;
       align-items: start;
       justify-content: center;
+      padding: 0 0 18px;
+      scrollbar-width: auto;
+      scrollbar-color: #236bd8 #e8eef9;
+    }
+
+    .hub-page::-webkit-scrollbar,
+    .app.hub-mode .main::-webkit-scrollbar {
+      width: 14px;
+      height: 14px;
+    }
+
+    .hub-page::-webkit-scrollbar-track,
+    .app.hub-mode .main::-webkit-scrollbar-track {
+      background: #e8eef9;
+      border-radius: 999px;
+    }
+
+    .hub-page::-webkit-scrollbar-thumb,
+    .app.hub-mode .main::-webkit-scrollbar-thumb {
+      background: #236bd8;
+      border-radius: 999px;
+      border: 3px solid #e8eef9;
     }
 
     .hub-page:before {
@@ -2454,7 +2478,33 @@
     .module-content {
       display: grid;
       gap: 16px;
-      min-width: 0
+      min-width: 0;
+      overflow: visible
+    }
+
+    .main::-webkit-scrollbar,
+    .module-content::-webkit-scrollbar,
+    .hub-page::-webkit-scrollbar,
+    .app.hub-mode .main::-webkit-scrollbar {
+      width: 14px;
+      height: 14px;
+    }
+
+    .main::-webkit-scrollbar-track,
+    .module-content::-webkit-scrollbar-track,
+    .hub-page::-webkit-scrollbar-track,
+    .app.hub-mode .main::-webkit-scrollbar-track {
+      background: #e8eef9;
+      border-radius: 999px;
+    }
+
+    .main::-webkit-scrollbar-thumb,
+    .module-content::-webkit-scrollbar-thumb,
+    .hub-page::-webkit-scrollbar-thumb,
+    .app.hub-mode .main::-webkit-scrollbar-thumb {
+      background: #236bd8;
+      border-radius: 999px;
+      border: 3px solid #e8eef9;
     }
 
     @media(max-width:1080px) {
@@ -3015,10 +3065,10 @@
     }
 
     .hub-page {
-      padding: 0px 0 !important;
+      padding: 0 0 18px !important;
       align-items: flex-start !important;
       align-content: flex-start !important;
-      gap: 10px !important;
+      gap: 8px !important;
     }
 
     .hub-page:before,
@@ -3076,23 +3126,28 @@
     }
 
     .hub-node {
-      min-width: 200px !important;
-      height: 200px !important;
-      min-height: 200px !important;
+      min-width: 168px !important;
+      width: 168px !important;
+      height: 168px !important;
+      min-height: 168px !important;
       flex-direction: column !important;
-      gap: 8px !important;
+      gap: 6px !important;
       justify-content: center !important;
       align-items: center !important;
-      border-radius: 24px !important;
+      padding: 10px 12px !important;
+      border-radius: 20px !important;
       border-width: 1px !important;
-      background: linear-gradient(180deg, #fff, #fbfcff) !important;
+      background: linear-gradient(180deg, #fff, #f8fbff) !important;
+      box-shadow: 0 12px 28px rgba(32, 53, 94, .08) !important;
     }
 
     .hub-node b {
-      font-size: 16px !important;
+      font-size: 14px !important;
       color: #236bd8;
       opacity: 1 !important;
-      font-weight: 400 !important;
+      font-weight: 500 !important;
+      line-height: 1.25 !important;
+      text-align: center !important;
     }
 
     .hub-node small {
@@ -3103,11 +3158,11 @@
     }
 
     .hub-img {
-      width: 104px;
-      height: 96px;
-      min-width: 92px;
-      min-height: 86px;
-      border-radius: 20px;
+      width: 82px;
+      height: 72px;
+      min-width: 82px;
+      min-height: 72px;
+      border-radius: 16px;
       display: grid !important;
       place-items: center;
       margin: 0 !important;
@@ -3115,6 +3170,7 @@
       font-size: 18px !important;
       font-weight: 900 !important;
       position: relative;
+      background: linear-gradient(180deg, rgba(35, 107, 216, .08), rgba(35, 107, 216, .02));
     }
 
     .hub-img {
@@ -3138,11 +3194,13 @@
     }
 
     .hub-img img {
-      width: 82px;
-      height: auto;
+      width: 66px;
+      height: 66px;
       max-width: 100%;
       max-height: 100%;
       display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 14px rgba(35, 107, 216, .12));
     }
     /* .hub-purple .hub-img {background:linear-gradient(135deg,#a94fd8,#7535b5)}
 .hub-orange .hub-img {background:linear-gradient(135deg,#8fd7ff,#48aeea)}
