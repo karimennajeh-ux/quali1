@@ -2487,6 +2487,36 @@
       line-height: 1.45
     }
 
+    .module-org-compact {
+      display: grid;
+      gap: 10px;
+    }
+
+    .module-org-line {
+      display: grid;
+      gap: 4px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(36, 92, 149, .12);
+    }
+
+    .module-org-line:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .module-org-line strong {
+      margin: 0;
+      color: #17446d;
+    }
+
+    .module-org-line p {
+      margin: 0;
+      color: #285c89;
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
     .module-content {
       display: grid;
       gap: 16px;
@@ -6637,7 +6667,7 @@
     function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value; if (!isPilotLogin(e, p)) { $("#lmsg").textContent = "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h"); return } try { ensurePilotAccount(); const u = s.usr.find(x => x.email.toLowerCase() === e.toLowerCase()) || pilotAccount(); s.u = u; ss(S, JSON.stringify({ email: s.u.email })); log("Connexion", "Session", e); save("Session ouverte"); openApp() } catch (err) { console.error(err); $("#lmsg").textContent = "Erreur de connexion. Verifie l'application puis recommence."; sr(S); $("#auth").classList.remove("h"); $("#app").classList.add("h") } }
     function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; $("#app").classList.add("h"); $("#auth").classList.remove("h"); updateBackButton() }
     const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestateur externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
-    function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-card"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-card"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-card"><strong>Adresse</strong><p>${esc(addr)}</p></div></div>` }
+    function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card module-org-compact"><div class="module-org-line"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-line"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-line"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-line"><strong>Adresse</strong><p>${esc(addr)}</p></div></div></div>` }
     function buildModuleRail(id) { const meta = moduleRailMeta[id]; if (!meta) return null; const rail = document.createElement("aside"); rail.className = "module-rail"; rail.innerHTML = `<div class="module-rail-logo"><img src="image/logo/SVG/Asset 5.svg" alt="QUALI"></div><div class="module-rail-head"><b>${esc(meta.title)}</b><span>${esc(meta.tag)}</span></div>${moduleOrgRailHtml()}`; return rail }
     function updateModuleRails() { Object.keys(moduleRailMeta).forEach(id => { const org = $("#" + id + " .module-org"); if (org) org.outerHTML = moduleOrgRailHtml() }) }
     function updateModuleHeadTitles() { const titles = { hub: "Modules" }; Object.keys(moduleRailMeta).forEach(id => titles[id] = moduleRailMeta[id].title); Object.keys(titles).forEach(id => { const head = $("#" + id + " .hub-app-head"); if (!head) return; let t = head.querySelector(".module-page-title"); if (!t) { t = document.createElement("div"); t.className = "module-page-title"; const actions = head.querySelector(".hub-top-actions"); if (actions) head.insertBefore(t, actions); else head.appendChild(t) } t.textContent = titles[id] }) }
