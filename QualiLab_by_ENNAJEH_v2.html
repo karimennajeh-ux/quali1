@@ -3329,6 +3329,185 @@
       box-sizing: border-box;
     }
 
+    .hub-action-icon[data-msg-count]:not([data-msg-count="0"])::after {
+      content: attr(data-msg-count);
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #16a34a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-sizing: border-box;
+    }
+
+    .discussion-shell {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .discussion-list {
+      display: grid;
+      gap: 10px;
+      max-height: 720px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .discussion-user {
+      width: 100%;
+      border: 1px solid #dbe6f5;
+      border-radius: 18px;
+      background: #fff;
+      padding: 14px;
+      text-align: left;
+      display: grid;
+      gap: 6px;
+      box-shadow: 0 10px 24px rgba(39, 63, 104, .06);
+    }
+
+    .discussion-user.on {
+      border-color: #236bd8;
+      background: #eef4ff;
+      box-shadow: 0 16px 28px rgba(35, 107, 216, .14);
+    }
+
+    .discussion-user-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .discussion-user b {
+      color: #24324a;
+      font-size: 15px;
+    }
+
+    .discussion-user p,
+    .discussion-user small {
+      margin: 0;
+      color: #6c7a96;
+      line-height: 1.4;
+    }
+
+    .discussion-user-count {
+      min-width: 24px;
+      height: 24px;
+      padding: 0 7px;
+      border-radius: 999px;
+      background: #16a34a;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .discussion-thread {
+      display: grid;
+      gap: 14px;
+    }
+
+    .discussion-thread-box {
+      border: 1px solid #dbe6f5;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #f9fbff, #ffffff);
+      min-height: 420px;
+      max-height: 520px;
+      overflow: auto;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .discussion-message {
+      max-width: min(86%, 620px);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: #edf3ff;
+      border: 1px solid #dbe6f5;
+      box-shadow: 0 10px 22px rgba(39, 63, 104, .06);
+    }
+
+    .discussion-message.mine {
+      margin-left: auto;
+      background: #236bd8;
+      color: #fff;
+      border-color: #236bd8;
+    }
+
+    .discussion-message b {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .discussion-message p {
+      margin: 0;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .discussion-message small {
+      display: block;
+      margin-top: 8px;
+      opacity: .88;
+      font-size: 11px;
+    }
+
+    .discussion-compose {
+      display: grid;
+      gap: 12px;
+    }
+
+    .discussion-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .discussion-target {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .discussion-empty {
+      padding: 22px;
+      border: 1px dashed #cfd9ec;
+      border-radius: 18px;
+      background: #fbfcff;
+      color: #6c7a96;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .discussion-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .discussion-list {
+        max-height: none;
+      }
+    }
+
     .hub-app-head b {
       display: block;
       color: #25324b;
@@ -3406,7 +3585,7 @@
     (function () {
       function setText(sel, val) { var el = document.querySelector(sel); if (el) el.textContent = val }
       function showPage(id) {
-        ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "set", "diag", "risk", "swot", "sat", "recl", "pers", "repo"].forEach(function (x) {
+        ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "repo"].forEach(function (x) {
           var el = document.getElementById(x);
           if (el) el.classList.toggle("h", x !== id);
         });
@@ -3513,6 +3692,7 @@
         <button data-p="usr"><span
             class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¹Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤</span><span
             class="menu-label">Utilisateurs</span></button>
+        <button data-p="disc"><span class="menu-ico">DI</span><span class="menu-label">Discussion</span></button>
         <button data-p="set"><span
             class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
             class="menu-label">Parametres</span></button>
@@ -3595,6 +3775,8 @@
                 src="boutan/diagnostic.png" alt=""></span><b>Diagnostic ISO</b><small></small></button>
           <button class="hub-node hub-violet orbit-8" data-go="usr"><span class="hub-img"><img
                 src="boutan/equipe.png" alt=""></span><b>Utilisateurs</b><small></small></button>
+          <button class="hub-node hub-blue orbit-18" data-go="disc"><span class="hub-img"><img
+                src="boutan/liste.png" alt=""></span><b>Discussion</b><small></small></button>
           <button class="hub-node hub-slate orbit-9" data-go="set"><span class="hub-img"><img
                 src="boutan/parametre.png" alt=""></span><b>Parametres</b><small></small></button>
           <button class="hub-node hub-red orbit-10" data-go="risk"><span class="hub-img"><img
@@ -3615,7 +3797,7 @@
                 src="boutan/tableau-de-bord.png" alt=""></span><b>Planning</b><small></small></button>
         </div>
         <div class="hub-summary">
-          <div class="mini"><strong>Acces rapide</strong><span class="bl">18 modules</span></div>
+          <div class="mini"><strong>Acces rapide</strong><span class="bl">19 modules</span></div>
           <div class="mini"><strong>Presentation</strong><span class="ok">Apres connexion</span></div>
           <div class="mini"><strong>Interface</strong><span class="wa">Responsive</span></div>
         </div>
@@ -4426,6 +4608,62 @@
             <div class="acts justify-start mb10"><button class="btn" id="weeklyReport">Telecharger rapport PDF et
                 remettre a zero</button></div>
             <div id="trailB" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="disc" class="row h">
+        <div class="hub-app-head">
+          <img src="image/logo/SVG/Asset 4.svg" alt="QUALI" class="logo-header">
+          <div class="hub-top-actions" aria-label="Raccourcis utilisateur">
+            <button class="hub-action-icon" type="button" title="Messages" aria-label="Messages"><svg
+                viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 6h16v10H8l-4 4z"></path>
+                <path d="M8 10h8M8 14h5"></path>
+              </svg></button>
+            <button class="hub-action-icon" type="button" title="Notifications" aria-label="Notifications"><svg
+                viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 16H6l2-3V9a4 4 0 0 1 8 0v4z"></path>
+                <path d="M10 19a2 2 0 0 0 4 0"></path>
+              </svg></button>
+            <button class="hub-action-icon profile" type="button" title="Profil" aria-label="Profil"><svg
+                viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path>
+              </svg></button>
+            <div class="back-nav"><button class="back-btn" id="backBtn" title="Page precedente"
+                aria-label="Page precedente"><img src="assets/left arrow.png" alt="left arrow" class="arrow"></button>
+              <button class="back-btn" id="nextBtn" title="Page suivante" aria-label="Page suivante"><img
+                  src="assets/right arrow.png" alt="right arrow" class="arrow"></button></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Discussion interne entre les comptes</h3>
+          <p class="mut mt-neg6">Cette page regroupe les echanges entre les comptes deja crees dans l'application.</p>
+          <div class="discussion-shell">
+            <div class="discussion-list" id="discUsers"></div>
+            <div class="discussion-thread">
+              <div class="card" style="padding:14px">
+                <div class="discussion-toolbar">
+                  <div>
+                    <h3 class="mt0 mb0">Fil de discussion</h3>
+                    <p class="mut mt8" id="discCurrentMeta">Choisis un membre pour afficher les echanges.</p>
+                  </div>
+                  <div class="discussion-target">
+                    <label class="mut" for="discRecipient">Nouveau destinataire</label>
+                    <select id="discRecipient"></select>
+                    <button class="btn2 btn" type="button" id="discOpenBtn">Ouvrir</button>
+                  </div>
+                </div>
+              </div>
+              <div class="discussion-thread-box" id="discThread"></div>
+              <div class="card discussion-compose">
+                <textarea id="discMessage" placeholder="Ecrire un message au membre selectionne"></textarea>
+                <div class="acts justify-start">
+                  <button class="btn" type="button" id="discSendBtn">Envoyer</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -5787,7 +6025,7 @@
     const ACI_DEFAULTS = [
       { id: "ACI-001", no: "AC-2026-001", date: "2026-04-20", requester: "Responsable qualite", dept: "Qualite", contact: "qualite@qualilab.tn", docTitle: "Procedure maitrise documentaire", docRef: "PRO-DOC-001", version: "2.0", versionDate: "2026-03-01", type: "Mise a jour", desc: "Ajout des exigences de tracabilite des demandes de modification.", part: "Chapitre 6 et annexe historique", reason: "Amelioration", goal: "Renforcer la conformite ISO 9001 et ISO 17025.", impactProcess: "Pilotage documentaire", impactService: "Aucun impact direct sur le service client", impactPeople: "Brief de sensibilisation", impactEquip: "Aucun", criticality: "Moyenne", qualityManager: "Responsable qualite", processOwner: "Pilote documentaire", decision: "Acceptee", validationDate: "2026-04-22", implOwner: "Assistant qualite", plannedDate: "2026-04-25", revisedVersion: "2.1", effectiveDate: "2026-04-28", verification: "Verification en revue documentaire", traceAction: "AC-2026-014", traceAudit: "AI-2026-001", traceComplaint: "-", archive: "Archive documentaire / version precedente" }
     ];
-    const D = { u: { name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, org: { name: "QUALI by ENNAJEH", fiscal: "MF-2026-001", acc: "Accredite", accDate: "2026-01-15", validDate: "2027-01-15", manager: "John Doe", phone: "+216 71 000 000", fax: "+216 71 000 001", mail: "contact@QUALI.tn", address: "Zone industrielle, Tunis, Tunisie", docs: "Manuel qualite\nCertificat d'accreditation\nAnnexe technique\nPolitique qualite de l'organisme" }, diag: { person: "", date: "", answers: {}, notes: {}, updated: "" }, repo: { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }, docs: [{ id: 1, ref: "PRO-LAB-001", title: "Programme d'etalonnage", p: "Processus support", type: "Procedure", v: "2.1", st: "A valider", o: "Resp. qualite", d: "2026-04-01" }, { id: 2, ref: "INS-LAB-004", title: "Utilisation balance analytique", p: "Processus operationnel", type: "Instruction", v: "1.3", st: "Valide", o: "Technicien senior", d: "2026-03-18" }], orgDocs: [{ id: 101, ref: "PRO-PIL-001", title: "Audit client", ie: "IE-01", p: "Processus pilotage", type: "Procedure", page: "1/3", v: "1.0", st: "Valide", o: "Direction", d: "2026-03-12" }, { id: 102, ref: "INS-OPE-002", title: "Reception et traitement des echantillons", ie: "IE-02", p: "Processus operationnel", type: "Instruction", page: "1/2", v: "2.0", st: "A valider", o: "Chef laboratoire", d: "2026-04-02" }, { id: 103, ref: "FOR-SUP-003", title: "Demande d'achat de consommables", ie: "IE-03", p: "Processus support", type: "Formulaire", page: "1/1", v: "1.4", st: "Valide", o: "Service achats", d: "2026-02-20" }, { id: 104, ref: "ENR-SUP-004", title: "Fiche de maintenance preventive", ie: "IE-04", p: "Processus support", type: "Enregistrement", page: "1/1", v: "3.1", st: "Valide", o: "Metrologie", d: "2026-03-25" }], eq: [{ id: "EQ-001", n: "Balance analytique", m: "Mettler XS-205", sn: "SN-1234", l: "2026-01-10", nx: "2026-04-10", st: "A etalonner", ciq: "Quotidien", u: "+/- 0.1 mg" }, { id: "EQ-002", n: "pH-metre", m: "Metrohm 914", sn: "SN-5678", l: "2026-02-01", nx: "2026-08-01", st: "Valide", ciq: "Avant usage", u: "+/- 0.01 pH" }], nc: [{ ref: "NC-2026-001", desc: "Certificat manquant", g: "Critique", act: "Bloquer l'equipement", st: "Ouverte", o: "Resp. qualite", due: "2026-04-10" }, { ref: "NC-2026-002", desc: "Rapport incomplet", g: "Majeure", act: "Corriger modele", st: "En cours", o: "Technicien", due: "2026-04-15" }], aud: [{ ref: "AI-2026-001", ty: "Audit interne", sc: "Equipements et tracabilite", o: "A. Bensalem", d: "2026-04-20", st: "Planifie", f: "-" }, { ref: "AC-2026-001", ty: "Audit externe (client)", sc: "Systeme complet", o: "Direction", d: "2026-05-05", st: "En cours", f: "2 actions" }], revc: [{ ref: "1", client: "arco sonia sarl", address: "Z.I Enfidha", city: "SOUSSE", phone: "36 381 720", fax: "-", mail: "khassan@valvulasarco.com", st: "Actif" }, { ref: "2", client: "STE DE NUTRITION ANIMALE SA (SNA)", address: "SIDI EL HENI", city: "SOUSSE", phone: "73 280 400", fax: "73 240 409", mail: "achat_seh2@snasidielheni.com", st: "Actif" }, { ref: "3", client: "Ste LA TRINGLE", address: "WG7M+HPV Akouda Sousse", city: "AKOUDA", phone: "73342077", fax: "-", mail: "mariem.latringle@gnet.tn", st: "Actif" }, { ref: "4", client: "AMC", address: "ROUTE DE MSAKEN KM 147 ZAOUIET", city: "SOUSSE", phone: "73 386 040", fax: "-", mail: "achat@amctunisie.com", st: "Actif" }, { ref: "5", client: "VIVIER MARITIME DE TUNISIE (VMT)", address: "Port de peche Hergla", city: "SOUSSE", phone: "73 251 799", fax: "-", mail: "safrjb@gmail.com", st: "Actif" }, { ref: "6", client: "SOCIETE SAMELEC", address: "Rue Maarouf Roussafi, ZI", city: "ZAGHOUAN", phone: "72680122", fax: "72680090", mail: "amel.bensassi@apem.com", st: "Actif" }], prest: [{ id: "PREST-2026-001", ref: "PREST-2026-001", name: "Lab Expert Services", service: "Maintenance et qualification", contact: "Sami Trabelsi", mail: "contact@labexpert.tn", phone: "+216 71 123 456", scope: "Maintenance preventive des equipements critiques", d: "2026-04-08", st: "Actif", obs: "Intervention sous 48h" }, { id: "PREST-2026-002", ref: "PREST-2026-002", name: "Metrology Support", service: "Etalonnage externe", contact: "Nadia Ben Amor", mail: "support@metrology.tn", phone: "+216 70 555 222", scope: "Etalonnage balance, pipettes et sondes", d: "2026-04-15", st: "A evaluer", obs: "Dossier fournisseur a completer" }], aci: [{ id: "ACI-001", no: "AC-2026-001", date: "2026-04-20", requester: "Responsable qualite", dept: "Qualite", contact: "qualite@qualilab.tn", docTitle: "Procedure maitrise documentaire", docRef: "PRO-DOC-001", version: "2.0", versionDate: "2026-03-01", type: "Mise a jour", desc: "Ajout des exigences de tracabilite des demandes de modification.", part: "Chapitre 6 et annexe historique", reason: "Amelioration", goal: "Renforcer la conformite ISO 9001 et ISO 17025.", impactProcess: "Pilotage documentaire", impactService: "Aucun impact direct sur le service client", impactPeople: "Brief de sensibilisation", impactEquip: "Aucun", criticality: "Moyenne", qualityManager: "Responsable qualite", processOwner: "Pilote documentaire", decision: "Acceptee", validationDate: "2026-04-22", implOwner: "Assistant qualite", plannedDate: "2026-04-25", revisedVersion: "2.1", effectiveDate: "2026-04-28", verification: "Verification en revue documentaire", traceAction: "AC-2026-014", traceAudit: "AI-2026-001", traceComplaint: "-", archive: "Archive documentaire / version precedente" }], plan: [{ id: "PLAN-IC-001", type: "Inter-comparaison", ref: "PIC-2026-001", lab: "Laboratoire chimie", scope: "Programme inter-comparaison eau potable et solutions etalon", resp: "Responsable technique", start: "2026-05-10", end: "2026-05-20", freq: "Annuel", status: "Planifie", notes: "Coordination avec organisme externe et preparation des echantillons" }, { id: "PLAN-AUD-001", type: "Audit interne", ref: "PAI-2026-001", lab: "Systeme management qualite", scope: "Audit interne de tous les processus du laboratoire", resp: "Responsable qualite", start: "2026-06-01", end: "2026-06-05", freq: "Semestriel", status: "Planifie", notes: "Couvrir documentation, equipements, competences et reclamations" }, { id: "PLAN-HAB-001", type: "Maintien habilitation personnel", ref: "PHAB-2026-001", lab: "Personnel technique", scope: "Suivi des habilitations, observations terrain et reevaluations", resp: "Chef laboratoire", start: "2026-05-02", end: "2026-05-30", freq: "Trimestriel", status: "En cours", notes: "Verifier les techniciens actifs sur chaque methode" }, { id: "PLAN-RD-001", type: "Revue de direction", ref: "PRD-2026-001", lab: "Direction", scope: "Preparation des indicateurs, actions, risques et satisfaction client", resp: "Direction generale", start: "2026-07-10", end: "2026-07-15", freq: "Annuel", status: "Planifie", notes: "Inclure bilan objectifs qualite et besoins en ressources" }, { id: "PLAN-ETA-001", type: "Etalonnage laboratoire", ref: "PETA-2026-001", lab: "Laboratoire metrologie", scope: "Balance analytique, pipettes, thermometres, masses et verrerie", resp: "Metrologue interne", start: "2026-05-12", end: "2026-05-28", freq: "Mensuel", status: "Planifie", notes: "Plan par instrument avec echeances et priorites critiques" }], usr: [{ name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, { name: "Amina El Idrissi", email: "amina@ener.tn", role: "Responsable qualite", dept: "Qualite", ini: "AE" }], trailWeek: "", trailArchive: [], trail: [{ t: "2026-04-07 09:30", u: "John Doe", a: "Connexion", m: "Session", x: "Ouverture de l'application" }, { t: "2026-04-07 09:10", u: "Amina El Idrissi", a: "Creation", m: "NC", x: "NC-2026-001 ajoutee" }] };
+    const D = { u: { name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, org: { name: "QUALI by ENNAJEH", fiscal: "MF-2026-001", acc: "Accredite", accDate: "2026-01-15", validDate: "2027-01-15", manager: "John Doe", phone: "+216 71 000 000", fax: "+216 71 000 001", mail: "contact@QUALI.tn", address: "Zone industrielle, Tunis, Tunisie", docs: "Manuel qualite\nCertificat d'accreditation\nAnnexe technique\nPolitique qualite de l'organisme" }, diag: { person: "", date: "", answers: {}, notes: {}, updated: "" }, repo: { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }, docs: [{ id: 1, ref: "PRO-LAB-001", title: "Programme d'etalonnage", p: "Processus support", type: "Procedure", v: "2.1", st: "A valider", o: "Resp. qualite", d: "2026-04-01" }, { id: 2, ref: "INS-LAB-004", title: "Utilisation balance analytique", p: "Processus operationnel", type: "Instruction", v: "1.3", st: "Valide", o: "Technicien senior", d: "2026-03-18" }], orgDocs: [{ id: 101, ref: "PRO-PIL-001", title: "Audit client", ie: "IE-01", p: "Processus pilotage", type: "Procedure", page: "1/3", v: "1.0", st: "Valide", o: "Direction", d: "2026-03-12" }, { id: 102, ref: "INS-OPE-002", title: "Reception et traitement des echantillons", ie: "IE-02", p: "Processus operationnel", type: "Instruction", page: "1/2", v: "2.0", st: "A valider", o: "Chef laboratoire", d: "2026-04-02" }, { id: 103, ref: "FOR-SUP-003", title: "Demande d'achat de consommables", ie: "IE-03", p: "Processus support", type: "Formulaire", page: "1/1", v: "1.4", st: "Valide", o: "Service achats", d: "2026-02-20" }, { id: 104, ref: "ENR-SUP-004", title: "Fiche de maintenance preventive", ie: "IE-04", p: "Processus support", type: "Enregistrement", page: "1/1", v: "3.1", st: "Valide", o: "Metrologie", d: "2026-03-25" }], eq: [{ id: "EQ-001", n: "Balance analytique", m: "Mettler XS-205", sn: "SN-1234", l: "2026-01-10", nx: "2026-04-10", st: "A etalonner", ciq: "Quotidien", u: "+/- 0.1 mg" }, { id: "EQ-002", n: "pH-metre", m: "Metrohm 914", sn: "SN-5678", l: "2026-02-01", nx: "2026-08-01", st: "Valide", ciq: "Avant usage", u: "+/- 0.01 pH" }], nc: [{ ref: "NC-2026-001", desc: "Certificat manquant", g: "Critique", act: "Bloquer l'equipement", st: "Ouverte", o: "Resp. qualite", due: "2026-04-10" }, { ref: "NC-2026-002", desc: "Rapport incomplet", g: "Majeure", act: "Corriger modele", st: "En cours", o: "Technicien", due: "2026-04-15" }], aud: [{ ref: "AI-2026-001", ty: "Audit interne", sc: "Equipements et tracabilite", o: "A. Bensalem", d: "2026-04-20", st: "Planifie", f: "-" }, { ref: "AC-2026-001", ty: "Audit externe (client)", sc: "Systeme complet", o: "Direction", d: "2026-05-05", st: "En cours", f: "2 actions" }], revc: [{ ref: "1", client: "arco sonia sarl", address: "Z.I Enfidha", city: "SOUSSE", phone: "36 381 720", fax: "-", mail: "khassan@valvulasarco.com", st: "Actif" }, { ref: "2", client: "STE DE NUTRITION ANIMALE SA (SNA)", address: "SIDI EL HENI", city: "SOUSSE", phone: "73 280 400", fax: "73 240 409", mail: "achat_seh2@snasidielheni.com", st: "Actif" }, { ref: "3", client: "Ste LA TRINGLE", address: "WG7M+HPV Akouda Sousse", city: "AKOUDA", phone: "73342077", fax: "-", mail: "mariem.latringle@gnet.tn", st: "Actif" }, { ref: "4", client: "AMC", address: "ROUTE DE MSAKEN KM 147 ZAOUIET", city: "SOUSSE", phone: "73 386 040", fax: "-", mail: "achat@amctunisie.com", st: "Actif" }, { ref: "5", client: "VIVIER MARITIME DE TUNISIE (VMT)", address: "Port de peche Hergla", city: "SOUSSE", phone: "73 251 799", fax: "-", mail: "safrjb@gmail.com", st: "Actif" }, { ref: "6", client: "SOCIETE SAMELEC", address: "Rue Maarouf Roussafi, ZI", city: "ZAGHOUAN", phone: "72680122", fax: "72680090", mail: "amel.bensassi@apem.com", st: "Actif" }], prest: [{ id: "PREST-2026-001", ref: "PREST-2026-001", name: "Lab Expert Services", service: "Maintenance et qualification", contact: "Sami Trabelsi", mail: "contact@labexpert.tn", phone: "+216 71 123 456", scope: "Maintenance preventive des equipements critiques", d: "2026-04-08", st: "Actif", obs: "Intervention sous 48h" }, { id: "PREST-2026-002", ref: "PREST-2026-002", name: "Metrology Support", service: "Etalonnage externe", contact: "Nadia Ben Amor", mail: "support@metrology.tn", phone: "+216 70 555 222", scope: "Etalonnage balance, pipettes et sondes", d: "2026-04-15", st: "A evaluer", obs: "Dossier fournisseur a completer" }], aci: [{ id: "ACI-001", no: "AC-2026-001", date: "2026-04-20", requester: "Responsable qualite", dept: "Qualite", contact: "qualite@qualilab.tn", docTitle: "Procedure maitrise documentaire", docRef: "PRO-DOC-001", version: "2.0", versionDate: "2026-03-01", type: "Mise a jour", desc: "Ajout des exigences de tracabilite des demandes de modification.", part: "Chapitre 6 et annexe historique", reason: "Amelioration", goal: "Renforcer la conformite ISO 9001 et ISO 17025.", impactProcess: "Pilotage documentaire", impactService: "Aucun impact direct sur le service client", impactPeople: "Brief de sensibilisation", impactEquip: "Aucun", criticality: "Moyenne", qualityManager: "Responsable qualite", processOwner: "Pilote documentaire", decision: "Acceptee", validationDate: "2026-04-22", implOwner: "Assistant qualite", plannedDate: "2026-04-25", revisedVersion: "2.1", effectiveDate: "2026-04-28", verification: "Verification en revue documentaire", traceAction: "AC-2026-014", traceAudit: "AI-2026-001", traceComplaint: "-", archive: "Archive documentaire / version precedente" }], plan: [{ id: "PLAN-IC-001", type: "Inter-comparaison", ref: "PIC-2026-001", lab: "Laboratoire chimie", scope: "Programme inter-comparaison eau potable et solutions etalon", resp: "Responsable technique", start: "2026-05-10", end: "2026-05-20", freq: "Annuel", status: "Planifie", notes: "Coordination avec organisme externe et preparation des echantillons" }, { id: "PLAN-AUD-001", type: "Audit interne", ref: "PAI-2026-001", lab: "Systeme management qualite", scope: "Audit interne de tous les processus du laboratoire", resp: "Responsable qualite", start: "2026-06-01", end: "2026-06-05", freq: "Semestriel", status: "Planifie", notes: "Couvrir documentation, equipements, competences et reclamations" }, { id: "PLAN-HAB-001", type: "Maintien habilitation personnel", ref: "PHAB-2026-001", lab: "Personnel technique", scope: "Suivi des habilitations, observations terrain et reevaluations", resp: "Chef laboratoire", start: "2026-05-02", end: "2026-05-30", freq: "Trimestriel", status: "En cours", notes: "Verifier les techniciens actifs sur chaque methode" }, { id: "PLAN-RD-001", type: "Revue de direction", ref: "PRD-2026-001", lab: "Direction", scope: "Preparation des indicateurs, actions, risques et satisfaction client", resp: "Direction generale", start: "2026-07-10", end: "2026-07-15", freq: "Annuel", status: "Planifie", notes: "Inclure bilan objectifs qualite et besoins en ressources" }, { id: "PLAN-ETA-001", type: "Etalonnage laboratoire", ref: "PETA-2026-001", lab: "Laboratoire metrologie", scope: "Balance analytique, pipettes, thermometres, masses et verrerie", resp: "Metrologue interne", start: "2026-05-12", end: "2026-05-28", freq: "Mensuel", status: "Planifie", notes: "Plan par instrument avec echeances et priorites critiques" }], disc: [], usr: [{ name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, { name: "Amina El Idrissi", email: "amina@ener.tn", role: "Responsable qualite", dept: "Qualite", ini: "AE" }], trailWeek: "", trailArchive: [], trail: [{ t: "2026-04-07 09:30", u: "John Doe", a: "Connexion", m: "Session", x: "Ouverture de l'application" }, { t: "2026-04-07 09:10", u: "Amina El Idrissi", a: "Creation", m: "NC", x: "NC-2026-001 ajoutee" }] };
     let s = load();
     const RISK_EMPTY_VERSION = "risk-empty-20260415";
     try { if (localStorage.getItem(RISK_EMPTY_VERSION) !== "1") { s.risk = []; localStorage.setItem(RISK_EMPTY_VERSION, "1"); ss(K, JSON.stringify(s)) } } catch (e) { s.risk = [] }
@@ -5851,16 +6089,16 @@
     function isPilotLogin(e, p) { return String(e || "").trim().toLowerCase() === "karimennajeh@gmail.com" && String(p || "") === "09318872karim@" }
     function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value; if (!isPilotLogin(e, p)) { $("#lmsg").textContent = "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h"); return } try { ensurePilotAccount(); const u = s.usr.find(x => x.email.toLowerCase() === e.toLowerCase()) || pilotAccount(); s.u = u; ss(S, JSON.stringify({ email: s.u.email })); log("Connexion", "Session", e); save("Session ouverte"); openApp() } catch (err) { console.error(err); $("#lmsg").textContent = "Erreur de connexion. Verifie l'application puis recommence."; sr(S); $("#auth").classList.remove("h"); $("#app").classList.add("h") } }
     function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; $("#app").classList.add("h"); $("#auth").classList.remove("h"); updateBackButton() }
-    const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestateur externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
+    const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestateur externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
     function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-card"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-card"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-card"><strong>Adresse</strong><p>${esc(addr)}</p></div></div>` }
     function buildModuleRail(id) { const meta = moduleRailMeta[id]; if (!meta) return null; const rail = document.createElement("aside"); rail.className = "module-rail"; rail.innerHTML = `<div class="module-rail-logo"><img src="image/logo/SVG/asset 5.svg" alt="QUALI"></div><div class="module-rail-head"><b>${esc(meta.title)}</b><span>${esc(meta.tag)}</span></div>${moduleOrgRailHtml()}`; return rail }
     function updateModuleRails() { Object.keys(moduleRailMeta).forEach(id => { const org = $("#" + id + " .module-org"); if (org) org.outerHTML = moduleOrgRailHtml() }) }
     function updateModuleHeadTitles() { const titles = { hub: "Modules" }; Object.keys(moduleRailMeta).forEach(id => titles[id] = moduleRailMeta[id].title); Object.keys(titles).forEach(id => { const head = $("#" + id + " .hub-app-head"); if (!head) return; let t = head.querySelector(".module-page-title"); if (!t) { t = document.createElement("div"); t.className = "module-page-title"; const actions = head.querySelector(".hub-top-actions"); if (actions) head.insertBefore(t, actions); else head.appendChild(t) } t.textContent = titles[id] }) }
     function enhanceModulePanels() { Object.keys(moduleRailMeta).forEach(id => { const section = $("#" + id); if (!section || section.dataset.railReady === "1") return; section.dataset.railReady = "1"; section.classList.add("module-shell", moduleRailMeta[id].cls); const body = document.createElement("div"); body.className = "module-content"; while (section.firstChild) body.appendChild(section.firstChild); section.appendChild(buildModuleRail(id)); section.appendChild(body) }) }
-    function page(id, skipHistory) { const m = { hub: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], db: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], docs: ["Maitrise documentaire", ""], docorg: ["Documentation", ""], eq: ["Gestion des equipements", ""], nc: ["Non-conformites", ""], aud: ["Audits", ""], revc: ["Liste client", ""], usr: ["Utilisateurs", ""], set: ["Parametres", ""], diag: ["Diagnostic ISO 17025", ""], risk: ["Analyse de risque", ""], swot: ["Analyse SWOT", ""], sat: ["Satisfaction client", ""], recl: ["Reclamation client", ""], pers: ["Personnel", ""], prest: ["Prestateur externe", ""], aci: ["Amelioration continue", ""], plan: ["Planning", ""], repo: ["Dossier principal", ""] }; if (!skipHistory && currentPage && currentPage !== id) { pageHistory.push(currentPage); nextPageHistory = [] } currentPage = id;["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== id)); $("#app").classList.toggle("hub-mode", id === "hub"); $all("#nav button").forEach(b => b.classList.toggle("on", b.dataset.p === id)); $("#pt").textContent = m[id][0]; $("#ps").textContent = m[id][1]; placeBackButton(); updateBackButton() }
+    function page(id, skipHistory) { const m = { hub: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], db: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], docs: ["Maitrise documentaire", ""], docorg: ["Documentation", ""], eq: ["Gestion des equipements", ""], nc: ["Non-conformites", ""], aud: ["Audits", ""], revc: ["Liste client", ""], usr: ["Utilisateurs", ""], disc: ["Discussion", ""], set: ["Parametres", ""], diag: ["Diagnostic ISO 17025", ""], risk: ["Analyse de risque", ""], swot: ["Analyse SWOT", ""], sat: ["Satisfaction client", ""], recl: ["Reclamation client", ""], pers: ["Personnel", ""], prest: ["Prestateur externe", ""], aci: ["Amelioration continue", ""], plan: ["Planning", ""], repo: ["Dossier principal", ""] }; if (!skipHistory && currentPage && currentPage !== id) { pageHistory.push(currentPage); nextPageHistory = [] } currentPage = id;["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== id)); $("#app").classList.toggle("hub-mode", id === "hub"); $all("#nav button").forEach(b => b.classList.toggle("on", b.dataset.p === id)); $("#pt").textContent = m[id][0]; $("#ps").textContent = m[id][1]; placeBackButton(); updateBackButton() }
     function goBackPage() { if (pageHistory.length) { nextPageHistory.push(currentPage); page(pageHistory.pop(), true); return } if (sessionActive() && currentPage === "hub") { logout(); return } if (sessionActive()) { nextPageHistory.push(currentPage); page("hub", true) } }
     function goNextPage() { if (!sessionActive() || !nextPageHistory.length) return; page(nextPageHistory.pop(), true) }
-    function render() { dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); repoView(); updateModuleHeadTitles(); updateModuleRails(); updateNotificationBadges(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept }
+    function render() { dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); discussionView(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); repoView(); updateModuleHeadTitles(); updateModuleRails(); updateNotificationBadges(); updateMessageBadges(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept }
     function dashboardBarCard(title, value, max, color, note = "") { const pct = max > 0 ? Math.max(8, Math.min(100, Math.round((value / max) * 100))) : 0; return `<div class="mini" style="padding:14px 16px"><strong>${esc(title)}</strong><span class="bl">${esc(String(value))}</span><div style="margin-top:10px;height:10px;border-radius:999px;background:#edf3ff;overflow:hidden"><div style="width:${pct}%;height:100%;background:${color};border-radius:999px"></div></div>${note ? `<p class="mut" style="margin:8px 0 0">${esc(note)}</p>` : ""}</div>` }
     function dashboardSparkline(values, color = "#3f6fd8", width = 280, height = 110) { const list = (values || []).map(v => Number(v) || 0), max = Math.max(...list, 1), min = Math.min(...list, 0), pad = 12, usableW = width - pad * 2, usableH = height - pad * 2, step = list.length > 1 ? usableW / (list.length - 1) : usableW, norm = v => { const ratio = max === min ? 0.5 : (v - min) / (max - min); return height - pad - (ratio * usableH) }, pts = list.map((v, i) => `${pad + i * step},${norm(v)}`), area = [`${pad},${height - pad}`, ...pts, `${pad + usableW},${height - pad}`].join(" "), line = pts.join(" "); return `<svg viewBox="0 0 ${width} ${height}" aria-label="Courbe de suivi"><defs><linearGradient id="dashFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".28"></stop><stop offset="100%" stop-color="${color}" stop-opacity=".04"></stop></linearGradient></defs><polyline points="${area}" fill="url(#dashFill)" stroke="none"></polyline><polyline points="${line}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>${pts.map(p => { const [x, y] = p.split(","); return `<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"></circle>` }).join("")}</svg>` }
     function dashboardDonut(values, colors, size = 150) { const total = Math.max(values.reduce((n, v) => n + (Number(v) || 0), 0), 1), r = size * 0.34, c = size / 2, stroke = size * 0.16; let offset = 0; const segs = values.map((v, i) => { const value = Number(v) || 0, len = (value / total) * (Math.PI * 2 * r), dash = `${len} ${Math.PI * 2 * r - len}`, part = `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${colors[i] || "#3f6fd8"}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${c} ${c})"></circle>`; offset += len; return part }).join(""); return `<svg viewBox="0 0 ${size} ${size}" aria-label="Diagramme circulaire"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef3ff" stroke-width="${stroke}"></circle>${segs}<text x="${c}" y="${c - 2}" text-anchor="middle" font-size="26" font-weight="800" fill="#1f2d4d">${values.reduce((n, v) => n + (Number(v) || 0), 0)}</text><text x="${c}" y="${c + 20}" text-anchor="middle" font-size="11" fill="#6c7a96">elements</text></svg>` }
@@ -6088,6 +6326,25 @@
     function toggleNotificationMenu(btn) { const m = notificationMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } renderNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 580, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - Math.min(420, window.innerWidth - 20), r.right - 380)) + "px"; m.classList.remove("h") }
     function updateNotificationBadges() { const count = planningNotifications().length; document.querySelectorAll('.hub-action-icon[aria-label^="Notifications"]').forEach(btn => { btn.dataset.notifCount = String(count); btn.title = count ? `Notifications (${count})` : "Notifications"; btn.setAttribute("aria-label", count ? `Notifications (${count})` : "Notifications") }) }
     function openPlanningNotification(key) { if (!key) return; planNotifStore()[key] = now(); save("Notification planning traitee"); closeNotificationMenu(); page("plan"); render() }
+    function discussionItems() { if (!Array.isArray(s.disc)) s.disc = []; return s.disc }
+    function discussionUsers() { ensurePilotAccount(); return (s.usr || []).filter(x => x && x.email).map(x => ({ ...x, name: x.name || [x.firstName, x.lastName].filter(Boolean).join(" ").trim() || x.email, ini: x.ini || ini(x.name || x.email) })) }
+    function discussionCurrentEmail() { return String((s.u && s.u.email) || "").toLowerCase() }
+    function discussionPeerEmail() { return String(s.discSelected || "").toLowerCase() }
+    function discussionPeers() { const me = discussionCurrentEmail(); return discussionUsers().filter(x => String(x.email || "").toLowerCase() !== me) }
+    function discussionEnsureSelection() { const peers = discussionPeers(); if (!peers.length) { s.discSelected = ""; return "" } const current = discussionPeerEmail(); if (current && peers.some(x => x.email.toLowerCase() === current)) return current; const withMessages = peers.find(x => discussionItems().some(m => [m.fromEmail, m.toEmail].map(v => String(v || "").toLowerCase()).includes(x.email.toLowerCase()))); s.discSelected = (withMessages || peers[0]).email; return String(s.discSelected || "").toLowerCase() }
+    function discussionThread(email) { const me = discussionCurrentEmail(), peer = String(email || "").toLowerCase(); return discussionItems().filter(m => { const from = String(m.fromEmail || "").toLowerCase(), to = String(m.toEmail || "").toLowerCase(); return (from === me && to === peer) || (from === peer && to === me) }).sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || ""))) }
+    function discussionUnreadCount(email) { const me = discussionCurrentEmail(), peer = String(email || "").toLowerCase(); return discussionThread(peer).filter(m => String(m.toEmail || "").toLowerCase() === me && !(m.readBy || []).includes(me)).length }
+    function totalDiscussionUnread() { const me = discussionCurrentEmail(); return discussionItems().filter(m => String(m.toEmail || "").toLowerCase() === me && !(m.readBy || []).includes(me)).length }
+    function markDiscussionRead(email) { const me = discussionCurrentEmail(), peer = String(email || "").toLowerCase(); let changed = false; discussionThread(peer).forEach(m => { if (String(m.toEmail || "").toLowerCase() === me) { m.readBy = Array.isArray(m.readBy) ? m.readBy : []; if (!m.readBy.includes(me)) { m.readBy.push(me); changed = true } } }); if (changed) save("Messages lus") }
+    function openDiscussionWith(email) { const peer = String(email || "").toLowerCase(); if (!peer) return; s.discSelected = peer; markDiscussionRead(peer); page("disc"); render() }
+    function updateMessageBadges() { const count = totalDiscussionUnread(); document.querySelectorAll('.hub-action-icon[aria-label="Messages"]').forEach(btn => { btn.dataset.msgCount = String(count); btn.title = count ? `Messages (${count})` : "Messages" }) }
+    function discussionUsersHtml(selected) { return discussionPeers().map(user => { const email = String(user.email || "").toLowerCase(), thread = discussionThread(email), last = thread[thread.length - 1], unread = discussionUnreadCount(email); return `<button class="discussion-user${email === selected ? " on" : ""}" type="button" data-disc-user="${esc(email)}"><div class="discussion-user-head"><b>${esc(user.name)}</b>${unread ? `<span class="discussion-user-count">${unread}</span>` : ""}</div><small>${esc(user.role || "Compte interne")} - ${esc(user.dept || "-")}</small><p>${last ? esc((last.fromName || user.name) + " : " + String(last.body || "").slice(0, 82)) : "Aucune discussion pour le moment."}</p><small>${last ? esc(last.createdAt || "-") : esc(user.email)}</small></button>` }).join("") || `<div class="discussion-empty">Aucun autre compte n'est disponible pour la discussion.</div>` }
+    function discussionRecipientOptions(selected) { return discussionPeers().map(user => `<option value="${esc(String(user.email || "").toLowerCase())}"${String(user.email || "").toLowerCase() === String(selected || "").toLowerCase() ? " selected" : ""}>${esc(user.name)} - ${esc(user.role || "Compte")}</option>`).join("") || `<option value="">Aucun destinataire</option>` }
+    function discussionThreadHtml(selected) { if (!selected) return `<div class="discussion-empty">Choisis un membre du personnel pour afficher ou demarrer une discussion.</div>`; const thread = discussionThread(selected), me = discussionCurrentEmail(); if (!thread.length) return `<div class="discussion-empty">Aucun message pour ce compte. Ecris le premier message ci-dessous.</div>`; return thread.map(m => { const mine = String(m.fromEmail || "").toLowerCase() === me; return `<div class="discussion-message${mine ? " mine" : ""}"><b>${esc(mine ? "Moi" : (m.fromName || m.fromEmail || "Compte"))}</b><p>${esc(m.body || "")}</p><small>${esc(m.createdAt || "-")}</small></div>` }).join("") }
+    function discussionMeta(selected) { const peer = discussionPeers().find(x => String(x.email || "").toLowerCase() === String(selected || "").toLowerCase()); if (!peer) return "Choisis un membre pour afficher les echanges."; const unread = discussionUnreadCount(selected), thread = discussionThread(selected); return `${peer.name} - ${peer.role || "Compte interne"}${unread ? ` - ${unread} message${unread > 1 ? "s" : ""} non lu${unread > 1 ? "s" : ""}` : ""}${thread.length ? ` - ${thread.length} message${thread.length > 1 ? "s" : ""}` : ""}` }
+    function discussionView() { const selected = discussionEnsureSelection(); if ($("#discUsers")) $("#discUsers").innerHTML = discussionUsersHtml(selected); if ($("#discRecipient")) $("#discRecipient").innerHTML = discussionRecipientOptions(selected); if ($("#discCurrentMeta")) $("#discCurrentMeta").textContent = discussionMeta(selected); if ($("#discThread")) $("#discThread").innerHTML = discussionThreadHtml(selected); const sendBtn = $("#discSendBtn"), box = $("#discMessage"); if (sendBtn) sendBtn.disabled = !selected; if (box) box.disabled = !selected }
+    function sendDiscussionMessage() { const peer = discussionPeerEmail(), body = ($("#discMessage") && $("#discMessage").value || "").trim(); if (!peer) { sync("Choisis un destinataire pour envoyer un message"); return } if (!body) { sync("Ecris un message avant l'envoi"); return } const me = s.u || {}, recipient = discussionPeers().find(x => String(x.email || "").toLowerCase() === peer); discussionItems().push(markSaved({ id: "DISC-" + stamp() + "-" + Math.random().toString(36).slice(2, 6), fromEmail: me.email || "-", fromName: me.name || "Utilisateur", toEmail: recipient ? recipient.email : peer, toName: recipient ? recipient.name : peer, body, createdAt: now(), readBy: [discussionCurrentEmail()] })); log("Creation", "Discussion", "Message envoye a " + (recipient ? recipient.name : peer)); save("Message envoye"); if ($("#discMessage")) $("#discMessage").value = ""; render(); const thread = $("#discThread"); if (thread) thread.scrollTop = thread.scrollHeight }
+    function openDiscussionRecipient() { const target = $("#discRecipient"); if (!target || !target.value) { sync("Choisis un destinataire"); return } openDiscussionWith(target.value) }
     function planLegendHtml() { return `<div class="acts"><span class="ok">Planifie / realise</span><span class="wa">Planifie</span><span class="er">Reporte</span><span class="bl">1ere habilitation</span></div>` }
     function planAuditItems() { if (!Array.isArray(s.planAudit)) s.planAudit = c(PLAN_AUDIT_TEMPLATE.rows); return s.planAudit }
     function planAuditOptionsHtml() { const items = planAuditItems(); return `<option value="">Ligne a modifier / supprimer</option>` + items.map(x => `<option value="${esc(x.id)}">${esc(x.activity)} - ${esc(x.year || PLAN_AUDIT_TEMPLATE.year)}</option>`).join("") }
@@ -6483,7 +6740,7 @@
       });
     })();
     bindClick("procClose", closeProcessWindow);
-    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), notifItem = e.target.closest("[data-notif-key]"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
+    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), msg = e.target.closest('.hub-action-icon[aria-label="Messages"]'), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), notifItem = e.target.closest("[data-notif-key]"), discUser = e.target.closest("[data-disc-user]"), discOpen = e.target.closest("#discOpenBtn"), discSend = e.target.closest("#discSendBtn"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (msg) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("disc"); render(); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (discUser) { e.preventDefault(); openDiscussionWith(discUser.dataset.discUser); return } if (discOpen) { e.preventDefault(); openDiscussionRecipient(); return } if (discSend) { e.preventDefault(); sendDiscussionMessage(); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
     async function restoreRepo() { const h = await idbGet("repoHandle"); if (!h) return; if (await verifyHandle(h, false)) { repoHandle = h; s.repo.folderName = h.name; s.repo.linked = true; s.repo.mode = "Dossier reconnecte"; await scanRepo(h) } else { s.repo.mode = "Reconnecter le dossier local"; repoView() } }
     async function restoreOrgDir() { const h = await idbGet("orgHandle"); if (!h) return; if (await verifyHandle(h, false)) { orgHandle = h; orgRootName = h.name || "QUALI_Organisme"; if (activeOrgProc) await scanOrgProc(activeOrgProc) } }
     ensurePilotAccount();
