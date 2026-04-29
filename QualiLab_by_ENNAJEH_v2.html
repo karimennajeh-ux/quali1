@@ -3381,7 +3381,8 @@
       box-shadow: none;
     }
 
-    .auth-create {
+    .auth-create,
+    .auth-panel {
       margin-top: 18px;
       padding: 16px;
       border: 1px solid #dbe6f5;
@@ -3391,24 +3392,43 @@
       gap: 12px;
     }
 
-    .auth-create h3 {
+    .auth-create h3,
+    .auth-panel h3 {
       margin: 0;
       color: #245ccc;
       font-size: 16px;
     }
 
-    .auth-create-grid {
+    .auth-create-grid,
+    .auth-panel-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .auth-create .btn {
+    .auth-create .btn,
+    .auth-panel .btn {
       width: 100%;
     }
 
+    .auth-panel-actions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .auth-link-btn {
+      border: 0;
+      background: transparent;
+      color: #236bd8;
+      font-weight: 800;
+      text-align: left;
+      padding: 0;
+      cursor: pointer;
+    }
+
     @media(max-width:700px) {
-      .auth-create-grid {
+      .auth-create-grid,
+      .auth-panel-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -4192,32 +4212,56 @@
               style="width:80px; height:auto; margin-bottom:30px;">
             <h2 style="width: 70%;">Bienvenue sur QUALI</h2>
             <p>Solution de gestion qualite des laboratoires</p>
-            <div class="f"><label>Adresse e-mail</label><input id="lemail" type="email" value="karimennajeh@gmail.com">
-            </div>
-            <div class="f mt12"><label>Mot de passe</label>
-              <div class="password-wrap"><input id="lpwd" type="password" value="09318872karim@"><button id="togglePwd"
-                  class="password-toggle" type="button" aria-label="Afficher le mot de passe"
-                  aria-pressed="false">Afficher</button></div>
-            </div>
-            <button id="lbtn" class="btn" style="font-weight: 500; font-family: outfit;">Se connecter</button>
-            <div class="auth-help">Mot de passe oublie ?</div>
-            <p id="lmsg" class="mut auth-status">Connexion locale prete.</p>
-            <div class="auth-create">
-              <h3>Creer un compte pilote</h3>
-              <div class="auth-create-grid">
-                <div class="f"><label>Nom du pilote</label><input id="cpName" type="text"
-                    placeholder="Nom complet du pilote"></div>
-                <div class="f"><label>Adresse e-mail</label><input id="cpEmail" type="email"
-                    placeholder="pilote@organisme.tn"></div>
-                <div class="f"><label>Confirmer l'e-mail</label><input id="cpEmail2" type="email"
-                    placeholder="Confirmer l'adresse e-mail"></div>
-                <div class="f"><label>Mot de passe</label><input id="cpPwd" type="password"
-                    placeholder="Mot de passe du pilote"></div>
-                <div class="f"><label>Confirmer le mot de passe</label><input id="cpPwd2" type="password"
-                    placeholder="Confirmer le mot de passe"></div>
+            <div id="authLoginPanel">
+              <div class="f"><label>Adresse e-mail</label><input id="lemail" type="email" value="karimennajeh@gmail.com">
               </div>
-              <button id="cpBtn" class="btn" type="button">Creer et ouvrir un compte pilote vide</button>
-              <p id="cpMsg" class="mut auth-status">Chaque compte pilote utilise sa propre base locale.</p>
+              <div class="f mt12"><label>Mot de passe</label>
+                <div class="password-wrap"><input id="lpwd" type="password" value="09318872karim@"><button id="togglePwd"
+                    class="password-toggle" type="button" aria-label="Afficher le mot de passe"
+                    aria-pressed="false">Afficher</button></div>
+              </div>
+              <button id="lbtn" class="btn" style="font-weight: 500; font-family: outfit;">Se connecter</button>
+              <div class="auth-panel-actions">
+                <button id="openForgotPanel" class="auth-link-btn" type="button">Mot de passe oublie ?</button>
+                <button id="openCreatePanel" class="auth-link-btn" type="button">Creer un compte pilote</button>
+              </div>
+              <p id="lmsg" class="mut auth-status">Connexion locale prete.</p>
+            </div>
+            <div id="authCreatePanel" class="auth-panel h">
+              <h3>Creer un compte pilote</h3>
+              <div class="auth-panel-grid">
+                <div class="f"><label>Nom</label><input id="cpLastName" type="text" placeholder="Nom"></div>
+                <div class="f"><label>Prenom</label><input id="cpFirstName" type="text" placeholder="Prenom"></div>
+                <div class="f"><label>Poste</label><input id="cpFunc" type="text" placeholder="Poste / fonction"></div>
+                <div class="f"><label>Identifiant unique</label><input id="cpUid" type="text" placeholder="PILOT-002"></div>
+                <div class="f" style="grid-column:1/-1"><label>Nom de l'organisme</label><input id="cpOrgName" type="text" placeholder="Nom de la societe / organisme"></div>
+                <div class="f"><label>Adresse e-mail</label><input id="cpEmail" type="email" placeholder="pilote@organisme.tn"></div>
+                <div class="f"><label>Confirmer l'e-mail</label><input id="cpEmail2" type="email" placeholder="Confirmer l'adresse e-mail"></div>
+                <div class="f"><label>Mot de passe</label><input id="cpPwd" type="password" placeholder="Mot de passe du pilote"></div>
+                <div class="f"><label>Confirmer le mot de passe</label><input id="cpPwd2" type="password" placeholder="Confirmer le mot de passe"></div>
+                <div class="f"><label>Code de validation</label><input id="cpCode" type="text" placeholder="Code recu par e-mail"></div>
+              </div>
+              <div class="auth-panel-actions">
+                <button id="cpSendCodeBtn" class="btn" type="button">Envoyer le code</button>
+                <button id="cpBtn" class="btn" type="button">Valider et creer le compte pilote</button>
+                <button id="backToLoginFromCreate" class="auth-link-btn" type="button">Retour a la connexion</button>
+              </div>
+              <p id="cpMsg" class="mut auth-status">Le code de validation est associe au compte pilote en cours de creation.</p>
+            </div>
+            <div id="authResetPanel" class="auth-panel h">
+              <h3>Mot de passe oublie</h3>
+              <div class="auth-panel-grid">
+                <div class="f"><label>Adresse e-mail</label><input id="rpEmail" type="email" placeholder="pilote@organisme.tn"></div>
+                <div class="f"><label>Code de validation</label><input id="rpCode" type="text" placeholder="Code recu par e-mail"></div>
+                <div class="f"><label>Nouveau mot de passe</label><input id="rpPwd" type="password" placeholder="Nouveau mot de passe"></div>
+                <div class="f"><label>Confirmer le mot de passe</label><input id="rpPwd2" type="password" placeholder="Confirmer le mot de passe"></div>
+              </div>
+              <div class="auth-panel-actions">
+                <button id="rpSendCodeBtn" class="btn" type="button">Envoyer un code</button>
+                <button id="rpBtn" class="btn" type="button">Modifier le mot de passe</button>
+                <button id="backToLoginFromReset" class="auth-link-btn" type="button">Retour a la connexion</button>
+              </div>
+              <p id="rpMsg" class="mut auth-status">Un code de reinitialisation est necessaire pour modifier le mot de passe.</p>
             </div>
             <div class="auth-foot">&copy; 2026 QUALI - by ENNAJEH | Systeme de management de la qualite</div>
           </div>
@@ -6756,15 +6800,22 @@
     function pilotAccount() { return { name: "Pilote QUALI", firstName: "Pilote", lastName: "QUALI", email: MAIN_PILOT_EMAIL, role: "Administrateur", dept: "Pilotage application", func: "Pilote de l'application", matricule: "PILOT-001", ini: "PQ", perms: [...PERMS], passwordHint: "Mot de passe pilote : " + MAIN_PILOT_PASSWORD, pilot: true } }
     function pilotAccounts() { const fallback = [mainPilotRegistryAccount()]; const raw = sg(ACCK); if (!raw) return fallback; try { const parsed = JSON.parse(raw); return Array.isArray(parsed) && parsed.length ? parsed : fallback } catch (e) { return fallback } }
     function savePilotAccounts(arr) { ss(ACCK, JSON.stringify(arr)) }
-    function mainPilotRegistryAccount() { const p = pilotAccount(); return { name: p.name, email: p.email, password: MAIN_PILOT_PASSWORD, role: p.role, dept: p.dept, func: p.func, matricule: p.matricule, pilot: true } }
+    function mainPilotRegistryAccount() { const p = pilotAccount(); return { name: p.name, firstName: p.firstName, lastName: p.lastName, email: p.email, password: MAIN_PILOT_PASSWORD, role: p.role, dept: p.dept, func: p.func, matricule: p.matricule, orgName: "QUALI by ENNAJEH", pilot: true } }
     function ensureMainPilotRegistry() { const accounts = pilotAccounts(), email = authNormEmail(MAIN_PILOT_EMAIL); const i = accounts.findIndex(x => authNormEmail(x.email) === email); if (i >= 0) accounts[i] = { ...accounts[i], ...mainPilotRegistryAccount() }; else accounts.unshift(mainPilotRegistryAccount()); savePilotAccounts(accounts); return accounts }
-    function pilotRegistryToUser(acc) { const full = String(acc.name || "Pilote").trim(); const parts = full.split(" ").filter(Boolean); return { name: full, firstName: parts[0] || full, lastName: parts.slice(1).join(" ") || "", email: acc.email, role: acc.role || "Administrateur", dept: acc.dept || "Pilotage application", func: acc.func || "Pilote de l'application", matricule: acc.matricule || ("PILOT-" + stamp()), ini: ini(full), perms: [...PERMS], pilot: true } }
-    function blankPilotData(acc) { const d = c(D), user = pilotRegistryToUser(acc); Object.keys(d).forEach(k => { if (Array.isArray(d[k])) d[k] = [] }); d.u = user; d.org = { ...d.org, name: "", fiscal: "", acc: "", accDate: "", validDate: "", manager: "", phone: "", fax: "", mail: user.email || "", address: "", city: "", accRef: "", accStd: "ISO/IEC 17025:2017", docs: "" }; d.diag = { person: "", date: "", answers: {}, notes: {}, updated: "" }; d.repo = { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }; d.docs = []; d.orgDocs = []; d.eq = []; d.nc = []; d.aud = []; d.revc = []; d.prest = []; d.aci = []; d.plan = []; d.disc = []; d.usr = [user]; d.trailWeek = ""; d.trailArchive = []; d.trail = []; d.risk = []; d.swot = []; d.sat = []; d.recl = []; d.personnel = []; d.perHab = []; d.perQual = []; d.dbCalendarNotes = {}; d.dbCalendarView = null; d.dbCalendarSelected = ""; return d }
+    function pilotRegistryToUser(acc) { const full = String(acc.name || [acc.firstName, acc.lastName].filter(Boolean).join(" ") || "Pilote").trim(); const parts = full.split(" ").filter(Boolean); return { name: full, firstName: acc.firstName || parts[0] || full, lastName: acc.lastName || parts.slice(1).join(" ") || "", email: acc.email, role: acc.role || "Administrateur", dept: acc.dept || "Pilotage application", func: acc.func || "Pilote de l'application", matricule: acc.matricule || ("PILOT-" + stamp()), ini: ini(full), perms: [...PERMS], pilot: true } }
+    function blankPilotData(acc) { const d = c(D), user = pilotRegistryToUser(acc); Object.keys(d).forEach(k => { if (Array.isArray(d[k])) d[k] = [] }); d.u = user; d.org = { ...d.org, name: acc.orgName || "", fiscal: "", acc: "", accDate: "", validDate: "", manager: user.name || "", phone: "", fax: "", mail: user.email || "", address: "", city: "", accRef: acc.matricule || "", accStd: "ISO/IEC 17025:2017", docs: "" }; d.diag = { person: "", date: "", answers: {}, notes: {}, updated: "" }; d.repo = { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }; d.docs = []; d.orgDocs = []; d.eq = []; d.nc = []; d.aud = []; d.revc = []; d.prest = []; d.aci = []; d.plan = []; d.disc = []; d.usr = [user]; d.trailWeek = ""; d.trailArchive = []; d.trail = []; d.risk = []; d.swot = []; d.sat = []; d.recl = []; d.personnel = []; d.perHab = []; d.perQual = []; d.dbCalendarNotes = {}; d.dbCalendarView = null; d.dbCalendarSelected = ""; return d }
     function switchPilotStore(email) { currentPilotEmail = authNormEmail(email) || MAIN_PILOT_EMAIL; currentDataKey = pilotDataKey(currentPilotEmail) }
     function findPilotAccount(email) { return ensureMainPilotRegistry().find(x => authNormEmail(x.email) === authNormEmail(email)) || null }
     function loadPilotApp(email) { const acc = findPilotAccount(email); if (!acc) return null; switchPilotStore(email); s = load(); s.usr = s.usr || []; const user = pilotRegistryToUser(acc); const i = s.usr.findIndex(x => authNormEmail(x.email) === authNormEmail(acc.email)); if (i >= 0) s.usr[i] = { ...s.usr[i], ...user }; else s.usr.unshift(user); s.u = s.usr.find(x => authNormEmail(x.email) === authNormEmail(acc.email)) || user; ensurePilotAccount(); return acc }
     function isPilotLogin(e, p) { const acc = findPilotAccount(e); return !!(acc && String(acc.password || "") === String(p || "")) }
-    function createPilotAccount() { const name = $("#cpName").value.trim(), email = $("#cpEmail").value.trim(), email2 = $("#cpEmail2").value.trim(), pw = $("#cpPwd").value, pw2 = $("#cpPwd2").value, msg = $("#cpMsg"); if (!name || !email || !email2 || !pw || !pw2) { msg.textContent = "Renseigne tous les champs du compte pilote."; return } if (authNormEmail(email) !== authNormEmail(email2)) { msg.textContent = "La confirmation de l'adresse e-mail est incorrecte."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : minimum 8 caracteres avec lettres, chiffres et symbole."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); if (accounts.some(x => authNormEmail(x.email) === authNormEmail(email))) { msg.textContent = "Ce compte pilote existe deja."; return } const account = { name, email, password: pw, role: "Administrateur", dept: "Pilotage application", func: "Pilote de l'application", matricule: "PILOT-" + stamp(), pilot: true }; accounts.unshift(account); savePilotAccounts(accounts); switchPilotStore(email); s = blankPilotData(account); save("Nouvelle base pilote initialisee"); ss(S, JSON.stringify({ email: account.email })); msg.textContent = "Compte pilote cree. L'application s'ouvre avec une base vide."; $("#lemail").value = account.email; $("#lpwd").value = pw; clearFields(["#cpName", "#cpEmail", "#cpEmail2", "#cpPwd", "#cpPwd2"]); openApp() }
+    function authPanel(id) { ["authLoginPanel", "authCreatePanel", "authResetPanel"].forEach(x => { const el = $("#" + x); if (el) el.classList.toggle("h", x !== id) }) }
+    function sixCode() { return String(Math.floor(100000 + Math.random() * 900000)) }
+    function sendPilotMailCode(email, code, purpose = "validation") { const subject = encodeURIComponent(purpose === "reset" ? "Code de reinitialisation QUALI" : "Code de validation QUALI"), body = encodeURIComponent(`Bonjour,\n\nVotre code QUALI est : ${code}\n\nObjet : ${purpose === "reset" ? "reinitialisation du mot de passe" : "validation du compte pilote"}\n\nMerci de conserver ce code en toute confidentialite.`), a = document.createElement("a"); a.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`; a.style.display = "none"; document.body.appendChild(a); a.click(); a.remove() }
+    function createDraftPayload() { const firstName = $("#cpFirstName").value.trim(), lastName = $("#cpLastName").value.trim(), func = $("#cpFunc").value.trim(), uid = $("#cpUid").value.trim(), orgName = $("#cpOrgName").value.trim(), email = $("#cpEmail").value.trim(), email2 = $("#cpEmail2").value.trim(), pw = $("#cpPwd").value, pw2 = $("#cpPwd2").value; return { firstName, lastName, func, uid, orgName, email, email2, pw, pw2, name: [firstName, lastName].filter(Boolean).join(" ").trim() } }
+    function sendCreatePilotCode() { const msg = $("#cpMsg"), draft = createDraftPayload(); if (!draft.firstName || !draft.lastName || !draft.func || !draft.uid || !draft.orgName || !draft.email || !draft.email2 || !draft.pw || !draft.pw2) { msg.textContent = "Renseigne toutes les donnees du compte pilote avant d'envoyer le code."; return } if (authNormEmail(draft.email) !== authNormEmail(draft.email2)) { msg.textContent = "La confirmation de l'adresse e-mail est incorrecte."; return } if (!validPassword(draft.pw)) { msg.textContent = "Mot de passe invalide : minimum 8 caracteres avec lettres, chiffres et symbole."; return } if (draft.pw !== draft.pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); if (accounts.some(x => authNormEmail(x.email) === authNormEmail(draft.email))) { msg.textContent = "Ce compte pilote existe deja."; return } const code = sixCode(); ss("QUALI_pending_pilot_signup", JSON.stringify({ ...draft, code, createdAt: now() })); sendPilotMailCode(draft.email, code, "validation"); msg.textContent = "Code envoye. Ouvre ton e-mail, puis saisis le code de validation pour terminer la creation."; }
+    function createPilotAccount() { const msg = $("#cpMsg"), raw = sg("QUALI_pending_pilot_signup"), entered = ($("#cpCode").value || "").trim(); if (!raw) { msg.textContent = "Commence par envoyer le code de validation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending) { msg.textContent = "Le brouillon du compte pilote est invalide. Renvoie un nouveau code."; return } if (!entered || entered !== String(pending.code || "")) { msg.textContent = "Le code de validation est incorrect."; return } const accounts = ensureMainPilotRegistry(); if (accounts.some(x => authNormEmail(x.email) === authNormEmail(pending.email))) { msg.textContent = "Ce compte pilote existe deja."; return } const account = { name: pending.name, firstName: pending.firstName, lastName: pending.lastName, email: pending.email, password: pending.pw, role: "Administrateur", dept: "Pilotage application", func: pending.func, matricule: pending.uid, orgName: pending.orgName, pilot: true }; accounts.unshift(account); savePilotAccounts(accounts); sr("QUALI_pending_pilot_signup"); msg.textContent = "Compte pilote valide. Retour a la connexion pour ouvrir l'application avec ce compte."; $("#lemail").value = account.email; $("#lpwd").value = ""; clearFields(["#cpFirstName", "#cpLastName", "#cpFunc", "#cpUid", "#cpOrgName", "#cpEmail", "#cpEmail2", "#cpPwd", "#cpPwd2", "#cpCode"]); authPanel("authLoginPanel"); $("#lmsg").textContent = "Compte pilote cree. Connecte-toi avec ton e-mail et ton mot de passe."; }
+    function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"), acc = findPilotAccount(email); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; }
+    function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : minimum 8 caracteres avec lettres, chiffres et symbole."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); const i = accounts.findIndex(x => authNormEmail(x.email) === authNormEmail(email)); if (i < 0) { msg.textContent = "Compte pilote introuvable."; return } accounts[i] = { ...accounts[i], password: pw }; savePilotAccounts(accounts); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; }
     function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value; if (!isPilotLogin(e, p)) { $("#lmsg").textContent = "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h"); return } try { const acc = loadPilotApp(e); if (!acc) throw new Error("Compte pilote introuvable"); ss(S, JSON.stringify({ email: acc.email })); log("Connexion", "Session", e); save("Session ouverte"); openApp() } catch (err) { console.error(err); $("#lmsg").textContent = "Erreur de connexion. Verifie l'application puis recommence."; sr(S); $("#auth").classList.remove("h"); $("#app").classList.add("h") } }
     function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; $("#app").classList.add("h"); $("#auth").classList.remove("h"); updateBackButton() }
     const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestateur externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
@@ -7370,7 +7421,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametre de profil ouvert"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    bindClick("lbtn", login); bindClick("cpBtn", createPilotAccount); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport);
+    bindClick("lbtn", login); bindClick("openCreatePanel", () => authPanel("authCreatePanel")); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", createPilotAccount); bindClick("rpSendCodeBtn", sendResetPilotCode); bindClick("rpBtn", resetPilotPassword); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport);
     ["#ds", "#dpf", "#dtf", "#df", "#ods", "#odpf", "#odtf", "#odf", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });
     ["#pxqual", "#pxcomm", "#pxdelay"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updatePrestEvaluation); el.addEventListener("change", updatePrestEvaluation) } });
