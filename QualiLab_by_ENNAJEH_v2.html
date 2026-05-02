@@ -2984,6 +2984,36 @@
       padding: 12px
     }
 
+    .user-step-grid {
+      display: grid;
+      gap: 14px
+    }
+
+    .user-step-card {
+      border: 1px solid #dfe8f5;
+      border-radius: 18px;
+      background: #fdfefe;
+      padding: 14px
+    }
+
+    .user-step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #edf4ff;
+      color: #245ccc;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px
+    }
+
+    .user-step-card h4 {
+      margin: 0 0 10px;
+      color: #21314f
+    }
+
     .access-row-head {
       display: flex;
       align-items: center;
@@ -3013,6 +3043,46 @@
       color: #51627f;
       font-size: 12px;
       font-weight: 700
+    }
+
+    .access-window-card.access-max {
+      grid-column: 1 / -1
+    }
+
+    .access-window-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px
+    }
+
+    .access-window-head .audit-window-controls {
+      margin-left: auto
+    }
+
+    .access-window-card.access-min .access-window-body {
+      display: none
+    }
+
+    .access-window-card.access-hidden .access-window-body,
+    .access-window-card.access-hidden .access-window-head .audit-window-controls {
+      display: none
+    }
+
+    .access-window-hidden {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #f2f6ff;
+      color: #51627f;
+      font-weight: 700
+    }
+
+    .access-window-card.access-hidden .access-window-hidden {
+      display: flex
     }
 
     .user-meta {
@@ -5607,15 +5677,24 @@
         </div>
         <div class="card">
           <h3>Creation d'un nouveau utilisateur</h3>
-          <p class="mut mt-neg6">Renseigne le compte puis coche les autorisations d'acces avant l'enregistrement.</p>
-          <div class="access-layout">
-            <div class="access-meta">
+          <p class="mut mt-neg6">Presentation simplifiee par etapes pour creer rapidement un compte utilisateur.</p>
+          <div class="user-step-grid">
+            <div class="user-step-card">
+              <div class="user-step-badge">Etape 1</div>
+              <h4>Informations du compte</h4>
               <div class="g">
                 <input id="ufn" placeholder="Prenom">
                 <input id="uln" placeholder="Nom">
                 <input id="ue" type="email" placeholder="Adresse e-mail du compte">
-                <input id="upw" type="password" placeholder="Mot de passe : lettres, chiffres et symbole">
+                <input id="upw" type="password" placeholder="Mot de passe : minimum 4 chiffres">
                 <input id="upw2" type="password" placeholder="Confirmer le mot de passe">
+                <input id="umat" placeholder="Matricule de l'agent">
+              </div>
+            </div>
+            <div class="user-step-card">
+              <div class="user-step-badge">Etape 2</div>
+              <h4>Profil et statut</h4>
+              <div class="g">
                 <select id="ur">
                   <option>Administrateur</option>
                   <option>Responsable qualite</option>
@@ -5623,7 +5702,6 @@
                   <option>Lecture seule</option>
                 </select>
                 <input id="ufunc" placeholder="Poste / fonction de l'agent">
-                <input id="umat" placeholder="Matricule de l'agent">
                 <input id="ud" placeholder="Departement / service">
                 <select id="uStatus">
                   <option>Actif</option>
@@ -5637,9 +5715,12 @@
                   <option value="Personnalise">Profil : Personnalise</option>
                 </select>
                 <button class="btn2 btn" id="uApplyProfile">Appliquer le profil</button>
-                <button class="btn" id="usv">Enregistrer le compte</button>
               </div>
-              <div class="f mt12">
+            </div>
+            <div class="user-step-card">
+              <div class="user-step-badge">Etape 3</div>
+              <h4>Autorisations generales</h4>
+              <div class="f mt0">
                 <label>Autorisations generales du compte</label>
                 <div class="perm-grid" id="uperms">
                   <label><input type="checkbox" value="Ajouter" checked> Ajouter</label>
@@ -5654,9 +5735,14 @@
                 </div>
               </div>
             </div>
-            <div class="f mt0">
+            <div class="user-step-card">
+              <div class="user-step-badge">Etape 4</div>
+              <h4>Acces par module</h4>
               <label>Acces par module</label>
               <div id="uModuleAccess" class="access-matrix"></div>
+            </div>
+            <div class="acts">
+              <button class="btn" id="usv">Enregistrer le compte</button>
             </div>
           </div>
         </div>
@@ -8089,7 +8175,10 @@
     function normalizeModuleAccess(raw) { const out = {}; MODULE_ACCESS_CONFIG.forEach(mod => { const list = Array.isArray(raw && raw[mod.id]) ? raw[mod.id].filter(x => MODULE_ACTIONS.includes(x)) : []; if (list.length) out[mod.id] = [...new Set(list)] }); return out }
     function moduleAccessForProfile(profile) { const tpl = ACCOUNT_PROFILES[profile] || ACCOUNT_PROFILES["Lecture seule"]; return normalizeModuleAccess(cloneModuleAccess(tpl.moduleAccess || {})) }
     function moduleAccessSummary(access) { const visible = MODULE_ACCESS_CONFIG.filter(mod => Array.isArray(access && access[mod.id]) && access[mod.id].length); if (!visible.length) return `<div class="e">Aucun module autorise.</div>`; return `<div class="module-access-list">${visible.map(mod => `<div class="module-access-item"><b>${esc(mod.label)}</b><p>${esc((access[mod.id] || []).join(", "))}</p></div>`).join("")}</div>` }
-    function buildModuleAccessMatrix() { const box = $("#uModuleAccess"); if (!box) return; box.innerHTML = MODULE_ACCESS_CONFIG.map(mod => `<div class="access-row"><div class="access-row-head"><b>${esc(mod.label)}</b><span class="bl">${esc(mod.id)}</span></div><div class="access-actions">${MODULE_ACTIONS.map(action => `<label><input type="checkbox" data-module-access="${esc(mod.id)}" data-module-action="${esc(action)}">${esc(action)}</label>`).join("")}</div></div>`).join("") }
+    function userAccessUi(moduleId) { s.userAccessUi = s.userAccessUi || {}; return s.userAccessUi[moduleId] || { min: false, max: false, hidden: false } }
+    function setUserAccessUi(moduleId, patch) { s.userAccessUi = s.userAccessUi || {}; s.userAccessUi[moduleId] = { ...userAccessUi(moduleId), ...patch }; applyUserAccessUi() }
+    function buildModuleAccessMatrix() { const box = $("#uModuleAccess"); if (!box) return; box.innerHTML = MODULE_ACCESS_CONFIG.map(mod => `<div class="access-row access-window-card" data-access-window="${esc(mod.id)}"><div class="access-window-head access-row-head"><b>${esc(mod.label)}</b><span class="bl">${esc(mod.id)}</span><div class="audit-window-controls"><button class="audit-window-btn" type="button" title="Reduire" aria-label="Reduire" data-uam-win="min" data-uam-module="${esc(mod.id)}">_</button><button class="audit-window-btn" type="button" title="Agrandir ou restaurer" aria-label="Agrandir ou restaurer" data-uam-win="max" data-uam-module="${esc(mod.id)}">&#9633;</button><button class="audit-window-btn" type="button" title="Fermer" aria-label="Fermer" data-uam-win="close" data-uam-module="${esc(mod.id)}">&times;</button></div></div><div class="access-window-hidden"><span>${esc(mod.label)} masque</span><button class="btn2 btn" type="button" data-uam-win="open" data-uam-module="${esc(mod.id)}">Afficher</button></div><div class="access-window-body"><div class="access-actions">${MODULE_ACTIONS.map(action => `<label><input type="checkbox" data-module-access="${esc(mod.id)}" data-module-action="${esc(action)}">${esc(action)}</label>`).join("")}</div></div></div>`).join(""); applyUserAccessUi() }
+    function applyUserAccessUi() { MODULE_ACCESS_CONFIG.forEach(mod => { const el = document.querySelector(`[data-access-window="${mod.id}"]`), ui = userAccessUi(mod.id); if (!el) return; el.classList.toggle("access-min", !!ui.min); el.classList.toggle("access-max", !!ui.max); el.classList.toggle("access-hidden", !!ui.hidden) }) }
     function setModuleAccessSelection(access) { $all("[data-module-access]").forEach(input => { const mod = input.dataset.moduleAccess, action = input.dataset.moduleAction; input.checked = !!(access && Array.isArray(access[mod]) && access[mod].includes(action)) }) }
     function selectedModuleAccess() { const out = {}; $all("[data-module-access]").forEach(input => { const mod = input.dataset.moduleAccess, action = input.dataset.moduleAction; if (!input.checked) return; if (!out[mod]) out[mod] = []; out[mod].push(action) }); Object.keys(out).forEach(mod => { if (out[mod].length && !out[mod].includes("Voir")) out[mod].unshift("Voir") }); return normalizeModuleAccess(out) }
     function profilePerms(profile) { const tpl = ACCOUNT_PROFILES[profile] || ACCOUNT_PROFILES["Lecture seule"]; return [...new Set((tpl.perms || []).filter(x => PERMS.includes(x)))] }
@@ -8108,7 +8197,7 @@
     function requirePerm(p, moduleId = currentPage) { if (hasPerm(p, moduleId)) return true; sync("Acces refuse : autorisation requise - " + p); return false }
     function selectedPerms() { return [...new Set($all("#uperms input:checked").map(x => x.value).filter(x => PERMS.includes(x)))] }
     function permsHtml(u) { return `<div class="perm-tags">${userPerms(u).map(p => `<span>${esc(p)}</span>`).join("")}</div>` }
-    function validPassword(v) { return String(v || "").length >= 8 && /[A-Za-z]/.test(v) && /\d/.test(v) && /[^A-Za-z0-9]/.test(v) }
+    function validPassword(v) { return /^\d{4,}$/.test(String(v || "").trim()) }
     function notifyAccount(u, pw) { const modules = MODULE_ACCESS_CONFIG.filter(mod => Array.isArray(u.moduleAccess && u.moduleAccess[mod.id]) && u.moduleAccess[mod.id].length).map(mod => `${mod.label} : ${(u.moduleAccess[mod.id] || []).join(", ")}`).join("\n") || "Aucun module autorise", subject = encodeURIComponent("Creation de votre compte QUALI"), body = encodeURIComponent(`Bonjour ${u.firstName || u.name},\n\nVotre compte QUALI a ete cree.\n\nIdentifiant : ${u.email}\nMot de passe provisoire : ${pw}\nRole : ${u.role}\nFonction : ${u.func || "-"}\nMatricule : ${u.matricule || "-"}\nStatut : ${u.status || "Actif"}\nAutorisations generales : ${(u.perms || []).join(", ") || "-"}\n\nAcces par module :\n${modules}\n\nMerci de conserver ces informations de maniere securisee.`), a = document.createElement("a"); a.href = `mailto:${encodeURIComponent(u.email)}?subject=${subject}&body=${body}`; a.style.display = "none"; document.body.appendChild(a); a.click(); a.remove() }
     function resetDocForm() { editingDocId = ""; clearFields(["#dt", "#dr", "#do", "#dverif", "#dapp", "#drev", "#ddiff", "#durl"]); const btn = $("#dsv"); if (btn) btn.textContent = "Enregistrer" }
     function editDoc(id) { if (!requirePerm("Modifier")) return; s.docs = (s.docs || []).map(normDoc); const x = s.docs.find(v => String(v.id) === String(id)); if (!x) return; editingDocId = String(id); $("#dt").value = x.title || ""; $("#dr").value = x.ref || ""; $("#dpr").value = x.p || "Processus support"; $("#dty").value = x.type || "Procedure"; $("#do").value = x.o || ""; $("#dverif").value = x.verif || ""; $("#dapp").value = x.app || ""; $("#drev").value = x.review && x.review !== "-" ? x.review : ""; $("#dstat").value = x.st || "Brouillon"; $("#dst").value = x.store || "A definir"; $("#ddiff").value = x.diff || ""; $("#durl").value = x.url || ""; const btn = $("#dsv"); if (btn) btn.textContent = "Modifier"; sync("Document charge pour modification"); $("#dt").scrollIntoView({ behavior: "smooth", block: "center" }) }
@@ -8164,7 +8253,7 @@
     function deletePlanning(id) { if (!requirePerm("Supprimer")) return; const x = planningItems().find(v => v.id === id); s.plan = planningItems().filter(v => v.id !== id); if (editingPlanId === id) resetPlanningForm(); log("Suppression", "Planning", x ? x.ref : id); save("Planning supprime automatiquement"); render() }
     function printPlanning() { if (!requirePerm("Exporter")) return; const type = selectedPlanningType(), html = planningExportHtml(filteredPlanning(), type), w = window.open("", "_blank", "width=1200,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer le planning"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync(selectedPlanningLabel(type) + " pret a imprimer") }
     function downloadPlanning() { if (!requirePerm("Telecharger")) return; const type = selectedPlanningType(), label = planningFileLabel(type); downloadText(label + "_" + stamp() + ".xls", planningExportHtml(filteredPlanning(), type), "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Planning", selectedPlanningLabel(type) + " exporte sous Excel"); save(selectedPlanningLabel(type) + " telecharge") }
-    function addUsr() { if (!requirePerm("Comptes", "usr")) return; const fn = $("#ufn").value.trim(), ln = $("#uln").value.trim(), e = $("#ue").value.trim(), pw = $("#upw").value, pw2 = $("#upw2").value, func = $("#ufunc").value.trim(), mat = $("#umat").value.trim(), n = (fn + " " + ln).trim(), profile = currentUserProfile(); let moduleAccess = selectedModuleAccess(), perms = selectedPerms(); if (!fn || !ln || !e) { sync("Renseigne le prenom, le nom et l'adresse mail du compte"); return } if ((s.usr || []).some(x => authNormEmail(x.email) === authNormEmail(e))) { sync("Cette adresse e-mail existe deja dans l'application"); return } if (!validPassword(pw)) { sync("Mot de passe invalide : minimum 8 caracteres avec lettres, chiffres et symbole"); return } if (pw !== pw2) { sync("Confirmation du mot de passe incorrecte"); return } if (!func || !mat) { sync("Renseigne le poste/fonction et la matricule de l'agent"); return } if (!Object.keys(moduleAccess).length) moduleAccess = defaultModuleAccessForForm(); if (!perms.length) perms = defaultPermsForForm(); if (!Object.keys(moduleAccess).length) { sync("Choisis au moins un module autorise pour ce compte"); return } const user = normalizeUserAccount(markSaved({ firstName: fn, lastName: ln, name: n, email: e, role: $("#ur").value, dept: $("#ud").value.trim() || "-", func, matricule: mat, ini: ini(n), perms, password: pw, passwordHint: "Mot de passe cree et notifie par email", status: ($("#uStatus") && $("#uStatus").value) || "Actif", profile, moduleAccess, accountType: "Utilisateur", createdBy: (s.u && s.u.email) || "", createdAt: now() })); s.usr = (s.usr || []).map(normalizeUserAccount); s.usr.unshift(user); log("Creation", "Utilisateurs", n + " ajoute avec acces : " + Object.keys(moduleAccess).length + " module(s)"); save("Utilisateur enregistre automatiquement"); clearFields(["#ufn", "#uln", "#ue", "#upw", "#upw2", "#ufunc", "#umat", "#ud"]); if ($("#uStatus")) $("#uStatus").value = "Actif"; if ($("#uProfile")) $("#uProfile").value = "Technicien"; applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Technicien")); render(); try { notifyAccount(user, pw) } catch (e) { console.error(e) } sync("Compte utilisateur cree et ajoute a la liste") }
+    function addUsr() { if (!requirePerm("Comptes", "usr")) return; const fn = $("#ufn").value.trim(), ln = $("#uln").value.trim(), e = $("#ue").value.trim(), pw = $("#upw").value, pw2 = $("#upw2").value, func = $("#ufunc").value.trim(), mat = $("#umat").value.trim(), n = (fn + " " + ln).trim(), profile = currentUserProfile(); let moduleAccess = selectedModuleAccess(), perms = selectedPerms(); if (!fn || !ln || !e) { sync("Renseigne le prenom, le nom et l'adresse mail du compte"); return } if ((s.usr || []).some(x => authNormEmail(x.email) === authNormEmail(e))) { sync("Cette adresse e-mail existe deja dans l'application"); return } if (!validPassword(pw)) { sync("Mot de passe invalide : saisir au minimum 4 chiffres"); return } if (pw !== pw2) { sync("Confirmation du mot de passe incorrecte"); return } if (!func || !mat) { sync("Renseigne le poste/fonction et la matricule de l'agent"); return } if (!Object.keys(moduleAccess).length) moduleAccess = defaultModuleAccessForForm(); if (!perms.length) perms = defaultPermsForForm(); if (!Object.keys(moduleAccess).length) { sync("Choisis au moins un module autorise pour ce compte"); return } const user = normalizeUserAccount(markSaved({ firstName: fn, lastName: ln, name: n, email: e, role: $("#ur").value, dept: $("#ud").value.trim() || "-", func, matricule: mat, ini: ini(n), perms, password: pw, passwordHint: "Mot de passe numerique d'au moins 4 chiffres", status: ($("#uStatus") && $("#uStatus").value) || "Actif", profile, moduleAccess, accountType: "Utilisateur", createdBy: (s.u && s.u.email) || "", createdAt: now() })); s.usr = (s.usr || []).map(normalizeUserAccount); s.usr.unshift(user); log("Creation", "Utilisateurs", n + " ajoute avec acces : " + Object.keys(moduleAccess).length + " module(s)"); save("Utilisateur enregistre automatiquement"); clearFields(["#ufn", "#uln", "#ue", "#upw", "#upw2", "#ufunc", "#umat", "#ud"]); if ($("#uStatus")) $("#uStatus").value = "Actif"; if ($("#uProfile")) $("#uProfile").value = "Technicien"; applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Technicien")); render(); try { notifyAccount(user, pw) } catch (e) { console.error(e) } sync("Compte utilisateur cree et ajoute a la liste") }
     function saveOrg(actionLabel = "Enregistrement") { if (!requirePerm("Parametres")) return; const get = id => { const el = $("#" + id); return el ? el.value.trim() : "" }; s.org = markSaved({ ...(s.org || {}), name: get("oname"), acc: get("oacc"), accDate: get("oad"), validDate: get("ovd"), manager: get("omgr"), city: get("ocity"), phone: get("otel"), fax: get("ofax"), mail: get("omail"), address: get("oaddr"), accRef: get("oaref"), accStd: get("oastd"), accBody: get("oabody"), accScope: get("oascope"), accResp: get("oaresp"), accNext: get("oanext"), accDecision: get("oadec"), accActionDate: get("oaactiondate"), accActions: get("oaactions"), docs: (s.org && s.org.docs) || "", createdAt: (s.org && s.org.createdAt) || now(), lastAction: actionLabel + " de la configuration organisme" }); log(actionLabel, "Parametres", "Configuration accreditation et organisme mise a jour et affichee dans les documents necessaires"); save("Configuration organisme mise a jour et affichee dans les documents necessaires"); render(); sync("Configuration organisme mise a jour et affichee dans Documents necessaires") }
     function modifyOrg() { saveOrg("Modification") }
     function printOrgSummary() { const o = s.org || {}, sections = orgSummarySections(o).map(sec => `<h2>${esc(sec.title)}</h2><table>${sec.rows.map(x => `<tr><th>${esc(x[0])}</th><td>${esc(x[1] || "-")}</td></tr>`).join("")}</table>`).join(""), html = `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Resume organisme QUALI PDF</title><style>body{font:14px Segoe UI,Arial,sans-serif;color:#25324b;padding:28px}h1{color:#7c89c4;margin:0 0 10px}h2{margin:22px 0 8px;color:#51627f}.meta{color:#6f7d99;margin-bottom:18px}table{width:100%;border-collapse:collapse;margin-bottom:10px}th,td{padding:10px 12px;border:1px solid #d9def2;text-align:left;vertical-align:top}th{width:260px;background:#f2f4fc;color:#51627f}.box{border:1px solid #d9def2;border-radius:14px;padding:16px;margin-bottom:18px}</style><body><h1>Resume organisme</h1><div class="meta">QUALI - Edition : ${esc(now())}</div><div class="box"><b>${esc(o.name || "Organisme")}</b><p>General, accreditation et suivi de l'accreditation.</p></div>${sections}</body></html>`; const w = window.open("", "_blank", "width=900,height=720"); if (!w) { sync("Autorise les fenetres popup pour imprimer le resume organisme en PDF"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Resume organisme pret : choisir Enregistrer en PDF dans la fenetre d'impression") }
@@ -8222,6 +8311,7 @@
     $("#perQualTab").addEventListener("click", e => { const edit = e.target.closest("[data-perqual-edit]"), del = e.target.closest("[data-perqual-del]"); if (edit) editPersonnelQual(edit.dataset.perqualEdit); if (del) deletePersonnelQual(del.dataset.perqualDel) });
     $("#pxtab").addEventListener("click", e => { const edit = e.target.closest("[data-px-edit]"), del = e.target.closest("[data-px-del]"); if (edit) editPrest(edit.dataset.pxEdit); if (del) deletePrest(del.dataset.pxDel) });
     $("#statTab").addEventListener("click", e => { const edit = e.target.closest("[data-stat-edit]"), del = e.target.closest("[data-stat-del]"); if (edit) editStat(edit.dataset.statEdit); if (del) deleteStat(del.dataset.statDel) });
+    const uam = $("#uModuleAccess"); if (uam) uam.addEventListener("click", e => { const btn = e.target.closest("[data-uam-win]"); if (!btn) return; const moduleId = btn.dataset.uamModule, action = btn.dataset.uamWin, ui = userAccessUi(moduleId); if (action === "min") setUserAccessUi(moduleId, { min: !ui.min, max: ui.min ? ui.max : false, hidden: false }); if (action === "max") setUserAccessUi(moduleId, { max: !ui.max, min: false, hidden: false }); if (action === "close") setUserAccessUi(moduleId, { hidden: true, min: false, max: false }); if (action === "open") setUserAccessUi(moduleId, { hidden: false, min: false, max: false }) });
     const planTab = $("#planTab"); if (planTab) planTab.addEventListener("click", e => { const edit = e.target.closest("[data-plan-edit]"), del = e.target.closest("[data-plan-del]"); if (edit) editPlanning(edit.dataset.planEdit); if (del) deletePlanning(del.dataset.planDel) });
     $("#rtab").addEventListener("click", e => { const edit = e.target.closest("[data-re-edit]"); if (edit) editRevc(edit.dataset.reEdit) });
     $("#aciTab").addEventListener("click", e => { const detail = e.target.closest("[data-aci-detail]"), edit = e.target.closest("[data-aci-edit]"), del = e.target.closest("[data-aci-del]"); if (detail) { showAciDetail(detail.dataset.aciDetail); sync("Rapport detaille affiche dans l'application") } if (edit) editAci(edit.dataset.aciEdit); if (del) deleteAci(del.dataset.aciDel) });
