@@ -5942,8 +5942,51 @@
           <div class="risk-legend mb12">
             <div class="mini"><strong>Risques acceptables</strong><span class="ok">C <= 5</span>
             </div>
-            <div class="mini"><strong>Risques a surveiller</strong><span class="wa">6 a 12</span></div>
+            <div class="mini"><strong>Risques a surveiller</strong><span class="wa">6 a 14</span></div>
             <div class="mini"><strong>Risques majeurs</strong><span class="er">C >= 15</span></div>
+          </div>
+          <div class="card" style="margin-bottom:12px">
+            <h3>Matrice d'evaluation des risques</h3>
+            <div class="tb">
+              <table class="risk-register">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Probabilite</th>
+                    <th colspan="5">Gravite</th>
+                  </tr>
+                  <tr class="risk-sub">
+                    <th>1 - Mineur</th>
+                    <th>2 - Significative</th>
+                    <th>3 - Severe</th>
+                    <th>4 - Critique</th>
+                    <th>5 - Catastrophique</th>
+                  </tr>
+                </thead>
+                <tbody id="riskMatrixBody"></tbody>
+              </table>
+            </div>
+            <div class="row s2" style="margin-top:12px">
+              <div class="card">
+                <h3>Note de probabilite</h3>
+                <div class="list">
+                  <div class="it"><b>5 - Frequent</b><p>Peut se produire 1 fois en 1 trimestre.</p></div>
+                  <div class="it"><b>4 - Probable</b><p>Peut se produire 1 fois en 1 an.</p></div>
+                  <div class="it"><b>3 - Peu probable</b><p>Peut se produire 1 fois en 3 ans.</p></div>
+                  <div class="it"><b>2 - Rare</b><p>Peut se produire 1 fois en 5 ans.</p></div>
+                  <div class="it"><b>1 - Extremement rare</b><p>Peut se produire sur une periode superieure a 5 ans.</p></div>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Note de gravite</h3>
+                <div class="list">
+                  <div class="it"><b>1 - Mineur</b><p>Impact detectable sans effet majeur sur la qualite des resultats et le fonctionnement du laboratoire.</p></div>
+                  <div class="it"><b>2 - Significative</b><p>Impact detectable sur la qualite des resultats et le fonctionnement, avec un cout supportable.</p></div>
+                  <div class="it"><b>3 - Severe</b><p>Impact grave sur le fonctionnement du laboratoire avec un cout consequent.</p></div>
+                  <div class="it"><b>4 - Critique</b><p>Impact critique sur le fonctionnement du laboratoire et l'integrite du SMQ avec un cout eleve.</p></div>
+                  <div class="it"><b>5 - Catastrophique</b><p>Impact insupportable affectant la survie du laboratoire et pouvant entrainer l'arret de l'activite.</p></div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="g4">
             <input id="riskChapter" list="riskClauseList" placeholder="Paragraphe / chapitre de la norme ISO/IEC 17025:2017">
@@ -5985,18 +6028,18 @@
             </datalist>
             <input id="riskText" placeholder="Risque">
             <select id="riskP">
-              <option>1</option>
-              <option>2</option>
-              <option selected>3</option>
-              <option>4</option>
-              <option>5</option>
+              <option value="1">1 - Extremement rare</option>
+              <option value="2">2 - Rare</option>
+              <option value="3" selected>3 - Peu probable</option>
+              <option value="4">4 - Probable</option>
+              <option value="5">5 - Frequent</option>
             </select>
             <select id="riskG">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
+              <option value="1">1 - Mineur</option>
+              <option value="2">2 - Significative</option>
+              <option value="3">3 - Severe</option>
+              <option value="4">4 - Critique</option>
+              <option value="5" selected>5 - Catastrophique</option>
             </select>
             <textarea id="riskAction" placeholder="Actions a realiser"></textarea>
             <input id="riskDelay" placeholder="Delai">
@@ -6007,19 +6050,21 @@
               <option>Realisee</option>
             </select>
             <select id="riskRp">
-              <option selected>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
+              <option value="1" selected>1 - Extremement rare</option>
+              <option value="2">2 - Rare</option>
+              <option value="3">3 - Peu probable</option>
+              <option value="4">4 - Probable</option>
+              <option value="5">5 - Frequent</option>
             </select>
             <select id="riskRg">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
+              <option value="1">1 - Mineur</option>
+              <option value="2">2 - Significative</option>
+              <option value="3">3 - Severe</option>
+              <option value="4">4 - Critique</option>
+              <option value="5" selected>5 - Catastrophique</option>
             </select>
+            <input id="riskInitialScore" placeholder="Criticite initiale" readonly>
+            <input id="riskResidualScore" placeholder="Criticite residuelle" readonly>
             <input id="riskCrit" placeholder="Critere d'evaluation">
             <input id="riskEff" placeholder="Efficacite">
             <button class="btn" id="riskSave" type="button">Enregistrer</button>
@@ -7780,13 +7825,26 @@
     function riskScore(x) { return Number(x.p || 0) * Number(x.g || 0) }
     function riskReScore(x) { return Number(x.rp || 0) * Number(x.rg || 0) }
     function riskClass(v) { return v >= 15 ? "risk-major" : v >= 6 ? "risk-watch" : "risk-acceptable" }
+    function riskLevelLabel(v) { return v >= 15 ? "Risque majeur" : v >= 6 ? "Risque a surveiller" : "Risque acceptable" }
+    function riskProbLabel(v) { return ({ 5: "Frequent", 4: "Probable", 3: "Peu probable", 2: "Rare", 1: "Extremement rare" })[Number(v) || 0] || "-" }
+    function riskGravLabel(v) { return ({ 1: "Mineur", 2: "Significative", 3: "Severe", 4: "Critique", 5: "Catastrophique" })[Number(v) || 0] || "-" }
+    function riskMatrixRows() { return [{ value: 5, label: "Frequent" }, { value: 4, label: "Probable" }, { value: 3, label: "Peu probable" }, { value: 2, label: "Rare" }, { value: 1, label: "Extremement rare" }] }
+    function riskMatrixHtml() {
+      return riskMatrixRows().map(row => `<tr><th>${row.value} - ${row.label}</th>${[1, 2, 3, 4, 5].map(col => { const score = row.value * col, cls = riskClass(score), title = `${riskProbLabel(row.value)} x ${riskGravLabel(col)} = ${score} (${riskLevelLabel(score)})`; return `<td class="risk-score ${cls}" title="${esc(title)}">${score}</td>` }).join("")}</tr>`).join("")
+    }
+    function updateRiskComputedScores() {
+      const p = Number(($("#riskP") && $("#riskP").value) || 0), g = Number(($("#riskG") && $("#riskG").value) || 0), rp = Number(($("#riskRp") && $("#riskRp").value) || 0), rg = Number(($("#riskRg") && $("#riskRg").value) || 0);
+      const initial = p * g, residual = rp * rg, initialField = $("#riskInitialScore"), residualField = $("#riskResidualScore");
+      if (initialField) initialField.value = initial ? `${initial} - ${riskLevelLabel(initial)}` : "";
+      if (residualField) residualField.value = residual ? `${residual} - ${riskLevelLabel(residual)}` : ""
+    }
     function riskItems() { if (!Array.isArray(s.risk)) s.risk = c(RISK_DEFAULTS); return s.risk }
     function touchRiskRegister() { s.riskUpdatedAt = now(); return s.riskUpdatedAt }
-    function riskView() { const tab = $("#riskTab"); if (!tab) return; const q = ($("#riskSearch").value || "").toLowerCase(), sheet = $("#riskSheet").value, items = riskItems().filter(x => (sheet === "all" || x.sheet === sheet) && [x.sheet, x.chapter, x.risk, x.action, x.resp, x.follow, x.criterion, x.eff].join(" ").toLowerCase().includes(q)); $("#riskCount").textContent = `${items.length} risque${items.length > 1 ? "s" : ""}`; $("#riskUpdated").textContent = "Derniere mise a jour : " + (s.riskUpdatedAt || "-"); $("#riskSave").textContent = editingRiskId ? "Modifier" : "Enregistrer"; tab.innerHTML = items.map(x => { const c0 = riskScore(x), c1 = riskReScore(x), cl0 = riskClass(c0), cl1 = riskClass(c1); return `<tr><td>${esc(x.chapter)}</td><td>${esc(x.risk)}</td><td class="risk-score ${cl0}">${esc(x.p)}</td><td class="risk-score ${cl0}">${esc(x.g)}</td><td class="risk-score ${cl0}">${c0}</td><td>${esc(x.action)}</td><td>${esc(x.delay)}</td><td>${esc(x.resp)}</td><td>${esc(x.follow)}</td><td class="risk-score ${cl1}">${esc(x.rp)}</td><td class="risk-score ${cl1}">${esc(x.rg)}</td><td class="risk-score ${cl1}">${c1}</td><td>${esc(x.criterion)}</td><td>${esc(x.eff)}</td><td><div class="risk-actions"><button class="btn2 btn" data-risk-edit="${esc(x.id)}" type="button">Modifier</button><button class="btn2 btn" data-risk-del="${esc(x.id)}" type="button">Supprimer</button></div></td></tr>` }).join("") || `<tr><td colspan="15" class="e">Aucun risque trouve.</td></tr>` }
+    function riskView() { const tab = $("#riskTab"); if (!tab) return; const q = ($("#riskSearch").value || "").toLowerCase(), sheet = $("#riskSheet").value, items = riskItems().filter(x => (sheet === "all" || x.sheet === sheet) && [x.sheet, x.chapter, x.risk, x.action, x.resp, x.follow, x.criterion, x.eff].join(" ").toLowerCase().includes(q)); $("#riskCount").textContent = `${items.length} risque${items.length > 1 ? "s" : ""}`; $("#riskUpdated").textContent = "Derniere mise a jour : " + (s.riskUpdatedAt || "-"); $("#riskSave").textContent = editingRiskId ? "Modifier" : "Enregistrer"; const matrix = $("#riskMatrixBody"); if (matrix) matrix.innerHTML = riskMatrixHtml(); updateRiskComputedScores(); tab.innerHTML = items.map(x => { const c0 = riskScore(x), c1 = riskReScore(x), cl0 = riskClass(c0), cl1 = riskClass(c1); return `<tr><td>${esc(x.chapter)}</td><td>${esc(x.risk)}</td><td class="risk-score ${cl0}" title="${esc(riskProbLabel(x.p))}">${esc(x.p)}</td><td class="risk-score ${cl0}" title="${esc(riskGravLabel(x.g))}">${esc(x.g)}</td><td class="risk-score ${cl0}">${c0}</td><td>${esc(x.action)}</td><td>${esc(x.delay)}</td><td>${esc(x.resp)}</td><td>${esc(x.follow)}</td><td class="risk-score ${cl1}" title="${esc(riskProbLabel(x.rp))}">${esc(x.rp)}</td><td class="risk-score ${cl1}" title="${esc(riskGravLabel(x.rg))}">${esc(x.rg)}</td><td class="risk-score ${cl1}">${c1}</td><td>${esc(x.criterion)}</td><td>${esc(x.eff)}</td><td><div class="risk-actions"><button class="btn2 btn" data-risk-edit="${esc(x.id)}" type="button">Modifier</button><button class="btn2 btn" data-risk-del="${esc(x.id)}" type="button">Supprimer</button></div></td></tr>` }).join("") || `<tr><td colspan="15" class="e">Aucun risque trouve.</td></tr>` }
     function riskFormData() { const currentSheet = $("#riskSheet") ? $("#riskSheet").value : "all"; return markSaved({ id: editingRiskId || "RISK-" + stamp(), sheet: currentSheet && currentSheet !== "all" ? currentSheet : "-", chapter: $("#riskChapter").value.trim(), risk: $("#riskText").value.trim(), p: +$("#riskP").value, g: +$("#riskG").value, action: $("#riskAction").value.trim() || "-", delay: $("#riskDelay").value.trim() || "-", resp: $("#riskResp").value.trim() || s.u.name, follow: $("#riskFollow").value, rp: +$("#riskRp").value, rg: +$("#riskRg").value, criterion: $("#riskCrit").value.trim() || "-", eff: $("#riskEff").value.trim() || "A verifier" }) }
-    function resetRiskForm() { editingRiskId = ""; clearFields(["#riskChapter", "#riskText", "#riskAction", "#riskDelay", "#riskResp", "#riskCrit", "#riskEff"]) }
+    function resetRiskForm() { editingRiskId = ""; clearFields(["#riskChapter", "#riskText", "#riskAction", "#riskDelay", "#riskResp", "#riskCrit", "#riskEff"]); if ($("#riskP")) $("#riskP").value = "3"; if ($("#riskG")) $("#riskG").value = "5"; if ($("#riskRp")) $("#riskRp").value = "1"; if ($("#riskRg")) $("#riskRg").value = "5"; updateRiskComputedScores() }
     function addRisk() { if (!requirePerm(editingRiskId ? "Modifier" : "Ajouter")) return; const risk = $("#riskText").value.trim(), chapter = $("#riskChapter").value.trim(); if (!risk || !chapter) { sync("Renseigne le chapitre et le risque"); return } const x = riskFormData(), items = riskItems(), i = items.findIndex(v => v.id === editingRiskId); touchRiskRegister(); if (i >= 0) { items[i] = { ...items[i], ...x }; log("Modification", "Analyse de risque", x.risk + " - derniere mise a jour : " + s.riskUpdatedAt); save("Risque modifie automatiquement") } else { items.unshift(x); log("Creation", "Analyse de risque", x.risk + " - derniere mise a jour : " + s.riskUpdatedAt); save("Risque enregistre automatiquement") } resetRiskForm(); render() }
-    function editRisk(id) { if (!requirePerm("Modifier")) return; const x = riskItems().find(v => v.id === id); if (!x) return; editingRiskId = id; if ($("#riskSheet") && x.sheet && x.sheet !== "-") $("#riskSheet").value = x.sheet; $("#riskChapter").value = x.chapter || ""; $("#riskText").value = x.risk || ""; $("#riskP").value = String(x.p || 3); $("#riskG").value = String(x.g || 5); $("#riskAction").value = x.action || ""; $("#riskDelay").value = x.delay || ""; $("#riskResp").value = x.resp || ""; $("#riskFollow").value = x.follow || "en cours"; $("#riskRp").value = String(x.rp || 1); $("#riskRg").value = String(x.rg || 5); $("#riskCrit").value = x.criterion || ""; $("#riskEff").value = x.eff || ""; sync("Risque charge pour modification"); render() }
+    function editRisk(id) { if (!requirePerm("Modifier")) return; const x = riskItems().find(v => v.id === id); if (!x) return; editingRiskId = id; if ($("#riskSheet") && x.sheet && x.sheet !== "-") $("#riskSheet").value = x.sheet; $("#riskChapter").value = x.chapter || ""; $("#riskText").value = x.risk || ""; $("#riskP").value = String(x.p || 3); $("#riskG").value = String(x.g || 5); $("#riskAction").value = x.action || ""; $("#riskDelay").value = x.delay || ""; $("#riskResp").value = x.resp || ""; $("#riskFollow").value = x.follow || "en cours"; $("#riskRp").value = String(x.rp || 1); $("#riskRg").value = String(x.rg || 5); $("#riskCrit").value = x.criterion || ""; $("#riskEff").value = x.eff || ""; updateRiskComputedScores(); sync("Risque charge pour modification"); render() }
     function deleteRisk(id) { if (!requirePerm("Supprimer")) return; const items = riskItems(), x = items.find(v => v.id === id); s.risk = items.filter(v => v.id !== id); if (editingRiskId === id) resetRiskForm(); touchRiskRegister(); log("Suppression", "Analyse de risque", (x ? x.risk : id) + " - derniere mise a jour : " + s.riskUpdatedAt); save("Risque supprime automatiquement"); render() }
     function filteredRisks() { const q = ($("#riskSearch").value || "").toLowerCase(), sheet = $("#riskSheet").value; return riskItems().filter(x => (sheet === "all" || x.sheet === sheet) && [x.sheet, x.chapter, x.risk, x.action, x.resp, x.follow, x.criterion, x.eff].join(" ").toLowerCase().includes(q)) }
     function riskRowsHtml(items, actions = false) { return items.map(x => { const c0 = riskScore(x), c1 = riskReScore(x); return `<tr><td>${esc(x.chapter)}</td><td>${esc(x.risk)}</td><td>${esc(x.p)}</td><td>${esc(x.g)}</td><td>${c0}</td><td>${esc(x.action)}</td><td>${esc(x.delay)}</td><td>${esc(x.resp)}</td><td>${esc(x.follow)}</td><td>${esc(x.rp)}</td><td>${esc(x.rg)}</td><td>${c1}</td><td>${esc(x.criterion)}</td><td>${esc(x.eff)}</td>${actions ? `<td>${esc(x.id)}</td>` : ""}</tr>` }).join("") || `<tr><td colspan="${actions ? 15 : 14}">Aucun risque trouve.</td></tr>` }
@@ -8137,6 +8195,7 @@
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });
     ["#pxqual", "#pxcomm", "#pxdelay"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updatePrestEvaluation); el.addEventListener("change", updatePrestEvaluation) } });
     ["#naMajor", "#naMinor"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateNcCountFields); el.addEventListener("change", updateNcCountFields) } });
+    ["#riskP", "#riskG", "#riskRp", "#riskRg"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateRiskComputedScores); el.addEventListener("change", updateRiskComputedScores) } });
     ["#uProfile", "#ur"].forEach(id => { const el = $(id); if (el) el.addEventListener("change", () => { const profile = id === "#uProfile" ? $("#uProfile").value : $("#ur").value; if ($("#uProfile") && id === "#ur" && ACCOUNT_PROFILES[profile]) $("#uProfile").value = profile; applyUserProfile((($("#uProfile") && $("#uProfile").value) || profile || "Lecture seule")) }) });
     ["#planInterYear", "#planInterScope"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPlanInterOptionPreview); el.addEventListener("change", syncPlanInterOptionPreview) } });
     const planAuditActivity = $("#planAuditActivity"); if (planAuditActivity) { planAuditActivity.addEventListener("input", () => syncPlanAuditActivity("form")); planAuditActivity.addEventListener("change", () => syncPlanAuditActivity("form")) }
