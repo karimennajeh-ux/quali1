@@ -714,6 +714,38 @@
       background: linear-gradient(135deg, #ff8c74, #f25f5c)
     }
 
+    .k-cyan {
+      background: linear-gradient(135deg, #69d3ff, #2da3e8)
+    }
+
+    .k-purple {
+      background: linear-gradient(135deg, #9c7bff, #6f52df)
+    }
+
+    .k-teal {
+      background: linear-gradient(135deg, #45d6c1, #149e97)
+    }
+
+    .k-gold {
+      background: linear-gradient(135deg, #ffcb63, #f59e0b)
+    }
+
+    .k-pink {
+      background: linear-gradient(135deg, #ff8fbe, #ea4c89)
+    }
+
+    .k-slate {
+      background: linear-gradient(135deg, #7d93b2, #54657d)
+    }
+
+    .k-lime {
+      background: linear-gradient(135deg, #b8e96f, #7abf2a)
+    }
+
+    .k-indigo {
+      background: linear-gradient(135deg, #7188ff, #4455d6)
+    }
+
     .k-card .mut {
       color: rgba(255, 255, 255, .78)
     }
@@ -972,6 +1004,38 @@
 
     .k-red {
       background: linear-gradient(135deg, #ff8c74, #f25f5c)
+    }
+
+    .k-cyan {
+      background: linear-gradient(135deg, #69d3ff, #2da3e8)
+    }
+
+    .k-purple {
+      background: linear-gradient(135deg, #9c7bff, #6f52df)
+    }
+
+    .k-teal {
+      background: linear-gradient(135deg, #45d6c1, #149e97)
+    }
+
+    .k-gold {
+      background: linear-gradient(135deg, #ffcb63, #f59e0b)
+    }
+
+    .k-pink {
+      background: linear-gradient(135deg, #ff8fbe, #ea4c89)
+    }
+
+    .k-slate {
+      background: linear-gradient(135deg, #7d93b2, #54657d)
+    }
+
+    .k-lime {
+      background: linear-gradient(135deg, #b8e96f, #7abf2a)
+    }
+
+    .k-indigo {
+      background: linear-gradient(135deg, #7188ff, #4455d6)
     }
 
     .k-card .mut {
@@ -7392,15 +7456,15 @@
       const kpis = [
         ["Documents maitrises", docs.filter(x => ["Approuve", "Diffuse", "Valide"].includes(x.st)).length, "DOC", "k-blue", docs.length + " document(s) au total"],
         ["Equipements valides", eq.filter(x => x.st === "Valide").length, "EQ", "k-green", eq.length + " equipement(s) suivis"],
-        ["NC ouvertes", nc.filter(x => x.st !== "Cloturee").length, "NC", "k-orange", nc.length + " NC au registre"],
+        ["NC ouvertes", nc.filter(x => x.st !== "Cloturee").length, "NC", "k-cyan", nc.length + " NC au registre"],
         ["Score ISO 17025", dm.score + "%", "ISO", "k-red", "Completion " + dm.completion + "%"],
-        ["Reclamations actives", recl.filter(x => x.status !== "Cloturee").length, "REC", "k-blue", recl.length + " reclamation(s)"],
-        ["Satisfaction moyenne", (sat.length ? Math.round(sat.reduce((n, x) => n + (Number(x.score) || 0), 0) / sat.length) : 0) + "%", "SAT", "k-green", sat.length + " enquete(s)"],
-        ["Risques critiques", risk.filter(x => riskScore(x) >= 15).length, "RSK", "k-red", risk.length + " risque(s) suivis"],
-        ["Prestataires retenus", prest.filter(x => x.evalDecision === "RETENU").length, "PRE", "k-orange", prest.length + " prestataire(s)"],
-        ["Affaires suivies", stat.length, "AFF", "k-blue", statRegions + " region(s) couvertes"],
-        ["Prestations effectuees", statPrestations, "PST", "k-green", stat.length + " affaire(s) saisies"],
-        ["Familles / domaines", statFamilies, "FAM", "k-orange", "Synthese produit / service"]
+        ["Reclamations actives", recl.filter(x => x.status !== "Cloturee").length, "REC", "k-purple", recl.length + " reclamation(s)"],
+        ["Satisfaction moyenne", (sat.length ? Math.round(sat.reduce((n, x) => n + (Number(x.score) || 0), 0) / sat.length) : 0) + "%", "SAT", "k-teal", sat.length + " enquete(s)"],
+        ["Risques critiques", risk.filter(x => riskScore(x) >= 15).length, "RSK", "k-lime", risk.length + " risque(s) suivis"],
+        ["Prestataires retenus", prest.filter(x => x.evalDecision === "RETENU").length, "PRE", "k-pink", prest.length + " prestataire(s)"],
+        ["Affaires suivies", stat.length, "AFF", "k-slate", statRegions + " region(s) couvertes"],
+        ["Prestations effectuees", statPrestations, "PST", "k-gold", stat.length + " affaire(s) saisies"],
+        ["Familles / domaines", statFamilies, "FAM", "k-indigo", "Synthese produit / service"]
       ];
       if (stats) stats.innerHTML = kpis.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">${x[4]}</div></div></div></div>`).join("");
       if (moduleTable) moduleTable.innerHTML = dashboardModuleSummary().map(x => `<tr><td><b>${esc(x[0])}</b></td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
