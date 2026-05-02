@@ -1686,6 +1686,66 @@
       margin-left: auto;
     }
 
+    .audit-window-card.audit-max {
+      grid-column: 1 / -1;
+    }
+
+    .audit-window-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .audit-window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .audit-window-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid #d7e2f4;
+      background: #fff;
+      color: #40516f;
+      font: 16px/1 Segoe UI, Arial, sans-serif;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    .audit-window-btn:hover {
+      background: #eef4ff;
+      border-color: #a9c3f3;
+      color: #245ccc;
+    }
+
+    .audit-window-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .audit-window-card.audit-min .audit-window-body {
+      display: none;
+    }
+
+    .audit-hidden-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1px dashed #c9d8ef;
+      border-radius: 14px;
+      background: #f8fbff;
+      color: #51627f;
+      margin-bottom: 12px;
+    }
+
     .audit-report {
       width: 100%;
       border-collapse: collapse;
@@ -7172,7 +7232,10 @@
     function ncClosedRows(rows) { return rows.length ? rows.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.desc)}</td><td>${esc(x.g)}</td><td>${esc(x.act)}</td><td>${esc(x.st)}</td><td>${esc(x.o)}</td><td>${esc(x.due)}</td></tr>`).join("") : `<tr><td colspan="7" class="e">Aucune non-conformite cloturee ou soldee.</td></tr>` }
     function ncClosedHtml(rows) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Non conformites cloturees</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#25324b;padding:24px}h1{margin:0 0 12px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe6f5;padding:8px 10px;text-align:left;vertical-align:top}th{background:#f7f9fd}</style><body><h1>Les non conformites cloturees / soldees</h1><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th></tr></thead><tbody>${ncClosedRows(rows)}</tbody></table></body></html>` }
     function auditReportHtml(a, rows, includeList = true) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Audit Ref ${esc(a.ref)}</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#25324b;padding:24px}h1,h2{margin:0 0 12px;color:#25324b}table{width:100%;border-collapse:collapse;margin-bottom:16px}th,td{border:1px solid #dbe6f5;padding:8px 10px;text-align:left;vertical-align:top}th{background:#f7f9fd;color:#51627f}.wa{background:#fff4df;color:#9a6500;padding:4px 8px;border-radius:999px;font-weight:700}.er{background:#ffeaea;color:#b42323;padding:4px 8px;border-radius:999px;font-weight:700}.bl{background:#edf3ff;color:#2f67d8;padding:4px 8px;border-radius:999px;font-weight:700}@page{size:landscape;margin:12mm}</style><body><h1>Audit : Ref ${esc(a.ref)}</h1>${ncAuditSummary(a)}${includeList ? `<h2>Liste de non conformite</h2><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th></tr></thead><tbody>${ncRowsPlain(rows)}</tbody></table>` : ""}</body></html>` }
-    function ncAuditGroups(arr) { const box = $("#ncAuditGroups"); if (!box) return; const audits = ncAudits(); box.innerHTML = audits.length ? audits.map(a => { const rows = arr.filter(x => x.auditId === a.ref); return `<div class="card"><div class="audit-report-head"><h3 class="audit-report-title">Audit : Ref ${esc(a.ref)}</h3><div class="acts"><button class="btn2 btn" data-na-edit="${esc(a.ref)}">Modifier</button><button class="btn2 btn" data-na-print="${esc(a.ref)}">Imprimer</button><button class="btn2 btn" data-na-download="${esc(a.ref)}">Telecharger</button></div></div>${ncAuditSummary(a)}<div class="audit-report-head mt12"><h3 class="audit-report-title">Liste de non conformite</h3><div class="acts"><button class="btn2 btn" data-nalist-print="${esc(a.ref)}">Imprimer</button><button class="btn2 btn" data-nalist-download="${esc(a.ref)}">Telecharger</button></div></div><div class="tb mt12"><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th><th>Actions</th></tr></thead><tbody>${rows.length ? rows.map(ncRow).join("") : `<tr><td colspan="8" class="e">Aucune NC pour cet audit.</td></tr>`}</tbody></table></div></div>` }).join("") : `<div class="card"><div class="e">Aucun audit cree pour les non-conformites.</div></div>` }
+    function ncAuditUi(ref) { s.ncAuditUi = s.ncAuditUi || {}; return s.ncAuditUi[ref] || { min: false, max: false, hidden: false } }
+    function setNcAuditUi(ref, patch) { s.ncAuditUi = s.ncAuditUi || {}; s.ncAuditUi[ref] = { ...ncAuditUi(ref), ...patch }; render() }
+    function restoreNcAuditCards() { s.ncAuditUi = s.ncAuditUi || {}; Object.keys(s.ncAuditUi).forEach(ref => s.ncAuditUi[ref] = { ...ncAuditUi(ref), hidden: false, min: false, max: false }); render() }
+    function ncAuditGroups(arr) { const box = $("#ncAuditGroups"); if (!box) return; const audits = ncAudits(), visible = audits.filter(a => !ncAuditUi(a.ref).hidden), hiddenCount = audits.length - visible.length; box.innerHTML = audits.length ? `${hiddenCount ? `<div class="audit-hidden-bar"><span>${hiddenCount} audit${hiddenCount > 1 ? "s" : ""} masque${hiddenCount > 1 ? "s" : ""}</span><button class="btn2 btn" type="button" data-na-restore="all">Afficher tous les audits</button></div>` : ""}${visible.map(a => { const rows = arr.filter(x => x.auditId === a.ref), ui = ncAuditUi(a.ref); return `<div class="card audit-window-card${ui.min ? " audit-min" : ""}${ui.max ? " audit-max" : ""}"><div class="audit-report-head"><h3 class="audit-report-title">Audit : Ref ${esc(a.ref)}</h3><div class="audit-window-bar"><div class="audit-window-controls"><button class="audit-window-btn" type="button" title="Reduire" aria-label="Reduire" data-na-win="min" data-na-ref="${esc(a.ref)}">_</button><button class="audit-window-btn" type="button" title="Agrandir ou restaurer" aria-label="Agrandir ou restaurer" data-na-win="max" data-na-ref="${esc(a.ref)}">&#9633;</button><button class="audit-window-btn" type="button" title="Fermer" aria-label="Fermer" data-na-win="close" data-na-ref="${esc(a.ref)}">&times;</button></div><div class="acts"><button class="btn2 btn" data-na-edit="${esc(a.ref)}">Modifier</button><button class="btn2 btn" data-na-print="${esc(a.ref)}">Imprimer</button><button class="btn2 btn" data-na-download="${esc(a.ref)}">Telecharger</button></div></div></div><div class="audit-window-body">${ncAuditSummary(a)}<div class="audit-report-head mt12"><h3 class="audit-report-title">Liste de non conformite</h3><div class="acts"><button class="btn2 btn" data-nalist-print="${esc(a.ref)}">Imprimer</button><button class="btn2 btn" data-nalist-download="${esc(a.ref)}">Telecharger</button></div></div><div class="tb mt12"><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th><th>Actions</th></tr></thead><tbody>${rows.length ? rows.map(ncRow).join("") : `<tr><td colspan="8" class="e">Aucune NC pour cet audit.</td></tr>`}</tbody></table></div></div></div>` }).join("")}` : `<div class="card"><div class="e">Aucun audit cree pour les non-conformites.</div></div>` }
     function nc() { ncAuditOptions(); updateNcCountFields(); const q = $("#ns").value.trim().toLowerCase(), f = $("#nf").value, audit = $("#nAudit").value, arr = s.nc.filter(x => [x.ref, x.desc, x.act, x.o, x.auditId].join(" ").toLowerCase().includes(q) && (f === "all" || x.st === f) && (audit === "all" || x.auditId === audit)); $("#ncn").textContent = arr.length + " non-conformite" + (arr.length > 1 ? "s" : ""); $("#naCount").textContent = ncAudits().length + " audit" + (ncAudits().length > 1 ? "s" : ""); ncAuditGroups(arr); $("#ntab").innerHTML = arr.length ? arr.map(ncRow).join("") : `<tr><td colspan="8" class="e">Aucune NC.</td></tr>`; $("#ncClosedTab").innerHTML = ncClosedRows(ncClosedItems()) }
     function handleNcAuditExport(ref, mode, listOnly = false) { const a = ncAudits().find(x => x.ref === ref); if (!a) return; const rows = s.nc.filter(x => x.auditId === ref), html = listOnly ? `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Liste NC Ref ${esc(ref)}</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#25324b;padding:24px}h1{margin:0 0 12px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe6f5;padding:8px 10px;text-align:left;vertical-align:top}th{background:#f7f9fd}</style><body><h1>Liste de non conformite - Audit : Ref ${esc(ref)}</h1><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th></tr></thead><tbody>${ncRowsPlain(rows)}</tbody></table></body></html>` : auditReportHtml(a, rows, false); if (mode === "print") { const w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); return } downloadText((listOnly ? "Liste_NC_" : "Audit_NC_") + ref.replace(/[^a-z0-9_-]+/gi, "_") + "_" + stamp() + ".xls", html, "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Non-conformites", (listOnly ? "Liste NC " : "Rapport audit ") + ref); save("Export audit non-conformites genere") }
     function handleNcClosedExport(mode) { const rows = ncClosedItems(), html = ncClosedHtml(rows); if (mode === "print") { const w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); return } downloadText("NC_cloturees_soldees_" + stamp() + ".xls", html, "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Non-conformites", "Liste des NC cloturees/soldees"); save("Export des NC cloturees genere") }
@@ -7741,7 +7804,7 @@
     const planTab = $("#planTab"); if (planTab) planTab.addEventListener("click", e => { const edit = e.target.closest("[data-plan-edit]"), del = e.target.closest("[data-plan-del]"); if (edit) editPlanning(edit.dataset.planEdit); if (del) deletePlanning(del.dataset.planDel) });
     $("#rtab").addEventListener("click", e => { const edit = e.target.closest("[data-re-edit]"); if (edit) editRevc(edit.dataset.reEdit) });
     $("#aciTab").addEventListener("click", e => { const detail = e.target.closest("[data-aci-detail]"), edit = e.target.closest("[data-aci-edit]"), del = e.target.closest("[data-aci-del]"); if (detail) { showAciDetail(detail.dataset.aciDetail); sync("Rapport detaille affiche dans l'application") } if (edit) editAci(edit.dataset.aciEdit); if (del) deleteAci(del.dataset.aciDel) });
-    $("#ncAuditGroups").addEventListener("click", e => { const ae = e.target.closest("[data-na-edit]"), ap = e.target.closest("[data-na-print]"), ad = e.target.closest("[data-na-download]"), lp = e.target.closest("[data-nalist-print]"), ld = e.target.closest("[data-nalist-download]"); if (ae) editNcAudit(ae.dataset.naEdit); if (ap) handleNcAuditExport(ap.dataset.naPrint, "print", false); if (ad) handleNcAuditExport(ad.dataset.naDownload, "download", false); if (lp) handleNcAuditExport(lp.dataset.nalistPrint, "print", true); if (ld) handleNcAuditExport(ld.dataset.nalistDownload, "download", true) });
+    $("#ncAuditGroups").addEventListener("click", e => { const ae = e.target.closest("[data-na-edit]"), ap = e.target.closest("[data-na-print]"), ad = e.target.closest("[data-na-download]"), lp = e.target.closest("[data-nalist-print]"), ld = e.target.closest("[data-nalist-download]"), win = e.target.closest("[data-na-win]"), restore = e.target.closest("[data-na-restore]"); if (restore) restoreNcAuditCards(); if (win) { const ref = win.dataset.naRef, mode = win.dataset.naWin; if (mode === "min") setNcAuditUi(ref, { min: !ncAuditUi(ref).min, max: false }); if (mode === "max") { const next = !ncAuditUi(ref).max; s.ncAuditUi = s.ncAuditUi || {}; Object.keys(s.ncAuditUi).forEach(k => s.ncAuditUi[k] = { ...ncAuditUi(k), max: false }); setNcAuditUi(ref, { max: next, min: false }) } if (mode === "close") setNcAuditUi(ref, { hidden: true, min: false, max: false }) } if (ae) editNcAudit(ae.dataset.naEdit); if (ap) handleNcAuditExport(ap.dataset.naPrint, "print", false); if (ad) handleNcAuditExport(ad.dataset.naDownload, "download", false); if (lp) handleNcAuditExport(lp.dataset.nalistPrint, "print", true); if (ld) handleNcAuditExport(ld.dataset.nalistDownload, "download", true) });
     bindClick("ncClosedPrint", () => handleNcClosedExport("print")); bindClick("ncClosedDownload", () => handleNcClosedExport("download"));
     ["omod", "omodAcc", "omodSuivi"].forEach(id => bindClick(id, modifyOrg));["osv", "osvAcc", "osvSuivi"].forEach(id => bindClick(id, () => saveOrg())); bindClick("orgPrint", printOrgSummary); bindClick("diagReset", resetDiag); bindClick("diagExport", exportDiag);
     bindClick("pickDir", chooseRepoDir); bindClick("scanDir", () => scanRepo()); bindClick("fallbackDir", () => $("#repoDirFallback").click()); $("#repoDirFallback").onchange = e => scanFallbackDir(e.target.files); bindClick("pickFiles", () => $("#repoFiles").click()); $("#repoFiles").onchange = e => importRepoFiles(e.target.files, importTarget()); bindClick("exportDir", exportRepoData);
