@@ -7818,12 +7818,12 @@
     const DOC_PROCS = ["Processus pilotage", "Processus operationnel", "Processus support"], ORG_TOP_DOC_TYPES = ["Manuel qualite", "Politique qualite"], ORG_DOC_TYPES = ["Procedure", "Instruction", "Formulaire", "Enregistrement"], DOC_TYPES = [...ORG_TOP_DOC_TYPES, ...ORG_DOC_TYPES], DOC_FORMATS = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"], ORG_DIR_BASE = "D:\\QUALI_Organisme", ORG_TEMPLATES = {};
     function normDoc(x) { const st = x.st === "Valide" ? "Approuve" : x.st === "A valider" ? "En revue" : x.st || "Brouillon"; return { ...x, p: x.p || "Processus support", ie: x.ie || "-", st, verif: x.verif || "-", app: x.app || "-", review: x.review || "-", diff: x.diff || "-", body: x.body || "", history: x.history || [] } }
     Object.assign(ORG_TEMPLATES, {
-      Procedure: "modèle procédure.docx",
-      Instruction: "modèle instruction.docx",
-      Formulaire: "modèle formulaire.docx",
-      Enregistrement: "modèle Enregistrement.docx",
-      "Manuel qualite": "modèle procédure.docx",
-      "Politique qualite": "modèle procédure.docx"
+      Procedure: "/database/word_documents/templates/modèle procédure.docx",
+      Instruction: "/database/word_documents/templates/modèle instruction.docx",
+      Formulaire: "/database/word_documents/templates/modèle formulaire.docx",
+      Enregistrement: "/database/word_documents/templates/modèle Enregistrement.docx",
+      "Manuel qualite": "/database/word_documents/templates/modèle procédure.docx",
+      "Politique qualite": "/database/word_documents/templates/modèle procédure.docx"
     });
     const ORG_WORKFLOW = [["Brouillon", "Creation"], ["En revue", "Verification"], ["Approuve", "Approbation"], ["Diffuse", "Diffusion"]];
     function docStoragePath(x) { const clean = v => String(v || "").replace(/[\\/:*?"<>|]/g, "_").replace(/\s+/g, "_"), proc = clean(x.p || "Processus support"), type = clean(x.type || "Document"), st = clean(x.st || "A_valider"), name = clean((x.ref || "DOC") + "_" + (x.title || "document")); return `QUALI_Documents/${proc}/${type}/${st}/${name}` }

@@ -8,3 +8,5 @@ deliverables/_docx_src_quali/
 deliverables/_word_test.html
 deliverables/*.zip
 deliverables/~$*.docx
+database/word_documents/_docx_src_quali/
+database/word_documents/reports/*.zip

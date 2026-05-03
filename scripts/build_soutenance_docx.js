@@ -2,8 +2,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const outDir = path.join(root, "deliverables");
-const srcDir = path.join(outDir, "_docx_src_quali");
+const docsRoot = path.join(root, "database", "word_documents");
+const outDir = path.join(docsRoot, "reports");
+const srcDir = path.join(docsRoot, "_docx_src_quali");
 const docxPath = path.join(outDir, "Rapport_soutenance_PFE_Quali_by_ENNAJEH.docx");
 const zipPath = path.join(outDir, "Rapport_soutenance_PFE_Quali_by_ENNAJEH.zip");
 
