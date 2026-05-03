@@ -128,6 +128,25 @@ function normalizeUserPayload(payload = {}) {
   };
 }
 
+function normalizePilotPayload(payload = {}) {
+  const firstName = String(payload.firstName || "").trim();
+  const lastName = String(payload.lastName || "").trim();
+  const name = String(payload.name || `${firstName} ${lastName}`.trim() || "Pilote").trim();
+  return {
+    firstName,
+    lastName,
+    name,
+    email: normEmail(payload.email),
+    password: String(payload.password || ""),
+    role: String(payload.role || "Administrateur").trim() || "Administrateur",
+    dept: String(payload.dept || "Pilotage application").trim() || "Pilotage application",
+    func: String(payload.func || "Pilote de l'application").trim() || "Pilote de l'application",
+    matricule: String(payload.matricule || "").trim(),
+    orgName: String(payload.orgName || "QUALI by ENNAJEH").trim() || "QUALI by ENNAJEH",
+    status: String(payload.status || "Actif").trim() || "Actif"
+  };
+}
+
 function ensureDatabase() {
   ensureDir(DB_DIR);
   const db = new DatabaseSync(DB_PATH);
@@ -245,6 +264,21 @@ function userToAccount(row) {
 }
 
 const selectPilotByEmail = db.prepare("SELECT * FROM pilots WHERE email = ?");
+const insertPilotAccount = db.prepare(`
+  INSERT INTO pilots (
+    email, password, name, first_name, last_name, role, dept, func, matricule, org_name, status, created_at, updated_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`);
+const updatePilotAccountByEmail = db.prepare(`
+  UPDATE pilots
+  SET password = ?, name = ?, first_name = ?, last_name = ?, role = ?, dept = ?, func = ?, matricule = ?, org_name = ?, status = ?, updated_at = ?
+  WHERE email = ?
+`);
+const ensurePilotStateRow = db.prepare(`
+  INSERT INTO pilot_app_state (pilot_id, state_json, created_at, updated_at)
+  VALUES (?, '{}', ?, ?)
+  ON CONFLICT(pilot_id) DO NOTHING
+`);
 const selectPilotUsers = db.prepare(`
   SELECT u.*, p.email AS pilot_email, p.name AS pilot_name
   FROM users u
@@ -268,6 +302,59 @@ const insertUser = db.prepare(`
 function getPilotByEmail(email) {
   const row = selectPilotByEmail.get(normEmail(email));
   return row ? pilotToAccount(row) : null;
+}
+
+function upsertPilotAccount(payload) {
+  const pilot = normalizePilotPayload(payload);
+  if (!pilot.email) {
+    const error = new Error("Adresse e-mail pilote obligatoire");
+    error.status = 400;
+    throw error;
+  }
+  if (!pilot.password) {
+    const error = new Error("Mot de passe pilote obligatoire");
+    error.status = 400;
+    throw error;
+  }
+
+  const existing = selectPilotByEmail.get(pilot.email);
+  const timestamp = now();
+  if (!existing) {
+    const result = insertPilotAccount.run(
+      pilot.email,
+      pilot.password,
+      pilot.name,
+      pilot.firstName,
+      pilot.lastName,
+      pilot.role,
+      pilot.dept,
+      pilot.func,
+      pilot.matricule,
+      pilot.orgName,
+      pilot.status,
+      timestamp,
+      timestamp
+    );
+    ensurePilotStateRow.run(Number(result.lastInsertRowid), timestamp, timestamp);
+  } else {
+    updatePilotAccountByEmail.run(
+      pilot.password,
+      pilot.name,
+      pilot.firstName,
+      pilot.lastName,
+      pilot.role,
+      pilot.dept,
+      pilot.func,
+      pilot.matricule,
+      pilot.orgName,
+      pilot.status,
+      timestamp,
+      pilot.email
+    );
+    ensurePilotStateRow.run(existing.id, timestamp, timestamp);
+  }
+
+  return getPilotByEmail(pilot.email);
 }
 
 function listUsersByPilotEmail(email) {
@@ -392,6 +479,29 @@ app.post("/api/auth/login", (req, res) => {
     },
     user
   });
+});
+
+app.post("/api/pilots/register", (req, res) => {
+  try {
+    const pilot = upsertPilotAccount(req.body || {});
+    res.status(201).json({
+      ok: true,
+      pilot: {
+        email: pilot.email,
+        name: pilot.name,
+        firstName: pilot.firstName,
+        lastName: pilot.lastName,
+        role: pilot.role,
+        dept: pilot.dept,
+        func: pilot.func,
+        matricule: pilot.matricule,
+        orgName: pilot.orgName,
+        status: pilot.status
+      }
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Creation pilote impossible" });
+  }
 });
 
 app.get("/api/pilots/:pilotEmail/users", (req, res) => {
