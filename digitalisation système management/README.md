@@ -1,4 +1,4 @@
-# QualiLab by ENNAJEH
+# Quali by ENNAJEH
 
 Prototype d'application web statique pour la digitalisation du systeme de management qualite d'un laboratoire de metrologie.
 

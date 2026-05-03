@@ -1,6 +1,7 @@
-QUALILAB - DOSSIER DOCUMENTAIRE LOCAL
+QUALI BY ENNAJEH - DOSSIER DOCUMENTAIRE LOCAL
 
-Ce dossier est rattache a l'application QualiLab_by_ENNAJEH_v2.html.
+Ce dossier est rattache a l'application Quali by ENNAJEH.
+Le fichier technique principal conserve le nom : QualiLab_by_ENNAJEH_v2.html.
 
 Organisation recommandee :
 
@@ -17,7 +18,7 @@ Organisation recommandee :
 
 Utilisation :
 
-1. Ouvrir l'application QualiLab.
+1. Ouvrir l'application Quali by ENNAJEH.
 2. Aller dans le module "Dossier local".
 3. Cliquer sur "Connecter un dossier".
 4. Selectionner ce dossier : QualiLab_Documents.

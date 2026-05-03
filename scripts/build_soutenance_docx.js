@@ -3,11 +3,13 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const outDir = path.join(root, "deliverables");
-const srcDir = path.join(outDir, "_docx_src");
-const docxPath = path.join(outDir, "Rapport_soutenance_PFE_QualiLab_by_ENNAJEH.docx");
-const zipPath = path.join(outDir, "Rapport_soutenance_PFE_QualiLab_by_ENNAJEH.zip");
+const srcDir = path.join(outDir, "_docx_src_quali");
+const docxPath = path.join(outDir, "Rapport_soutenance_PFE_Quali_by_ENNAJEH.docx");
+const zipPath = path.join(outDir, "Rapport_soutenance_PFE_Quali_by_ENNAJEH.zip");
 
-fs.rmSync(srcDir, { recursive: true, force: true });
+try {
+  fs.rmSync(srcDir, { recursive: true, force: true });
+} catch {}
 fs.mkdirSync(path.join(srcDir, "_rels"), { recursive: true });
 fs.mkdirSync(path.join(srcDir, "docProps"), { recursive: true });
 fs.mkdirSync(path.join(srcDir, "word", "_rels"), { recursive: true });
@@ -160,7 +162,7 @@ const body = [
   paragraph("République Tunisienne", { style: "CoverMinor", center: true, spacingAfter: 40 }),
   paragraph("Projet de Fin d’Études 2026", { style: "CoverMinor", center: true, spacingAfter: 140 }),
   paragraph("Conception et développement d’une application web de management qualité pour laboratoire", { style: "CoverTitle", center: true, spacingAfter: 100 }),
-  paragraph("QualiLab by ENNAJEH", { style: "CoverBrand", center: true, spacingAfter: 80 }),
+  paragraph("Quali by ENNAJEH", { style: "CoverBrand", center: true, spacingAfter: 80 }),
   paragraph("Document de soutenance académique", { style: "CoverMinor", center: true, spacingAfter: 220 }),
   paragraph("Présenté par : Karim ENNAJEH", { style: "BodyText", center: true, spacingAfter: 70 }),
   paragraph("Cadre du projet : digitalisation du système de management de la qualité d’un laboratoire selon ISO/IEC 17025:2017 et ISO 9001:2015.", { style: "QuoteText", center: true, spacingAfter: 180 }),
@@ -189,7 +191,7 @@ const body = [
 
   paragraph("1. Introduction générale", { style: "Heading1", keepNext: true }),
   paragraph("Ce projet de fin d’études porte sur la conception et le développement d’une application web destinée au pilotage du système de management de la qualité d’un laboratoire. Le besoin initial consistait à centraliser les documents, les données métier, les accès utilisateurs et les indicateurs de suivi dans une seule plateforme cohérente et exploitable.", { style: "BodyText" }),
-  paragraph("L’application développée, nommée QualiLab by ENNAJEH, vise à remplacer une gestion dispersée par une solution numérique modulaire, évolutive et orientée vers la traçabilité. Elle s’inscrit dans une logique de conformité et de maîtrise des informations conformément aux référentiels ISO/IEC 17025:2017 et ISO 9001:2015.", { style: "BodyText" }),
+  paragraph("L’application développée, nommée Quali by ENNAJEH, vise à remplacer une gestion dispersée par une solution numérique modulaire, évolutive et orientée vers la traçabilité. Elle s’inscrit dans une logique de conformité et de maîtrise des informations conformément aux référentiels ISO/IEC 17025:2017 et ISO 9001:2015.", { style: "BodyText" }),
 
   paragraph("2. Contexte et problématique", { style: "Heading1", keepNext: true }),
   paragraph("Dans un laboratoire, les documents qualité, les audits, les équipements, les non-conformités, les habilitations du personnel et les statistiques d’activité sont souvent répartis sur plusieurs supports. Cette dispersion rend le suivi difficile, augmente le risque de doublons et réduit la visibilité globale sur l’état réel de l’organisme.", { style: "BodyText" }),
@@ -253,7 +255,7 @@ const body = [
   bullets(perspectiveBullets),
 
   paragraph("15. Conclusion générale", { style: "Heading1", keepNext: true, pageBreakBefore: true }),
-  paragraph("Ce projet a permis de transformer un besoin métier complexe en une application web de management qualité structurée, modulaire et évolutive. QualiLab by ENNAJEH constitue aujourd’hui une base solide pour la digitalisation du système de management de la qualité d’un laboratoire.", { style: "BodyText" }),
+  paragraph("Ce projet a permis de transformer un besoin métier complexe en une application web de management qualité structurée, modulaire et évolutive. Quali by ENNAJEH constitue aujourd’hui une base solide pour la digitalisation du système de management de la qualité d’un laboratoire.", { style: "BodyText" }),
   paragraph("Au-delà de la réalisation technique, ce travail a permis de mettre en pratique une démarche de conception progressive orientée vers la résolution de problèmes concrets. L’application peut désormais servir de socle à des évolutions plus avancées et à une exploitation professionnelle future.", { style: "BodyText" })
 ].join("");
 
@@ -283,11 +285,11 @@ const docRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 const core = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <dc:title>Rapport de soutenance PFE - QualiLab by ENNAJEH</dc:title>
+<dc:title>Rapport de soutenance PFE - Quali by ENNAJEH</dc:title>
   <dc:subject>Application web de management qualité pour laboratoire</dc:subject>
   <dc:creator>OpenAI Codex</dc:creator>
-  <cp:keywords>Qualité; laboratoire; ISO 17025; PFE; QualiLab</cp:keywords>
-  <dc:description>Document de soutenance académique du projet QualiLab by ENNAJEH.</dc:description>
+<cp:keywords>Qualité; laboratoire; ISO 17025; PFE; Quali</cp:keywords>
+<dc:description>Document de soutenance académique du projet Quali by ENNAJEH.</dc:description>
   <cp:lastModifiedBy>OpenAI Codex</cp:lastModifiedBy>
   <dcterms:created xsi:type="dcterms:W3CDTF">2026-05-03T00:00:00Z</dcterms:created>
   <dcterms:modified xsi:type="dcterms:W3CDTF">2026-05-03T00:00:00Z</dcterms:modified>
@@ -295,7 +297,7 @@ const core = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 const app = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
-  <Application>QualiLab by ENNAJEH</Application>
+<Application>Quali by ENNAJEH</Application>
   <DocSecurity>0</DocSecurity>
   <ScaleCrop>false</ScaleCrop>
   <HeadingPairs>
@@ -306,7 +308,7 @@ const app = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   </HeadingPairs>
   <TitlesOfParts>
     <vt:vector size="1" baseType="lpstr">
-      <vt:lpstr>Rapport_soutenance_PFE_QualiLab_by_ENNAJEH</vt:lpstr>
+<vt:lpstr>Rapport_soutenance_PFE_Quali_by_ENNAJEH</vt:lpstr>
     </vt:vector>
   </TitlesOfParts>
   <Company>ENNAJEH</Company>

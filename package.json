@@ -1,8 +1,8 @@
 {
-  "name": "qualilab-by-ennajeh",
+  "name": "quali-by-ennajeh",
   "version": "1.0.0",
   "private": true,
-  "description": "Backend Node.js + Express + SQLite pour QualiLab",
+  "description": "Backend Node.js + Express + SQLite pour Quali by ENNAJEH",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

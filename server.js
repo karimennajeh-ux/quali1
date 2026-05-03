@@ -552,6 +552,6 @@ app.use("/api", (_req, res) => {
 });
 
 app.listen(PORT, HOST, () => {
-  console.log(`QualiLab backend ready on http://localhost:${PORT}`);
-  lanUrls(PORT).forEach((url) => console.log(`QualiLab mobile access: ${url}`));
+  console.log(`Quali by ENNAJEH backend ready on http://localhost:${PORT}`);
+  lanUrls(PORT).forEach((url) => console.log(`Quali by ENNAJEH mobile access: ${url}`));
 });

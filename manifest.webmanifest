@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "QualiLab by ENNAJEH",
-  "short_name": "QualiLab",
+  "name": "Quali by ENNAJEH",
+  "short_name": "Quali",
   "description": "Application de gestion qualite des laboratoires avec acces mobile, comptes, documents et modules metier.",
   "lang": "fr",
   "start_url": "/",

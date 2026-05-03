@@ -3,3 +3,8 @@ database/*.sqlite
 database/*.sqlite-journal
 test-root.sqlite
 test-root.sqlite-journal
+deliverables/_docx_src/
+deliverables/_docx_src_quali/
+deliverables/_word_test.html
+deliverables/*.zip
+deliverables/~$*.docx
