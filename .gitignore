@@ -1,0 +1,5 @@
+node_modules/
+database/*.sqlite
+database/*.sqlite-journal
+test-root.sqlite
+test-root.sqlite-journal
