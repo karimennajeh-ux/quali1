@@ -5,6 +5,7 @@ const express = require("express");
 const { DatabaseSync } = require("node:sqlite");
 
 const app = express();
+const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
 const DB_DIR = process.env.QUALILAB_DATA_DIR || os.tmpdir();
@@ -61,6 +62,18 @@ function normEmail(value) {
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function lanUrls(port) {
+  const out = [];
+  const nets = os.networkInterfaces();
+  Object.values(nets).forEach((entries) => {
+    (entries || []).forEach((entry) => {
+      if (!entry || entry.internal) return;
+      if (entry.family === "IPv4") out.push(`http://${entry.address}:${port}`);
+    });
+  });
+  return [...new Set(out)];
 }
 
 function parseJson(value, fallback) {
@@ -428,6 +441,7 @@ app.use("/api", (_req, res) => {
   res.status(404).json({ ok: false, message: "Route API introuvable" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`QualiLab backend ready on http://localhost:${PORT}`);
+  lanUrls(PORT).forEach((url) => console.log(`QualiLab mobile access: ${url}`));
 });
