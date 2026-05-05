@@ -2844,6 +2844,27 @@
       overflow: hidden
     }
 
+    .app:not(.hub-mode) .main {
+      height: 100vh;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .app:not(.hub-mode) .module-shell {
+      height: calc(100vh - 32px);
+      max-height: calc(100vh - 32px);
+      min-height: 0;
+    }
+
+    .app:not(.hub-mode) .module-rail {
+      max-height: calc(100vh - 72px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-gutter: stable;
+      scrollbar-width: thin;
+      scrollbar-color: #236bd8 #e8eef9;
+    }
+
     .module-rail:before {
       content: "âœ¦";
       position: absolute;
@@ -2958,7 +2979,21 @@
       display: grid;
       gap: 16px;
       min-width: 0;
+      min-height: 0;
+      align-self: stretch;
       overflow: visible
+    }
+
+    .app:not(.hub-mode) .module-content {
+      max-height: calc(100vh - 72px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      padding-right: 6px;
+      scrollbar-gutter: stable;
+      scrollbar-width: auto;
+      scrollbar-color: #236bd8 #e8eef9;
+      -webkit-overflow-scrolling: touch;
     }
 
     .module-shell .hub-app-head {
@@ -3082,6 +3117,7 @@
     }
 
     .main::-webkit-scrollbar,
+    .module-rail::-webkit-scrollbar,
     .module-content::-webkit-scrollbar,
     .hub-page::-webkit-scrollbar,
     .app.hub-mode .main::-webkit-scrollbar {
@@ -3090,6 +3126,7 @@
     }
 
     .main::-webkit-scrollbar-track,
+    .module-rail::-webkit-scrollbar-track,
     .module-content::-webkit-scrollbar-track,
     .hub-page::-webkit-scrollbar-track,
     .app.hub-mode .main::-webkit-scrollbar-track {
@@ -3098,6 +3135,7 @@
     }
 
     .main::-webkit-scrollbar-thumb,
+    .module-rail::-webkit-scrollbar-thumb,
     .module-content::-webkit-scrollbar-thumb,
     .hub-page::-webkit-scrollbar-thumb,
     .app.hub-mode .main::-webkit-scrollbar-thumb {
@@ -3109,8 +3147,17 @@
     @media(max-width:1080px) {
       .module-shell {
         grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(0, 1fr);
         padding: 16px;
         border-radius: 28px
+      }
+
+      .app:not(.hub-mode) .module-rail {
+        max-height: 230px;
+      }
+
+      .app:not(.hub-mode) .module-content {
+        max-height: none;
       }
 
       .module-rail {
@@ -3142,6 +3189,15 @@
         gap: 14px;
         padding: 14px;
         border-radius: 24px
+      }
+
+      .app:not(.hub-mode) .module-shell {
+        height: calc(100vh - 24px);
+        max-height: calc(100vh - 24px);
+      }
+
+      .app:not(.hub-mode) .module-rail {
+        max-height: 205px;
       }
 
       .module-page-title {
@@ -5131,6 +5187,10 @@
         border-radius: 20px;
         gap: 12px;
         background: linear-gradient(180deg, #e8f6ff, #cbe9ff 56%, #b0dcff);
+      }
+
+      .app:not(.hub-mode) .module-rail {
+        max-height: 180px;
       }
 
       .module-rail:before {
