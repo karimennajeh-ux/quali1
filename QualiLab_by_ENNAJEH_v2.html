@@ -694,6 +694,229 @@
       margin-top: 8px
     }
 
+    #intro {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(123, 173, 255, .24), transparent 26%),
+        radial-gradient(circle at 82% 16%, rgba(95, 203, 185, .16), transparent 22%),
+        linear-gradient(135deg, #eef4ff 0%, #fbfdff 48%, #f0f5ff 100%);
+    }
+
+    #intro:before,
+    #intro:after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(2px);
+    }
+
+    #intro:before {
+      inset: auto auto 8% -6%;
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(76, 125, 243, .20), rgba(76, 125, 243, 0) 68%);
+    }
+
+    #intro:after {
+      inset: 6% -4% auto auto;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(38, 194, 148, .16), rgba(38, 194, 148, 0) 66%);
+    }
+
+    #intro .intro-shell {
+      position: relative;
+      width: min(980px, 100%);
+      z-index: 1;
+    }
+
+    #intro .intro-card {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+      padding: 54px 42px 42px;
+      text-align: center;
+      border-radius: 34px;
+      border: 1px solid rgba(215, 228, 251, .92);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(247, 250, 255, .92));
+      box-shadow: 0 34px 80px rgba(49, 82, 145, .16);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    #intro .intro-card:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top, rgba(98, 154, 255, .14), transparent 34%),
+        linear-gradient(120deg, rgba(255, 255, 255, .36), rgba(255, 255, 255, 0) 42%);
+      pointer-events: none;
+    }
+
+    #intro .intro-badge {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid #d9e6ff;
+      background: rgba(255, 255, 255, .88);
+      color: #4d6ba5;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 22px rgba(52, 89, 157, .10);
+    }
+
+    #intro .intro-badge:before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #43cb8b, #1fae68);
+      box-shadow: 0 0 0 6px rgba(67, 203, 139, .14);
+    }
+
+    #intro .intro-logo-wrap {
+      position: relative;
+      z-index: 1;
+      width: min(320px, 70vw);
+      padding: 18px 24px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, .84);
+      border: 1px solid rgba(220, 232, 252, .95);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 18px 34px rgba(55, 93, 160, .10);
+    }
+
+    #intro .intro-logo {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    #intro h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1.02;
+      color: #244eab;
+      letter-spacing: -.03em;
+    }
+
+    #intro p {
+      position: relative;
+      z-index: 1;
+      width: min(620px, 100%);
+      margin: 0;
+      color: #6d7c98;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    #intro .intro-continue {
+      position: relative;
+      z-index: 1;
+      min-width: 230px;
+      height: 58px;
+      padding: 0 22px 0 26px;
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 18px;
+      border: 1px solid #1d5fc8;
+      background: linear-gradient(135deg, #3172f0, #164cb9);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: .01em;
+      box-shadow: 0 22px 42px rgba(35, 107, 216, .28);
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform .24s ease, box-shadow .24s ease, filter .24s ease;
+    }
+
+    #intro .intro-continue:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 18%, rgba(255, 255, 255, .30) 34%, transparent 52%);
+      transform: translateX(-135%);
+      transition: transform .72s ease;
+    }
+
+    #intro .intro-continue:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 28px 48px rgba(35, 107, 216, .34);
+      filter: saturate(1.06);
+    }
+
+    #intro .intro-continue:hover:before {
+      transform: translateX(135%);
+    }
+
+    #intro .intro-continue:active {
+      transform: translateY(0) scale(.99);
+    }
+
+    #intro .intro-continue i {
+      width: 28px;
+      height: 28px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .18);
+      font-style: normal;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    #intro .intro-note {
+      position: relative;
+      z-index: 1;
+      color: #8a97b1;
+      font-size: 13px;
+    }
+
+    @media(max-width:700px) {
+      #intro {
+        padding: 18px;
+      }
+
+      #intro .intro-card {
+        padding: 34px 22px 28px;
+        border-radius: 26px;
+        gap: 14px;
+      }
+
+      #intro .intro-logo-wrap {
+        width: min(240px, 76vw);
+        padding: 14px 18px;
+        border-radius: 22px;
+      }
+
+      #intro p {
+        font-size: 14px;
+      }
+
+      #intro .intro-continue {
+        width: 100%;
+      }
+    }
+
     .k-card {
       color: #fff;
       border: 0
@@ -1093,6 +1316,23 @@
       box-shadow: none;
       cursor: pointer;
       transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+
+    .back-btn::before {
+      content: "";
+      display: block;
+      font-size: 31px;
+      font-weight: 800;
+      line-height: 1;
+      color: #fff
+    }
+
+    .back-btn[aria-label="Page precedente"]::before {
+      content: "\2190"
+    }
+
+    .back-btn[aria-label="Page suivante"]::before {
+      content: "\2192"
     }
 
     .back-btn:hover {
@@ -1985,7 +2225,7 @@
 
     #auth .authshell {
       position: relative;
-      width: min(500px, 100%);
+      width: min(820px, 100%);
       min-height: auto;
       display: grid !important;
       grid-template-columns: 1fr;
@@ -2046,14 +2286,14 @@
     #auth .authright-inner {
       display: block;
       width: 100%;
-      max-width: 360px;
+      max-width: 720px;
       margin: 0 auto
     }
 
     #auth .authbox {
       display: block !important;
       width: 100% !important;
-      max-width: 360px;
+      max-width: 720px;
       margin: 0 auto;
       padding: 0 !important;
       background: transparent !important;
@@ -2542,10 +2782,50 @@
     }
 
     .module-shell {
+      position: relative;
       display: grid;
       grid-template-columns: 220px minmax(0, 1fr);
       gap: 18px;
-      align-items: start
+      align-items: start;
+      padding: 20px;
+      border-radius: 32px;
+      border: 1px solid rgba(211, 224, 244, .96);
+      background:
+        radial-gradient(circle at 22% 18%, rgba(255, 255, 255, .98) 0, rgba(255, 255, 255, .74) 18%, rgba(255, 255, 255, 0) 40%),
+        radial-gradient(circle at 84% 22%, rgba(161, 205, 255, .22) 0, rgba(161, 205, 255, 0) 32%),
+        radial-gradient(circle at 78% 78%, rgba(205, 192, 255, .18) 0, rgba(205, 192, 255, 0) 28%),
+        linear-gradient(180deg, #fbfdff 0%, #f4f8ff 48%, #eef4ff 100%);
+      box-shadow: 0 28px 54px rgba(34, 55, 99, .09), inset 0 1px 0 rgba(255, 255, 255, .82);
+      overflow: hidden;
+      isolation: isolate
+    }
+
+    .module-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, rgba(61, 131, 255, .96), rgba(144, 191, 255, .62), rgba(255, 255, 255, 0));
+      pointer-events: none;
+      z-index: 0
+    }
+
+    .module-shell::after {
+      content: "";
+      position: absolute;
+      right: -88px;
+      top: -72px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(95, 160, 255, .14) 0, rgba(95, 160, 255, 0) 68%);
+      pointer-events: none;
+      z-index: 0
+    }
+
+    .module-shell>* {
+      position: relative;
+      z-index: 1
     }
 
     .module-rail {
@@ -2681,6 +2961,126 @@
       overflow: visible
     }
 
+    .module-shell .hub-app-head {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid rgba(214, 224, 245, .92);
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, .98) 0, rgba(255, 255, 255, .84) 22%, rgba(255, 255, 255, 0) 48%),
+        linear-gradient(180deg, #fff 0%, #f9fbff 100%);
+      box-shadow: 0 16px 32px rgba(34, 55, 99, .08);
+      margin-bottom: 4px
+    }
+
+    .module-shell .hub-app-head::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(59, 140, 255, .94), rgba(141, 193, 255, .64), rgba(255, 255, 255, 0));
+      pointer-events: none
+    }
+
+    .module-shell .hub-app-head::after {
+      content: "";
+      position: absolute;
+      right: -38px;
+      top: -32px;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(84, 151, 255, .13) 0, rgba(84, 151, 255, 0) 68%);
+      pointer-events: none
+    }
+
+    .module-shell .module-page-title {
+      color: #245fd8;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .75)
+    }
+
+    .module-shell .card,
+    .module-shell .tb,
+    .module-shell .mini,
+    .module-shell .discussion-shell,
+    .module-shell .org-window {
+      border-color: rgba(223, 232, 245, .94);
+      box-shadow: 0 16px 36px rgba(38, 63, 106, .07);
+      transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease
+    }
+
+    .module-shell .card:hover,
+    .module-shell .mini:hover,
+    .module-shell .discussion-shell:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(38, 63, 106, .10);
+      border-color: rgba(194, 212, 241, .98)
+    }
+
+    @keyframes modulePremiumReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(22px) scale(.985)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1)
+      }
+    }
+
+    @keyframes modulePremiumRail {
+      0% {
+        opacity: 0;
+        transform: translateX(-22px) scale(.985)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0) scale(1)
+      }
+    }
+
+    .module-shell.module-live .module-rail {
+      animation: modulePremiumRail .52s cubic-bezier(.2, .8, .2, 1) both
+    }
+
+    .module-shell.module-live .module-content>* {
+      animation: modulePremiumReveal .64s cubic-bezier(.2, .8, .2, 1) both
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(1) {
+      animation-delay: .04s
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(2) {
+      animation-delay: .09s
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(3) {
+      animation-delay: .14s
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(4) {
+      animation-delay: .19s
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(5) {
+      animation-delay: .24s
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(6) {
+      animation-delay: .29s
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(7) {
+      animation-delay: .34s
+    }
+
+    .module-shell.module-live .module-content>*:nth-child(8) {
+      animation-delay: .39s
+    }
+
     .main::-webkit-scrollbar,
     .module-content::-webkit-scrollbar,
     .hub-page::-webkit-scrollbar,
@@ -2708,7 +3108,9 @@
 
     @media(max-width:1080px) {
       .module-shell {
-        grid-template-columns: 1fr
+        grid-template-columns: 1fr;
+        padding: 16px;
+        border-radius: 28px
       }
 
       .module-rail {
@@ -2736,9 +3138,20 @@
     }
 
     @media(max-width:760px) {
+      .module-shell {
+        gap: 14px;
+        padding: 14px;
+        border-radius: 24px
+      }
+
       .module-page-title {
         font-size: 17px;
         padding: 0 8px;
+      }
+
+      .module-shell .hub-app-head {
+        border-radius: 22px;
+        margin-bottom: 2px
       }
 
       .module-rail {
@@ -3905,6 +4318,88 @@
       cursor: pointer;
     }
 
+    .req-star {
+      color: #e5484d;
+      font-weight: 900;
+      margin-left: 2px;
+    }
+
+    .auth-stepper {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .auth-step-pill {
+      display: grid;
+      gap: 4px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid #d9e6ff;
+      background: #fff;
+      color: #5c6d8e;
+      text-align: left;
+      transition: all .2s ease;
+    }
+
+    .auth-step-pill strong {
+      font-size: 12px;
+      color: #2b5fc7;
+    }
+
+    .auth-step-pill span {
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .auth-step-pill.on {
+      border-color: #236bd8;
+      background: linear-gradient(180deg, #f4f8ff, #eef4ff);
+      box-shadow: 0 10px 24px rgba(35, 107, 216, .10);
+    }
+
+    .auth-step-view {
+      display: grid;
+      gap: 12px;
+    }
+
+    .auth-step-view.h {
+      display: none !important;
+    }
+
+    .auth-step-nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .auth-step-note {
+      margin: 0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #dbe6f5;
+      background: #fff;
+      color: #6b7894;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .auth-step-note strong {
+      color: #245ccc;
+    }
+
+    .auth-page-switch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .auth-page-switch .auth-link-btn {
+      text-align: left;
+    }
+
     .nodes{
       width: 100%;
       height:auto;
@@ -3918,6 +4413,10 @@
     @media(max-width:700px) {
       .auth-create-grid,
       .auth-panel-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-stepper {
         grid-template-columns: 1fr;
       }
     }
@@ -4217,10 +4716,7 @@
     }
 
     .arrow {
-      transition: 0.3s;
-      width: 74%;
-      height: auto;
-      filter: brightness(0) invert(1);
+      display: none
     }
 
     .arrow:hover {
@@ -4749,7 +5245,22 @@
 </head>
 
 <body>
-  <div id="auth" class="auth">
+  <div id="intro">
+    <div class="intro-shell">
+      <div class="intro-card">
+        <div class="intro-badge">Plateforme qualite digitale</div>
+        <div class="intro-logo-wrap">
+          <img src="image/logo/SVG/Asset 5.svg" alt="QUALI by ENNAJEH" class="intro-logo">
+        </div>
+        <h1>QUALI by ENNAJEH</h1>
+        <p>Centralise les modules qualite, les documents, les indicateurs et la tracabilite du laboratoire dans une experience claire et professionnelle.</p>
+        <button id="introContinueBtn" class="intro-continue" type="button"><span>Continuer</span><i>&gt;</i></button>
+        <div class="intro-note">Acces a la page de connexion securisee</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="auth" class="auth h">
     <div class="authshell">
       <div class="auth-ico left1">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¹ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°</div>
       <div class="auth-ico left2">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢</div>
@@ -4781,30 +5292,70 @@
               <div class="auth-panel-actions">
                 <button id="openForgotPanel" class="auth-link-btn" type="button">Mot de passe oublie ?</button>
                 <button id="openCreatePanel" class="auth-link-btn" type="button">Creer un compte pilote</button>
+                <button id="openPilotManagePanel" class="auth-link-btn" type="button">Modifier / supprimer un compte pilote</button>
                 <button id="pwaInstallBtn" class="auth-link-btn h" type="button">Installer l'application</button>
               </div>
               <p id="lmsg" class="mut auth-status">Connexion locale prete.</p>
             </div>
             <div id="authCreatePanel" class="auth-panel h">
               <h3>Creer un compte pilote</h3>
+              <div class="auth-stepper" id="cpStepper">
+                <div class="auth-step-pill on" data-cp-step="1"><strong>Etape 1</strong><span>Identite du pilote</span></div>
+                <div class="auth-step-pill" data-cp-step="2"><strong>Etape 2</strong><span>Connexion du compte</span></div>
+                <div class="auth-step-pill" data-cp-step="3"><strong>Etape 3</strong><span>Validation finale</span></div>
+              </div>
+              <div id="cpStep1" class="auth-step-view">
+                <div class="auth-panel-grid">
+                  <div class="f"><label>Nom <span class="req-star">*</span></label><input id="cpLastName" type="text" placeholder="Nom"></div>
+                  <div class="f"><label>Prenom <span class="req-star">*</span></label><input id="cpFirstName" type="text" placeholder="Prenom"></div>
+                  <div class="f"><label>Poste <span class="req-star">*</span></label><input id="cpFunc" type="text" placeholder="Poste / fonction"></div>
+                  <div class="f"><label>Identifiant unique <span class="req-star">*</span></label><input id="cpUid" type="text" placeholder="PILOT-002"></div>
+                  <div class="f" style="grid-column:1/-1"><label>Nom de l'organisme <span class="req-star">*</span></label><input id="cpOrgName" type="text" placeholder="Nom de la societe / organisme"></div>
+                </div>
+                <div class="auth-step-nav">
+                  <button id="cpNextStep1Btn" class="btn" type="button">Continuer a l'etape 2</button>
+                  <div class="auth-page-switch">
+                    <button id="openPilotManageFromCreate" class="auth-link-btn" type="button">Gerer un compte pilote existant</button>
+                    <button id="backToLoginFromCreate" class="auth-link-btn" type="button">Retour a la connexion</button>
+                  </div>
+                </div>
+              </div>
+              <div id="cpStep2" class="auth-step-view h">
+                <div class="auth-panel-grid">
+                  <div class="f"><label>Adresse e-mail <span class="req-star">*</span></label><input id="cpEmail" type="email" placeholder="pilote@organisme.tn"></div>
+                  <div class="f"><label>Confirmer l'e-mail <span class="req-star">*</span></label><input id="cpEmail2" type="email" placeholder="Confirmer l'adresse e-mail"></div>
+                  <div class="f"><label>Mot de passe <span class="req-star">*</span></label><input id="cpPwd" type="password" placeholder="Mot de passe du pilote"></div>
+                  <div class="f"><label>Confirmer le mot de passe <span class="req-star">*</span></label><input id="cpPwd2" type="password" placeholder="Confirmer le mot de passe"></div>
+                </div>
+                <div class="auth-step-nav">
+                  <button id="cpNextStep2Btn" class="btn" type="button">Continuer a l'etape de validation</button>
+                  <button id="cpBackStep1Btn" class="auth-link-btn" type="button">Retour a l'etape 1</button>
+                </div>
+              </div>
+              <div id="cpStep3" class="auth-step-view h">
+                <div id="cpCodeField" class="f"><label>Code de validation <span class="req-star">*</span></label><input id="cpCode" type="text" placeholder="Code recu par e-mail"></div>
+                <p id="cpEditNote" class="auth-step-note h"><strong>Modification du compte pilote</strong><br>Les donnees chargees peuvent etre mises a jour ici sans renvoyer un nouveau code de validation.</p>
+                <div class="auth-panel-actions">
+                  <button id="cpSendCodeBtn" class="btn" type="button">Envoyer le code</button>
+                  <button id="cpBtn" class="btn" type="button">Valider le compte pilote</button>
+                  <button id="cpBackStep2Btn" class="auth-link-btn" type="button">Retour a l'etape 2</button>
+                </div>
+              </div>
+              <p id="cpMsg" class="mut auth-status">Renseigne tous les champs obligatoires avant de passer a l'etape suivante.</p>
+            </div>
+            <div id="authPilotManagePanel" class="auth-panel h">
+              <h3>Gerer un compte pilote existant</h3>
               <div class="auth-panel-grid">
-                <div class="f"><label>Nom</label><input id="cpLastName" type="text" placeholder="Nom"></div>
-                <div class="f"><label>Prenom</label><input id="cpFirstName" type="text" placeholder="Prenom"></div>
-                <div class="f"><label>Poste</label><input id="cpFunc" type="text" placeholder="Poste / fonction"></div>
-                <div class="f"><label>Identifiant unique</label><input id="cpUid" type="text" placeholder="PILOT-002"></div>
-                <div class="f" style="grid-column:1/-1"><label>Nom de l'organisme</label><input id="cpOrgName" type="text" placeholder="Nom de la societe / organisme"></div>
-                <div class="f"><label>Adresse e-mail</label><input id="cpEmail" type="email" placeholder="pilote@organisme.tn"></div>
-                <div class="f"><label>Confirmer l'e-mail</label><input id="cpEmail2" type="email" placeholder="Confirmer l'adresse e-mail"></div>
-                <div class="f"><label>Mot de passe</label><input id="cpPwd" type="password" placeholder="Mot de passe du pilote"></div>
-                <div class="f"><label>Confirmer le mot de passe</label><input id="cpPwd2" type="password" placeholder="Confirmer le mot de passe"></div>
-                <div class="f"><label>Code de validation</label><input id="cpCode" type="text" placeholder="Code recu par e-mail"></div>
+                <div class="f" style="grid-column:1/-1"><label>Adresse e-mail du compte pilote a gerer <span class="req-star">*</span></label><input id="cpManageLookupEmail" type="email" placeholder="pilote@organisme.tn"></div>
               </div>
               <div class="auth-panel-actions">
-                <button id="cpSendCodeBtn" class="btn" type="button">Envoyer le code</button>
-                <button id="cpBtn" class="btn" type="button">Valider et creer le compte pilote</button>
-                <button id="backToLoginFromCreate" class="auth-link-btn" type="button">Retour a la connexion</button>
+                <button id="cpLoadBtn" class="btn2 btn" type="button">Charger les donnees</button>
+                <button id="cpUpdateBtn" class="btn" type="button">Modifier les donnees</button>
+                <button id="cpDeleteBtn" class="btn3 btn" type="button">Supprimer le compte pilote</button>
+                <button id="cpResetBtn" class="auth-link-btn" type="button">Nouveau compte pilote</button>
+                <button id="backToLoginFromManage" class="auth-link-btn" type="button">Retour a la connexion</button>
               </div>
-              <p id="cpMsg" class="mut auth-status">Le code de validation est associe au compte pilote en cours de creation.</p>
+              <p id="cpManageMsg" class="mut auth-status">Charge un compte pilote existant pour preparer sa modification ou sa suppression.</p>
             </div>
             <div id="authResetPanel" class="auth-panel h">
               <h3>Mot de passe oublie</h3>
@@ -4866,15 +5417,17 @@
         showPage("hub");
       }
       function secureOpen() {
-        var auth = document.getElementById("auth"), app = document.getElementById("app"), email = (document.getElementById("lemail") || {}).value || "", pwd = (document.getElementById("lpwd") || {}).value || "", msg = document.getElementById("lmsg");
+        var intro = document.getElementById("intro"), auth = document.getElementById("auth"), app = document.getElementById("app"), email = (document.getElementById("lemail") || {}).value || "", pwd = (document.getElementById("lpwd") || {}).value || "", msg = document.getElementById("lmsg");
         var pilotOk = typeof isPilotLogin === "function" && isPilotLogin(email, pwd);
         var userOk = typeof findUserLogin === "function" && !!findUserLogin(email, pwd);
         if (!pilotOk && !userOk) {
           if (msg) msg.textContent = "Acces refuse : e-mail ou mot de passe incorrect.";
+          if (intro) intro.classList.add("h");
           if (auth) auth.classList.remove("h");
           if (app) app.classList.add("h");
           return;
         }
+        if (intro) intro.classList.add("h");
         if (auth) auth.classList.add("h");
         if (app) app.classList.remove("h");
         fallbackRender(email);
@@ -7684,6 +8237,25 @@
       const data = await apiRequest("/pilots/register", { method: "POST", body });
       return data && data.pilot ? data.pilot : null
     }
+    async function apiUpdatePilot(pilotEmail, pilot) {
+      const body = {
+        password: String((pilot && pilot.password) || ""),
+        name: String((pilot && pilot.name) || "").trim(),
+        firstName: String((pilot && pilot.firstName) || "").trim(),
+        lastName: String((pilot && pilot.lastName) || "").trim(),
+        role: String((pilot && pilot.role) || "Administrateur").trim() || "Administrateur",
+        dept: String((pilot && pilot.dept) || "Pilotage application").trim() || "Pilotage application",
+        func: String((pilot && pilot.func) || "Pilote de l'application").trim() || "Pilote de l'application",
+        matricule: String((pilot && pilot.matricule) || "").trim(),
+        orgName: String((pilot && pilot.orgName) || "").trim() || "QUALI by ENNAJEH",
+        status: String((pilot && pilot.status) || "Actif").trim() || "Actif"
+      };
+      const data = await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)), { method: "PUT", body });
+      return data && data.pilot ? data.pilot : null
+    }
+    async function apiDeletePilot(pilotEmail) {
+      return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)), { method: "DELETE" })
+    }
     async function apiCreateUser(pilotEmail, user) {
       const data = await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/users", { method: "POST", body: user });
       return normalizeUserAccount(data && data.item ? data.item : {})
@@ -7791,20 +8363,37 @@
     function now() { const d = new Date(), p = n => String(n).padStart(2, "0"); return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()) }
     function esc(v) { return String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;") }
     function sessionActive() { const auth = $("#auth"), app = $("#app"); return !!(auth && app && auth.classList.contains("h") && !app.classList.contains("h")) }
+    function showIntroScreen() {
+      const intro = $("#intro"), auth = $("#auth"), app = $("#app");
+      if (intro) intro.classList.remove("h");
+      if (auth) auth.classList.add("h");
+      if (app) app.classList.add("h");
+      updateBackButton();
+    }
+    function showAuthScreen(panelId = "authLoginPanel") {
+      const intro = $("#intro"), auth = $("#auth"), app = $("#app");
+      if (intro) intro.classList.add("h");
+      if (auth) auth.classList.remove("h");
+      if (app) app.classList.add("h");
+      authPanel(panelId);
+      if ($("#lmsg")) $("#lmsg").textContent = "Connexion locale prete.";
+      updateBackButton();
+    }
+    function isBackArrowButton(btn) { const title = String(btn && (btn.getAttribute("aria-label") || btn.title || "") || "").toLowerCase(), img = btn ? btn.querySelector("img") : null, imgAlt = String(img && img.alt || "").toLowerCase(); return title.includes("precedente") || title.includes("précédente") || imgAlt.includes("left") }
+    function placeBackButton() { const heads = $all(".hub-app-head"); heads.forEach(head => { const nav = head.querySelector(".back-nav"); if (nav) nav.classList.remove("in-rail") }); const activeHead = $("#" + currentPage + " .hub-app-head"); if (!activeHead) return; const activeNav = activeHead.querySelector(".back-nav"); if (activeNav) activeNav.classList.add("in-rail") }
     function updateBackButton() {
-      const b = $("#backBtn"), n = $("#nextBtn");
-      if (!b || !n) return;
+      const buttons = $all(".hub-app-head .back-nav .back-btn");
+      if (!buttons.length) return;
       const active = sessionActive();
-      b.classList.remove("h");
-      n.classList.toggle("h", !active);
-      b.classList.remove("off");
-      n.classList.toggle("off", !active || !nextPageHistory.length);
-      b.disabled = false;
-      n.disabled = !active || !nextPageHistory.length;
-      b.setAttribute("title", "Page precedente");
-      n.setAttribute("title", "Page suivante");
-      b.setAttribute("aria-disabled", "false");
-      n.setAttribute("aria-disabled", String(!active || !nextPageHistory.length));
+      buttons.forEach(btn => {
+        const isBack = isBackArrowButton(btn), blocked = isBack ? false : (!active || !nextPageHistory.length);
+        btn.classList.remove("h");
+        btn.classList.toggle("off", blocked);
+        btn.disabled = blocked;
+        btn.setAttribute("title", isBack ? "Page precedente" : "Page suivante");
+        btn.setAttribute("aria-label", isBack ? "Page precedente" : "Page suivante");
+        btn.setAttribute("aria-disabled", String(blocked))
+      });
     }
     function fmtSize(n) { if (!n && n !== 0) return "-"; const u = ["o", "Ko", "Mo", "Go"]; let i = 0, v = n; while (v >= 1024 && i < u.length - 1) { v /= 1024; i++ } return (i ? v.toFixed(v >= 10 ? 1 : 2) : v) + " " + u[i] }
     function fmtDate(v) { if (!v) return "-"; try { return new Date(v).toLocaleString("fr-FR") } catch (e) { return v } }
@@ -7842,12 +8431,75 @@
     async function verifyHandle(h, w) { if (!h) return false; const o = { mode: w ? "readwrite" : "read" }; if ((await h.queryPermission(o)) === "granted") return true; return (await h.requestPermission(o)) === "granted" }
     function tag(v) { return ["Valide", "Approuve", "Diffuse", "Cloture", "Cloturee"].includes(v) ? "ok" : ["Brouillon", "En revue", "A corriger", "A valider", "A etalonner", "En cours", "Planifie", "Majeure"].includes(v) ? "wa" : ["Obsolete", "Archive", "Hors service", "Ouverte", "Critique"].includes(v) ? "er" : "bl" }
     function log(a, m, x) { ensureTrailWeek(); const u = s.u || {}; s.trail.unshift({ t: now(), u: u.name || "Utilisateur", email: u.email || "", role: u.role || "", a, m, x }); s.trail = s.trail.slice(0, 500) }
-    function openApp() { $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); page(canViewModule("hub") ? "hub" : "db", true); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
+    function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); page(canViewModule("hub") ? "hub" : "db", true); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
     function pilotAccount() { return normalizeUserAccount({ name: "Pilote QUALI", firstName: "Pilote", lastName: "QUALI", email: MAIN_PILOT_EMAIL, role: "Administrateur", dept: "Pilotage application", func: "Pilote de l'application", matricule: "PILOT-001", ini: "PQ", perms: [...PERMS], moduleAccess: fullModuleAccess(), passwordHint: "Mot de passe pilote : " + MAIN_PILOT_PASSWORD, pilot: true, status: "Actif", accountType: "Pilote" }) }
     function pilotAccounts() { const fallback = [mainPilotRegistryAccount()]; const raw = sg(ACCK); if (!raw) return fallback; try { const parsed = JSON.parse(raw); return Array.isArray(parsed) && parsed.length ? parsed : fallback } catch (e) { return fallback } }
     function savePilotAccounts(arr) { ss(ACCK, JSON.stringify(arr)) }
     function mainPilotRegistryAccount() { const p = pilotAccount(); return { name: p.name, firstName: p.firstName, lastName: p.lastName, email: p.email, password: MAIN_PILOT_PASSWORD, role: p.role, dept: p.dept, func: p.func, matricule: p.matricule, orgName: "QUALI by ENNAJEH", pilot: true } }
     function ensureMainPilotRegistry() { const accounts = pilotAccounts(), email = authNormEmail(MAIN_PILOT_EMAIL); const i = accounts.findIndex(x => authNormEmail(x.email) === email); if (i >= 0) accounts[i] = { ...accounts[i], ...mainPilotRegistryAccount() }; else accounts.unshift(mainPilotRegistryAccount()); savePilotAccounts(accounts); return accounts }
+    let editingPilotEmail = "", pilotCreateStep = 1;
+    function pilotManageTargetEmail() { return authNormEmail(($("#cpManageLookupEmail") && $("#cpManageLookupEmail").value) || ($("#cpEmail") && $("#cpEmail").value) || "") }
+    function pilotManageAllowed(email = editingPilotEmail || pilotManageTargetEmail()) { return !!email && authNormEmail(email) !== MAIN_PILOT_EMAIL }
+    function pilotPanelMessage(msg, manage = false) { const el = $(manage ? "#cpManageMsg" : "#cpMsg"); if (el) el.textContent = msg }
+    function setPilotCreateStep(step = 1) {
+      pilotCreateStep = Math.max(1, Math.min(3, Number(step) || 1));
+      ["cpStep1", "cpStep2", "cpStep3"].forEach((id, idx) => {
+        const el = $("#" + id);
+        if (el) el.classList.toggle("h", idx + 1 !== pilotCreateStep);
+      });
+      $all("#cpStepper [data-cp-step]").forEach(node => node.classList.toggle("on", Number(node.dataset.cpStep || 0) === pilotCreateStep));
+    }
+    function syncPilotManageButtons() {
+      const editing = !!editingPilotEmail, manageable = pilotManageAllowed(), hasLookup = !!pilotManageTargetEmail();
+      if ($("#cpEmail")) $("#cpEmail").readOnly = editing;
+      if ($("#cpEmail2")) $("#cpEmail2").readOnly = editing;
+      if ($("#cpSendCodeBtn")) {
+        $("#cpSendCodeBtn").disabled = editing;
+        $("#cpSendCodeBtn").classList.toggle("h", editing);
+      }
+      if ($("#cpCodeField")) $("#cpCodeField").classList.toggle("h", editing);
+      if ($("#cpEditNote")) $("#cpEditNote").classList.toggle("h", !editing);
+      if ($("#cpBtn")) $("#cpBtn").textContent = editing ? "Valider la modification du compte pilote" : "Valider le compte pilote";
+      if ($("#cpUpdateBtn")) $("#cpUpdateBtn").disabled = !hasLookup || !manageable;
+      if ($("#cpDeleteBtn")) $("#cpDeleteBtn").disabled = !hasLookup || !manageable;
+      if ($("#cpLoadBtn")) $("#cpLoadBtn").disabled = !hasLookup;
+    }
+    function openPilotCreateWizard(step = 1, msg = "Renseigne tous les champs obligatoires avant de passer a l'etape suivante.") {
+      authPanel("authCreatePanel");
+      setPilotCreateStep(step);
+      syncPilotManageButtons();
+      pilotPanelMessage(msg);
+    }
+    function openPilotManageWizard(msg = "Charge un compte pilote existant pour preparer sa modification ou sa suppression.") {
+      authPanel("authPilotManagePanel");
+      syncPilotManageButtons();
+      pilotPanelMessage(msg, true);
+    }
+    function resetPilotManageForm(msg = "Renseigne tous les champs obligatoires avant de passer a l'etape suivante.") {
+      editingPilotEmail = "";
+      clearFields(["#cpFirstName", "#cpLastName", "#cpFunc", "#cpUid", "#cpOrgName", "#cpEmail", "#cpEmail2", "#cpPwd", "#cpPwd2", "#cpCode", "#cpManageLookupEmail"]);
+      setPilotCreateStep(1);
+      syncPilotManageButtons();
+      pilotPanelMessage(msg);
+      pilotPanelMessage("Charge un compte pilote existant pour preparer sa modification ou sa suppression.", true);
+    }
+    function loadPilotManageForm(account) {
+      if (!account) return;
+      editingPilotEmail = authNormEmail(account.email);
+      $("#cpFirstName").value = account.firstName || "";
+      $("#cpLastName").value = account.lastName || "";
+      $("#cpFunc").value = account.func || "";
+      $("#cpUid").value = account.matricule || "";
+      $("#cpOrgName").value = account.orgName || "";
+      $("#cpEmail").value = account.email || "";
+      $("#cpEmail2").value = account.email || "";
+      $("#cpPwd").value = account.password || "";
+      $("#cpPwd2").value = account.password || "";
+      $("#cpCode").value = "";
+      if ($("#cpManageLookupEmail")) $("#cpManageLookupEmail").value = account.email || "";
+      setPilotCreateStep(1);
+      syncPilotManageButtons()
+    }
     function pilotRegistryToUser(acc) { const full = String(acc.name || [acc.firstName, acc.lastName].filter(Boolean).join(" ") || "Pilote").trim(); const parts = full.split(" ").filter(Boolean); return normalizeUserAccount({ name: full, firstName: acc.firstName || parts[0] || full, lastName: acc.lastName || parts.slice(1).join(" ") || "", email: acc.email, role: acc.role || "Administrateur", dept: acc.dept || "Pilotage application", func: acc.func || "Pilote de l'application", matricule: acc.matricule || ("PILOT-" + stamp()), ini: ini(full), perms: [...PERMS], moduleAccess: fullModuleAccess(), pilot: true, status: "Actif", accountType: "Pilote" }) }
     function blankPilotData(acc) { const d = c(D), user = pilotRegistryToUser(acc); Object.keys(d).forEach(k => { if (Array.isArray(d[k])) d[k] = [] }); d.u = user; d.org = { ...d.org, name: acc.orgName || "", fiscal: "", acc: "", accDate: "", validDate: "", manager: user.name || "", phone: "", fax: "", mail: user.email || "", address: "", city: "", accRef: acc.matricule || "", accStd: "ISO/IEC 17025:2017", docs: "" }; d.diag = { person: "", date: "", answers: {}, notes: {}, updated: "" }; d.repo = { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }; d.docs = []; d.orgDocs = []; d.eq = []; d.nc = []; d.aud = []; d.revc = []; d.prest = []; d.aci = []; d.plan = []; d.disc = []; d.usr = [user]; d.trailWeek = ""; d.trailArchive = []; d.trail = []; d.risk = []; d.swot = []; d.sat = []; d.recl = []; d.personnel = []; d.perHab = []; d.perQual = []; d.dbCalendarNotes = {}; d.dbCalendarView = null; d.dbCalendarSelected = ""; return d }
     function switchPilotStore(email) { currentPilotEmail = authNormEmail(email) || MAIN_PILOT_EMAIL; currentDataKey = pilotDataKey(currentPilotEmail) }
@@ -7856,16 +8508,135 @@
     function findUserLogin(email, password) { const target = authNormEmail(email), pw = String(password || ""); for (const pilot of ensureMainPilotRegistry()) { const key = pilotDataKey(pilot.email), raw = sg(key); if (!raw) continue; let data = null; try { data = { ...c(D), ...JSON.parse(raw) } } catch (e) { data = null } if (!data || !Array.isArray(data.usr)) continue; const user = data.usr.map(normalizeUserAccount).find(x => !x.pilot && authNormEmail(x.email) === target && String(x.password || "") === pw && String(x.status || "Actif") === "Actif"); if (user) return { pilot, user } } return null }
     function isPilotLogin(e, p) { const acc = findPilotAccount(e); return !!(acc && String(acc.password || "") === String(p || "")) }
     function sessionInfo() { try { const raw = sg(S); if (!raw) return null; const parsed = JSON.parse(raw); return parsed && typeof parsed === "object" ? parsed : null } catch (e) { return null } }
-    function authPanel(id) { ["authLoginPanel", "authCreatePanel", "authResetPanel"].forEach(x => { const el = $("#" + x); if (el) el.classList.toggle("h", x !== id) }) }
+    function authPanel(id) { ["authLoginPanel", "authCreatePanel", "authPilotManagePanel", "authResetPanel"].forEach(x => { const el = $("#" + x); if (el) el.classList.toggle("h", x !== id) }) }
     function sixCode() { return String(Math.floor(100000 + Math.random() * 900000)) }
     function sendPilotMailCode(email, code, purpose = "validation") { const subject = encodeURIComponent(purpose === "reset" ? "Code de reinitialisation QUALI" : "Code de validation QUALI"), body = encodeURIComponent(`Bonjour,\n\nVotre code QUALI est : ${code}\n\nObjet : ${purpose === "reset" ? "reinitialisation du mot de passe" : "validation du compte pilote"}\n\nMerci de conserver ce code en toute confidentialite.`), a = document.createElement("a"); a.href = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`; a.style.display = "none"; document.body.appendChild(a); a.click(); a.remove() }
     function createDraftPayload() { const firstName = $("#cpFirstName").value.trim(), lastName = $("#cpLastName").value.trim(), func = $("#cpFunc").value.trim(), uid = $("#cpUid").value.trim(), orgName = $("#cpOrgName").value.trim(), email = $("#cpEmail").value.trim(), email2 = $("#cpEmail2").value.trim(), pw = $("#cpPwd").value, pw2 = $("#cpPwd2").value; return { firstName, lastName, func, uid, orgName, email, email2, pw, pw2, name: [firstName, lastName].filter(Boolean).join(" ").trim() } }
-    function sendCreatePilotCode() { const msg = $("#cpMsg"), draft = createDraftPayload(); if (!draft.firstName || !draft.lastName || !draft.func || !draft.uid || !draft.orgName || !draft.email || !draft.email2 || !draft.pw || !draft.pw2) { msg.textContent = "Renseigne toutes les donnees du compte pilote avant d'envoyer le code."; return } if (authNormEmail(draft.email) !== authNormEmail(draft.email2)) { msg.textContent = "La confirmation de l'adresse e-mail est incorrecte."; return } if (!validPassword(draft.pw)) { msg.textContent = "Mot de passe invalide : minimum 8 caracteres avec lettres, chiffres et symbole."; return } if (draft.pw !== draft.pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); if (accounts.some(x => authNormEmail(x.email) === authNormEmail(draft.email))) { msg.textContent = "Ce compte pilote existe deja."; return } const code = sixCode(); ss("QUALI_pending_pilot_signup", JSON.stringify({ ...draft, code, createdAt: now() })); sendPilotMailCode(draft.email, code, "validation"); msg.textContent = "Code envoye. Ouvre ton e-mail, puis saisis le code de validation pour terminer la creation."; }
-    async function createPilotAccount() { const msg = $("#cpMsg"), raw = sg("QUALI_pending_pilot_signup"), entered = ($("#cpCode").value || "").trim(); if (!raw) { msg.textContent = "Commence par envoyer le code de validation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending) { msg.textContent = "Le brouillon du compte pilote est invalide. Renvoie un nouveau code."; return } if (!entered || entered !== String(pending.code || "")) { msg.textContent = "Le code de validation est incorrect."; return } const accounts = ensureMainPilotRegistry(); if (accounts.some(x => authNormEmail(x.email) === authNormEmail(pending.email))) { msg.textContent = "Ce compte pilote existe deja."; return } const account = { name: pending.name, firstName: pending.firstName, lastName: pending.lastName, email: pending.email, password: pending.pw, role: "Administrateur", dept: "Pilotage application", func: pending.func, matricule: pending.uid, orgName: pending.orgName, pilot: true, status: "Actif" }; accounts.unshift(account); savePilotAccounts(accounts); let serverNote = ""; if (await apiHealth()) { const remoteReady = await ensureRemotePilotAccount(account); if (!remoteReady) serverNote = " Synchronisation base en attente."; } sr("QUALI_pending_pilot_signup"); msg.textContent = "Compte pilote valide. Retour a la connexion pour ouvrir l'application avec ce compte." + serverNote; $("#lemail").value = account.email; $("#lpwd").value = ""; clearFields(["#cpFirstName", "#cpLastName", "#cpFunc", "#cpUid", "#cpOrgName", "#cpEmail", "#cpEmail2", "#cpPwd", "#cpPwd2", "#cpCode"]); authPanel("authLoginPanel"); $("#lmsg").textContent = "Compte pilote cree. Connecte-toi avec ton e-mail et ton mot de passe."; }
+    function validatePilotIdentityStep() {
+      const draft = createDraftPayload();
+      if (!draft.firstName || !draft.lastName || !draft.func || !draft.uid || !draft.orgName) {
+        pilotPanelMessage("Renseigne tous les champs obligatoires de l'etape 1.");
+        return false;
+      }
+      return true;
+    }
+    function validatePilotAccountStep() {
+      const draft = createDraftPayload();
+      if (!draft.email || !draft.email2 || !draft.pw || !draft.pw2) {
+        pilotPanelMessage("Renseigne tous les champs obligatoires de l'etape 2.");
+        return false;
+      }
+      if (authNormEmail(draft.email) !== authNormEmail(draft.email2)) {
+        pilotPanelMessage("La confirmation de l'adresse e-mail est incorrecte.");
+        return false;
+      }
+      if (!validPassword(draft.pw)) {
+        pilotPanelMessage("Mot de passe invalide : saisir au minimum 4 chiffres.");
+        return false;
+      }
+      if (draft.pw !== draft.pw2) {
+        pilotPanelMessage("La confirmation du mot de passe est incorrecte.");
+        return false;
+      }
+      if (editingPilotEmail) {
+        if (authNormEmail(draft.email) !== editingPilotEmail || authNormEmail(draft.email2) !== editingPilotEmail) {
+          pilotPanelMessage("L'adresse e-mail du compte pilote ne se modifie pas dans cet ecran.");
+          return false;
+        }
+      } else {
+        const accounts = ensureMainPilotRegistry();
+        if (accounts.some(x => authNormEmail(x.email) === authNormEmail(draft.email))) {
+          pilotPanelMessage("Ce compte pilote existe deja.");
+          return false;
+        }
+      }
+      return true;
+    }
+    function openPilotStep2() {
+      if (!validatePilotIdentityStep()) return;
+      setPilotCreateStep(2);
+      pilotPanelMessage("Etape 2 prete. Complete maintenant les informations de connexion du compte pilote.");
+    }
+    function openPilotStep3() {
+      if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
+      setPilotCreateStep(3);
+      syncPilotManageButtons();
+      pilotPanelMessage(editingPilotEmail ? "Verifie les donnees puis valide la modification du compte pilote." : "Envoie le code de validation, puis valide le compte pilote.");
+    }
+    function sendCreatePilotCode() {
+      if (editingPilotEmail) {
+        pilotPanelMessage("La modification d'un compte pilote existant ne demande pas de nouveau code.");
+        return;
+      }
+      if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
+      const draft = createDraftPayload(), code = sixCode();
+      ss("QUALI_pending_pilot_signup", JSON.stringify({ ...draft, code, createdAt: now() }));
+      sendPilotMailCode(draft.email, code, "validation");
+      pilotPanelMessage("Code envoye. Ouvre ton e-mail, puis saisis le code de validation pour terminer la creation.");
+    }
+    async function createPilotAccount() {
+      if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
+      const msg = $("#cpMsg"), raw = sg("QUALI_pending_pilot_signup"), entered = ($("#cpCode").value || "").trim();
+      if (!raw) { msg.textContent = "Commence par envoyer le code de validation."; return }
+      let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null }
+      if (!pending) { msg.textContent = "Le brouillon du compte pilote est invalide. Renvoie un nouveau code."; return }
+      if (!entered || entered !== String(pending.code || "")) { msg.textContent = "Le code de validation est incorrect."; return }
+      const accounts = ensureMainPilotRegistry();
+      if (accounts.some(x => authNormEmail(x.email) === authNormEmail(pending.email))) { msg.textContent = "Ce compte pilote existe deja."; return }
+      const account = { name: pending.name, firstName: pending.firstName, lastName: pending.lastName, email: pending.email, password: pending.pw, role: "Administrateur", dept: "Pilotage application", func: pending.func, matricule: pending.uid, orgName: pending.orgName, pilot: true, status: "Actif" };
+      accounts.unshift(account); savePilotAccounts(accounts); let serverNote = "";
+      if (await apiHealth()) { const remoteReady = await ensureRemotePilotAccount(account); if (!remoteReady) serverNote = " Synchronisation base en attente."; }
+      sr("QUALI_pending_pilot_signup");
+      msg.textContent = "Compte pilote valide. Retour a la connexion pour ouvrir l'application avec ce compte." + serverNote;
+      $("#lemail").value = account.email; $("#lpwd").value = ""; resetPilotManageForm("Compte pilote cree. Tu peux maintenant retourner a la connexion."); authPanel("authLoginPanel"); $("#lmsg").textContent = "Compte pilote cree. Connecte-toi avec ton e-mail et ton mot de passe.";
+    }
+    async function submitPilotWizard() {
+      if (editingPilotEmail) return updatePilotManageAccount();
+      return createPilotAccount();
+    }
+    function loadPilotAccountForManage(openEditor = false) {
+      const email = pilotManageTargetEmail();
+      if (!email) { pilotPanelMessage("Renseigne l'adresse e-mail du compte pilote a charger.", true); return }
+      const account = ensureMainPilotRegistry().find(x => authNormEmail(x.email) === email);
+      if (!account) { pilotPanelMessage("Compte pilote introuvable sur cet appareil.", true); return }
+      loadPilotManageForm(account);
+      const baseMsg = email === MAIN_PILOT_EMAIL ? "Compte pilote principal charge. Sa suppression et sa modification sont bloquees dans cet ecran." : "Compte pilote charge. Tu peux maintenant le modifier ou le supprimer.";
+      pilotPanelMessage(baseMsg, true);
+      if (openEditor) openPilotCreateWizard(1, email === MAIN_PILOT_EMAIL ? "Le compte pilote principal ne se modifie pas dans cet ecran." : "Compte pilote charge. Modifie les champs puis poursuis les etapes pour valider la modification.");
+    }
+    async function updatePilotManageAccount() {
+      const msg = $("#cpMsg"), draft = createDraftPayload();
+      if (!editingPilotEmail) { msg.textContent = "Charge d'abord un compte pilote existant."; return }
+      if (!pilotManageAllowed(editingPilotEmail)) { msg.textContent = "Le compte pilote principal ne se modifie pas dans cet ecran."; return }
+      if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
+      const accounts = ensureMainPilotRegistry(), index = accounts.findIndex(x => authNormEmail(x.email) === editingPilotEmail);
+      if (index < 0) { msg.textContent = "Compte pilote introuvable."; return }
+      const updated = { ...accounts[index], name: draft.name, firstName: draft.firstName, lastName: draft.lastName, email: editingPilotEmail, password: draft.pw, role: "Administrateur", dept: "Pilotage application", func: draft.func, matricule: draft.uid, orgName: draft.orgName, pilot: true, status: "Actif" };
+      accounts[index] = updated; savePilotAccounts(accounts); let serverNote = "";
+      if (await apiHealth()) { try { await apiUpdatePilot(editingPilotEmail, updated) } catch (e) { console.error(e); serverNote = " Synchronisation base en attente." } }
+      loadPilotManageForm(updated);
+      msg.textContent = "Compte pilote modifie avec succes." + serverNote;
+      pilotPanelMessage("Compte pilote modifie avec succes." + serverNote, true);
+    }
+    async function deletePilotManageAccount() {
+      const email = editingPilotEmail || pilotManageTargetEmail();
+      if (!email) { pilotPanelMessage("Charge d'abord un compte pilote a supprimer.", true); return }
+      if (!pilotManageAllowed(email)) { pilotPanelMessage("Le compte pilote principal ne peut pas etre supprime.", true); return }
+      const account = ensureMainPilotRegistry().find(x => authNormEmail(x.email) === authNormEmail(email));
+      if (!account) { pilotPanelMessage("Compte pilote introuvable.", true); return }
+      if (!confirm("Confirmer la suppression de ce compte pilote et de ses donnees associees ?")) return;
+      savePilotAccounts(ensureMainPilotRegistry().filter(x => authNormEmail(x.email) !== authNormEmail(email)));
+      sr(pilotDataKey(email));
+      const session = sessionInfo(); if (session && authNormEmail(session.pilotEmail) === authNormEmail(email)) sr(S);
+      let serverNote = "";
+      if (await apiHealth()) { try { await apiDeletePilot(email) } catch (e) { console.error(e); serverNote = " Suppression base en attente." } }
+      resetPilotManageForm("Renseigne tous les champs obligatoires avant de passer a l'etape suivante.");
+      openPilotManageWizard("Compte pilote supprime." + serverNote);
+    }
     function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"), acc = findPilotAccount(email); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; }
-    async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : minimum 8 caracteres avec lettres, chiffres et symbole."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); const i = accounts.findIndex(x => authNormEmail(x.email) === authNormEmail(email)); if (i < 0) { msg.textContent = "Compte pilote introuvable."; return } accounts[i] = { ...accounts[i], password: pw }; savePilotAccounts(accounts); if (await apiHealth()) await ensureRemotePilotAccount(accounts[i]); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; }
+    async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); const i = accounts.findIndex(x => authNormEmail(x.email) === authNormEmail(email)); if (i < 0) { msg.textContent = "Compte pilote introuvable."; return } accounts[i] = { ...accounts[i], password: pw }; savePilotAccounts(accounts); if (await apiHealth()) await ensureRemotePilotAccount(accounts[i]); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; }
     async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value; try { if (await apiHealth()) { try { const remote = await apiLogin(e, p); if (remote && remote.ok && remote.pilot && remote.user) { loadPilotApp(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); if (remote.type === "pilot") { s.u = normalizeUserAccount(remote.user); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })); await syncUsersFromApi(); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } await syncUsersFromApi(); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } } catch (apiErr) { console.error(apiErr) } } if (isPilotLogin(e, p)) { const acc = loadPilotApp(e); if (!acc) throw new Error("Compte pilote introuvable"); await ensureRemotePilotAccount(acc); await loadPilotStateFromApi(acc.email); ss(S, JSON.stringify({ email: acc.email, pilotEmail: acc.email, type: "pilot" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } const found = findUserLogin(e, p); if (!found) { $("#lmsg").textContent = "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h"); return } loadPilotApp(found.pilot.email); await ensureRemotePilotAccount(found.pilot); await loadPilotStateFromApi(found.pilot.email); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(found.user.email)); if (!current) throw new Error("Compte utilisateur introuvable dans la base du pilote"); s.u = normalizeUserAccount(current); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: found.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp() } catch (err) { console.error(err); $("#lmsg").textContent = "Erreur de connexion. Verifie l'application puis recommence."; sr(S); $("#auth").classList.remove("h"); $("#app").classList.add("h") } }
-    function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; $("#app").classList.add("h"); $("#auth").classList.remove("h"); updateBackButton() }
+    function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
     const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestataire externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, stat: { cls: "module-stat", title: "Statistique", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
     function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card module-org-compact"><div class="module-org-line"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-line"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-line"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-line"><strong>Adresse</strong><p>${esc(addr)}</p></div></div></div>` }
     function buildModuleRail(id) { const meta = moduleRailMeta[id]; if (!meta) return null; const rail = document.createElement("aside"); rail.className = "module-rail"; rail.innerHTML = `<div class="module-rail-logo"><img src="image/logo/SVG/Asset 5.svg" alt="QUALI"></div><div class="module-rail-head"><b>${esc(meta.title)}</b><span>${esc(meta.tag)}</span></div>${moduleOrgRailHtml()}`; return rail }
@@ -7874,8 +8645,9 @@
     function ensureModulesShortcutButtons() { document.querySelectorAll(".hub-top-actions").forEach(actions => { if (actions.querySelector('.hub-action-icon[aria-label="Acces rapide modules"]')) return; const msg = actions.querySelector('.hub-action-icon[aria-label="Messages"]'); const btn = document.createElement("button"); btn.className = "hub-action-icon"; btn.type = "button"; btn.title = "Acces rapide modules"; btn.setAttribute("aria-label", "Acces rapide modules"); btn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.5"></rect><rect x="14" y="4" width="6" height="6" rx="1.5"></rect><rect x="4" y="14" width="6" height="6" rx="1.5"></rect><rect x="14" y="14" width="6" height="6" rx="1.5"></rect></svg>`; if (msg) actions.insertBefore(btn, msg.nextSibling); else actions.insertBefore(btn, actions.firstChild) }) }
     function ensureRefreshButtons() { document.querySelectorAll(".hub-top-actions").forEach(actions => { if (actions.querySelector('.hub-action-icon[aria-label="Actualiser"]')) return; const msg = actions.querySelector('.hub-action-icon[aria-label="Messages"]'); const btn = document.createElement("button"); btn.className = "hub-action-icon"; btn.type = "button"; btn.title = "Actualiser"; btn.setAttribute("aria-label", "Actualiser"); btn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"></path><path d="M20 4v6h-6"></path></svg>`; if (msg && msg.nextSibling) actions.insertBefore(btn, msg.nextSibling); else actions.insertBefore(btn, actions.firstChild) }) }
     function enhanceModulePanels() { Object.keys(moduleRailMeta).forEach(id => { const section = $("#" + id); if (!section || section.dataset.railReady === "1") return; section.dataset.railReady = "1"; section.classList.add("module-shell", moduleRailMeta[id].cls); const body = document.createElement("div"); body.className = "module-content"; while (section.firstChild) body.appendChild(section.firstChild); section.appendChild(buildModuleRail(id)); section.appendChild(body) }) }
+    function triggerModulePremiumMotion(id) { Object.keys(moduleRailMeta).forEach(key => { const section = $("#" + key); if (section) section.classList.remove("module-live") }); if (!id || id === "hub") return; const active = $("#" + id); if (!active || active.classList.contains("h")) return; void active.offsetWidth; active.classList.add("module-live") }
     function accessDeniedPage(target = "hub") { const fallback = canViewModule(target) ? target : (MODULE_ACCESS_CONFIG.find(mod => canViewModule(mod.id)) || { id: "hub" }).id; if (fallback !== currentPage) { currentPage = fallback; ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== fallback)) } return fallback }
-    function page(id, skipHistory) { const m = { hub: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], db: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], docs: ["Maitrise documentaire", ""], docorg: ["Documentation", ""], eq: ["Gestion des equipements", ""], nc: ["Non-conformites", ""], aud: ["Audits", ""], revc: ["Liste client", ""], usr: ["Utilisateurs", ""], disc: ["Discussion", ""], set: ["Parametres", ""], diag: ["Diagnostic ISO 17025", ""], risk: ["Analyse de risque", ""], swot: ["Analyse SWOT", ""], sat: ["Satisfaction client", ""], recl: ["Reclamation client", ""], pers: ["Personnel", ""], prest: ["Prestataire externe", ""], aci: ["Amelioration continue", ""], plan: ["Planning", ""], stat: ["Statistique", ""], repo: ["Dossier principal", ""] }; if (!canViewModule(id)) { sync("Acces limite : module non autorise pour ce compte."); id = accessDeniedPage("hub") } if (!skipHistory && currentPage && currentPage !== id) { pageHistory.push(currentPage); nextPageHistory = [] } currentPage = id; ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== id)); $("#app").classList.toggle("hub-mode", id === "hub"); $all("#nav button").forEach(b => b.classList.toggle("on", b.dataset.p === id)); $("#pt").textContent = m[id][0]; $("#ps").textContent = m[id][1]; placeBackButton(); updateBackButton(); if (id === "usr") syncUsersFromApi() }
+    function page(id, skipHistory) { const m = { hub: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], db: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], docs: ["Maitrise documentaire", ""], docorg: ["Documentation", ""], eq: ["Gestion des equipements", ""], nc: ["Non-conformites", ""], aud: ["Audits", ""], revc: ["Liste client", ""], usr: ["Utilisateurs", ""], disc: ["Discussion", ""], set: ["Parametres", ""], diag: ["Diagnostic ISO 17025", ""], risk: ["Analyse de risque", ""], swot: ["Analyse SWOT", ""], sat: ["Satisfaction client", ""], recl: ["Reclamation client", ""], pers: ["Personnel", ""], prest: ["Prestataire externe", ""], aci: ["Amelioration continue", ""], plan: ["Planning", ""], stat: ["Statistique", ""], repo: ["Dossier principal", ""] }; if (!canViewModule(id)) { sync("Acces limite : module non autorise pour ce compte."); id = accessDeniedPage("hub") } if (!skipHistory && currentPage && currentPage !== id) { pageHistory.push(currentPage); nextPageHistory = [] } currentPage = id; ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== id)); $("#app").classList.toggle("hub-mode", id === "hub"); $all("#nav button").forEach(b => b.classList.toggle("on", b.dataset.p === id)); $("#pt").textContent = m[id][0]; $("#ps").textContent = m[id][1]; placeBackButton(); updateBackButton(); triggerModulePremiumMotion(id); if (id === "usr") syncUsersFromApi() }
     function goBackPage() { if (pageHistory.length) { nextPageHistory.push(currentPage); page(pageHistory.pop(), true); return } if (sessionActive() && currentPage === "hub") { logout(); return } if (sessionActive()) { nextPageHistory.push(currentPage); page("hub", true) } }
     function goNextPage() { if (!sessionActive() || !nextPageHistory.length) return; page(nextPageHistory.pop(), true) }
     function applyAccessUi() { const visible = new Set(["hub", ...MODULE_ACCESS_CONFIG.filter(mod => canViewModule(mod.id)).map(mod => mod.id)]); $all("#nav button[data-p]").forEach(btn => btn.classList.toggle("is-hidden", !visible.has(btn.dataset.p))); $all("[data-go]").forEach(btn => btn.classList.toggle("is-hidden", !visible.has(btn.dataset.go))); }
@@ -8690,7 +9462,8 @@
     }
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
-    bindClick("lbtn", login); bindClick("openCreatePanel", () => authPanel("authCreatePanel")); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", createPilotAccount); bindClick("rpSendCodeBtn", sendResetPilotCode); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); registerPwa();
+    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", () => loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", () => loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", sendResetPilotCode); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); syncPilotManageButtons(); registerPwa();
+    ["#cpManageLookupEmail", "#cpEmail", "#cpEmail2"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPilotManageButtons); el.addEventListener("change", syncPilotManageButtons) } });
     ["#ds", "#dpf", "#dtf", "#df", "#ods", "#odpf", "#odtf", "#odf", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });
     ["#pxqual", "#pxcomm", "#pxdelay"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updatePrestEvaluation); el.addEventListener("change", updatePrestEvaluation) } });
@@ -8765,7 +9538,7 @@
     async function restoreRepo() { const h = await idbGet("repoHandle"); if (!h) return; if (await verifyHandle(h, false)) { repoHandle = h; s.repo.folderName = h.name; s.repo.linked = true; s.repo.mode = "Dossier reconnecte"; await scanRepo(h) } else { s.repo.mode = "Reconnecter le dossier local"; repoView() } }
     async function restoreOrgDir() { const h = await idbGet("orgHandle"); if (!h) return; if (await verifyHandle(h, false)) { orgHandle = h; orgRootName = h.name || "QUALI_Organisme"; if (activeOrgProc) await scanOrgProc(activeOrgProc) } }
     ensurePilotAccount();
-    sr(S); $("#lmsg").textContent = "Connexion locale prete."; $("#auth").classList.remove("h"); $("#app").classList.add("h");
+    sr(S); $("#lmsg").textContent = "Connexion locale prete."; showIntroScreen();
     restoreRepo();
     restoreOrgDir();
 

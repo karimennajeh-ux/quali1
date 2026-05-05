@@ -274,6 +274,10 @@ const updatePilotAccountByEmail = db.prepare(`
   SET password = ?, name = ?, first_name = ?, last_name = ?, role = ?, dept = ?, func = ?, matricule = ?, org_name = ?, status = ?, updated_at = ?
   WHERE email = ?
 `);
+const deletePilotAccountByEmail = db.prepare(`
+  DELETE FROM pilots
+  WHERE email = ?
+`);
 const ensurePilotStateRow = db.prepare(`
   INSERT INTO pilot_app_state (pilot_id, state_json, created_at, updated_at)
   VALUES (?, '{}', ?, ?)
@@ -302,6 +306,55 @@ const insertUser = db.prepare(`
 function getPilotByEmail(email) {
   const row = selectPilotByEmail.get(normEmail(email));
   return row ? pilotToAccount(row) : null;
+}
+
+function updateExistingPilotAccount(email, payload = {}) {
+  const target = normEmail(email);
+  if (!target) {
+    const error = new Error("Adresse e-mail pilote obligatoire");
+    error.status = 400;
+    throw error;
+  }
+  if (target === normEmail(MAIN_PILOT.email)) {
+    const error = new Error("Le compte pilote principal ne peut pas etre modifie depuis cet ecran");
+    error.status = 403;
+    throw error;
+  }
+  const existing = getPilotByEmail(target);
+  if (!existing) {
+    const error = new Error("Compte pilote introuvable");
+    error.status = 404;
+    throw error;
+  }
+  const next = {
+    ...existing,
+    ...payload,
+    email: target,
+    password: String(payload.password || existing.password || "")
+  };
+  return upsertPilotAccount(next);
+}
+
+function removePilotAccount(email) {
+  const target = normEmail(email);
+  if (!target) {
+    const error = new Error("Adresse e-mail pilote obligatoire");
+    error.status = 400;
+    throw error;
+  }
+  if (target === normEmail(MAIN_PILOT.email)) {
+    const error = new Error("Le compte pilote principal ne peut pas etre supprime");
+    error.status = 403;
+    throw error;
+  }
+  const existing = getPilotByEmail(target);
+  if (!existing) {
+    const error = new Error("Compte pilote introuvable");
+    error.status = 404;
+    throw error;
+  }
+  deletePilotAccountByEmail.run(target);
+  return { email: target };
 }
 
 function upsertPilotAccount(payload) {
@@ -501,6 +554,38 @@ app.post("/api/pilots/register", (req, res) => {
     });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Creation pilote impossible" });
+  }
+});
+
+app.put("/api/pilots/:pilotEmail", (req, res) => {
+  try {
+    const pilot = updateExistingPilotAccount(req.params.pilotEmail, req.body || {});
+    res.json({
+      ok: true,
+      pilot: {
+        email: pilot.email,
+        name: pilot.name,
+        firstName: pilot.firstName,
+        lastName: pilot.lastName,
+        role: pilot.role,
+        dept: pilot.dept,
+        func: pilot.func,
+        matricule: pilot.matricule,
+        orgName: pilot.orgName,
+        status: pilot.status
+      }
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Modification pilote impossible" });
+  }
+});
+
+app.delete("/api/pilots/:pilotEmail", (req, res) => {
+  try {
+    const result = removePilotAccount(req.params.pilotEmail);
+    res.json({ ok: true, deleted: result.email });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Suppression pilote impossible" });
   }
 });
 
