@@ -8,7 +8,7 @@ const app = express();
 const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
-const DB_DIR = process.env.QUALILAB_DATA_DIR || os.tmpdir();
+const DB_DIR = process.env.QUALILAB_DATA_DIR || path.join(__dirname, "database");
 const DB_PATH = path.join(DB_DIR, "qualilab.sqlite");
 const SCHEMA_PATH = path.join(ROOT, "database", "schema.sql");
 
