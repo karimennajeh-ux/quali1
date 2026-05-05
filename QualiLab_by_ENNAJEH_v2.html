@@ -3556,58 +3556,114 @@
     }
 
     .hub-node {
-      min-width: 150px !important;
-      width: 150px !important;
-      height: 148px !important;
-      min-height: 148px !important;
+      --hub-accent: #236bd8;
+      --hub-soft: rgba(35, 107, 216, .12);
+      min-width: 156px !important;
+      width: 156px !important;
+      height: 176px !important;
+      min-height: 176px !important;
       flex-direction: column !important;
-      gap: 4px !important;
-      justify-content: center !important;
+      gap: 12px !important;
+      justify-content: flex-start !important;
       align-items: center !important;
-      padding: 10px 10px !important;
-      border-radius: 18px !important;
-      border-width: 1px !important;
-      background: linear-gradient(180deg, #fff, #f8fbff) !important;
-      box-shadow: 0 12px 28px rgba(32, 53, 94, .08) !important;
+      padding: 14px 12px 16px !important;
+      border-radius: 24px !important;
+      border: 1px solid rgba(211, 223, 242, .95) !important;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .96)) !important;
+      box-shadow:
+        0 14px 30px rgba(26, 49, 90, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hub-node::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: 10px;
+      height: 5px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--hub-accent), color-mix(in srgb, var(--hub-accent) 58%, #ffffff));
+      opacity: .95;
+    }
+
+    .hub-node::after {
+      content: "";
+      position: absolute;
+      width: 108px;
+      height: 108px;
+      right: -24px;
+      top: -24px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--hub-soft) 0, rgba(255, 255, 255, 0) 68%);
+      z-index: -1;
+      pointer-events: none;
     }
 
     .hub-node b {
-      font-size: 13px !important;
-      color: #236bd8;
-      opacity: 1 !important;
-      font-weight: 500 !important;
-      line-height: 1.18 !important;
-      text-align: center !important;
+      position: static !important;
+      left: auto !important;
+      top: auto !important;
+      transform: none !important;
+      display: block;
       width: 100%;
+      margin: 0;
+      font-size: 14px !important;
+      color: #163755;
+      opacity: 1 !important;
+      font-weight: 800 !important;
+      line-height: 1.24 !important;
+      text-align: center !important;
       word-break: break-word;
+      letter-spacing: .01em;
     }
 
     .hub-node small {
       display: block;
-      color: #7b879a;
+      margin-top: -4px;
+      color: #7d8da4;
       font-size: 10px;
       font-weight: 700;
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: .08em;
     }
 
     .hub-img {
-      width: 68px;
-      height: 60px;
-      min-width: 68px;
-      min-height: 60px;
-      border-radius: 14px;
+      width: 88px;
+      height: 84px;
+      min-width: 88px;
+      min-height: 84px;
+      border-radius: 22px;
       display: grid !important;
       place-items: center;
-      margin: 0 !important;
+      margin: 8px 0 0 !important;
       color: #fff !important;
       font-size: 16px !important;
       font-weight: 900 !important;
       position: relative;
-      background: linear-gradient(180deg, rgba(35, 107, 216, .08), rgba(35, 107, 216, .02));
+      background:
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--hub-accent) 14%, #ffffff),
+          color-mix(in srgb, var(--hub-accent) 5%, #ffffff));
+      border: 1px solid color-mix(in srgb, var(--hub-accent) 18%, #dfe8f5);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .86),
+        0 12px 24px rgba(35, 107, 216, .10);
       overflow: hidden;
     }
 
-    .hub-img {
-      text-shadow: 0 1px 2px rgba(0, 0, 0, .18);
+    .hub-img::before {
+      content: "";
+      position: absolute;
+      inset: 10px 12px auto;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0));
+      pointer-events: none;
     }
 
     .hub-img:not(:empty) {
@@ -3619,7 +3675,7 @@
       height: 60px;
       position: relative;
       z-index: 1;
-      stroke: #8fd7ff;
+      stroke: color-mix(in srgb, var(--hub-accent) 72%, #ffffff);
       fill: none;
       stroke-width: 2.5;
       stroke-linecap: round;
@@ -3627,14 +3683,14 @@
     }
 
     .hub-img img {
-      width: 48px;
-      height: 48px;
+      width: 58px;
+      height: 58px;
       max-width: 100%;
       max-height: 100%;
       display: block;
       object-fit: contain;
       object-position: center center;
-      filter: drop-shadow(0 10px 14px rgba(35, 107, 216, .12));
+      filter: drop-shadow(0 8px 14px rgba(20, 53, 101, .10));
     }
     /* .hub-purple .hub-img {background:linear-gradient(135deg,#a94fd8,#7535b5)}
 .hub-orange .hub-img {background:linear-gradient(135deg,#8fd7ff,#48aeea)}
@@ -3644,6 +3700,46 @@
 .hub-red .hub-img {background:linear-gradient(135deg,#f46b73,#d73847)}
 .hub-violet .hub-img {background:linear-gradient(135deg,#af6cf0,#7a43ce)}
 .hub-slate .hub-img {background:linear-gradient(135deg,#aeb8d8,#7d89af)} */
+    .hub-purple {
+      --hub-accent: #7d5cff;
+      --hub-soft: rgba(125, 92, 255, .18);
+    }
+
+    .hub-orange {
+      --hub-accent: #ff8b3d;
+      --hub-soft: rgba(255, 139, 61, .18);
+    }
+
+    .hub-green {
+      --hub-accent: #2fbc86;
+      --hub-soft: rgba(47, 188, 134, .18);
+    }
+
+    .hub-pink {
+      --hub-accent: #f4688b;
+      --hub-soft: rgba(244, 104, 139, .18);
+    }
+
+    .hub-blue {
+      --hub-accent: #3b8cff;
+      --hub-soft: rgba(59, 140, 255, .18);
+    }
+
+    .hub-slate {
+      --hub-accent: #7f8fb6;
+      --hub-soft: rgba(127, 143, 182, .18);
+    }
+
+    .hub-red {
+      --hub-accent: #f16363;
+      --hub-soft: rgba(241, 99, 99, .18);
+    }
+
+    .hub-violet {
+      --hub-accent: #8f63eb;
+      --hub-soft: rgba(143, 99, 235, .18);
+    }
+
     .hub-summary {
       display: grid !important;
       grid-template-columns: repeat(3, minmax(0, 1fr));
