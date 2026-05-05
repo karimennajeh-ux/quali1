@@ -239,12 +239,6 @@
       color: #8c97ad
     }
 
-    .mut:empty,
-    .module-rail-head span:empty,
-    .hub-node small:empty {
-      display: none;
-    }
-
     .list {
       display: grid;
       gap: 8px
@@ -2234,11 +2228,9 @@
     }
 
     .hub-page {
-      width: 100%;
       position: relative;
       overflow: visible;
       min-height: 100vh;
-      min-width: 1180px;
       background:
         radial-gradient(circle at 50% 18%, rgba(255, 255, 255, .96) 0, rgba(255, 255, 255, .76) 24%, rgba(255, 255, 255, 0) 50%),
         radial-gradient(circle at 18% 32%, rgba(150, 202, 255, .18) 0, rgba(150, 202, 255, 0) 34%),
@@ -2247,9 +2239,9 @@
       border: 0;
       border-radius: 0;
       display: flex;
-      flex-wrap: wrap;
       align-items: start;
       justify-content: center;
+      flex-wrap: wrap;
       padding: 0 0 18px;
       scrollbar-width: auto;
       scrollbar-color: #236bd8 #e8eef9;
@@ -2361,31 +2353,24 @@
     }
 
     .hub-node {
-      position: relative;
+      /* position: relative; */
       /* width:350px;
-  height: 350px; */
+      height: 350px;
       border-radius: 24px;
       display: flex;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      color: #25324b;
-      /* padding:22px 20px; */
+      text-align: center; */
+      /* color: #25324b;
+      padding:22px 20px;
       border: 1px solid rgba(214, 224, 245, .9);
       background: #fff;
       box-shadow: 0 18px 36px rgba(34, 55, 99, .08);
-      font-weight: 700;
+      font-weight: 700; */
       z-index: 1;
       transition: transform .25s ease, box-shadow .25s ease;
       cursor: pointer;
-      left: auto;
-      top: auto;
       transition: 0.5s;
-    }
-
-    .hub-node[class*="orbit-"] {
-      left: auto;
-      top: auto
     }
 
     /* .hub-node:hover {
@@ -2424,20 +2409,6 @@
     .hub-node:focus-visible {
       outline: 3px solid rgba(35, 107, 216, .35);
       outline-offset: 4px;
-    }
-
-    .hub-node.top,
-    .hub-node.top-right,
-    .hub-node.mid-right,
-    .hub-node.right,
-    .hub-node.bottom-right,
-    .hub-node.bottom,
-    .hub-node.bottom-left,
-    .hub-node.left-bottom,
-    .hub-node.left,
-    .hub-node.top-left {
-      left: auto;
-      top: auto
     }
 
     .hub-purple {
@@ -3437,71 +3408,13 @@
       flex-wrap: wrap
     }
 
-    .hub-node.orbit-0 {
-      left: calc(50% - 75px);
-      top: calc(50% - 405px)
-    }
-
-    .hub-node.orbit-1 {
-      left: calc(50% + 119px);
-      top: calc(50% - 342px)
-    }
-
-    .hub-node.orbit-2 {
-      left: calc(50% + 239px);
-      top: calc(50% - 177px)
-    }
-
     .hub-node {
-      position: absolute;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 34px;
       font-family: Raleway, sans-serif;
       font-weight: 500;
-    }
-
-    .hub-node.orbit-3 {
-      left: calc(50% + 239px);
-      top: calc(50% + 27px)
-    }
-
-    .hub-node.orbit-4 {
-      left: calc(50% + 119px);
-      top: calc(50% + 192px)
-    }
-
-    .hub-node.orbit-5 {
-      left: calc(50% - 75px);
-      top: calc(50% + 255px)
-    }
-
-    .hub-node.orbit-6 {
-      left: calc(50% - 269px);
-      top: calc(50% + 192px)
-    }
-
-    .hub-node.orbit-7 {
-      left: calc(50% - 389px);
-      top: calc(50% + 27px)
-    }
-
-    .hub-node.orbit-8 {
-      left: calc(50% - 389px);
-      top: calc(50% - 177px)
-    }
-
-    .hub-node.orbit-9 {
-      left: calc(50% - 269px);
-      top: calc(50% - 342px)
-    }
-
-    .hub-node[class*="orbit-"] {
-      position: relative;
-      left: auto !important;
-      top: auto !important;
-      transform: none !important;
     }
 
     .hub-page {
@@ -3569,15 +3482,14 @@
     .hub-node {
       --hub-accent: #236bd8;
       --hub-soft: rgba(35, 107, 216, .12);
-      min-width: 156px !important;
-      width: 156px !important;
+      width: 156px;
       height: 176px !important;
       min-height: 176px !important;
       flex-direction: column !important;
       gap: 12px !important;
       justify-content: flex-start !important;
       align-items: center !important;
-      padding: 14px 12px 16px !important;
+      padding: 20px 12px 16px !important;
       border-radius: 24px !important;
       border: 1px solid rgba(211, 223, 242, .95) !important;
       background:
@@ -3592,26 +3504,15 @@
     .hub-node::before {
       content: "";
       position: absolute;
-      left: 12px;
+      width: 70%;
+      left: 50%;
       right: 12px;
       top: 10px;
-      height: 5px;
+      height: 8px;
       border-radius: 999px;
       background: linear-gradient(90deg, var(--hub-accent), color-mix(in srgb, var(--hub-accent) 58%, #ffffff));
       opacity: .95;
-    }
-
-    .hub-node::after {
-      content: "";
-      position: absolute;
-      width: 108px;
-      height: 108px;
-      right: -24px;
-      top: -24px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--hub-soft) 0, rgba(255, 255, 255, 0) 68%);
-      z-index: -1;
-      pointer-events: none;
+      transform:translate(-50%)
     }
 
     .hub-node b {
@@ -3908,13 +3809,12 @@
     }
 
     #hub .hub-page {
-      width: min(100%, 1640px);
-      margin: 0 auto;
+      width: 100%;
+      display: flex;
       justify-content: flex-start !important;
       align-content: flex-start !important;
       gap: 14px !important;
       padding: 0 18px 18px !important;
-      box-sizing: border-box;
     }
 
     #hub .hub-row-break {
@@ -4008,6 +3908,16 @@
       cursor: pointer;
     }
 
+    .nodes{
+      width: 100%;
+      height:auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap:14px;
+      
+    }
     @media(max-width:700px) {
       .auth-create-grid,
       .auth-panel-grid {
@@ -4350,6 +4260,12 @@
     .chart {
       min-width: 0;
     }
+
+    #dashboardBtn{
+      width: 100%;
+
+    }
+
 
     @media (max-width: 1200px) {
       .main {
@@ -5091,49 +5007,58 @@
                     src="assets/right arrow.png" alt="right arrow" class="arrow"></button></div>
             </div>
           </div>
+          <div class="nodes">
+             
+              <button class="hub-node hub-purple" data-go="db" id="dashboardBtn" style="width: 100%;"><span class="hub-img"><img
+                src="boutan/tableau-de-bord.png" alt=""></span><b>Tableau de bord</b><small></small>
+              </button>
 
-          <button class="hub-node hub-purple orbit-0" data-go="db"><span class="hub-img"><img
-                src="boutan/tableau-de-bord.png" alt=""></span><b>Tableau de bord</b><small></small></button>
-          <button class="hub-node hub-orange orbit-1" data-go="docs"><span class="hub-img"><img
-                src="boutan/gestion-de-donnees.png" alt=""></span><b>Maitrise
-              documentaire</b><small></small></button>
-          <div class="hub-row-break" aria-hidden="true"></div>
-          <button class="hub-node hub-pink orbit-2" data-go="docorg"><span class="hub-img"><img
-                src="boutan/document.png" alt=""></span><b>Documentation</b><small></small></button>
-          <button class="hub-node hub-blue orbit-3" data-go="revc"><span class="hub-img"><img
-                src="boutan/contrat-de-travail.png" alt=""></span><b>Liste client</b><small></small></button>
-          <button class="hub-node hub-green orbit-4" data-go="eq"><span class="hub-img"><img
-                src="boutan/gestion-de-projet.png" alt=""></span><b>Gestion des equipements</b><small></small></button>
-          <button class="hub-node hub-orange orbit-5" data-go="nc"><span class="hub-img"><img
-                src="boutan/conformite.png" alt=""></span><b>Non-conformites</b><small></small></button>
-          <button class="hub-node hub-red orbit-6" data-go="aud"><span class="hub-img"><img
-                src="boutan/audit.png" alt=""></span><b>Audits</b><small></small></button>
-          <button class="hub-node hub-blue orbit-7" data-go="diag"><span class="hub-img"><img
-                src="boutan/diagnostic.png" alt=""></span><b>Diagnostic ISO</b><small></small></button>
-          <button class="hub-node hub-violet orbit-8" data-go="usr"><span class="hub-img"><img
-                src="boutan/equipe.png" alt=""></span><b>Utilisateurs</b><small></small></button>
-          <button class="hub-node hub-blue orbit-18" data-go="disc"><span class="hub-img"><img
-                src="boutan/liste.png" alt=""></span><b>Discussion</b><small></small></button>
-          <button class="hub-node hub-slate orbit-9" data-go="set"><span class="hub-img"><img
-                src="boutan/parametre.png" alt=""></span><b>Parametres</b><small></small></button>
-          <button class="hub-node hub-red orbit-10" data-go="risk"><span class="hub-img"><img
-                src="boutan/diagnostique.png" alt=""></span><b>Analyse de risque</b><small></small></button>
-          <button class="hub-node hub-green orbit-11" data-go="swot"><span class="hub-img"><img
-                src="boutan/analyse-swot.png" alt=""></span><b>Analyse SWOT</b><small></small></button>
-          <button class="hub-node hub-blue orbit-12" data-go="sat"><span class="hub-img"><img
-                src="boutan/la-satisfaction.png" alt=""></span><b>Satisfaction client</b><small></small></button>
-          <button class="hub-node hub-red orbit-14" data-go="recl"><span class="hub-img"><img
-                src="boutan/reglementaire.png" alt=""></span><b>Reclamation client</b><small></small></button>
-          <button class="hub-node hub-violet orbit-13" data-go="pers"><span class="hub-img"><img
-                src="boutan/developpeurs.png" alt=""></span><b>Personnel</b><small></small></button>
-          <button class="hub-node hub-green orbit-15" data-go="prest"><span class="hub-img"><img
-                src="boutan/evaluation.png" alt=""></span><b>Prestataire externe</b><small></small></button>
-          <button class="hub-node hub-blue orbit-16" data-go="aci"><span class="hub-img"><img
-                src="boutan/amelioration-continue.png" alt=""></span><b>Amelioration continue</b><small></small></button>
-          <button class="hub-node hub-purple orbit-17" data-go="plan"><span class="hub-img"><img
-                src="boutan/etude-de-marche.png" alt=""></span><b>Planning</b><small></small></button>
-          <button class="hub-node hub-green orbit-19" data-go="stat"><span class="hub-img"><img
-              src="boutan/statistiques.png" alt=""></span><b>Statistique</b><small></small></button>
+              <div class="hub-row-break" aria-hidden="true"></div>
+              <button class="hub-node hub-pink orbit-2" data-go="docorg"><span class="hub-img"><img
+                    src="boutan/document.png" alt=""></span><b>Documentation</b><small></small></button>
+              <button class="hub-node hub-blue orbit-3" data-go="revc"><span class="hub-img"><img
+                    src="boutan/contrat-de-travail.png" alt=""></span><b>Liste client</b><small></small></button>
+              <button class="hub-node hub-green orbit-4" data-go="eq"><span class="hub-img"><img
+                    src="boutan/gestion-de-projet.png" alt=""></span><b>Gestion des equipements</b><small></small></button>
+              <button class="hub-node hub-orange orbit-5" data-go="nc"><span class="hub-img"><img
+                    src="boutan/conformite.png" alt=""></span><b>Non-conformites</b><small></small></button>
+              <button class="hub-node hub-red orbit-6" data-go="aud"><span class="hub-img"><img
+                    src="boutan/audit.png" alt=""></span><b>Audits</b><small></small></button>
+              <button class="hub-node hub-blue orbit-7" data-go="diag"><span class="hub-img"><img
+                    src="boutan/diagnostic.png" alt=""></span><b>Diagnostic ISO</b><small></small></button>
+              <button class="hub-node hub-violet orbit-8" data-go="usr"><span class="hub-img"><img
+                    src="boutan/equipe.png" alt=""></span><b>Utilisateurs</b><small></small></button>
+              <button class="hub-node hub-blue orbit-18" data-go="disc"><span class="hub-img"><img
+                    src="boutan/liste.png" alt=""></span><b>Discussion</b><small></small></button>
+              <button class="hub-node hub-slate orbit-9" data-go="set"><span class="hub-img"><img
+                    src="boutan/parametre.png" alt=""></span><b>Parametres</b><small></small></button>
+              <button class="hub-node hub-red orbit-10" data-go="risk"><span class="hub-img"><img
+                    src="boutan/diagnostique.png" alt=""></span><b>Analyse de risque</b><small></small></button>
+              <button class="hub-node hub-green orbit-11" data-go="swot"><span class="hub-img"><img
+                    src="boutan/analyse-swot.png" alt=""></span><b>Analyse SWOT</b><small></small></button>
+              <button class="hub-node hub-blue orbit-12" data-go="sat"><span class="hub-img"><img
+                    src="boutan/la-satisfaction.png" alt=""></span><b>Satisfaction client</b><small></small></button>
+              <button class="hub-node hub-red orbit-14" data-go="recl"><span class="hub-img"><img
+                    src="boutan/reglementaire.png" alt=""></span><b>Reclamation client</b><small></small></button>
+              <button class="hub-node hub-violet orbit-13" data-go="pers"><span class="hub-img"><img
+                    src="boutan/developpeurs.png" alt=""></span><b>Personnel</b><small></small></button>
+              <button class="hub-node hub-green orbit-15" data-go="prest"><span class="hub-img"><img
+                    src="boutan/evaluation.png" alt=""></span><b>Prestataire externe</b><small></small></button>
+              <button class="hub-node hub-blue orbit-16" data-go="aci"><span class="hub-img"><img
+                    src="boutan/amelioration-continue.png" alt=""></span><b>Amelioration continue</b><small></small></button>
+              <button class="hub-node hub-purple orbit-17" data-go="plan"><span class="hub-img"><img
+                    src="boutan/etude-de-marche.png" alt=""></span><b>Planning</b><small></small></button>
+              <button class="hub-node hub-green orbit-19" data-go="stat"><span class="hub-img"><img
+                  src="boutan/statistiques.png" alt=""></span><b>Statistique</b><small></small>
+              </button>
+
+              
+              <button class="hub-node hub-orange orbit-1" data-go="docs"><span class="hub-img"><img
+                    src="boutan/gestion-de-donnees.png" alt=""></span><b>Maitrise
+                  documentaire</b><small></small>
+              </button>
+          </div>
+          
         </div>
       </section>
 
