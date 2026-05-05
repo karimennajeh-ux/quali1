@@ -1,8 +1,5 @@
-const CACHE_NAME = "quali-shell-v1";
+const CACHE_NAME = "quali-shell-v2";
 const APP_SHELL = [
-  "/",
-  "/index.html",
-  "/QualiLab_by_ENNAJEH_v2.html",
   "/manifest.webmanifest",
   "/pwa-icon-192.png",
   "/pwa-icon-512.png",

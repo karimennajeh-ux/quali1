@@ -8678,12 +8678,13 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
+    const PWA_VERSION = "2026-05-05-1";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
     async function installPwa() { if (!deferredPwaInstallPrompt) { sync(window.isSecureContext || isLocalDevHost() ? "L'installation n'est pas encore proposee par le navigateur." : "Pour installer sur telephone, publie l'application en HTTPS puis relance l'installation."); return } deferredPwaInstallPrompt.prompt(); try { await deferredPwaInstallPrompt.userChoice } catch (e) { console.error(e) } deferredPwaInstallPrompt = null; updatePwaInstallButton() }
     function registerPwa() {
-      if ("serviceWorker" in navigator && (window.isSecureContext || isLocalDevHost())) navigator.serviceWorker.register("/service-worker.js").catch(err => console.error("Service worker indisponible", err));
+      if ("serviceWorker" in navigator && (window.isSecureContext || isLocalDevHost())) navigator.serviceWorker.register("/service-worker.js?v=" + encodeURIComponent(PWA_VERSION), { updateViaCache: "none" }).then(reg => reg.update()).catch(err => console.error("Service worker indisponible", err));
       window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPwaInstallPrompt = e; updatePwaInstallButton() });
       window.addEventListener("appinstalled", () => { deferredPwaInstallPrompt = null; updatePwaInstallButton(); sync("Application installee sur cet appareil") })
     }
@@ -8772,5 +8773,4 @@
 </body>
 
 </html>
-
 
