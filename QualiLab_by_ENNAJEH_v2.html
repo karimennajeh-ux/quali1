@@ -3798,6 +3798,113 @@
       flex: 0 0 auto;
     }
 
+    #hub .hub-app-head {
+      width: min(100%, 1320px);
+      margin: 4px auto 20px;
+      display: grid;
+      grid-template-columns: minmax(140px, 180px) 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding: 14px 22px;
+      border: 1px solid rgba(205, 219, 240, .95);
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .97));
+      box-shadow:
+        0 16px 36px rgba(29, 52, 94, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .92);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hub .hub-app-head::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(59, 140, 255, .92), rgba(138, 191, 255, .65), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    #hub .hub-app-head::after {
+      content: "";
+      position: absolute;
+      right: -42px;
+      top: -32px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(84, 151, 255, .12) 0, rgba(84, 151, 255, 0) 66%);
+      pointer-events: none;
+    }
+
+    #hub .logo-header {
+      width: 108px;
+      justify-self: start;
+    }
+
+    #hub .module-page-title {
+      display: block;
+      text-align: center;
+      color: #245fd8;
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      padding: 0 10px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .75);
+    }
+
+    #hub .hub-top-actions {
+      justify-self: end;
+      position: relative;
+      top: auto;
+      right: auto;
+      gap: 10px;
+      padding: 0;
+      flex-wrap: nowrap;
+    }
+
+    #hub .hub-action-icon,
+    #hub .back-btn {
+      width: 56px;
+      height: 56px;
+      flex: 0 0 56px;
+      border-radius: 999px;
+      border: 1px solid rgba(38, 96, 201, .18);
+      background: linear-gradient(180deg, #2f76e3 0%, #236bd8 100%);
+      color: #fff;
+      box-shadow:
+        0 10px 22px rgba(35, 107, 216, .20),
+        inset 0 1px 0 rgba(255, 255, 255, .22);
+    }
+
+    #hub .hub-action-icon:hover,
+    #hub .back-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, #2668ce 0%, #1f5fc1 100%);
+      box-shadow:
+        0 14px 28px rgba(35, 107, 216, .24),
+        inset 0 1px 0 rgba(255, 255, 255, .18);
+    }
+
+    #hub .hub-action-icon svg {
+      width: 26px;
+      height: 26px;
+      stroke-width: 2.2;
+    }
+
+    #hub .back-nav {
+      margin-left: 0;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #hub .back-btn.off {
+      opacity: .48;
+      background: linear-gradient(180deg, #8fb2ea 0%, #80a6e1 100%);
+      box-shadow: none;
+    }
+
     .profile-menu {
       position: fixed;
       z-index: 9999;
@@ -4339,6 +4446,32 @@
         flex-wrap: wrap;
       }
 
+      #hub .hub-app-head {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 12px;
+        padding: 14px 16px 16px;
+        text-align: center;
+      }
+
+      #hub .logo-header {
+        justify-self: center;
+      }
+
+      #hub .module-page-title {
+        order: 2;
+        width: 100%;
+        font-size: 20px;
+        padding: 0;
+      }
+
+      #hub .hub-top-actions {
+        width: 100%;
+        justify-self: center;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
       .hub-top-actions {
         right: auto;
         top: auto;
@@ -4501,6 +4634,32 @@
       }
 
       .hub-action-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      #hub .hub-app-head {
+        gap: 10px;
+        padding: 12px 12px 14px;
+        border-radius: 18px;
+      }
+
+      #hub .logo-header {
+        width: 96px;
+      }
+
+      #hub .module-page-title {
+        font-size: 18px;
+      }
+
+      #hub .hub-action-icon,
+      #hub .back-btn {
+        width: 48px;
+        height: 48px;
+        flex-basis: 48px;
+      }
+
+      #hub .hub-action-icon svg {
         width: 22px;
         height: 22px;
       }
