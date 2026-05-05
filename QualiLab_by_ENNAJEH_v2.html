@@ -2619,7 +2619,7 @@
 
     .module-org {
       display: grid;
-      gap: 10px
+      gap: 10px;
     }
 
     .module-org-card {
@@ -2714,14 +2714,11 @@
       .module-rail {
         position: relative;
         top: auto;
-        grid-template-columns: 150px 1fr;
         align-items: start
       }
-
-      .module-org {
-        grid-template-columns: repeat(3, minmax(0, 1fr))
+      .module-org-compact {
+        width:100%;
       }
-
       .swot-board {
         grid-template-columns: 1fr;
         grid-template-rows: auto
@@ -4497,7 +4494,6 @@
       body {
         font-size: 13px;
       }
-
       .main {
         padding: 10px;
         gap: 10px;
@@ -4696,6 +4692,8 @@
         padding: 10px;
         scroll-snap-type: x proximity;
         -webkit-overflow-scrolling: touch;
+        background:none;
+        border:none;
       }
 
       .module-org-card.module-org-compact::-webkit-scrollbar {
@@ -4745,6 +4743,7 @@
       #planCalBoard table {
         min-width: 760px;
       }
+
     }
   </style>
 </head>
