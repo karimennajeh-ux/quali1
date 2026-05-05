@@ -3799,6 +3799,8 @@
     }
 
     #hub .hub-app-head {
+      order: -1;
+      flex-basis: 100%;
       width: min(100%, 1320px);
       margin: 4px auto 20px;
       display: grid;
@@ -3903,6 +3905,24 @@
       opacity: .48;
       background: linear-gradient(180deg, #8fb2ea 0%, #80a6e1 100%);
       box-shadow: none;
+    }
+
+    #hub .hub-page {
+      width: min(100%, 1640px);
+      margin: 0 auto;
+      justify-content: flex-start !important;
+      align-content: flex-start !important;
+      gap: 14px !important;
+      padding: 0 18px 18px !important;
+      box-sizing: border-box;
+    }
+
+    #hub .hub-row-break {
+      flex-basis: 100%;
+      width: 100%;
+      height: 0;
+      margin: 0;
+      padding: 0;
     }
 
     .profile-menu {
@@ -4508,6 +4528,10 @@
         display: none;
       }
 
+      #hub .hub-row-break {
+        display: none;
+      }
+
       .hub-node {
         width: 100% !important;
         min-width: 0 !important;
@@ -4590,6 +4614,10 @@
       .module-org,
       .hub-page {
         grid-template-columns: 1fr;
+      }
+
+      #hub .hub-row-break {
+        display: none;
       }
 
       .g .btn,
@@ -5069,6 +5097,7 @@
           <button class="hub-node hub-orange orbit-1" data-go="docs"><span class="hub-img"><img
                 src="boutan/gestion-de-donnees.png" alt=""></span><b>Maitrise
               documentaire</b><small></small></button>
+          <div class="hub-row-break" aria-hidden="true"></div>
           <button class="hub-node hub-pink orbit-2" data-go="docorg"><span class="hub-img"><img
                 src="boutan/document.png" alt=""></span><b>Documentation</b><small></small></button>
           <button class="hub-node hub-blue orbit-3" data-go="revc"><span class="hub-img"><img
