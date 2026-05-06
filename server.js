@@ -8,9 +8,12 @@ const app = express();
 const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
-const DB_DIR = process.env.QUALILAB_DATA_DIR || path.join(__dirname, "database");
-const DB_PATH = path.join(DB_DIR, "qualilab.sqlite");
+const PRIMARY_DB_DIR = process.env.QUALILAB_DATA_DIR || path.join(__dirname, "database");
+const PRIMARY_DB_PATH = path.join(PRIMARY_DB_DIR, "qualilab.sqlite");
+const FALLBACK_DB_DIR = process.env.QUALILAB_DATA_FALLBACK_DIR || path.join(os.tmpdir(), "QualiByEnnajeh", "data");
+const FALLBACK_DB_PATH = path.join(FALLBACK_DB_DIR, "qualilab.sqlite");
 const SCHEMA_PATH = path.join(ROOT, "database", "schema.sql");
+const APP_HTML_PATH = path.join(ROOT, "QualiLab_by_ENNAJEH_v2.html");
 
 const MAIN_PILOT = {
   email: "karimennajeh@gmail.com",
@@ -147,9 +150,9 @@ function normalizePilotPayload(payload = {}) {
   };
 }
 
-function ensureDatabase() {
-  ensureDir(DB_DIR);
-  const db = new DatabaseSync(DB_PATH);
+function ensureDatabase(dbPath) {
+  ensureDir(path.dirname(dbPath));
+  const db = new DatabaseSync(dbPath);
   db.exec(fs.readFileSync(SCHEMA_PATH, "utf8"));
 
   const selectPilot = db.prepare("SELECT id FROM pilots WHERE email = ?");
@@ -210,7 +213,33 @@ function ensureDatabase() {
   return db;
 }
 
-const db = ensureDatabase();
+let db = null;
+let dbReady = false;
+let dbInitError = null;
+let activeDbPath = PRIMARY_DB_PATH;
+
+function initDatabase() {
+  const tried = [];
+  for (const dbPath of [PRIMARY_DB_PATH, FALLBACK_DB_PATH]) {
+    if (tried.includes(dbPath)) continue;
+    tried.push(dbPath);
+    try {
+      db = ensureDatabase(dbPath);
+      dbReady = true;
+      dbInitError = null;
+      activeDbPath = dbPath;
+      return;
+    } catch (error) {
+      db = null;
+      dbReady = false;
+      dbInitError = error;
+      activeDbPath = dbPath;
+      console.error(`Quali by ENNAJEH database init failed for ${dbPath}:`, error.message);
+    }
+  }
+}
+
+initDatabase();
 
 function pilotToAccount(row) {
   return {
@@ -263,48 +292,57 @@ function userToAccount(row) {
   };
 }
 
-const selectPilotByEmail = db.prepare("SELECT * FROM pilots WHERE email = ?");
-const insertPilotAccount = db.prepare(`
+const SQL_SELECT_PILOT_BY_EMAIL = "SELECT * FROM pilots WHERE email = ?";
+const SQL_INSERT_PILOT_ACCOUNT = `
   INSERT INTO pilots (
     email, password, name, first_name, last_name, role, dept, func, matricule, org_name, status, created_at, updated_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`);
-const updatePilotAccountByEmail = db.prepare(`
+`;
+const SQL_UPDATE_PILOT_ACCOUNT_BY_EMAIL = `
   UPDATE pilots
   SET password = ?, name = ?, first_name = ?, last_name = ?, role = ?, dept = ?, func = ?, matricule = ?, org_name = ?, status = ?, updated_at = ?
   WHERE email = ?
-`);
-const deletePilotAccountByEmail = db.prepare(`
+`;
+const SQL_DELETE_PILOT_ACCOUNT_BY_EMAIL = `
   DELETE FROM pilots
   WHERE email = ?
-`);
-const ensurePilotStateRow = db.prepare(`
+`;
+const SQL_ENSURE_PILOT_STATE_ROW = `
   INSERT INTO pilot_app_state (pilot_id, state_json, created_at, updated_at)
   VALUES (?, '{}', ?, ?)
   ON CONFLICT(pilot_id) DO NOTHING
-`);
-const selectPilotUsers = db.prepare(`
+`;
+const SQL_SELECT_PILOT_USERS = `
   SELECT u.*, p.email AS pilot_email, p.name AS pilot_name
   FROM users u
   JOIN pilots p ON p.id = u.pilot_id
   WHERE p.email = ?
   ORDER BY u.created_at DESC, u.id DESC
-`);
-const selectUserByPilotAndEmail = db.prepare(`
+`;
+const SQL_SELECT_USER_BY_PILOT_AND_EMAIL = `
   SELECT u.*, p.email AS pilot_email, p.name AS pilot_name
   FROM users u
   JOIN pilots p ON p.id = u.pilot_id
   WHERE p.email = ? AND u.email = ?
-`);
-const insertUser = db.prepare(`
+`;
+const SQL_INSERT_USER = `
   INSERT INTO users (
     pilot_id, email, password, name, first_name, last_name, role, dept, func, matricule, profile, status,
     perms_json, module_access_json, account_type, created_by, created_at, updated_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`);
+`;
+
+function selectPilotByEmailStmt() { return db.prepare(SQL_SELECT_PILOT_BY_EMAIL); }
+function insertPilotAccountStmt() { return db.prepare(SQL_INSERT_PILOT_ACCOUNT); }
+function updatePilotAccountByEmailStmt() { return db.prepare(SQL_UPDATE_PILOT_ACCOUNT_BY_EMAIL); }
+function deletePilotAccountByEmailStmt() { return db.prepare(SQL_DELETE_PILOT_ACCOUNT_BY_EMAIL); }
+function ensurePilotStateRowStmt() { return db.prepare(SQL_ENSURE_PILOT_STATE_ROW); }
+function selectPilotUsersStmt() { return db.prepare(SQL_SELECT_PILOT_USERS); }
+function selectUserByPilotAndEmailStmt() { return db.prepare(SQL_SELECT_USER_BY_PILOT_AND_EMAIL); }
+function insertUserStmt() { return db.prepare(SQL_INSERT_USER); }
 
 function getPilotByEmail(email) {
-  const row = selectPilotByEmail.get(normEmail(email));
+  const row = selectPilotByEmailStmt().get(normEmail(email));
   return row ? pilotToAccount(row) : null;
 }
 
@@ -353,7 +391,7 @@ function removePilotAccount(email) {
     error.status = 404;
     throw error;
   }
-  deletePilotAccountByEmail.run(target);
+  deletePilotAccountByEmailStmt().run(target);
   return { email: target };
 }
 
@@ -370,10 +408,10 @@ function upsertPilotAccount(payload) {
     throw error;
   }
 
-  const existing = selectPilotByEmail.get(pilot.email);
+  const existing = selectPilotByEmailStmt().get(pilot.email);
   const timestamp = now();
   if (!existing) {
-    const result = insertPilotAccount.run(
+    const result = insertPilotAccountStmt().run(
       pilot.email,
       pilot.password,
       pilot.name,
@@ -388,9 +426,9 @@ function upsertPilotAccount(payload) {
       timestamp,
       timestamp
     );
-    ensurePilotStateRow.run(Number(result.lastInsertRowid), timestamp, timestamp);
+    ensurePilotStateRowStmt().run(Number(result.lastInsertRowid), timestamp, timestamp);
   } else {
-    updatePilotAccountByEmail.run(
+    updatePilotAccountByEmailStmt().run(
       pilot.password,
       pilot.name,
       pilot.firstName,
@@ -404,18 +442,18 @@ function upsertPilotAccount(payload) {
       timestamp,
       pilot.email
     );
-    ensurePilotStateRow.run(existing.id, timestamp, timestamp);
+    ensurePilotStateRowStmt().run(existing.id, timestamp, timestamp);
   }
 
   return getPilotByEmail(pilot.email);
 }
 
 function listUsersByPilotEmail(email) {
-  return selectPilotUsers.all(normEmail(email)).map(userToAccount);
+  return selectPilotUsersStmt().all(normEmail(email)).map(userToAccount);
 }
 
 function getUserByPilotAndEmail(pilotEmail, email) {
-  const row = selectUserByPilotAndEmail.get(normEmail(pilotEmail), normEmail(email));
+  const row = selectUserByPilotAndEmailStmt().get(normEmail(pilotEmail), normEmail(email));
   return row ? userToAccount(row) : null;
 }
 
@@ -445,7 +483,7 @@ function createUserForPilot(pilotEmail, payload) {
   }
 
   const timestamp = now();
-  const result = insertUser.run(
+  const result = insertUserStmt().run(
     pilot.id,
     user.email,
     user.password,
@@ -478,14 +516,33 @@ function createUserForPilot(pilotEmail, payload) {
 }
 
 app.use(express.json({ limit: "2mb" }));
-app.use(express.static(ROOT));
+app.use((req, res, next) => {
+  if (["/", "/index.html", "/QualiLab_by_ENNAJEH_v2", "/QualiLab_by_ENNAJEH_v2.html", "/service-worker.js", "/manifest.webmanifest"].includes(req.path)) {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate");
+  }
+  next();
+});
+app.get("/", (_req, res) => res.sendFile(APP_HTML_PATH, { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }));
+app.get("/QualiLab_by_ENNAJEH_v2", (_req, res) => res.sendFile(APP_HTML_PATH, { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }));
+app.get("/QualiLab_by_ENNAJEH_v2.html", (_req, res) => res.sendFile(APP_HTML_PATH, { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }));
+app.use(express.static(ROOT, { etag: false, lastModified: false }));
 
 app.get("/api/health", (_req, res) => {
-  res.json({
-    ok: true,
+  res.status(dbReady ? 200 : 503).json({
+    ok: dbReady,
     driver: "express + sqlite",
-    database: path.relative(ROOT, DB_PATH),
-    time: now()
+    database: activeDbPath,
+    time: now(),
+    error: dbInitError ? dbInitError.message : null
+  });
+});
+
+app.use("/api", (_req, res, next) => {
+  if (dbReady && db) return next();
+  return res.status(503).json({
+    ok: false,
+    message: "Base de donnees indisponible",
+    detail: dbInitError ? dbInitError.message : ""
   });
 });
 
