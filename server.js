@@ -15,6 +15,20 @@ const FALLBACK_DB_PATH = path.join(FALLBACK_DB_DIR, "qualilab.sqlite");
 const SCHEMA_PATH = path.join(ROOT, "database", "schema.sql");
 const APP_HTML_PATH = path.join(ROOT, "QualiLab_by_ENNAJEH_v2.html");
 const LIVE_RELOAD_WATCH_INTERVAL = Number(process.env.QUALI_LIVE_RELOAD_INTERVAL || 700);
+const DOC_SERVER_ROOT = process.env.QUALI_DOCS_ROOT || path.join(ROOT, "database", "QUALI_DATA_SERVER");
+const DOC_SERVER_DIRS = {
+  root: DOC_SERVER_ROOT,
+  db: path.join(DOC_SERVER_ROOT, "db"),
+  documents: path.join(DOC_SERVER_ROOT, "documents"),
+  archives: path.join(DOC_SERVER_ROOT, "archives"),
+  trash: path.join(DOC_SERVER_ROOT, "trash"),
+  logs: path.join(DOC_SERVER_ROOT, "logs")
+};
+const DEFAULT_DOC_PROCESS_FOLDERS = ["Processus_pilotage", "Processus_operationnel", "Processus_support"];
+const DEFAULT_DOC_HIERARCHY = {
+  levels: ["process", "type", "reference", "version"],
+  processFolders: DEFAULT_DOC_PROCESS_FOLDERS
+};
 
 const MAIN_PILOT = {
   email: "karimennajeh@gmail.com",
@@ -70,6 +84,46 @@ function normEmail(value) {
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function slugifySegment(value, fallback = "element") {
+  const normalized = String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 80);
+  return normalized || fallback;
+}
+
+function relFromDocServer(absPath) {
+  return path.relative(DOC_SERVER_ROOT, absPath).split(path.sep).join("/");
+}
+
+function ensureDocumentationServerRoots() {
+  Object.values(DOC_SERVER_DIRS).forEach(ensureDir);
+}
+
+function buildPilotDocumentationPaths(pilot) {
+  const pilotFolder = slugifySegment(pilot.orgName || pilot.name || pilot.email || `pilot_${pilot.id}`, `pilot_${pilot.id || "root"}`);
+  const pilotRoot = path.join(DOC_SERVER_DIRS.documents, pilotFolder);
+  return {
+    pilotFolder,
+    pilotRoot,
+    archivesRoot: path.join(DOC_SERVER_DIRS.archives, pilotFolder),
+    trashRoot: path.join(DOC_SERVER_DIRS.trash, pilotFolder),
+    logsRoot: path.join(DOC_SERVER_DIRS.logs, pilotFolder),
+    processFolders: DEFAULT_DOC_PROCESS_FOLDERS.map((label, index) => ({
+      folderKey: slugifySegment(label, `process_${index + 1}`),
+      folderLabel: label,
+      folderRole: "process",
+      absPath: path.join(pilotRoot, label),
+      relPath: relFromDocServer(path.join(pilotRoot, label)),
+      depth: 1,
+      sortOrder: index + 1,
+      isSystem: 1
+    }))
+  };
 }
 
 function lanUrls(port) {
@@ -264,6 +318,7 @@ let dbInitError = null;
 let activeDbPath = PRIMARY_DB_PATH;
 
 function initDatabase() {
+  ensureDocumentationServerRoots();
   const tried = [];
   for (const dbPath of [PRIMARY_DB_PATH, FALLBACK_DB_PATH]) {
     if (tried.includes(dbPath)) continue;
@@ -283,8 +338,6 @@ function initDatabase() {
     }
   }
 }
-
-initDatabase();
 
 function pilotToAccount(row) {
   return {
@@ -391,6 +444,166 @@ function getPilotByEmail(email) {
   return row ? pilotToAccount(row) : null;
 }
 
+function getDocumentationSettingsByPilotId(pilotId) {
+  const row = db.prepare(`
+    SELECT *
+    FROM doc_settings
+    WHERE pilot_id = ?
+  `).get(pilotId);
+  if (!row) return null;
+  return {
+    id: row.id,
+    pilotId: row.pilot_id,
+    serverRoot: row.server_root,
+    documentsRoot: row.documents_root,
+    archivesRoot: row.archives_root,
+    trashRoot: row.trash_root,
+    logsRoot: row.logs_root,
+    pilotRoot: row.pilot_root,
+    hierarchy: parseJson(row.hierarchy_json, DEFAULT_DOC_HIERARCHY),
+    autoCreateFolders: Boolean(row.auto_create_folders),
+    managedBy: row.managed_by || "",
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+
+function upsertDocumentationFolder(pilotId, folder, actorName = "Systeme", parentId = null) {
+  const timestamp = now();
+  db.prepare(`
+    INSERT INTO doc_folders (
+      pilot_id, parent_id, folder_key, folder_label, folder_role, abs_path, rel_path,
+      depth, sort_order, is_system, managed_by, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(pilot_id, abs_path) DO UPDATE SET
+      parent_id = excluded.parent_id,
+      folder_key = excluded.folder_key,
+      folder_label = excluded.folder_label,
+      folder_role = excluded.folder_role,
+      rel_path = excluded.rel_path,
+      depth = excluded.depth,
+      sort_order = excluded.sort_order,
+      is_system = excluded.is_system,
+      managed_by = excluded.managed_by,
+      updated_at = excluded.updated_at
+  `).run(
+    pilotId,
+    parentId,
+    folder.folderKey,
+    folder.folderLabel,
+    folder.folderRole || "custom",
+    folder.absPath,
+    folder.relPath || relFromDocServer(folder.absPath),
+    Number(folder.depth || 0),
+    Number(folder.sortOrder || 0),
+    Number(folder.isSystem ? 1 : 0),
+    actorName,
+    timestamp,
+    timestamp
+  );
+
+  return db.prepare(`
+    SELECT id, abs_path
+    FROM doc_folders
+    WHERE pilot_id = ? AND abs_path = ?
+  `).get(pilotId, folder.absPath);
+}
+
+function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme") {
+  if (!pilot || !pilot.id) {
+    const error = new Error("Compte pilote introuvable pour l'initialisation documentaire");
+    error.status = 404;
+    throw error;
+  }
+
+  ensureDocumentationServerRoots();
+  const structure = buildPilotDocumentationPaths(pilot);
+  [structure.pilotRoot, structure.archivesRoot, structure.trashRoot, structure.logsRoot].forEach(ensureDir);
+  structure.processFolders.forEach((folder) => ensureDir(folder.absPath));
+
+  const timestamp = now();
+  db.prepare(`
+    INSERT INTO doc_settings (
+      pilot_id, server_root, documents_root, archives_root, trash_root, logs_root, pilot_root,
+      hierarchy_json, auto_create_folders, managed_by, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(pilot_id) DO UPDATE SET
+      server_root = excluded.server_root,
+      documents_root = excluded.documents_root,
+      archives_root = excluded.archives_root,
+      trash_root = excluded.trash_root,
+      logs_root = excluded.logs_root,
+      pilot_root = excluded.pilot_root,
+      hierarchy_json = excluded.hierarchy_json,
+      auto_create_folders = excluded.auto_create_folders,
+      managed_by = excluded.managed_by,
+      updated_at = excluded.updated_at
+  `).run(
+    pilot.id,
+    DOC_SERVER_ROOT,
+    DOC_SERVER_DIRS.documents,
+    structure.archivesRoot,
+    structure.trashRoot,
+    structure.logsRoot,
+    structure.pilotRoot,
+    JSON.stringify(DEFAULT_DOC_HIERARCHY),
+    1,
+    actorName,
+    timestamp,
+    timestamp
+  );
+
+  const pilotRootFolder = upsertDocumentationFolder(pilot.id, {
+    folderKey: structure.pilotFolder,
+    folderLabel: pilot.orgName || pilot.name || structure.pilotFolder,
+    folderRole: "pilot_root",
+    absPath: structure.pilotRoot,
+    relPath: relFromDocServer(structure.pilotRoot),
+    depth: 0,
+    sortOrder: 0,
+    isSystem: 1
+  }, actorName);
+
+  upsertDocumentationFolder(pilot.id, {
+    folderKey: `${structure.pilotFolder}_archives`,
+    folderLabel: "Archives",
+    folderRole: "archives_root",
+    absPath: structure.archivesRoot,
+    relPath: relFromDocServer(structure.archivesRoot),
+    depth: 0,
+    sortOrder: 10,
+    isSystem: 1
+  }, actorName);
+
+  upsertDocumentationFolder(pilot.id, {
+    folderKey: `${structure.pilotFolder}_trash`,
+    folderLabel: "Corbeille",
+    folderRole: "trash_root",
+    absPath: structure.trashRoot,
+    relPath: relFromDocServer(structure.trashRoot),
+    depth: 0,
+    sortOrder: 11,
+    isSystem: 1
+  }, actorName);
+
+  upsertDocumentationFolder(pilot.id, {
+    folderKey: `${structure.pilotFolder}_logs`,
+    folderLabel: "Logs",
+    folderRole: "logs_root",
+    absPath: structure.logsRoot,
+    relPath: relFromDocServer(structure.logsRoot),
+    depth: 0,
+    sortOrder: 12,
+    isSystem: 1
+  }, actorName);
+
+  structure.processFolders.forEach((folder) => {
+    upsertDocumentationFolder(pilot.id, folder, actorName, pilotRootFolder ? pilotRootFolder.id : null);
+  });
+
+  return getDocumentationSettingsByPilotId(pilot.id);
+}
+
 function updateExistingPilotAccount(email, payload = {}) {
   const target = normEmail(email);
   if (!target) {
@@ -490,7 +703,9 @@ function upsertPilotAccount(payload) {
     ensurePilotStateRowStmt().run(existing.id, timestamp, timestamp);
   }
 
-  return getPilotByEmail(pilot.email);
+  const savedPilot = getPilotByEmail(pilot.email);
+  if (savedPilot) ensureDocumentationBootstrapForPilot(savedPilot, "Systeme");
+  return savedPilot;
 }
 
 function listUsersByPilotEmail(email) {
@@ -560,6 +775,12 @@ function createUserForPilot(pilotEmail, payload) {
   };
 }
 
+initDatabase();
+if (dbReady && db) {
+  const mainPilot = getPilotByEmail(MAIN_PILOT.email);
+  if (mainPilot) ensureDocumentationBootstrapForPilot(mainPilot, "Systeme");
+}
+
 app.use(express.json({ limit: "2mb" }));
 app.use((req, res, next) => {
   if (["/", "/index.html", "/QualiLab_by_ENNAJEH_v2", "/QualiLab_by_ENNAJEH_v2.html", "/service-worker.js", "/manifest.webmanifest"].includes(req.path)) {
@@ -603,6 +824,7 @@ app.get("/api/health", (_req, res) => {
     ok: dbReady,
     driver: "express + sqlite",
     database: activeDbPath,
+    documentationServerRoot: DOC_SERVER_ROOT,
     time: now(),
     error: dbInitError ? dbInitError.message : null
   });
@@ -614,6 +836,16 @@ app.use("/api", (_req, res, next) => {
     ok: false,
     message: "Base de donnees indisponible",
     detail: dbInitError ? dbInitError.message : ""
+  });
+});
+
+app.get("/api/documentation/server", (_req, res) => {
+  ensureDocumentationServerRoots();
+  res.json({
+    ok: true,
+    root: DOC_SERVER_ROOT,
+    folders: DOC_SERVER_DIRS,
+    defaultHierarchy: DEFAULT_DOC_HIERARCHY
   });
 });
 
@@ -760,6 +992,25 @@ app.put("/api/pilots/:pilotEmail/state", (req, res) => {
   res.json({ ok: true, updatedAt: timestamp });
 });
 
+app.get("/api/pilots/:pilotEmail/documentation/settings", (req, res) => {
+  const pilot = getPilotByEmail(req.params.pilotEmail);
+  if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+  const settings = getDocumentationSettingsByPilotId(pilot.id) || ensureDocumentationBootstrapForPilot(pilot, pilot.name || "Pilote");
+  res.json({ ok: true, pilot: { email: pilot.email, name: pilot.name }, settings });
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/bootstrap", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const settings = ensureDocumentationBootstrapForPilot(pilot, actorName);
+    res.json({ ok: true, pilot: { email: pilot.email, name: pilot.name }, settings });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Initialisation documentaire impossible" });
+  }
+});
+
 app.use("/api", (_req, res) => {
   res.status(404).json({ ok: false, message: "Route API introuvable" });
 });
@@ -768,5 +1019,6 @@ app.listen(PORT, HOST, () => {
   startLiveReloadWatcher();
   console.log(`Quali by ENNAJEH backend ready on http://localhost:${PORT}`);
   lanUrls(PORT).forEach((url) => console.log(`Quali by ENNAJEH mobile access: ${url}`));
+  console.log(`Quali by ENNAJEH documentation server root: ${DOC_SERVER_ROOT}`);
   console.log(`Quali by ENNAJEH live reload active on http://localhost:${PORT}/api/dev/live-reload`);
 });
