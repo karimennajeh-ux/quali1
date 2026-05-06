@@ -3325,22 +3325,107 @@
       height: 24px;
     }
 
-    .module-shell .card,
-    .module-shell .tb,
-    .module-shell .mini,
-    .module-shell .discussion-shell,
-    .module-shell .org-window {
-      border-color: rgba(223, 232, 245, .94);
-      box-shadow: 0 16px 36px rgba(38, 63, 106, .07);
-      transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease
+    .module-shell:not(#db) .card,
+    .module-shell:not(#db) .tb,
+    .module-shell:not(#db) .mini,
+    .module-shell:not(#db) .it,
+    .module-shell:not(#db) .discussion-shell,
+    .module-shell:not(#db) .org-window,
+    .module-shell:not(#db) .access-window-card {
+      position: relative;
+      border-color: rgba(213, 225, 247, .96);
+      background:
+        radial-gradient(circle at top right, rgba(95, 160, 255, .12), rgba(95, 160, 255, 0) 28%),
+        linear-gradient(180deg, rgba(255, 255, 255, .985), rgba(246, 250, 255, .965));
+      box-shadow:
+        0 18px 40px rgba(36, 69, 122, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .94);
+      transition: transform .26s ease, box-shadow .26s ease, border-color .26s ease, filter .26s ease;
+      isolation: isolate
     }
 
-    .module-shell .card:hover,
-    .module-shell .mini:hover,
-    .module-shell .discussion-shell:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 20px 40px rgba(38, 63, 106, .10);
-      border-color: rgba(194, 212, 241, .98)
+    .module-shell:not(#db) .card::before,
+    .module-shell:not(#db) .tb::before,
+    .module-shell:not(#db) .mini::before,
+    .module-shell:not(#db) .it::before,
+    .module-shell:not(#db) .discussion-shell::before,
+    .module-shell:not(#db) .org-window::before,
+    .module-shell:not(#db) .access-window-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(59, 140, 255, .92), rgba(138, 191, 255, .62), rgba(255, 255, 255, 0));
+      pointer-events: none;
+      z-index: 0
+    }
+
+    .module-shell:not(#db) .card::after,
+    .module-shell:not(#db) .tb::after,
+    .module-shell:not(#db) .mini::after,
+    .module-shell:not(#db) .it::after,
+    .module-shell:not(#db) .discussion-shell::after,
+    .module-shell:not(#db) .org-window::after,
+    .module-shell:not(#db) .access-window-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, .20) 36%, transparent 54%);
+      transform: translateX(-155%);
+      pointer-events: none;
+      z-index: 0
+    }
+
+    .module-shell:not(#db) .card>*,
+    .module-shell:not(#db) .tb>*,
+    .module-shell:not(#db) .mini>*,
+    .module-shell:not(#db) .it>*,
+    .module-shell:not(#db) .discussion-shell>*,
+    .module-shell:not(#db) .org-window>*,
+    .module-shell:not(#db) .access-window-card>* {
+      position: relative;
+      z-index: 1
+    }
+
+    .module-shell:not(#db) .card:hover,
+    .module-shell:not(#db) .mini:hover,
+    .module-shell:not(#db) .it:hover,
+    .module-shell:not(#db) .discussion-shell:hover,
+    .module-shell:not(#db) .org-window:hover,
+    .module-shell:not(#db) .access-window-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(190, 212, 244, .98);
+      box-shadow:
+        0 24px 48px rgba(36, 69, 122, .14),
+        inset 0 1px 0 rgba(255, 255, 255, .96);
+      filter: saturate(1.03)
+    }
+
+    .module-shell:not(#db) .tb:hover {
+      border-color: rgba(190, 212, 244, .98);
+      box-shadow:
+        0 24px 48px rgba(36, 69, 122, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .96)
+    }
+
+    .module-shell:not(#db) .card h3,
+    .module-shell:not(#db) .access-window-head b,
+    .module-shell:not(#db) .org-window h3 {
+      color: #245fd8;
+      letter-spacing: .01em
+    }
+
+    .module-shell:not(#db) .access-window-head {
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(223, 232, 245, .92)
+    }
+
+    .module-shell:not(#db) .bar {
+      border: 1px solid rgba(219, 229, 245, .94);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .96));
+      box-shadow: 0 12px 28px rgba(38, 63, 106, .08), inset 0 1px 0 rgba(255, 255, 255, .94)
     }
 
     @keyframes modulePremiumReveal {
@@ -3364,6 +3449,28 @@
       100% {
         opacity: 1;
         transform: translateX(0) scale(1)
+      }
+    }
+
+    @keyframes modulePremiumFloatGlow {
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-2px)
+      }
+    }
+
+    @keyframes modulePremiumShine {
+      0% {
+        transform: translateX(-155%)
+      }
+
+      55%,
+      100% {
+        transform: translateX(155%)
       }
     }
 
@@ -3405,6 +3512,21 @@
 
     .module-shell.module-live .module-content>*:nth-child(8) {
       animation-delay: .39s
+    }
+
+    .module-shell.module-live:not(#db) .card::after,
+    .module-shell.module-live:not(#db) .tb::after,
+    .module-shell.module-live:not(#db) .mini::after,
+    .module-shell.module-live:not(#db) .it::after,
+    .module-shell.module-live:not(#db) .discussion-shell::after,
+    .module-shell.module-live:not(#db) .org-window::after,
+    .module-shell.module-live:not(#db) .access-window-card::after {
+      animation: modulePremiumShine 7.2s ease-in-out .75s infinite
+    }
+
+    .module-shell.module-live:not(#db) .mini,
+    .module-shell.module-live:not(#db) .it {
+      animation: modulePremiumFloatGlow 6s ease-in-out 1s infinite
     }
 
     .main::-webkit-scrollbar,
