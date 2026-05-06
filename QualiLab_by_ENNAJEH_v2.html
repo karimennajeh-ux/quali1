@@ -2847,22 +2847,21 @@
     .app:not(.hub-mode) .main {
       height: 100vh;
       min-height: 0;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-gutter: stable both-edges;
+      -webkit-overflow-scrolling: touch;
     }
 
     .app:not(.hub-mode) .module-shell {
-      height: calc(100vh - 32px);
-      max-height: calc(100vh - 32px);
-      min-height: 0;
+      height: auto;
+      max-height: none;
+      min-height: calc(100vh - 32px);
     }
 
     .app:not(.hub-mode) .module-rail {
-      max-height: calc(100vh - 72px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      scrollbar-gutter: stable;
-      scrollbar-width: thin;
-      scrollbar-color: #236bd8 #e8eef9;
+      max-height: none;
+      overflow: visible;
     }
 
     .module-rail:before {
@@ -2985,15 +2984,10 @@
     }
 
     .app:not(.hub-mode) .module-content {
-      max-height: calc(100vh - 72px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      overscroll-behavior: contain;
-      padding-right: 6px;
-      scrollbar-gutter: stable;
-      scrollbar-width: auto;
-      scrollbar-color: #236bd8 #e8eef9;
-      -webkit-overflow-scrolling: touch;
+      max-height: none;
+      overflow: visible;
+      padding-right: 0;
+      overscroll-behavior: auto;
     }
 
     .module-shell .hub-app-head {
