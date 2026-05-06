@@ -104,7 +104,32 @@ function ensureDocumentationServerRoots() {
   Object.values(DOC_SERVER_DIRS).forEach(ensureDir);
 }
 
-function buildPilotDocumentationPaths(pilot) {
+function normalizeDocProcessFolders(raw) {
+  const list = Array.isArray(raw) ? raw : String(raw || "").split(/\r?\n|,/);
+  const clean = list
+    .map((item) => String(item || "").trim())
+    .filter(Boolean)
+    .slice(0, 12);
+  return [...new Set(clean)].length ? [...new Set(clean)] : [...DEFAULT_DOC_PROCESS_FOLDERS];
+}
+
+function normalizeDocVersionFolder(value) {
+  const label = String(value || "1.0").trim() || "1.0";
+  return slugifySegment(`v_${label}`, "v_1_0");
+}
+
+function safeDocumentFileName(fileName, fallbackBase = "document", fallbackExt = ".bin") {
+  const parsed = path.parse(String(fileName || "").trim() || `${fallbackBase}${fallbackExt}`);
+  const base = slugifySegment(parsed.name || fallbackBase, fallbackBase);
+  const ext = parsed.ext ? parsed.ext.replace(/[^.\w-]+/g, "") : fallbackExt;
+  return `${base}${ext || fallbackExt}`;
+}
+
+function webPathFromAbsolute(absPath) {
+  return `/${path.relative(ROOT, absPath).split(path.sep).join("/")}`;
+}
+
+function buildPilotDocumentationPaths(pilot, processFolders = DEFAULT_DOC_PROCESS_FOLDERS) {
   const pilotFolder = slugifySegment(pilot.orgName || pilot.name || pilot.email || `pilot_${pilot.id}`, `pilot_${pilot.id || "root"}`);
   const pilotRoot = path.join(DOC_SERVER_DIRS.documents, pilotFolder);
   return {
@@ -113,7 +138,7 @@ function buildPilotDocumentationPaths(pilot) {
     archivesRoot: path.join(DOC_SERVER_DIRS.archives, pilotFolder),
     trashRoot: path.join(DOC_SERVER_DIRS.trash, pilotFolder),
     logsRoot: path.join(DOC_SERVER_DIRS.logs, pilotFolder),
-    processFolders: DEFAULT_DOC_PROCESS_FOLDERS.map((label, index) => ({
+    processFolders: normalizeDocProcessFolders(processFolders).map((label, index) => ({
       folderKey: slugifySegment(label, `process_${index + 1}`),
       folderLabel: label,
       folderRole: "process",
@@ -509,7 +534,7 @@ function upsertDocumentationFolder(pilotId, folder, actorName = "Systeme", paren
   `).get(pilotId, folder.absPath);
 }
 
-function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme") {
+function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme", options = {}) {
   if (!pilot || !pilot.id) {
     const error = new Error("Compte pilote introuvable pour l'initialisation documentaire");
     error.status = 404;
@@ -517,7 +542,17 @@ function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme") {
   }
 
   ensureDocumentationServerRoots();
-  const structure = buildPilotDocumentationPaths(pilot);
+  const existingSettings = getDocumentationSettingsByPilotId(pilot.id);
+  const processFolders = normalizeDocProcessFolders(
+    options.processFolders
+    || (existingSettings && existingSettings.hierarchy && existingSettings.hierarchy.processFolders)
+    || DEFAULT_DOC_PROCESS_FOLDERS
+  );
+  const hierarchy = {
+    levels: ["process", "type", "reference", "version"],
+    processFolders
+  };
+  const structure = buildPilotDocumentationPaths(pilot, processFolders);
   [structure.pilotRoot, structure.archivesRoot, structure.trashRoot, structure.logsRoot].forEach(ensureDir);
   structure.processFolders.forEach((folder) => ensureDir(folder.absPath));
 
@@ -546,7 +581,7 @@ function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme") {
     structure.trashRoot,
     structure.logsRoot,
     structure.pilotRoot,
-    JSON.stringify(DEFAULT_DOC_HIERARCHY),
+    JSON.stringify(hierarchy),
     1,
     actorName,
     timestamp,
@@ -602,6 +637,361 @@ function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme") {
   });
 
   return getDocumentationSettingsByPilotId(pilot.id);
+}
+
+function getFolderByPilotAndPath(pilotId, absPath) {
+  return db.prepare(`
+    SELECT *
+    FROM doc_folders
+    WHERE pilot_id = ? AND abs_path = ?
+  `).get(pilotId, absPath);
+}
+
+function listDocumentationFoldersByPilotId(pilotId) {
+  return db.prepare(`
+    SELECT id, parent_id, folder_key, folder_label, folder_role, abs_path, rel_path, depth, sort_order, is_system, managed_by, created_at, updated_at
+    FROM doc_folders
+    WHERE pilot_id = ?
+    ORDER BY depth ASC, sort_order ASC, folder_label COLLATE NOCASE ASC
+  `).all(pilotId).map((row) => ({
+    id: row.id,
+    parentId: row.parent_id,
+    key: row.folder_key,
+    label: row.folder_label,
+    role: row.folder_role,
+    absPath: row.abs_path,
+    relPath: row.rel_path,
+    webPath: webPathFromAbsolute(row.abs_path),
+    depth: row.depth,
+    sortOrder: row.sort_order,
+    isSystem: Boolean(row.is_system),
+    managedBy: row.managed_by || "",
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  }));
+}
+
+function mapDocumentationRow(row) {
+  return {
+    id: row.id,
+    pilotId: row.pilot_id,
+    folderId: row.folder_id,
+    ref: row.doc_ref,
+    title: row.title,
+    processName: row.process_name,
+    docType: row.doc_type,
+    versionLabel: row.version_label,
+    status: row.status,
+    ownerName: row.owner_name,
+    verifierName: row.verifier_name,
+    approverName: row.approver_name,
+    diffuserName: row.diffuser_name,
+    fileName: row.file_name,
+    fileExt: row.file_ext,
+    mimeType: row.mime_type,
+    relPath: row.rel_path,
+    absPath: row.abs_path,
+    webUrl: row.source_url || webPathFromAbsolute(row.abs_path),
+    fileSize: row.file_size,
+    checksum: row.checksum || "",
+    storageMode: row.storage_mode,
+    notes: row.notes || "",
+    archivedAt: row.archived_at || "",
+    createdBy: row.created_by || "",
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
+  };
+}
+
+function listDocumentationDocumentsByPilotId(pilotId) {
+  return db.prepare(`
+    SELECT *
+    FROM documents
+    WHERE pilot_id = ?
+    ORDER BY updated_at DESC, id DESC
+  `).all(pilotId).map(mapDocumentationRow);
+}
+
+function decodeDataUrl(dataUrl) {
+  const raw = String(dataUrl || "");
+  const match = raw.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) {
+    const error = new Error("Fichier invalide : donnees base64 introuvables");
+    error.status = 400;
+    throw error;
+  }
+  return {
+    mimeType: match[1] || "application/octet-stream",
+    buffer: Buffer.from(match[2], "base64")
+  };
+}
+
+function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Systeme") {
+  const settings = ensureDocumentationBootstrapForPilot(pilot, actorName);
+  const hierarchy = settings.hierarchy || DEFAULT_DOC_HIERARCHY;
+  const processName = String(payload.processName || hierarchy.processFolders[0] || DEFAULT_DOC_PROCESS_FOLDERS[0]).trim();
+  const docType = String(payload.docType || "Procedure").trim() || "Procedure";
+  const docRef = String(payload.docRef || "DOC-001").trim() || "DOC-001";
+  const versionLabel = String(payload.versionLabel || "1.0").trim() || "1.0";
+  const versionFolder = normalizeDocVersionFolder(versionLabel);
+  const processPath = path.join(settings.pilotRoot, processName);
+  const typePath = path.join(processPath, docType);
+  const refPath = path.join(typePath, docRef);
+  const versionPath = path.join(refPath, versionFolder);
+
+  [processPath, typePath, refPath, versionPath].forEach(ensureDir);
+
+  const pilotRootFolder = getFolderByPilotAndPath(pilot.id, settings.pilotRoot);
+  const processFolder = upsertDocumentationFolder(pilot.id, {
+    folderKey: slugifySegment(processName, "process"),
+    folderLabel: processName,
+    folderRole: "process",
+    absPath: processPath,
+    relPath: relFromDocServer(processPath),
+    depth: 1,
+    sortOrder: 1,
+    isSystem: 1
+  }, actorName, pilotRootFolder ? pilotRootFolder.id : null);
+  const typeFolder = upsertDocumentationFolder(pilot.id, {
+    folderKey: slugifySegment(docType, "type"),
+    folderLabel: docType,
+    folderRole: "type",
+    absPath: typePath,
+    relPath: relFromDocServer(typePath),
+    depth: 2,
+    sortOrder: 1,
+    isSystem: 0
+  }, actorName, processFolder ? processFolder.id : null);
+  const refFolder = upsertDocumentationFolder(pilot.id, {
+    folderKey: slugifySegment(docRef, "ref"),
+    folderLabel: docRef,
+    folderRole: "reference",
+    absPath: refPath,
+    relPath: relFromDocServer(refPath),
+    depth: 3,
+    sortOrder: 1,
+    isSystem: 0
+  }, actorName, typeFolder ? typeFolder.id : null);
+  const versionFolderRow = upsertDocumentationFolder(pilot.id, {
+    folderKey: versionFolder,
+    folderLabel: versionLabel,
+    folderRole: "version",
+    absPath: versionPath,
+    relPath: relFromDocServer(versionPath),
+    depth: 4,
+    sortOrder: 1,
+    isSystem: 0
+  }, actorName, refFolder ? refFolder.id : null);
+
+  return {
+    settings,
+    processName,
+    docType,
+    docRef,
+    versionLabel,
+    versionFolder,
+    processPath,
+    typePath,
+    refPath,
+    versionPath,
+    versionFolderId: versionFolderRow ? versionFolderRow.id : null
+  };
+}
+
+function createDocumentationFolderOnly(pilot, payload = {}, actorName = "Systeme") {
+  const target = ensureDocumentationFolderStructure(pilot, payload, actorName);
+  return {
+    processName: target.processName,
+    docType: target.docType,
+    docRef: target.docRef,
+    versionLabel: target.versionLabel,
+    versionPath: target.versionPath,
+    webPath: webPathFromAbsolute(target.versionPath)
+  };
+}
+
+function createDocumentationImport(pilot, payload = {}, actorName = "Systeme") {
+  const title = String(payload.title || "").trim();
+  const fileName = String(payload.fileName || "").trim();
+  const dataUrl = String(payload.dataUrl || "").trim();
+  if (!title || !fileName || !dataUrl) {
+    const error = new Error("Titre, nom de fichier et contenu du fichier obligatoires");
+    error.status = 400;
+    throw error;
+  }
+
+  const target = ensureDocumentationFolderStructure(pilot, payload, actorName);
+  const decoded = decodeDataUrl(dataUrl);
+  const safeName = safeDocumentFileName(fileName, payload.docRef || "document", path.extname(fileName) || ".bin");
+  const absPath = path.join(target.versionPath, safeName);
+  fs.writeFileSync(absPath, decoded.buffer);
+
+  const timestamp = now();
+  const existing = db.prepare(`
+    SELECT *
+    FROM documents
+    WHERE pilot_id = ? AND doc_ref = ? AND version_label = ? AND file_name = ?
+  `).get(pilot.id, target.docRef, target.versionLabel, safeName);
+  const relPath = relFromDocServer(absPath);
+  const webUrl = webPathFromAbsolute(absPath);
+  const ownerName = String(payload.ownerName || pilot.name || "").trim();
+  const verifierName = String(payload.verifierName || "").trim();
+  const approverName = String(payload.approverName || "").trim();
+  const diffuserName = String(payload.diffuserName || "").trim();
+  const notes = String(payload.notes || "").trim();
+  const status = String(payload.status || "Brouillon").trim() || "Brouillon";
+  const fileExt = path.extname(safeName).replace(/^\./, "");
+  let documentId = existing ? existing.id : null;
+
+  if (!existing) {
+    const result = db.prepare(`
+      INSERT INTO documents (
+        pilot_id, folder_id, doc_ref, title, process_name, doc_type, version_label, status,
+        owner_name, verifier_name, approver_name, diffuser_name, file_name, file_ext, mime_type,
+        rel_path, abs_path, file_size, checksum, storage_mode, source_url, notes, archived_at, created_by, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      pilot.id,
+      target.versionFolderId,
+      target.docRef,
+      title,
+      target.processName,
+      target.docType,
+      target.versionLabel,
+      status,
+      ownerName,
+      verifierName,
+      approverName,
+      diffuserName,
+      safeName,
+      fileExt,
+      String(payload.mimeType || decoded.mimeType || "application/octet-stream"),
+      relPath,
+      absPath,
+      decoded.buffer.length,
+      "",
+      "local_server",
+      webUrl,
+      notes,
+      null,
+      actorName,
+      timestamp,
+      timestamp
+    );
+    documentId = Number(result.lastInsertRowid);
+  } else {
+    db.prepare(`
+      UPDATE documents
+      SET folder_id = ?, title = ?, process_name = ?, doc_type = ?, version_label = ?, status = ?,
+          owner_name = ?, verifier_name = ?, approver_name = ?, diffuser_name = ?, file_ext = ?, mime_type = ?,
+          rel_path = ?, abs_path = ?, file_size = ?, storage_mode = 'local_server', source_url = ?,
+          notes = ?, updated_at = ?, archived_at = NULL
+      WHERE id = ?
+    `).run(
+      target.versionFolderId,
+      title,
+      target.processName,
+      target.docType,
+      target.versionLabel,
+      status,
+      ownerName,
+      verifierName,
+      approverName,
+      diffuserName,
+      fileExt,
+      String(payload.mimeType || decoded.mimeType || "application/octet-stream"),
+      relPath,
+      absPath,
+      decoded.buffer.length,
+      webUrl,
+      notes,
+      timestamp,
+      existing.id
+    );
+  }
+
+  db.prepare(`
+    INSERT INTO document_versions (
+      document_id, version_label, status, file_name, rel_path, abs_path, file_size, checksum, created_by, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    documentId,
+    target.versionLabel,
+    status,
+    safeName,
+    relPath,
+    absPath,
+    decoded.buffer.length,
+    "",
+    actorName,
+    timestamp
+  );
+
+  db.prepare(`
+    INSERT INTO document_events (
+      document_id, event_type, event_label, actor_name, event_detail, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `).run(
+    documentId,
+    existing ? "update" : "create",
+    existing ? "Mise a jour du document central" : "Importation du document central",
+    actorName,
+    `${target.docRef} | ${safeName} | ${target.versionLabel}`,
+    timestamp
+  );
+
+  const row = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(documentId);
+  return mapDocumentationRow(row);
+}
+
+function archiveDocumentationDocument(pilot, documentId, actorName = "Systeme") {
+  const row = db.prepare(`
+    SELECT *
+    FROM documents
+    WHERE pilot_id = ? AND id = ?
+  `).get(pilot.id, Number(documentId));
+  if (!row) {
+    const error = new Error("Document central introuvable");
+    error.status = 404;
+    throw error;
+  }
+  const settings = getDocumentationSettingsByPilotId(pilot.id) || ensureDocumentationBootstrapForPilot(pilot, actorName);
+  const archiveDir = path.join(
+    settings.archivesRoot,
+    String(row.process_name || "Processus_support"),
+    String(row.doc_type || "Document"),
+    String(row.doc_ref || "DOC"),
+    normalizeDocVersionFolder(row.version_label || "1.0")
+  );
+  ensureDir(archiveDir);
+  const archivedPath = path.join(archiveDir, path.basename(row.abs_path));
+  try {
+    if (fs.existsSync(row.abs_path) && row.abs_path !== archivedPath) fs.renameSync(row.abs_path, archivedPath);
+  } catch {
+    if (fs.existsSync(row.abs_path) && row.abs_path !== archivedPath) fs.copyFileSync(row.abs_path, archivedPath);
+  }
+  const relPath = relFromDocServer(archivedPath);
+  const webUrl = webPathFromAbsolute(archivedPath);
+  const timestamp = now();
+  db.prepare(`
+    UPDATE documents
+    SET status = 'Archive', rel_path = ?, abs_path = ?, source_url = ?, archived_at = ?, updated_at = ?
+    WHERE id = ?
+  `).run(relPath, archivedPath, webUrl, timestamp, timestamp, row.id);
+  db.prepare(`
+    INSERT INTO document_events (
+      document_id, event_type, event_label, actor_name, event_detail, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `).run(
+    row.id,
+    "archive",
+    "Archivage du document central",
+    actorName,
+    `${row.doc_ref} | ${path.basename(archivedPath)}`,
+    timestamp
+  );
+  const archived = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(row.id);
+  return mapDocumentationRow(archived);
 }
 
 function updateExistingPilotAccount(email, payload = {}) {
@@ -781,7 +1171,7 @@ if (dbReady && db) {
   if (mainPilot) ensureDocumentationBootstrapForPilot(mainPilot, "Systeme");
 }
 
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "35mb" }));
 app.use((req, res, next) => {
   if (["/", "/index.html", "/QualiLab_by_ENNAJEH_v2", "/QualiLab_by_ENNAJEH_v2.html", "/service-worker.js", "/manifest.webmanifest"].includes(req.path)) {
     res.set("Cache-Control", "no-store, no-cache, must-revalidate");
@@ -1008,6 +1398,79 @@ app.post("/api/pilots/:pilotEmail/documentation/bootstrap", (req, res) => {
     res.json({ ok: true, pilot: { email: pilot.email, name: pilot.name }, settings });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Initialisation documentaire impossible" });
+  }
+});
+
+app.put("/api/pilots/:pilotEmail/documentation/settings", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const processFolders = normalizeDocProcessFolders(req.body && req.body.processFolders);
+    const settings = ensureDocumentationBootstrapForPilot(pilot, actorName, { processFolders });
+    res.json({ ok: true, pilot: { email: pilot.email, name: pilot.name }, settings });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Mise a jour de la hierarchie impossible" });
+  }
+});
+
+app.get("/api/pilots/:pilotEmail/documentation/folders", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    ensureDocumentationBootstrapForPilot(pilot, pilot.name || "Pilote");
+    const items = listDocumentationFoldersByPilotId(pilot.id);
+    res.json({ ok: true, items });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Lecture des dossiers impossible" });
+  }
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/folders", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const item = createDocumentationFolderOnly(pilot, req.body || {}, actorName);
+    res.status(201).json({ ok: true, item });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Creation du dossier impossible" });
+  }
+});
+
+app.get("/api/pilots/:pilotEmail/documentation/documents", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    ensureDocumentationBootstrapForPilot(pilot, pilot.name || "Pilote");
+    const items = listDocumentationDocumentsByPilotId(pilot.id);
+    res.json({ ok: true, items });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Lecture des documents impossible" });
+  }
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/documents/import", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const item = createDocumentationImport(pilot, req.body || {}, actorName);
+    res.status(201).json({ ok: true, item });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Importation documentaire impossible" });
+  }
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/documents/:documentId/archive", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const item = archiveDocumentationDocument(pilot, req.params.documentId, actorName);
+    res.json({ ok: true, item });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Archivage documentaire impossible" });
   }
 });
 
