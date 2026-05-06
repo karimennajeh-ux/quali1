@@ -3016,20 +3016,21 @@
 
     .module-shell .hub-app-head {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-columns: minmax(140px, 180px) 1fr auto;
       align-items: center;
-      gap: 22px;
+      gap: 18px;
       min-height: 88px;
       padding: 14px 22px;
       position: relative;
       overflow: hidden;
-      border-radius: 24px;
-      border: 1px solid rgba(214, 224, 245, .92);
+      border-radius: 20px;
+      border: 1px solid rgba(205, 219, 240, .95);
       background:
-        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, .98) 0, rgba(255, 255, 255, .84) 22%, rgba(255, 255, 255, 0) 48%),
-        linear-gradient(180deg, #fff 0%, #f9fbff 100%);
-      box-shadow: 0 16px 32px rgba(34, 55, 99, .08);
-      margin-bottom: 4px
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .97));
+      box-shadow:
+        0 16px 36px rgba(29, 52, 94, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .92);
+      margin: 4px auto 18px
     }
 
     .app:not(.hub-mode) .logo-header {
@@ -3068,6 +3069,9 @@
       text-align: center;
       padding: 0 10px;
       color: #245fd8;
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: .02em;
       text-shadow: 0 1px 0 rgba(255, 255, 255, .75)
     }
 
@@ -3078,12 +3082,37 @@
       justify-content: flex-end;
       flex-wrap: nowrap;
       gap: 10px;
+      padding: 0;
     }
 
     .app:not(.hub-mode) .hub-app-head .back-nav {
       margin-left: 0;
       align-items: center;
       gap: 10px;
+    }
+
+    .app:not(.hub-mode) .hub-action-icon,
+    .app:not(.hub-mode) .back-btn {
+      width: 56px;
+      height: 56px;
+      flex-basis: 56px;
+    }
+
+    .app:not(.hub-mode) .hub-action-icon svg,
+    .app:not(.hub-mode) .back-btn svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    #db .module-content {
+      max-height: calc(100vh - 172px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 6px;
+      scrollbar-gutter: stable both-edges;
+      scrollbar-width: auto;
+      scrollbar-color: #236bd8 #e8eef9;
+      -webkit-overflow-scrolling: touch;
     }
 
     .module-shell .card,
@@ -3259,7 +3288,7 @@
 
       .module-shell .hub-app-head {
         min-height: 82px;
-        border-radius: 22px;
+        border-radius: 18px;
         margin-bottom: 2px
       }
 
@@ -5009,6 +5038,12 @@
         justify-self: center;
         justify-content: center;
         flex-wrap: wrap;
+      }
+
+      #db .module-content {
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
       }
 
       #hub .hub-app-head {
