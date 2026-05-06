@@ -3015,6 +3015,12 @@
     }
 
     .module-shell .hub-app-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 22px;
+      min-height: 88px;
+      padding: 14px 22px;
       position: relative;
       overflow: hidden;
       border-radius: 24px;
@@ -3024,6 +3030,12 @@
         linear-gradient(180deg, #fff 0%, #f9fbff 100%);
       box-shadow: 0 16px 32px rgba(34, 55, 99, .08);
       margin-bottom: 4px
+    }
+
+    .app:not(.hub-mode) .logo-header {
+      width: 108px;
+      justify-self: start;
+      align-self: center;
     }
 
     .module-shell .hub-app-head::before {
@@ -3048,8 +3060,30 @@
     }
 
     .module-shell .module-page-title {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      justify-self: center;
+      align-self: center;
+      text-align: center;
+      padding: 0 10px;
       color: #245fd8;
       text-shadow: 0 1px 0 rgba(255, 255, 255, .75)
+    }
+
+    .app:not(.hub-mode) .hub-app-head .hub-top-actions {
+      width: auto;
+      justify-self: end;
+      align-self: center;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      gap: 10px;
+    }
+
+    .app:not(.hub-mode) .hub-app-head .back-nav {
+      margin-left: 0;
+      align-items: center;
+      gap: 10px;
     }
 
     .module-shell .card,
@@ -3224,6 +3258,7 @@
       }
 
       .module-shell .hub-app-head {
+        min-height: 82px;
         border-radius: 22px;
         margin-bottom: 2px
       }
@@ -4945,6 +4980,33 @@
 
       .hub-app-head .hub-top-actions {
         width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .app:not(.hub-mode) .hub-app-head {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 12px;
+        min-height: unset;
+        padding: 14px 16px 16px;
+        text-align: center;
+      }
+
+      .app:not(.hub-mode) .logo-header {
+        justify-self: center;
+      }
+
+      .app:not(.hub-mode) .module-page-title {
+        order: 2;
+        width: 100%;
+        padding: 0;
+        font-size: 20px;
+      }
+
+      .app:not(.hub-mode) .hub-app-head .hub-top-actions {
+        width: 100%;
+        justify-self: center;
         justify-content: center;
         flex-wrap: wrap;
       }
