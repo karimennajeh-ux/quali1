@@ -3,11 +3,6 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#245ccc">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,6 +14,9 @@
   <title>QUALI by ENNAJEH v2</title>
   <style>
     :root {
+      --ui-font-stack: "Segoe UI", Tahoma, Arial, sans-serif;
+      --display-font-stack: "Segoe UI", Tahoma, Arial, sans-serif;
+      --app-stage-width: 1520px;
       color-scheme: light;
       text-size-adjust: 100%;
       -webkit-text-size-adjust: 100%;
@@ -101,10 +99,10 @@
       width: 100%;
       min-width: 320px;
       min-height: 100vh;
-      font: 14px "Segoe UI", Arial, sans-serif;
+      font: 14px var(--ui-font-stack);
       background: #f4f7fb;
       color: #25324b;
-      font-family: "Outfit", sans-serif;
+      font-family: var(--ui-font-stack);
       overflow: hidden;
       overscroll-behavior: none;
     }
@@ -180,7 +178,10 @@
       display: grid;
       grid-template-columns: 1fr;
       min-height: 100vh;
-      height: 100vh
+      height: 100vh;
+      width: min(100%, var(--app-stage-width));
+      max-width: var(--app-stage-width);
+      margin: 0 auto
     }
 
     .app.hub-mode {
@@ -4293,7 +4294,7 @@
       align-items: center;
       justify-content: center;
       border-radius: 34px;
-      font-family: Raleway, sans-serif;
+      font-family: var(--display-font-stack);
       font-weight: 500;
     }
 
@@ -5795,7 +5796,7 @@
                     class="password-toggle" type="button" aria-label="Afficher le mot de passe"
                     aria-pressed="false">Afficher</button></div>
               </div>
-              <button id="lbtn" class="btn" style="font-weight: 500; font-family: outfit;">Se connecter</button>
+              <button id="lbtn" class="btn" style="font-weight: 500; font-family: var(--ui-font-stack);">Se connecter</button>
               <div class="auth-panel-actions">
                 <button id="openForgotPanel" class="auth-link-btn" type="button">Mot de passe oublie ?</button>
                 <button id="openCreatePanel" class="auth-link-btn" type="button">Creer un compte pilote</button>
@@ -9966,6 +9967,7 @@
       document.documentElement.style.backgroundColor = "#f4f7fb";
       document.body.style.backgroundColor = "#f4f7fb";
       document.body.style.zoom = "1";
+      document.body.style.fontFamily = "var(--ui-font-stack)";
     }
     let liveReloadSource = null;
     function registerLocalLiveReload() {
