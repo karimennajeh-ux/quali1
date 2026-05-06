@@ -3224,10 +3224,15 @@
     }
 
     .app:not(.hub-mode) .module-content {
-      max-height: none;
-      overflow: visible;
-      padding-right: 0;
+      max-height: calc(100vh - 172px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 6px;
+      scrollbar-gutter: stable both-edges;
+      scrollbar-width: auto;
+      scrollbar-color: #236bd8 #e8eef9;
       overscroll-behavior: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .module-shell .hub-app-head {
@@ -3318,17 +3323,6 @@
     .app:not(.hub-mode) .back-btn svg {
       width: 24px;
       height: 24px;
-    }
-
-    #db .module-content {
-      max-height: calc(100vh - 172px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding-right: 6px;
-      scrollbar-gutter: stable both-edges;
-      scrollbar-width: auto;
-      scrollbar-color: #236bd8 #e8eef9;
-      -webkit-overflow-scrolling: touch;
     }
 
     .module-shell .card,
@@ -3454,7 +3448,7 @@
       }
 
       .app:not(.hub-mode) .module-content {
-        max-height: none;
+        max-height: calc(100vh - 390px);
       }
 
       .module-rail {
@@ -5256,7 +5250,7 @@
         flex-wrap: wrap;
       }
 
-      #db .module-content {
+      .app:not(.hub-mode) .module-content {
         max-height: none;
         overflow: visible;
         padding-right: 0;
