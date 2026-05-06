@@ -2079,19 +2079,71 @@
       grid-column: 1 / -1;
     }
 
+    #db {
+      position: relative;
+    }
+
+    #db>.card,
+    #db .dash-window-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(213, 225, 247, .96);
+      background:
+        radial-gradient(circle at top right, rgba(95, 160, 255, .13), rgba(95, 160, 255, 0) 28%),
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .96));
+      box-shadow:
+        0 18px 40px rgba(36, 69, 122, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .94);
+      transition: transform .26s ease, box-shadow .26s ease, border-color .26s ease, filter .26s ease;
+    }
+
+    #db>.card::before,
+    #db .dash-window-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(59, 140, 255, .92), rgba(138, 191, 255, .60), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    #db>.card:hover,
+    #db .dash-window-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(190, 212, 244, .98);
+      box-shadow:
+        0 24px 48px rgba(36, 69, 122, .14),
+        inset 0 1px 0 rgba(255, 255, 255, .96);
+    }
+
+    #db>div.row.s2 {
+      align-items: stretch;
+      gap: 16px;
+    }
+
     .dash-window-head {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(223, 232, 245, .92);
     }
 
     .dash-window-head h3 {
       margin: 0;
+      color: #245fd8;
+      font-size: 19px;
+      letter-spacing: .01em;
     }
 
     .dash-window-head .audit-window-controls {
       margin-left: auto;
+    }
+
+    .dash-window-body {
+      display: grid;
+      gap: 14px;
     }
 
     .dash-window-card.dash-min .dash-window-body {
@@ -2117,6 +2169,170 @@
 
     .dash-window-card.dash-hidden .dash-window-hidden {
       display: flex;
+    }
+
+    #db .dash-window-card.dash-min {
+      background:
+        radial-gradient(circle at top right, rgba(95, 160, 255, .08), rgba(95, 160, 255, 0) 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(250, 252, 255, .96));
+    }
+
+    #db .dash-window-card.dash-max {
+      box-shadow:
+        0 28px 54px rgba(36, 69, 122, .16),
+        inset 0 1px 0 rgba(255, 255, 255, .96);
+    }
+
+    #db .dash-window-hidden {
+      border-radius: 14px;
+      background: linear-gradient(180deg, #f6f9ff, #eef4ff);
+    }
+
+    #db .mini {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid #dce7fb;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(243, 248, 255, .96));
+      box-shadow: 0 12px 28px rgba(40, 66, 113, .08);
+    }
+
+    #db .it {
+      border-radius: 16px;
+      border: 1px solid #dde7f9;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .96));
+      box-shadow: 0 10px 24px rgba(40, 66, 113, .07);
+    }
+
+    #db .tb {
+      border: 1px solid #dde7f9;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .96));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .92);
+    }
+
+    #db #stats .k-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 20px 38px rgba(36, 69, 122, .18);
+      transition: transform .3s ease, box-shadow .3s ease, filter .3s ease;
+    }
+
+    #db #stats .k-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, .22) 36%, transparent 54%);
+      transform: translateX(-145%);
+      animation: dashboardShine 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    #db #stats .k-card::after {
+      content: "";
+      position: absolute;
+      right: -22px;
+      top: -18px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, .18) 0, rgba(255, 255, 255, 0) 70%);
+      pointer-events: none;
+    }
+
+    #db #stats .k-card:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 26px 44px rgba(36, 69, 122, .24);
+      filter: saturate(1.04);
+    }
+
+    #db #stats .kpi {
+      min-height: 72px;
+    }
+
+    #db #stats .kpi i {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 16px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24);
+    }
+
+    #db #stats .stat b {
+      font-size: 30px;
+      margin: 6px 0;
+    }
+
+    #db #dbCharts .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(244, 249, 255, .96));
+    }
+
+    @keyframes dashboardPanelReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(26px) scale(.985);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes dashboardFloatGlow {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+
+    @keyframes dashboardShine {
+      0% {
+        transform: translateX(-145%);
+      }
+
+      55%,
+      100% {
+        transform: translateX(145%);
+      }
+    }
+
+    #db.module-live>#stats>.k-card,
+    #db.module-live>.card,
+    #db.module-live .dash-window-card {
+      --db-delay: 0s;
+      animation: dashboardPanelReveal .62s cubic-bezier(.2, .82, .2, 1) both;
+      animation-delay: var(--db-delay);
+    }
+
+    #db.module-live>#stats>.k-card {
+      animation-name: dashboardPanelReveal, dashboardFloatGlow;
+      animation-duration: .62s, 6.4s;
+      animation-delay: var(--db-delay), calc(.72s + var(--db-delay));
+      animation-timing-function: cubic-bezier(.2, .82, .2, 1), ease-in-out;
+      animation-fill-mode: both, both;
+      animation-iteration-count: 1, infinite;
+    }
+
+    #db.module-live>#stats>.k-card:nth-child(2),
+    #db.module-live>#dbQuickCard,
+    #db.module-live>#dbDiagCard {
+      --db-delay: .05s;
+    }
+
+    #db.module-live>#stats>.k-card:nth-child(3),
+    #db.module-live>#dbChartsCard,
+    #db.module-live>#dbModulesCard {
+      --db-delay: .10s;
+    }
+
+    #db.module-live>#stats>.k-card:nth-child(4),
+    #db.module-live>#dbAlertsCard,
+    #db.module-live>#dbTrailCard {
+      --db-delay: .15s;
     }
 
     .audit-report {
