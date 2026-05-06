@@ -9967,6 +9967,32 @@
       document.body.style.backgroundColor = "#f4f7fb";
       document.body.style.zoom = "1";
     }
+    let liveReloadSource = null;
+    function registerLocalLiveReload() {
+      if (!isLocalDevHost() || typeof EventSource === "undefined") return;
+      try {
+        if (liveReloadSource) liveReloadSource.close();
+        liveReloadSource = new EventSource("/api/dev/live-reload");
+        liveReloadSource.addEventListener("reload", ev => {
+          let payload = null;
+          try { payload = JSON.parse(ev.data || "{}") } catch (e) { payload = null }
+          const nextVersion = String((payload && payload.version) || Date.now());
+          const currentVersion = sessionStorage.getItem("quali-live-reload-version") || "";
+          if (currentVersion === nextVersion) return;
+          sessionStorage.setItem("quali-live-reload-version", nextVersion);
+          location.reload();
+        });
+        liveReloadSource.onmessage = ev => {
+          try {
+            const payload = JSON.parse(ev.data || "{}");
+            if (payload && payload.version) sessionStorage.setItem("quali-live-reload-version", String(payload.version));
+          } catch (e) { }
+        };
+        liveReloadSource.onerror = () => { };
+      } catch (err) {
+        console.error("Live reload indisponible", err);
+      }
+    }
     function registerPwa() {
       if ("serviceWorker" in navigator && isLocalDevHost()) {
         navigator.serviceWorker.getRegistrations().then(regs => Promise.all(regs.map(reg => reg.unregister()))).catch(() => { });
@@ -9980,6 +10006,7 @@
       window.addEventListener("appinstalled", () => { deferredPwaInstallPrompt = null; updatePwaInstallButton(); sync("Application installee sur cet appareil") })
     }
     normalizeRuntimeRendering();
+    registerLocalLiveReload();
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
     bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", () => loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", () => loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", sendResetPilotCode); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); syncPilotManageButtons(); registerPwa();

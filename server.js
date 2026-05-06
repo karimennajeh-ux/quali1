@@ -14,6 +14,7 @@ const FALLBACK_DB_DIR = process.env.QUALILAB_DATA_FALLBACK_DIR || path.join(os.t
 const FALLBACK_DB_PATH = path.join(FALLBACK_DB_DIR, "qualilab.sqlite");
 const SCHEMA_PATH = path.join(ROOT, "database", "schema.sql");
 const APP_HTML_PATH = path.join(ROOT, "QualiLab_by_ENNAJEH_v2.html");
+const LIVE_RELOAD_WATCH_INTERVAL = Number(process.env.QUALI_LIVE_RELOAD_INTERVAL || 700);
 
 const MAIN_PILOT = {
   email: "karimennajeh@gmail.com",
@@ -54,6 +55,10 @@ const MODULE_ACCESS_CONFIG = [
   { id: "set", label: "Parametres" }
 ];
 const PERMS = ["Ajouter", "Modifier", "Supprimer", "Valider", "Telecharger", "Importer", "Exporter", "Parametres", "Comptes"];
+const liveReloadClients = new Set();
+let liveReloadVersion = Date.now();
+let liveReloadDebounce = null;
+let liveReloadWatcherStarted = false;
 
 function now() {
   return new Date().toISOString();
@@ -77,6 +82,46 @@ function lanUrls(port) {
     });
   });
   return [...new Set(out)];
+}
+
+function emitLiveReload(reason = "file-updated") {
+  liveReloadVersion = Date.now();
+  const payload = JSON.stringify({
+    ok: true,
+    reason,
+    version: liveReloadVersion,
+    file: path.basename(APP_HTML_PATH),
+    time: now()
+  });
+  [...liveReloadClients].forEach((res) => {
+    try {
+      res.write(`event: reload\n`);
+      res.write(`data: ${payload}\n\n`);
+    } catch (_error) {
+      liveReloadClients.delete(res);
+    }
+  });
+}
+
+function scheduleLiveReload(reason = "file-updated") {
+  clearTimeout(liveReloadDebounce);
+  liveReloadDebounce = setTimeout(() => emitLiveReload(reason), 120);
+}
+
+function startLiveReloadWatcher() {
+  if (liveReloadWatcherStarted) return;
+  liveReloadWatcherStarted = true;
+  fs.watchFile(APP_HTML_PATH, { interval: LIVE_RELOAD_WATCH_INTERVAL }, (curr, prev) => {
+    if (!curr || !prev) return;
+    if (curr.mtimeMs !== prev.mtimeMs || curr.size !== prev.size) {
+      scheduleLiveReload("html-saved");
+    }
+  });
+  ["exit", "SIGINT", "SIGTERM"].forEach((evt) => {
+    process.once(evt, () => {
+      try { fs.unwatchFile(APP_HTML_PATH); } catch (_error) { }
+    });
+  });
 }
 
 function parseJson(value, fallback) {
@@ -527,6 +572,32 @@ app.get("/QualiLab_by_ENNAJEH_v2", (_req, res) => res.sendFile(APP_HTML_PATH, { 
 app.get("/QualiLab_by_ENNAJEH_v2.html", (_req, res) => res.sendFile(APP_HTML_PATH, { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }));
 app.use(express.static(ROOT, { etag: false, lastModified: false }));
 
+app.get("/api/dev/live-reload", (req, res) => {
+  res.set({
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-store, no-cache, must-revalidate",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no"
+  });
+  if (typeof res.flushHeaders === "function") res.flushHeaders();
+  res.write(`retry: 1000\n`);
+  res.write(`data: ${JSON.stringify({ ok: true, status: "connected", version: liveReloadVersion, time: now() })}\n\n`);
+  liveReloadClients.add(res);
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(`: ping ${Date.now()}\n\n`);
+    } catch (_error) {
+      clearInterval(heartbeat);
+      liveReloadClients.delete(res);
+    }
+  }, 25000);
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    liveReloadClients.delete(res);
+    try { res.end(); } catch (_error) { }
+  });
+});
+
 app.get("/api/health", (_req, res) => {
   res.status(dbReady ? 200 : 503).json({
     ok: dbReady,
@@ -694,6 +765,8 @@ app.use("/api", (_req, res) => {
 });
 
 app.listen(PORT, HOST, () => {
+  startLiveReloadWatcher();
   console.log(`Quali by ENNAJEH backend ready on http://localhost:${PORT}`);
   lanUrls(PORT).forEach((url) => console.log(`Quali by ENNAJEH mobile access: ${url}`));
+  console.log(`Quali by ENNAJEH live reload active on http://localhost:${PORT}/api/dev/live-reload`);
 });
