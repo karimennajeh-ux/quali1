@@ -725,7 +725,11 @@
       place-items: center;
       padding: 24px;
       position: relative;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-gutter: stable both-edges;
+      scrollbar-width: auto;
+      scrollbar-color: #236bd8 #e8eef9;
       background:
         radial-gradient(circle at 18% 18%, rgba(123, 173, 255, .24), transparent 26%),
         radial-gradient(circle at 82% 16%, rgba(95, 203, 185, .16), transparent 22%),
@@ -2461,6 +2465,11 @@
       place-items: center;
       padding: 24px;
       width: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-gutter: stable both-edges;
+      scrollbar-width: auto;
+      scrollbar-color: #236bd8 #e8eef9;
       background: radial-gradient(circle at 0% 50%, rgba(132, 176, 255, .18), transparent 26%), linear-gradient(135deg, #eef3ff 0%, #ffffff 44%, #edf4ff 100%) !important
     }
 
@@ -3696,6 +3705,8 @@
     }
 
     .main::-webkit-scrollbar,
+    #intro::-webkit-scrollbar,
+    #auth::-webkit-scrollbar,
     .module-rail::-webkit-scrollbar,
     .module-content::-webkit-scrollbar,
     .hub-page::-webkit-scrollbar,
@@ -3705,6 +3716,8 @@
     }
 
     .main::-webkit-scrollbar-track,
+    #intro::-webkit-scrollbar-track,
+    #auth::-webkit-scrollbar-track,
     .module-rail::-webkit-scrollbar-track,
     .module-content::-webkit-scrollbar-track,
     .hub-page::-webkit-scrollbar-track,
@@ -3714,6 +3727,8 @@
     }
 
     .main::-webkit-scrollbar-thumb,
+    #intro::-webkit-scrollbar-thumb,
+    #auth::-webkit-scrollbar-thumb,
     .module-rail::-webkit-scrollbar-thumb,
     .module-content::-webkit-scrollbar-thumb,
     .hub-page::-webkit-scrollbar-thumb,
