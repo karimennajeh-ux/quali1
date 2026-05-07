@@ -10,3 +10,5 @@ deliverables/*.zip
 deliverables/~$*.docx
 database/word_documents/_docx_src_quali/
 database/word_documents/reports/*.zip
+server-*.log
+.tmp_doc_payload.json

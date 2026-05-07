@@ -70,6 +70,7 @@ const MODULE_ACCESS_CONFIG = [
 ];
 const PERMS = ["Ajouter", "Modifier", "Supprimer", "Valider", "Telecharger", "Importer", "Exporter", "Parametres", "Comptes"];
 const liveReloadClients = new Set();
+const documentationEventClients = new Map();
 let liveReloadVersion = Date.now();
 let liveReloadDebounce = null;
 let liveReloadWatcherStarted = false;
@@ -185,6 +186,35 @@ function emitLiveReload(reason = "file-updated") {
 function scheduleLiveReload(reason = "file-updated") {
   clearTimeout(liveReloadDebounce);
   liveReloadDebounce = setTimeout(() => emitLiveReload(reason), 120);
+}
+
+function documentationClientBucket(pilotEmail) {
+  const key = normEmail(pilotEmail);
+  if (!documentationEventClients.has(key)) documentationEventClients.set(key, new Set());
+  return documentationEventClients.get(key);
+}
+
+function emitDocumentationEvent(pilotEmail, action = "documentation-update", payload = {}) {
+  const key = normEmail(pilotEmail);
+  if (!key) return;
+  const bucket = documentationEventClients.get(key);
+  if (!bucket || !bucket.size) return;
+  const data = JSON.stringify({
+    ok: true,
+    action,
+    pilotEmail: key,
+    time: now(),
+    ...payload
+  });
+  [...bucket].forEach((res) => {
+    try {
+      res.write(`event: documentation-update\n`);
+      res.write(`data: ${data}\n\n`);
+    } catch (_error) {
+      bucket.delete(res);
+    }
+  });
+  if (!bucket.size) documentationEventClients.delete(key);
 }
 
 function startLiveReloadWatcher() {
@@ -712,6 +742,59 @@ function listDocumentationDocumentsByPilotId(pilotId) {
   `).all(pilotId).map(mapDocumentationRow);
 }
 
+function listDocumentationEventsByPilotId(pilotId, limit = 60) {
+  return db.prepare(`
+    SELECT
+      e.id,
+      e.document_id,
+      e.event_type,
+      e.event_label,
+      e.actor_name,
+      e.event_detail,
+      e.created_at,
+      d.doc_ref,
+      d.title,
+      d.process_name,
+      d.doc_type,
+      d.version_label,
+      d.status,
+      d.file_name,
+      d.abs_path,
+      d.source_url
+    FROM document_events e
+    LEFT JOIN documents d ON d.id = e.document_id
+    WHERE d.pilot_id = ?
+    ORDER BY e.created_at DESC, e.id DESC
+    LIMIT ?
+  `).all(pilotId, Math.max(1, Math.min(200, Number(limit) || 60))).map((row) => ({
+    id: row.id,
+    documentId: row.document_id,
+    eventType: row.event_type,
+    eventLabel: row.event_label,
+    actorName: row.actor_name || "",
+    eventDetail: row.event_detail || "",
+    createdAt: row.created_at,
+    ref: row.doc_ref || "",
+    title: row.title || "",
+    processName: row.process_name || "",
+    docType: row.doc_type || "",
+    versionLabel: row.version_label || "",
+    status: row.status || "",
+    fileName: row.file_name || "",
+    absPath: row.abs_path || "",
+    webUrl: row.source_url || (row.abs_path ? webPathFromAbsolute(row.abs_path) : "")
+  }));
+}
+
+function appendDocumentEvent(documentId, eventType, eventLabel, actorName, eventDetail, createdAt = now()) {
+  db.prepare(`
+    INSERT INTO document_events (
+      document_id, event_type, event_label, actor_name, event_detail, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `).run(documentId, eventType, eventLabel, actorName, eventDetail, createdAt);
+  return createdAt;
+}
+
 function decodeDataUrl(dataUrl) {
   const raw = String(dataUrl || "");
   const match = raw.match(/^data:([^;]+);base64,(.+)$/);
@@ -927,21 +1010,25 @@ function createDocumentationImport(pilot, payload = {}, actorName = "Systeme") {
     timestamp
   );
 
-  db.prepare(`
-    INSERT INTO document_events (
-      document_id, event_type, event_label, actor_name, event_detail, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?)
-  `).run(
-    documentId,
-    existing ? "update" : "create",
-    existing ? "Mise a jour du document central" : "Importation du document central",
-    actorName,
-    `${target.docRef} | ${safeName} | ${target.versionLabel}`,
-    timestamp
-  );
+  const eventType = existing ? "update" : "create";
+  const eventLabel = existing ? "Mise a jour du document central" : "Importation du document central";
+  appendDocumentEvent(documentId, eventType, eventLabel, actorName, `${target.docRef} | ${safeName} | ${target.versionLabel}`, timestamp);
 
   const row = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(documentId);
-  return mapDocumentationRow(row);
+  const mapped = mapDocumentationRow(row);
+  emitDocumentationEvent(pilot.email, "documentation-import", {
+    documentId,
+    eventType,
+    eventLabel,
+    ref: mapped.ref,
+    title: mapped.title,
+    status: mapped.status,
+    processName: mapped.processName,
+    docType: mapped.docType,
+    versionLabel: mapped.versionLabel,
+    webUrl: mapped.webUrl
+  });
+  return mapped;
 }
 
 function archiveDocumentationDocument(pilot, documentId, actorName = "Systeme") {
@@ -978,20 +1065,94 @@ function archiveDocumentationDocument(pilot, documentId, actorName = "Systeme") 
     SET status = 'Archive', rel_path = ?, abs_path = ?, source_url = ?, archived_at = ?, updated_at = ?
     WHERE id = ?
   `).run(relPath, archivedPath, webUrl, timestamp, timestamp, row.id);
-  db.prepare(`
-    INSERT INTO document_events (
-      document_id, event_type, event_label, actor_name, event_detail, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?)
-  `).run(
-    row.id,
-    "archive",
-    "Archivage du document central",
-    actorName,
-    `${row.doc_ref} | ${path.basename(archivedPath)}`,
-    timestamp
-  );
+  appendDocumentEvent(row.id, "archive", "Archivage du document central", actorName, `${row.doc_ref} | ${path.basename(archivedPath)}`, timestamp);
   const archived = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(row.id);
-  return mapDocumentationRow(archived);
+  const mapped = mapDocumentationRow(archived);
+  emitDocumentationEvent(pilot.email, "documentation-archive", {
+    documentId: row.id,
+    eventType: "archive",
+    eventLabel: "Archivage du document central",
+    ref: mapped.ref,
+    title: mapped.title,
+    status: mapped.status,
+    processName: mapped.processName,
+    docType: mapped.docType,
+    versionLabel: mapped.versionLabel,
+    webUrl: mapped.webUrl
+  });
+  return mapped;
+}
+
+function updateDocumentationDocumentStatus(pilot, documentId, nextStatus, actorName = "Systeme") {
+  const allowed = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"];
+  const status = String(nextStatus || "").trim();
+  if (!allowed.includes(status)) {
+    const error = new Error("Statut documentaire central invalide");
+    error.status = 400;
+    throw error;
+  }
+  if (status === "Archive") return archiveDocumentationDocument(pilot, documentId, actorName);
+  const row = db.prepare(`
+    SELECT *
+    FROM documents
+    WHERE pilot_id = ? AND id = ?
+  `).get(pilot.id, Number(documentId));
+  if (!row) {
+    const error = new Error("Document central introuvable");
+    error.status = 404;
+    throw error;
+  }
+  const timestamp = now();
+  db.prepare(`
+    UPDATE documents
+    SET status = ?, archived_at = NULL, updated_at = ?
+    WHERE id = ?
+  `).run(status, timestamp, row.id);
+  appendDocumentEvent(row.id, "status", "Statut documentaire mis a jour", actorName, `${row.doc_ref} -> ${status}`, timestamp);
+  const updated = mapDocumentationRow(db.prepare(`SELECT * FROM documents WHERE id = ?`).get(row.id));
+  emitDocumentationEvent(pilot.email, "documentation-status", {
+    documentId: row.id,
+    eventType: "status",
+    eventLabel: "Statut documentaire mis a jour",
+    ref: updated.ref,
+    title: updated.title,
+    status: updated.status,
+    processName: updated.processName,
+    docType: updated.docType,
+    versionLabel: updated.versionLabel,
+    webUrl: updated.webUrl
+  });
+  return updated;
+}
+
+function registerDocumentationOpen(pilot, documentId, actorName = "Systeme", mode = "read") {
+  const row = db.prepare(`
+    SELECT *
+    FROM documents
+    WHERE pilot_id = ? AND id = ?
+  `).get(pilot.id, Number(documentId));
+  if (!row) {
+    const error = new Error("Document central introuvable");
+    error.status = 404;
+    throw error;
+  }
+  const eventType = mode === "open" ? "open" : "read";
+  const eventLabel = mode === "open" ? "Ouverture du document central" : "Lecture du document central";
+  appendDocumentEvent(row.id, eventType, eventLabel, actorName, `${row.doc_ref} | ${row.file_name}`, now());
+  const mapped = mapDocumentationRow(row);
+  emitDocumentationEvent(pilot.email, "documentation-read", {
+    documentId: row.id,
+    eventType,
+    eventLabel,
+    ref: mapped.ref,
+    title: mapped.title,
+    status: mapped.status,
+    processName: mapped.processName,
+    docType: mapped.docType,
+    versionLabel: mapped.versionLabel,
+    webUrl: mapped.webUrl
+  });
+  return mapped;
 }
 
 function updateExistingPilotAccount(email, payload = {}) {
@@ -1395,6 +1556,11 @@ app.post("/api/pilots/:pilotEmail/documentation/bootstrap", (req, res) => {
     if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
     const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
     const settings = ensureDocumentationBootstrapForPilot(pilot, actorName);
+    emitDocumentationEvent(pilot.email, "documentation-bootstrap", {
+      eventLabel: "Depot documentaire initialise",
+      actorName,
+      pilotRoot: settings.pilotRoot
+    });
     res.json({ ok: true, pilot: { email: pilot.email, name: pilot.name }, settings });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Initialisation documentaire impossible" });
@@ -1408,6 +1574,11 @@ app.put("/api/pilots/:pilotEmail/documentation/settings", (req, res) => {
     const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
     const processFolders = normalizeDocProcessFolders(req.body && req.body.processFolders);
     const settings = ensureDocumentationBootstrapForPilot(pilot, actorName, { processFolders });
+    emitDocumentationEvent(pilot.email, "documentation-hierarchy", {
+      eventLabel: "Hierarchie documentaire mise a jour",
+      actorName,
+      processFolders: settings.hierarchy && settings.hierarchy.processFolders ? settings.hierarchy.processFolders : processFolders
+    });
     res.json({ ok: true, pilot: { email: pilot.email, name: pilot.name }, settings });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Mise a jour de la hierarchie impossible" });
@@ -1432,6 +1603,15 @@ app.post("/api/pilots/:pilotEmail/documentation/folders", (req, res) => {
     if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
     const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
     const item = createDocumentationFolderOnly(pilot, req.body || {}, actorName);
+    emitDocumentationEvent(pilot.email, "documentation-folder", {
+      eventLabel: "Dossier documentaire cree",
+      actorName,
+      ref: item.docRef,
+      processName: item.processName,
+      docType: item.docType,
+      versionLabel: item.versionLabel,
+      versionPath: item.versionPath
+    });
     res.status(201).json({ ok: true, item });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Creation du dossier impossible" });
@@ -1472,6 +1652,74 @@ app.post("/api/pilots/:pilotEmail/documentation/documents/:documentId/archive", 
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Archivage documentaire impossible" });
   }
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/documents/:documentId/status", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const status = String((req.body && req.body.status) || "").trim();
+    const item = updateDocumentationDocumentStatus(pilot, req.params.documentId, status, actorName);
+    res.json({ ok: true, item });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Mise a jour du statut documentaire impossible" });
+  }
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/documents/:documentId/open", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const mode = String((req.body && req.body.mode) || "read").trim() || "read";
+    const item = registerDocumentationOpen(pilot, req.params.documentId, actorName, mode);
+    res.json({ ok: true, item });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Ouverture documentaire impossible" });
+  }
+});
+
+app.get("/api/pilots/:pilotEmail/documentation/events", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const items = listDocumentationEventsByPilotId(pilot.id, req.query.limit);
+    res.json({ ok: true, items });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Lecture du journal documentaire impossible" });
+  }
+});
+
+app.get("/api/pilots/:pilotEmail/documentation/events/stream", (req, res) => {
+  const pilot = getPilotByEmail(req.params.pilotEmail);
+  if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+  res.set({
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-store, no-cache, must-revalidate",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no"
+  });
+  if (typeof res.flushHeaders === "function") res.flushHeaders();
+  res.write(`retry: 1200\n`);
+  res.write(`data: ${JSON.stringify({ ok: true, status: "connected", pilotEmail: normEmail(pilot.email), time: now() })}\n\n`);
+  const bucket = documentationClientBucket(pilot.email);
+  bucket.add(res);
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(`: ping ${Date.now()}\n\n`);
+    } catch (_error) {
+      clearInterval(heartbeat);
+      bucket.delete(res);
+      if (!bucket.size) documentationEventClients.delete(normEmail(pilot.email));
+    }
+  }, 25000);
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    bucket.delete(res);
+    if (!bucket.size) documentationEventClients.delete(normEmail(pilot.email));
+    try { res.end(); } catch (_error) { }
+  });
 });
 
 app.use("/api", (_req, res) => {
