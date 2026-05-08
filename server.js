@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const { spawn } = require("node:child_process");
 const express = require("express");
 const { DatabaseSync } = require("node:sqlite");
 
@@ -1569,8 +1570,8 @@ function registerDocumentationOpen(pilot, documentId, actorName = "Systeme", mod
     error.status = 404;
     throw error;
   }
-  const eventType = mode === "open" ? "open" : "read";
-  const eventLabel = mode === "open" ? "Ouverture du document central" : "Lecture du document central";
+  const eventType = mode === "open" ? "open" : mode === "download" ? "download" : "read";
+  const eventLabel = mode === "open" ? "Ouverture du document central" : mode === "download" ? "Telechargement du document central" : "Lecture du document central";
   appendDocumentEvent(row.id, eventType, eventLabel, actorName, `${row.doc_ref} | ${row.file_name}`, now());
   const mapped = mapDocumentationRow(row);
   emitDocumentationEvent(pilot.email, "documentation-read", {
@@ -1586,6 +1587,42 @@ function registerDocumentationOpen(pilot, documentId, actorName = "Systeme", mod
     webUrl: mapped.webUrl
   });
   return mapped;
+}
+
+function revealDocumentationDocument(pilot, documentId, actorName = "Systeme") {
+  const row = db.prepare(`
+    SELECT *
+    FROM documents
+    WHERE pilot_id = ? AND id = ?
+  `).get(pilot.id, Number(documentId));
+  if (!row) {
+    const error = new Error("Document central introuvable");
+    error.status = 404;
+    throw error;
+  }
+  const absPath = String(row.abs_path || "").trim();
+  if (!absPath || !fs.existsSync(absPath)) {
+    const error = new Error("Le fichier du document n'existe plus sur le serveur local");
+    error.status = 404;
+    throw error;
+  }
+  const mapped = mapDocumentationRow(row);
+  appendDocumentEvent(row.id, "reveal", "Ouverture de l'emplacement", actorName, `${row.doc_ref} | ${row.file_name}`, now());
+  if (process.platform === "win32") {
+    const child = spawn("explorer.exe", [`/select,${absPath}`], { detached: true, stdio: "ignore" });
+    child.unref();
+  }
+  emitDocumentationEvent(pilot.email, "documentation-reveal", {
+    documentId: row.id,
+    eventType: "reveal",
+    eventLabel: "Ouverture de l'emplacement",
+    ref: mapped.ref,
+    title: mapped.title,
+    status: mapped.status,
+    absPath: mapped.absPath,
+    webUrl: mapped.webUrl
+  });
+  return { item: mapped, folderPath: path.dirname(absPath) };
 }
 
 function updateExistingPilotAccount(email, payload = {}) {
@@ -2177,6 +2214,18 @@ app.post("/api/pilots/:pilotEmail/documentation/documents/:documentId/open", (re
     res.json({ ok: true, item });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Ouverture documentaire impossible" });
+  }
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/documents/:documentId/reveal", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const result = revealDocumentationDocument(pilot, req.params.documentId, actorName);
+    res.json({ ok: true, item: result.item, folderPath: result.folderPath });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Ouverture de l'emplacement impossible" });
   }
 });
 
