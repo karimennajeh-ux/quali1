@@ -25,6 +25,8 @@ const DOC_SERVER_DIRS = {
   logs: path.join(DOC_SERVER_ROOT, "logs")
 };
 const DEFAULT_DOC_PROCESS_FOLDERS = ["Processus_pilotage", "Processus_operationnel", "Processus_support"];
+const TOP_PYRAMID_DOC_TYPES = ["Manuel qualité", "Politique Qualité"];
+const TOP_PYRAMID_ARCHIVE_STATUSES = ["Archive"];
 const DEFAULT_DOC_HIERARCHY = {
   levels: ["process", "type", "reference", "version"],
   processFolders: DEFAULT_DOC_PROCESS_FOLDERS
@@ -140,6 +142,38 @@ function buildPilotDocumentationPaths(pilot, processFolders = DEFAULT_DOC_PROCES
     archivesRoot: path.join(DOC_SERVER_DIRS.archives, pilotFolder),
     trashRoot: path.join(DOC_SERVER_DIRS.trash, pilotFolder),
     logsRoot: path.join(DOC_SERVER_DIRS.logs, pilotFolder),
+    topDocs: TOP_PYRAMID_DOC_TYPES.map((label, index) => ({
+      folderKey: slugifySegment(label, `top_doc_${index + 1}`),
+      folderLabel: label,
+      folderRole: "top_doc",
+      absPath: path.join(pilotRoot, label),
+      relPath: relFromDocServer(path.join(pilotRoot, label)),
+      depth: 1,
+      sortOrder: 100 + index,
+      isSystem: 1,
+      branches: [
+        {
+          folderKey: slugifySegment(`${label}_document_en_vigueur`, `top_doc_current_${index + 1}`),
+          folderLabel: "document en vigueur",
+          folderRole: "top_doc_current",
+          absPath: path.join(pilotRoot, label, "document en vigueur"),
+          relPath: relFromDocServer(path.join(pilotRoot, label, "document en vigueur")),
+          depth: 2,
+          sortOrder: 1,
+          isSystem: 1
+        },
+        {
+          folderKey: slugifySegment(`${label}_document_en_archive`, `top_doc_archive_${index + 1}`),
+          folderLabel: "document en archive",
+          folderRole: "top_doc_archive",
+          absPath: path.join(pilotRoot, label, "document en archive"),
+          relPath: relFromDocServer(path.join(pilotRoot, label, "document en archive")),
+          depth: 2,
+          sortOrder: 2,
+          isSystem: 1
+        }
+      ]
+    })),
     processFolders: normalizeDocProcessFolders(processFolders).map((label, index) => ({
       folderKey: slugifySegment(label, `process_${index + 1}`),
       folderLabel: label,
@@ -700,6 +734,10 @@ function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme", opti
   const structure = buildPilotDocumentationPaths(pilot, processFolders);
   [structure.pilotRoot, structure.archivesRoot, structure.trashRoot, structure.logsRoot].forEach(ensureDir);
   structure.processFolders.forEach((folder) => ensureDir(folder.absPath));
+  structure.topDocs.forEach((folder) => {
+    ensureDir(folder.absPath);
+    (folder.branches || []).forEach((branch) => ensureDir(branch.absPath));
+  });
 
   const timestamp = now();
   db.prepare(`
@@ -779,6 +817,12 @@ function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme", opti
 
   structure.processFolders.forEach((folder) => {
     upsertDocumentationFolder(pilot.id, folder, actorName, pilotRootFolder ? pilotRootFolder.id : null);
+  });
+  structure.topDocs.forEach((folder) => {
+    const topFolder = upsertDocumentationFolder(pilot.id, folder, actorName, pilotRootFolder ? pilotRootFolder.id : null);
+    (folder.branches || []).forEach((branch) => {
+      upsertDocumentationFolder(pilot.id, branch, actorName, topFolder ? topFolder.id : null);
+    });
   });
 
   return getDocumentationSettingsByPilotId(pilot.id);
@@ -932,8 +976,15 @@ function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Sy
   const docRef = String(payload.docRef || "DOC-001").trim() || "DOC-001";
   const versionLabel = String(payload.versionLabel || "1.0").trim() || "1.0";
   const versionFolder = normalizeDocVersionFolder(versionLabel);
-  const processPath = path.join(settings.pilotRoot, processName);
-  const typePath = path.join(processPath, docType);
+  const isTopPyramidDoc = TOP_PYRAMID_DOC_TYPES.includes(docType);
+  const useArchiveBranch = TOP_PYRAMID_ARCHIVE_STATUSES.includes(String(payload.status || "").trim());
+  const topBranchLabel = useArchiveBranch ? "document en archive" : "document en vigueur";
+  const processPath = isTopPyramidDoc
+    ? path.join(settings.pilotRoot, docType)
+    : path.join(settings.pilotRoot, processName);
+  const typePath = isTopPyramidDoc
+    ? path.join(processPath, topBranchLabel)
+    : path.join(processPath, docType);
   const refPath = path.join(typePath, docRef);
   const versionPath = path.join(refPath, versionFolder);
 
@@ -941,9 +992,9 @@ function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Sy
 
   const pilotRootFolder = getFolderByPilotAndPath(pilot.id, settings.pilotRoot);
   const processFolder = upsertDocumentationFolder(pilot.id, {
-    folderKey: slugifySegment(processName, "process"),
-    folderLabel: processName,
-    folderRole: "process",
+    folderKey: slugifySegment(isTopPyramidDoc ? docType : processName, "process"),
+    folderLabel: isTopPyramidDoc ? docType : processName,
+    folderRole: isTopPyramidDoc ? "top_doc" : "process",
     absPath: processPath,
     relPath: relFromDocServer(processPath),
     depth: 1,
@@ -951,9 +1002,9 @@ function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Sy
     isSystem: 1
   }, actorName, pilotRootFolder ? pilotRootFolder.id : null);
   const typeFolder = upsertDocumentationFolder(pilot.id, {
-    folderKey: slugifySegment(docType, "type"),
-    folderLabel: docType,
-    folderRole: "type",
+    folderKey: slugifySegment(isTopPyramidDoc ? topBranchLabel : docType, "type"),
+    folderLabel: isTopPyramidDoc ? topBranchLabel : docType,
+    folderRole: isTopPyramidDoc ? (useArchiveBranch ? "top_doc_archive" : "top_doc_current") : "type",
     absPath: typePath,
     relPath: relFromDocServer(typePath),
     depth: 2,
@@ -985,6 +1036,8 @@ function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Sy
     settings,
     processName,
     docType,
+    topBranchLabel,
+    isTopPyramidDoc,
     docRef,
     versionLabel,
     versionFolder,
