@@ -968,6 +968,271 @@ function decodeDataUrl(dataUrl) {
   };
 }
 
+function mimeTypeFromFileName(fileName) {
+  const ext = String(path.extname(String(fileName || "")).toLowerCase()).replace(/^\./, "");
+  return {
+    pdf: "application/pdf",
+    doc: "application/msword",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    xls: "application/vnd.ms-excel",
+    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    csv: "text/csv",
+    txt: "text/plain",
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    gif: "image/gif",
+    bmp: "image/bmp",
+    svg: "image/svg+xml",
+    ppt: "application/vnd.ms-powerpoint",
+    pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    odt: "application/vnd.oasis.opendocument.text",
+    ods: "application/vnd.oasis.opendocument.spreadsheet",
+    odp: "application/vnd.oasis.opendocument.presentation"
+  }[ext] || "application/octet-stream";
+}
+
+function versionLabelFromFolder(folderName) {
+  const raw = String(folderName || "").trim();
+  if (!raw) return "1.0";
+  if (/^v[_-]/i.test(raw)) return raw.slice(2).replace(/_/g, ".").replace(/-/g, ".");
+  return raw.replace(/_/g, ".").replace(/-/g, ".");
+}
+
+function scannedDocRefFromName(fileName, docType) {
+  const prefixes = {
+    Procedure: "PRO",
+    Instruction: "INS",
+    Formulaire: "FOR",
+    Enregistrement: "ENR",
+    "Manuel qualité": "MQ",
+    "Politique Qualité": "POL"
+  };
+  const base = path.basename(String(fileName || ""), path.extname(String(fileName || "")))
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 24);
+  return `${prefixes[docType] || "DOC"}-${base || "001"}`;
+}
+
+function scannedTitleFromName(fileName) {
+  return path.basename(String(fileName || ""), path.extname(String(fileName || "")))
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim() || "Document";
+}
+
+function collectFilesRecursive(rootDir) {
+  const files = [];
+  if (!fs.existsSync(rootDir)) return files;
+  const stack = [rootDir];
+  while (stack.length) {
+    const current = stack.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const abs = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(abs);
+      } else if (entry.isFile()) {
+        if (entry.name.startsWith(".")) continue;
+        files.push(abs);
+      }
+    }
+  }
+  return files;
+}
+
+function ensureDocumentationFolderRowsForExistingFile(pilot, settings, absFilePath, actorName = "Systeme") {
+  const pilotRootFolder = getFolderByPilotAndPath(pilot.id, settings.pilotRoot);
+  const relDir = path.relative(settings.pilotRoot, path.dirname(absFilePath));
+  const segments = relDir.split(path.sep).filter(Boolean);
+  let currentPath = settings.pilotRoot;
+  let parentId = pilotRootFolder ? pilotRootFolder.id : null;
+  const isTopPyramid = TOP_PYRAMID_DOC_TYPES.includes(segments[0]);
+  let deepest = pilotRootFolder;
+  segments.forEach((segment, index) => {
+    currentPath = path.join(currentPath, segment);
+    const role = index === 0
+      ? (isTopPyramid ? "top_doc" : "process")
+      : index === 1
+        ? (isTopPyramid ? (segment === "document en archive" ? "top_doc_archive" : "top_doc_current") : "type")
+        : index === 2
+          ? "reference"
+          : "version";
+    deepest = upsertDocumentationFolder(pilot.id, {
+      folderKey: slugifySegment(segment, `${role}_${index + 1}`),
+      folderLabel: segment,
+      folderRole: role,
+      absPath: currentPath,
+      relPath: relFromDocServer(currentPath),
+      depth: index + 1,
+      sortOrder: index + 1,
+      isSystem: 0
+    }, actorName, parentId);
+    parentId = deepest ? deepest.id : parentId;
+  });
+  return deepest ? deepest.id : parentId;
+}
+
+function buildDocumentationScanPayload(absPath, settings) {
+  const rel = path.relative(settings.pilotRoot, absPath);
+  if (!rel || rel.startsWith("..")) return null;
+  const parts = rel.split(path.sep).filter(Boolean);
+  if (parts.length < 2) return null;
+  const fileName = parts[parts.length - 1];
+  const dirParts = parts.slice(0, -1);
+  if (!fileName) return null;
+
+  let processName = DEFAULT_DOC_PROCESS_FOLDERS[0];
+  let docType = "Procedure";
+  let status = "Brouillon";
+  let docRef = "";
+  let versionLabel = "1.0";
+
+  if (TOP_PYRAMID_DOC_TYPES.includes(dirParts[0])) {
+    docType = dirParts[0];
+    processName = "Processus pilotage";
+    status = dirParts[1] === "document en archive" ? "Archive" : "Approuve";
+    docRef = dirParts[2] || scannedDocRefFromName(fileName, docType);
+    versionLabel = versionLabelFromFolder(dirParts[3] || "v_1_0");
+  } else {
+    processName = dirParts[0] || DEFAULT_DOC_PROCESS_FOLDERS[0];
+    docType = dirParts[1] || "Procedure";
+    docRef = dirParts[2] || scannedDocRefFromName(fileName, docType);
+    versionLabel = versionLabelFromFolder(dirParts[3] || "v_1_0");
+    status = "Brouillon";
+  }
+
+  return {
+    title: scannedTitleFromName(fileName),
+    fileName,
+    processName,
+    docType,
+    docRef,
+    versionLabel,
+    status,
+    absPath
+  };
+}
+
+function registerExistingDocumentationFile(pilot, payload = {}, actorName = "Systeme") {
+  const absPath = String(payload.absPath || "").trim();
+  if (!absPath || !fs.existsSync(absPath)) return null;
+  const stat = fs.statSync(absPath);
+  const settings = getDocumentationSettingsByPilotId(pilot.id) || ensureDocumentationBootstrapForPilot(pilot, actorName);
+  const existing = db.prepare(`
+    SELECT *
+    FROM documents
+    WHERE pilot_id = ? AND abs_path = ?
+  `).get(pilot.id, absPath);
+  if (existing) return mapDocumentationRow(existing);
+
+  const folderId = ensureDocumentationFolderRowsForExistingFile(pilot, settings, absPath, actorName);
+  const relPath = relFromDocServer(absPath);
+  const webUrl = webPathFromAbsolute(absPath);
+  const timestamp = now();
+  const fileName = path.basename(absPath);
+  const fileExt = path.extname(fileName).replace(/^\./, "");
+  const mimeType = mimeTypeFromFileName(fileName);
+
+  const result = db.prepare(`
+    INSERT INTO documents (
+      pilot_id, folder_id, doc_ref, title, process_name, doc_type, version_label, status,
+      owner_name, verifier_name, approver_name, diffuser_name, file_name, file_ext, mime_type,
+      rel_path, abs_path, file_size, checksum, storage_mode, source_url, notes, archived_at, created_by, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    pilot.id,
+    folderId,
+    payload.docRef,
+    payload.title,
+    payload.processName,
+    payload.docType,
+    payload.versionLabel,
+    payload.status,
+    "",
+    "",
+    "",
+    "",
+    fileName,
+    fileExt,
+    mimeType,
+    relPath,
+    absPath,
+    stat.size,
+    "",
+    "local_server_scan",
+    webUrl,
+    "Document detecte automatiquement depuis le dossier de stockage",
+    payload.status === "Archive" ? timestamp : null,
+    actorName,
+    timestamp,
+    timestamp
+  );
+  const documentId = Number(result.lastInsertRowid);
+  db.prepare(`
+    INSERT INTO document_versions (
+      document_id, version_label, status, file_name, rel_path, abs_path, file_size, checksum, created_by, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    documentId,
+    payload.versionLabel,
+    payload.status,
+    fileName,
+    relPath,
+    absPath,
+    stat.size,
+    "",
+    actorName,
+    timestamp
+  );
+  appendDocumentEvent(documentId, "scan", "Document detecte depuis D:", actorName, `${payload.docRef} | ${fileName}`, timestamp);
+  return mapDocumentationRow(db.prepare(`SELECT * FROM documents WHERE id = ?`).get(documentId));
+}
+
+function scanDocumentationRepository(pilot, actorName = "Systeme") {
+  const settings = getDocumentationSettingsByPilotId(pilot.id) || ensureDocumentationBootstrapForPilot(pilot, actorName);
+  const files = collectFilesRecursive(settings.pilotRoot);
+  const existingPaths = new Set(
+    db.prepare(`SELECT abs_path FROM documents WHERE pilot_id = ?`).all(pilot.id).map((row) => String(row.abs_path || "").toLowerCase())
+  );
+  const added = [];
+  const skipped = [];
+  files.forEach((absPath) => {
+    const normalized = String(absPath || "").toLowerCase();
+    if (existingPaths.has(normalized)) {
+      skipped.push({ absPath, reason: "already_registered" });
+      return;
+    }
+    const payload = buildDocumentationScanPayload(absPath, settings);
+    if (!payload) {
+      skipped.push({ absPath, reason: "unsupported_path" });
+      return;
+    }
+    const item = registerExistingDocumentationFile(pilot, payload, actorName);
+    if (item) {
+      added.push(item);
+      existingPaths.add(normalized);
+    }
+  });
+  if (added.length) {
+    emitDocumentationEvent(pilot.email, "documentation-scan", {
+      eventType: "scan",
+      eventLabel: "Synchronisation documentaire depuis D:",
+      actorName,
+      addedCount: added.length
+    });
+  }
+  return {
+    scannedCount: files.length,
+    addedCount: added.length,
+    skippedCount: skipped.length,
+    added,
+    skipped
+  };
+}
+
 function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Systeme") {
   const settings = ensureDocumentationBootstrapForPilot(pilot, actorName);
   const hierarchy = settings.hierarchy || DEFAULT_DOC_HIERARCHY;
@@ -1817,6 +2082,18 @@ app.get("/api/pilots/:pilotEmail/documentation/folders", (req, res) => {
     res.json({ ok: true, items });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Lecture des dossiers impossible" });
+  }
+});
+
+app.post("/api/pilots/:pilotEmail/documentation/scan", (req, res) => {
+  try {
+    const pilot = getPilotByEmail(req.params.pilotEmail);
+    if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+    const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
+    const summary = scanDocumentationRepository(pilot, actorName);
+    res.json({ ok: true, summary, items: listDocumentationDocumentsByPilotId(pilot.id) });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Scan documentaire impossible" });
   }
 });
 
