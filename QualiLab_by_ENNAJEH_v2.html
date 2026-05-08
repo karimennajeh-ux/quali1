@@ -9894,6 +9894,7 @@
       if ($("#odCentralNotes") && !$("#odCentralNotes").value.trim()) $("#odCentralNotes").value = `Document de tete de la pyramide : ${type}`;
       if ($("#odCentralFile")) $("#odCentralFile").value = "";
       if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml();
+      docCentralState.topDocAutoImport = !!pickFile;
       const target = $("#odCentralTitle") || $("#odCentralImportBtn");
       if (target && typeof target.scrollIntoView === "function") target.scrollIntoView({ behavior: "smooth", block: "center" });
       sync(`${currentDoc ? "Mise a jour" : "Preparation"} du dossier ${type} prete.`);
@@ -10246,11 +10247,18 @@
       if ($("#odCentralRef") && !$("#odCentralRef").value.trim()) $("#odCentralRef").value = file.name.replace(/\.[^.]+$/, "").toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30) || "DOC-001";
       const box = $("#odCentralFileMeta");
       if (box) box.innerHTML = docCentralFileMetaHtml();
+      if (docCentralState.topDocAutoImport && ORG_TOP_DOC_TYPES.includes((($("#odCentralType") && $("#odCentralType").value) || "").trim())) {
+        docCentralState.topDocAutoImport = false;
+        sync("Fichier selectionne. Importation du document de tete en cours...");
+        await importDocumentationCentralFile();
+        return
+      }
       sync("Fichier pret pour l'importation vers le depot central")
     }
     async function importDocumentationCentralFile() {
       const pilotEmail = pilotEmailForApi();
       if (!pilotEmail) return;
+      docCentralState.topDocAutoImport = false;
       const file = docCentralState.selectedFile;
       if (!file) { sync("Choisis d'abord le fichier a importer dans la bibliotheque centrale"); return }
       const title = ($("#odCentralTitle") && $("#odCentralTitle").value || "").trim();
