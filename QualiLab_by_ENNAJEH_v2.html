@@ -5086,6 +5086,38 @@
       align-items: center;
     }
 
+    .auth-login-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .auth-login-actions .auth-link-btn {
+      width: 100%;
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: 16px;
+    }
+
+    .auth-login-actions #openPilotManagePanel,
+    .auth-login-actions #pwaInstallBtn {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 640px) {
+      .auth-login-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-login-actions #openPilotManagePanel,
+      .auth-login-actions #pwaInstallBtn {
+        grid-column: auto;
+      }
+    }
+
     .auth-link-btn {
       border: 1px solid #d6e2fb;
       background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(241, 246, 255, .92));
@@ -6114,7 +6146,7 @@
                       aria-pressed="false">Afficher</button></div>
                 </div>
                 <button id="lbtn" class="btn" style="font-weight: 500; font-family: var(--ui-font-stack);">Se connecter</button>
-                <div class="auth-panel-actions">
+                <div class="auth-panel-actions auth-login-actions">
                   <button id="openForgotPanel" class="auth-link-btn" type="button">Mot de passe oublie ?</button>
                   <button id="openCreatePanel" class="auth-link-btn" type="button">Creer un compte pilote</button>
                   <button id="openPilotManagePanel" class="auth-link-btn" type="button">Modifier / supprimer un compte pilote</button>
