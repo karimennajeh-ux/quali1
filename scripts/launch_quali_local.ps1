@@ -1,19 +1,10 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 
-$projectRoot = 'D:\stage prjet fin d''étude 2026\cahier de charge d''application'
+$projectRoot = Split-Path -Parent $PSScriptRoot
 $appUrl = 'http://localhost:3000/QualiLab_by_ENNAJEH_v2.html'
 $healthUrl = 'http://localhost:3000/api/health'
 $serverScript = Join-Path $projectRoot 'server.js'
-
-function Test-Port3000 {
-  try {
-    $conn = Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction Stop
-    return $conn -ne $null
-  } catch {
-    return $false
-  }
-}
 
 function Test-Health {
   try {
@@ -24,13 +15,23 @@ function Test-Health {
   }
 }
 
-if (-not (Test-Port3000) -or -not (Test-Health)) {
-  $serverCommand = "Set-Location -LiteralPath '$projectRoot'; node '$serverScript'"
+if (-not (Test-Path -LiteralPath $serverScript)) {
+  [System.Windows.Forms.MessageBox]::Show(
+    "Le fichier server.js est introuvable.`nVerifie le dossier du projet.",
+    'Quali by ENNAJEH',
+    [System.Windows.Forms.MessageBoxButtons]::OK,
+    [System.Windows.Forms.MessageBoxIcon]::Warning
+  ) | Out-Null
+  exit 1
+}
+
+if (-not (Test-Health)) {
   Start-Process -FilePath 'powershell.exe' -ArgumentList @(
     '-NoProfile',
     '-ExecutionPolicy', 'Bypass',
     '-WindowStyle', 'Hidden',
-    '-Command', $serverCommand
+    '-Command',
+    "Set-Location -LiteralPath '$projectRoot'; node '$serverScript'"
   ) -WindowStyle Hidden | Out-Null
 
   $ready = $false
