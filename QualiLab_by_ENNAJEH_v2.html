@@ -428,6 +428,22 @@
       min-height: 48px;
     }
 
+    .field-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .field-wrap label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #3f5d86
+    }
+
+    .field-wrap .req {
+      color: #d94b63
+    }
+
     .chart {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -6843,43 +6859,47 @@
           </div>
           <div id="odFolderResult" class="list mt12"></div>
         </div>
-        <div class="card">
+        <div class="card" id="odCentralImportCard">
           <h3>4. Importation vers la bibliotheque centrale</h3>
           <div class="g4">
-            <input id="odCentralTitle" placeholder="Titre du document">
-            <input id="odCentralRef" placeholder="Reference documentaire">
-            <select id="odCentralProc">
+            <div class="field-wrap"><label for="odCentralTitle">Titre du document <span class="req">*</span></label><input id="odCentralTitle" placeholder="Titre du document"></div>
+            <div class="field-wrap"><label for="odCentralRef">Reference documentaire <span class="req">*</span></label><input id="odCentralRef" placeholder="Reference documentaire"></div>
+            <div class="field-wrap"><label for="odCentralProc">Processus <span class="req">*</span></label><select id="odCentralProc">
+              <option value="">Choisir un processus</option>
               <option>Processus pilotage</option>
               <option>Processus operationnel</option>
               <option>Processus support</option>
-            </select>
-            <select id="odCentralType">
+            </select></div>
+            <div class="field-wrap"><label for="odCentralType">Type documentaire <span class="req">*</span></label><select id="odCentralType">
+              <option value="">Choisir un type</option>
               <option>Manuel qualité</option>
               <option>Politique Qualité</option>
               <option>Procedure</option>
               <option>Instruction</option>
               <option>Formulaire</option>
               <option>Enregistrement</option>
-            </select>
-            <input id="odCentralVersion" placeholder="Version : 1.0">
-            <select id="odCentralStatus">
+            </select></div>
+            <div class="field-wrap"><label for="odCentralVersion">Version <span class="req">*</span></label><input id="odCentralVersion" placeholder="Version : 1.0"></div>
+            <div class="field-wrap"><label for="odCentralStatus">Statut <span class="req">*</span></label><select id="odCentralStatus">
+              <option value="">Choisir un statut</option>
               <option>Brouillon</option>
               <option>En revue</option>
               <option>A corriger</option>
               <option>Approuve</option>
               <option>Diffuse</option>
               <option>Archive</option>
-            </select>
-            <input id="odCentralOwner" placeholder="Responsable / redacteur">
-            <input id="odCentralVerifier" placeholder="Verificateur">
-            <input id="odCentralApprover" placeholder="Approbateur">
-            <input id="odCentralDiffuser" placeholder="Diffuseur">
-            <textarea id="odCentralNotes" placeholder="Observation / note documentaire"></textarea>
-            <button class="btn2 btn" id="odCentralPickBtn" type="button">Choisir le fichier</button>
-            <button class="btn" id="odCentralImportBtn" type="button">Importer vers D:</button>
+            </select></div>
+            <div class="field-wrap"><label for="odCentralOwner">Responsable / redacteur <span class="req">*</span></label><input id="odCentralOwner" placeholder="Responsable / redacteur"></div>
+            <div class="field-wrap"><label for="odCentralVerifier">Verificateur <span class="req">*</span></label><input id="odCentralVerifier" placeholder="Verificateur"></div>
+            <div class="field-wrap"><label for="odCentralApprover">Approbateur <span class="req">*</span></label><input id="odCentralApprover" placeholder="Approbateur"></div>
+            <div class="field-wrap"><label for="odCentralDiffuser">Diffuseur <span class="req">*</span></label><input id="odCentralDiffuser" placeholder="Diffuseur"></div>
+            <div class="field-wrap" style="grid-column: span 2"><label for="odCentralNotes">Observation / note documentaire <span class="req">*</span></label><textarea id="odCentralNotes" placeholder="Observation / note documentaire"></textarea></div>
+            <div class="field-wrap"><label for="odCentralPickBtn">Fichier a importer <span class="req">*</span></label><button class="btn2 btn" id="odCentralPickBtn" type="button">Choisir le fichier</button></div>
+            <div class="field-wrap"><label for="odCentralImportBtn">Validation de l'import <span class="req">*</span></label><button class="btn" id="odCentralImportBtn" type="button">Importer vers D:</button></div>
             <input type="file" id="odCentralFile" accept=".doc,.docx,.xls,.xlsx,.pdf,.png,.jpg,.jpeg,.gif,.bmp,.svg,.ppt,.pptx,.txt,.csv,.odt,.ods,.odp" style="display:none">
           </div>
           <div id="odCentralFileMeta" class="list mt12"></div>
+          <div id="odCentralImportResult" class="list mt12"></div>
         </div>
         <div class="card">
           <h3>5. Bibliotheque documentaire centralisee</h3>
@@ -9153,7 +9173,7 @@
     let repoHandle = null, repoFilesMap = new Map(), previewUrl = "";
     let orgHandle = null, orgFilesMap = new Map(), orgPreviewUrl = "", activeOrgProc = "", orgRootName = "QUALI_Organisme", orgFiles = [], activeOrgType = "", activeOrgStatus = "";
     let orgReqFilesMap = new Map(), orgReqPreviewUrl = "", activeOrgReqDoc = "", orgDocFilesMap = new Map();
-    let docCentralState = { server: null, settings: null, folders: [], documents: [], events: [], loading: false, ready: false, error: "", syncedAt: "", selectedFile: null, selectedMeta: null, pilotEmail: "", streamConnected: false, streamStatus: "", streamLastEvent: null };
+    let docCentralState = { server: null, settings: null, folders: [], documents: [], events: [], loading: false, ready: false, error: "", syncedAt: "", selectedFile: null, selectedMeta: null, lastImportedId: "", lastImportedItem: null, editingDocumentId: "", pilotEmail: "", streamConnected: false, streamStatus: "", streamLastEvent: null };
     let docCentralEventSource = null, docCentralRefreshTimer = null, pilotRealtimeSource = null, pilotRealtimeRefreshTimer = 0;
     let currentPage = "hub", pageHistory = [], nextPageHistory = [], currentOrgTab = "general", editingDocId = "", editingEqId = "", editingNcId = "", editingAudId = "", editingRiskId = "", editingSwotId = "", editingSatId = "", editingPersonnelId = "", editingPersonnelHabId = "", editingPersonnelQualId = "", editingReclId = "", editingNcAuditRef = "", editingPrestId = "", editingAciId = "", editingRevcId = "", editingPlanId = "", editingPlanAuditId = "", editingPlanInterId = "", aciDraftLoaded = false;
     function c(v) { return JSON.parse(JSON.stringify(v)) }
@@ -9897,10 +9917,10 @@
       if ($("#odCentralNotes") && !$("#odCentralNotes").value.trim()) $("#odCentralNotes").value = `Document de tete de la pyramide : ${type}`;
       if ($("#odCentralFile")) $("#odCentralFile").value = "";
       if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml();
-      docCentralState.topDocAutoImport = !!pickFile;
-      const target = $("#odCentralTitle") || $("#odCentralImportBtn");
-      if (target && typeof target.scrollIntoView === "function") target.scrollIntoView({ behavior: "smooth", block: "center" });
-      sync(`${currentDoc ? "Mise a jour" : "Preparation"} du dossier ${type} prete.`);
+      docCentralState.topDocAutoImport = false;
+      const target = $("#odCentralImportCard") || $("#odCentralTitle") || $("#odCentralImportBtn");
+      if (target && typeof target.scrollIntoView === "function") target.scrollIntoView({ behavior: "smooth", block: "start" });
+      sync(`${currentDoc ? "Mise a jour" : "Preparation"} du dossier ${type} prete. Complete tous les champs obligatoires puis importe le fichier vers D:`);
       if (pickFile && $("#odCentralFile")) $("#odCentralFile").click()
     }
     function topDocCards() {
@@ -9964,6 +9984,11 @@
       if (!meta) return `<div class="it"><b>Aucun fichier selectionne</b><p>Choisis un fichier Word, PDF, Excel ou image a importer vers le depot central.</p></div>`;
       return `<div class="it"><b>${esc(meta.name)}</b><p>Type : ${esc(meta.label)} | Taille : ${esc(meta.size)}</p><p>Derniere modification : ${esc(meta.modified)}</p></div>`
     }
+    function docCentralImportResultHtml() {
+      const x = docCentralState.lastImportedItem;
+      if (!x) return "";
+      return `<div class="it"><b>Document enregistre avec succes</b><p><b>${esc(x.ref || "-")} - ${esc(x.title || "-")}</b></p><p>Adresse d'enregistrement sur D: <code>${esc(x.absPath || "-")}</code></p><p>Dossier application : <code>${esc(x.relPath || "-")}</code></p><div class="reader-actions"><button class="btn2 btn" type="button" data-odcentral-open="${x.id}">Ouvrir</button><button class="btn2 btn" type="button" data-odcentral-read="${x.id}">Lire</button><button class="btn2 btn" type="button" data-odcentral-detail="${x.id}">Fiche</button><button class="btn2 btn" type="button" data-odcentral-edit="${x.id}">Modifier</button><a class="btn btn" href="${esc(x.webUrl || "#")}" download="${esc(x.fileName || "document")}">Telecharger</a></div></div>`
+    }
     function docCentralRecentEvents(documentId = "", limit = 12) {
       const all = Array.isArray(docCentralState.events) ? docCentralState.events : [];
       const filtered = documentId ? all.filter(x => String(x.documentId || "") === String(documentId)) : all;
@@ -9994,7 +10019,26 @@
       return `<div class="card mt12"><h3>Lecture integree</h3><div class="it"><b>Apercu navigateur limite pour ce format</b><p>Ce type de fichier s'ouvre mieux dans son application native. Utilise les boutons ci-dessous pour l'ouvrir ou le telecharger directement depuis le depot central.</p><div class="reader-actions"><a class="btn2 btn" href="${esc(x.webUrl || "#")}" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a><a class="btn btn" href="${esc(x.webUrl || "#")}" download="${esc(x.fileName || "document")}">Telecharger</a></div></div></div>`
     }
     function docCentralDetailHtml(x, mode = "detail") {
-      return `<div class="card"><h3>${mode === "read" ? "Lecture du document central" : "Fiche du document central"}</h3><div class="it"><b>${esc(x.ref)} - ${esc(x.title)}</b><p>Processus : ${esc(x.processName || "-")} | Type : ${esc(x.docType || "-")} | Version : ${esc(x.versionLabel || "-")}</p><p>Statut : <span class="${centralDocStatusTag(x.status)}">${esc(x.status || "-")}</span> | Responsable : ${esc(x.ownerName || "-")}</p><p>Fichier : ${esc(x.fileName || "-")} | Taille : ${fmtSize(Number(x.fileSize || 0))}</p><p>Chemin D: : <code>${esc(x.absPath || "-")}</code></p><p>Lien application : <a href="${esc(x.webUrl || "#")}" target="_blank" rel="noopener">${esc(x.webUrl || "-")}</a></p><p>Observation : ${esc(x.notes || "-")}</p><div class="reader-actions"><button class="btn2 btn" type="button" data-odcentral-open="${x.id}">Ouvrir</button><button class="btn2 btn" type="button" data-odcentral-read="${x.id}">Lire dans l'application</button><button class="btn3 btn" type="button" data-odcentral-archive="${x.id}">Archiver</button></div>${centralDocWorkflowActions(x)}<div class="card mt12"><h3>Historique recent</h3><div class="list">${docCentralEventsHtml(x.id)}</div></div></div></div>${mode === "read" ? docCentralPreviewHtml(x) : ""}`
+      return `<div class="card"><h3>${mode === "read" ? "Lecture du document central" : "Fiche du document central"}</h3><div class="it"><b>${esc(x.ref)} - ${esc(x.title)}</b><p>Processus : ${esc(x.processName || "-")} | Type : ${esc(x.docType || "-")} | Version : ${esc(x.versionLabel || "-")}</p><p>Statut : <span class="${centralDocStatusTag(x.status)}">${esc(x.status || "-")}</span> | Responsable : ${esc(x.ownerName || "-")}</p><p>Fichier : ${esc(x.fileName || "-")} | Taille : ${fmtSize(Number(x.fileSize || 0))}</p><p>Chemin D: : <code>${esc(x.absPath || "-")}</code></p><p>Lien application : <a href="${esc(x.webUrl || "#")}" target="_blank" rel="noopener">${esc(x.webUrl || "-")}</a></p><p>Observation : ${esc(x.notes || "-")}</p><div class="reader-actions"><button class="btn2 btn" type="button" data-odcentral-open="${x.id}">Ouvrir</button><button class="btn2 btn" type="button" data-odcentral-read="${x.id}">Lire dans l'application</button><button class="btn2 btn" type="button" data-odcentral-edit="${x.id}">Modifier</button><a class="btn btn" href="${esc(x.webUrl || "#")}" download="${esc(x.fileName || "document")}">Telecharger</a><button class="btn3 btn" type="button" data-odcentral-archive="${x.id}">Archiver</button></div>${centralDocWorkflowActions(x)}<div class="card mt12"><h3>Historique recent</h3><div class="list">${docCentralEventsHtml(x.id)}</div></div></div></div>${mode === "read" ? docCentralPreviewHtml(x) : ""}`
+    }
+    function loadDocumentationCentralIntoForm(id) {
+      const x = (docCentralState.documents || []).find(v => String(v.id) === String(id));
+      if (!x) { sync("Document central introuvable"); return }
+      if ($("#odCentralTitle")) $("#odCentralTitle").value = x.title || "";
+      if ($("#odCentralRef")) $("#odCentralRef").value = x.ref || "";
+      if ($("#odCentralProc")) $("#odCentralProc").value = x.processName || "";
+      if ($("#odCentralType")) $("#odCentralType").value = x.docType || "";
+      if ($("#odCentralVersion")) $("#odCentralVersion").value = x.versionLabel || "";
+      if ($("#odCentralStatus")) $("#odCentralStatus").value = x.status || "";
+      if ($("#odCentralOwner")) $("#odCentralOwner").value = x.ownerName || "";
+      if ($("#odCentralVerifier")) $("#odCentralVerifier").value = x.verifierName || "";
+      if ($("#odCentralApprover")) $("#odCentralApprover").value = x.approverName || "";
+      if ($("#odCentralDiffuser")) $("#odCentralDiffuser").value = x.diffuserName || "";
+      if ($("#odCentralNotes")) $("#odCentralNotes").value = x.notes || "";
+      docCentralState.editingDocumentId = String(x.id || "");
+      const target = $("#odCentralImportCard") || $("#odCentralTitle");
+      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      sync("Le document a ete recharge dans le formulaire. Modifie les champs, choisis le nouveau fichier puis importe vers D:")
     }
     function docCentralTableRows() {
       const q = ($("#ods") && $("#ods").value || "").trim().toLowerCase();
@@ -10018,6 +10062,8 @@
         const current = el.value;
         if (id === "#odpf") {
           el.innerHTML = `<option value="all">Tous les processus</option>` + items.map(x => `<option>${esc(x)}</option>`).join("");
+        } else if (id === "#odCentralProc") {
+          el.innerHTML = `<option value="">Choisir un processus</option>` + items.map(x => `<option>${esc(x)}</option>`).join("");
         } else {
           el.innerHTML = items.map(x => `<option>${esc(x)}</option>`).join("");
         }
@@ -10178,6 +10224,9 @@
         docCentralState.folders = Array.isArray(foldersRes && foldersRes.items) ? foldersRes.items : [];
         docCentralState.documents = Array.isArray(docsRes && docsRes.items) ? docsRes.items : [];
         docCentralState.events = Array.isArray(eventsRes && eventsRes.items) ? eventsRes.items : [];
+        if (docCentralState.lastImportedId) {
+          docCentralState.lastImportedItem = docCentralState.documents.find(x => String(x.id) === String(docCentralState.lastImportedId)) || docCentralState.lastImportedItem || null;
+        }
         docCentralState.ready = true;
         docCentralState.syncedAt = now();
         fillDocumentationProcessSelectors();
@@ -10288,12 +10337,17 @@
       const docRef = ($("#odCentralRef") && $("#odCentralRef").value || "").trim();
       const processName = ($("#odCentralProc") && $("#odCentralProc").value || "").trim();
       const docType = ($("#odCentralType") && $("#odCentralType").value || "").trim();
-      const versionLabel = ($("#odCentralVersion") && $("#odCentralVersion").value || "1.0").trim() || "1.0";
-      const status = ($("#odCentralStatus") && $("#odCentralStatus").value || "Brouillon").trim() || "Brouillon";
-      if (!title || !docRef) { sync("Renseigne le titre et la reference du document a importer"); return }
+      const versionLabel = ($("#odCentralVersion") && $("#odCentralVersion").value || "").trim();
+      const status = ($("#odCentralStatus") && $("#odCentralStatus").value || "").trim();
+      const ownerName = ($("#odCentralOwner") && $("#odCentralOwner").value || "").trim();
+      const verifierName = ($("#odCentralVerifier") && $("#odCentralVerifier").value || "").trim();
+      const approverName = ($("#odCentralApprover") && $("#odCentralApprover").value || "").trim();
+      const diffuserName = ($("#odCentralDiffuser") && $("#odCentralDiffuser").value || "").trim();
+      const notes = ($("#odCentralNotes") && $("#odCentralNotes").value || "").trim();
+      if (!title || !docRef || !processName || !docType || !versionLabel || !status || !ownerName || !verifierName || !approverName || !diffuserName || !notes) { sync("Tous les champs marques par une etoile rouge sont obligatoires pour l'importation"); return }
       try {
         const dataUrl = await fileToDataUrl(file);
-        await apiDocImport(pilotEmail, {
+        const res = await apiDocImport(pilotEmail, {
           actorName: (s.u && s.u.name) || "Pilote",
           title,
           docRef,
@@ -10301,18 +10355,24 @@
           docType,
           versionLabel,
           status,
-          ownerName: ($("#odCentralOwner") && $("#odCentralOwner").value || "").trim(),
-          verifierName: ($("#odCentralVerifier") && $("#odCentralVerifier").value || "").trim(),
-          approverName: ($("#odCentralApprover") && $("#odCentralApprover").value || "").trim(),
-          diffuserName: ($("#odCentralDiffuser") && $("#odCentralDiffuser").value || "").trim(),
-          notes: ($("#odCentralNotes") && $("#odCentralNotes").value || "").trim(),
+          ownerName,
+          verifierName,
+          approverName,
+          diffuserName,
+          notes,
           fileName: file.name,
           mimeType: file.type || mimeForName(file.name) || "application/octet-stream",
           dataUrl
         });
+        docCentralState.lastImportedItem = res && res.item ? res.item : null;
+        docCentralState.lastImportedId = docCentralState.lastImportedItem ? String(docCentralState.lastImportedItem.id || "") : "";
+        docCentralState.editingDocumentId = "";
         docCentralState.selectedFile = null;
         docCentralState.selectedMeta = null;
         clearFields(["#odCentralTitle", "#odCentralRef", "#odCentralVersion", "#odCentralOwner", "#odCentralVerifier", "#odCentralApprover", "#odCentralDiffuser", "#odCentralNotes"]);
+        if ($("#odCentralProc")) $("#odCentralProc").value = "";
+        if ($("#odCentralType")) $("#odCentralType").value = "";
+        if ($("#odCentralStatus")) $("#odCentralStatus").value = "";
         if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml();
         await refreshDocumentationCentral("Document importe dans la bibliotheque centrale");
       } catch (e) {
@@ -10381,7 +10441,7 @@
     function downloadDocsTable() { if (!requirePerm("Exporter")) return; const { arr } = filteredDocs(); downloadText("liste_documents_" + stamp() + ".xls", docExportHtml(arr), "application/vnd.ms-excel;charset=utf-8"); sync("Liste des documents telechargee") }
     function docs() { const { all, arr } = filteredDocs(); $("#dc").textContent = arr.length + " document" + (arr.length > 1 ? "s" : ""); const summary = $("#dSummary"); if (summary) summary.innerHTML = all.length ? docSummary(all) : `<div class="e">Aucun document.</div>`; $("#dtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${x.ref}</td><td><b>${x.title}</b><br><small></small></td><td>${x.p}</td><td>${x.type}</td><td>${x.v}</td><td><span class="${tag(x.st)}">${x.st}</span></td><td>${storageCell(x)}</td><td>${x.o}</td><td>${esc(x.verif)}<br>${esc(x.app)}</td><td>${esc(x.review)}</td><td>${esc(x.diff)}</td></tr><tr class="doc-action-row"><td colspan="11">${docActions(x)}</td></tr>`).join("") : `<tr><td colspan="11" class="e">Aucun document.</td></tr>` }
     function orgDocActions(x) { return `<div class="doc-row-actions"><button class="btn2 btn" data-odreview="${x.id}">Verification</button><button class="btn2 btn" data-odapprove="${x.id}">Approbation</button><button class="btn2 btn" data-oddiffuse="${x.id}">Diffuser</button><button class="btn2 btn" data-odcorrect="${x.id}">Correction</button><button class="btn2 btn" data-oddetail="${x.id}">Fiche</button><button class="btn2 btn" data-odread="${x.id}">Lire</button><button class="btn3 btn" data-odarchive="${x.id}">Archiver</button><button class="btn3 btn" data-odd="${x.id}">Supprimer</button></div>` }
-    function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = $("#ods").value.trim().toLowerCase(), pf = $("#odpf").value, tf = $("#odtf").value, f = $("#odf").value, all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && (pf === "all" || x.p === pf) && (tf === "all" || x.type === tf) && (f === "all" || x.st === f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.processName, x.docType, x.status, x.fileName, x.ownerName, x.notes].join(" ").toLowerCase(); return hay.includes(q) && (pf === "all" || x.processName === pf) && (tf === "all" || x.docType === tf) && (f === "all" || x.status === f) }); $("#odc").textContent = (arr.length + centralDocs.length) + " document" + ((arr.length + centralDocs.length) > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
+    function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = $("#ods").value.trim().toLowerCase(), pf = $("#odpf").value, tf = $("#odtf").value, f = $("#odf").value, all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && (pf === "all" || x.p === pf) && (tf === "all" || x.type === tf) && (f === "all" || x.st === f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.processName, x.docType, x.status, x.fileName, x.ownerName, x.notes].join(" ").toLowerCase(); return hay.includes(q) && (pf === "all" || x.processName === pf) && (tf === "all" || x.docType === tf) && (f === "all" || x.status === f) }); $("#odc").textContent = (arr.length + centralDocs.length) + " document" + ((arr.length + centralDocs.length) > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralImportResult")) $("#odCentralImportResult").innerHTML = docCentralImportResultHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
     function eqItem(x) { return { ...x, dom: x.dom || x.domain || x.domaine || "-", n: x.n || x.designation || "-", brand: x.brand || x.b || x.marque || "-", m: x.m || x.model || x.modele || "-", sn: x.sn || x.serial || x.serie || "-", code: x.code || x.id || "-", l: x.l || x.start || x.mise || "-", st: x.st || "Valide" } }
     function filteredEq() { const q = ($("#es").value || "").trim().toLowerCase(), f = ($("#ef").value || "all"); return (s.eq || []).map(eqItem).filter(x => [x.dom, x.n, x.brand, x.m, x.sn, x.code].join(" ").toLowerCase().includes(q) && (f === "all" || x.st === f)) }
     function eqExportHtml(items) { const rows = items.map(x => `<tr><td>${esc(x.dom)}</td><td>${esc(x.n)}</td><td>${esc(x.brand)}</td><td>${esc(x.m)}</td><td>${esc(x.sn)}</td><td>${esc(x.code)}</td><td>${esc(x.l)}</td><td>${esc(x.st)}</td></tr>`).join("") || `<tr><td colspan="9">Aucun equipement.</td></tr>`; return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Liste des equipements</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>Liste des equipements</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre d'equipements :</b> ${items.length}</p><table><thead><tr><th>Domaine</th><th>Designation</th><th>Marque</th><th>Modele</th><th>N de serie</th><th>Code</th><th>Date mise en service</th><th>Statut</th></tr></thead><tbody>${rows}</tbody></table></body></html>` }
@@ -10968,7 +11028,7 @@
     function diagField(e) { const t = e.target; if (t.matches("[data-diag]")) saveDiag(t.dataset.diag, t.value); if (t.matches("[data-dnote]")) { saveDiagNote(t.dataset.dnote, t.value); render() } if (t.id === "diagPerson" || t.id === "diagDate") saveDiagMeta() }
     function act(e) { const da = e.target.closest("[data-da]"), doo = e.target.closest("[data-do]"), dd = e.target.closest("[data-dd]"), oda = e.target.closest("[data-oda]"), odo = e.target.closest("[data-odo]"), odd = e.target.closest("[data-odd]"), op = e.target.closest("[data-oproc]"), orgpick = e.target.closest("[data-orgpick]"), orgscan = e.target.closest("[data-orgscan]"), orgf = e.target.closest("[data-orgf]"), orgReqImport = e.target.closest("[data-orgreq-import]"), orgReqRead = e.target.closest("[data-orgreq-read]"), ee = e.target.closest("[data-ee]"), et = e.target.closest("[data-et]"), ed = e.target.closest("[data-ed]"), ne = e.target.closest("[data-ne]"), nt = e.target.closest("[data-nt]"), nd = e.target.closest("[data-nd]"), ae = e.target.closest("[data-ae]"), at = e.target.closest("[data-at]"), ad = e.target.closest("[data-ad]"), rt = e.target.closest("[data-rt]"), rd = e.target.closest("[data-rd]"), ud = e.target.closest("[data-ud]"), rf = e.target.closest("[data-rf]"); if ((da || oda) && !requirePerm("Valider")) return; if ((doo || odo || ee || et || ne || nt || ae || at || rt) && !requirePerm("Modifier")) return; if ((dd || odd || ed || nd || ad || rd || ud) && !requirePerm("Supprimer")) return; if (op) openProcessWindow(op.dataset.oproc); if (orgpick) { activeOrgType = orgpick.dataset.otype || activeOrgType; activeOrgStatus = orgpick.dataset.ost || activeOrgStatus; chooseOrgDir() } if (orgscan && activeOrgProc) { activeOrgType = orgscan.dataset.otype || activeOrgType; activeOrgStatus = orgscan.dataset.ost || activeOrgStatus; scanOrgProc(activeOrgProc) } if (orgf) openOrgFile(orgf.dataset.orgf); if (orgReqImport) pickReqDoc(orgReqImport.dataset.orgreqImport); if (orgReqRead) readReqDoc(orgReqRead.dataset.orgreqRead); if (da) { let x = s.docs.find(v => v.id == da.dataset.da); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Documents", x.ref + " valide"); save("Document valide"); render() } } if (doo) { let x = s.docs.find(v => v.id == doo.dataset.do); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Documents", x.ref + " obsolete"); save("Document obsolete"); render() } } if (dd) { let x = s.docs.find(v => v.id == dd.dataset.dd); if (x) { s.docs = s.docs.filter(v => v.id != dd.dataset.dd); log("Suppression", "Documents", x.ref + " supprime"); save("Document supprime"); render() } } if (oda) { let x = (s.orgDocs || []).find(v => v.id == oda.dataset.oda); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Document organisme", x.ref + " valide"); save("Document organisme valide"); render() } } if (odo) { let x = (s.orgDocs || []).find(v => v.id == odo.dataset.odo); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Document organisme", x.ref + " obsolete"); save("Document organisme obsolete"); render() } } if (odd) { let x = (s.orgDocs || []).find(v => v.id == odd.dataset.odd); if (x) { s.orgDocs = s.orgDocs.filter(v => v.id != odd.dataset.odd); log("Suppression", "Document organisme", x.ref + " supprime"); save("Document organisme supprime"); render() } } if (ee) editEq(ee.dataset.ee); if (et) { let x = s.eq.find(v => String((v.code || v.id)) == String(et.dataset.et)); if (x) { x.st = x.st === "Valide" ? "A etalonner" : x.st === "A etalonner" ? "Hors service" : "Valide"; markSaved(x); log("Mise a jour", "Equipements", (x.code || x.id) + " -> " + x.st); save("Equipement mis a jour"); render() } } if (ed) { let x = s.eq.find(v => String((v.code || v.id)) == String(ed.dataset.ed)); if (x) { s.eq = s.eq.filter(v => String((v.code || v.id)) != String(ed.dataset.ed)); if (editingEqId === String(ed.dataset.ed)) resetEqForm(); log("Suppression", "Equipements", (x.code || x.id) + " supprime"); save("Equipement supprime"); render() } } if (ne) editNc(ne.dataset.ne); if (nt) { let x = s.nc.find(v => v.ref == nt.dataset.nt); x.st = x.st === "Ouverte" ? "En cours" : "Cloturee"; markSaved(x); log("Mise a jour", "NC", x.ref + " -> " + x.st); save("NC mise a jour"); render() } if (nd) { let x = s.nc.find(v => v.ref == nd.dataset.nd); if (x) { s.nc = s.nc.filter(v => v.ref != nd.dataset.nd); log("Suppression", "NC", x.ref + " supprimee"); save("NC supprimee"); render() } } if (ae) editAud(ae.dataset.ae); if (at) { let x = s.aud.find(v => v.ref == at.dataset.at); x.st = x.st === "Planifie" ? "En cours" : "Cloture"; markSaved(x); log("Mise a jour", "Audits", x.ref + " -> " + x.st); save("Audit mis a jour"); render() } if (ad) { let x = s.aud.find(v => v.ref == ad.dataset.ad); if (x) { s.aud = s.aud.filter(v => v.ref != ad.dataset.ad); log("Suppression", "Audits", x.ref + " supprime"); save("Audit supprime"); render() } } if (rt) { let x = (s.revc || []).find(v => v.ref == rt.dataset.rt); if (x) { x.st = x.st === "A revoir" ? "En attente client" : x.st === "En attente client" ? "Approuvee" : "Approuvee"; markSaved(x); log("Mise a jour", "Liste client", x.ref + " -> " + x.st); save("Liste client mise a jour"); render() } } if (rd) { let x = (s.revc || []).find(v => v.ref == rd.dataset.rd); if (x) { s.revc = s.revc.filter(v => v.ref != rd.dataset.rd); if (editingRevcId === x.ref) resetRevcForm(); log("Suppression", "Liste client", x.ref + " supprime"); save("Liste client supprime"); render() } } if (ud) { let x = (s.usr || []).map(normalizeUserAccount).find(v => v.email == ud.dataset.ud); if (x) { if (x.pilot) { sync("Le compte pilote principal ne peut pas etre supprime depuis ce module"); return } if (authNormEmail((s.u && s.u.email) || "") === authNormEmail(x.email)) { sync("Le compte connecte ne peut pas etre supprime pendant la session"); return } s.usr = s.usr.filter(v => authNormEmail(v.email) != authNormEmail(ud.dataset.ud)); log("Suppression", "Utilisateurs", x.email + " supprime"); save("Utilisateur supprime"); render() } } if (rf) openRepoFile(rf.dataset.rf) }
     function docAct(e) { const dcycle = e.target.closest("[data-dcycle]"), ddetail = e.target.closest("[data-ddetail]"), dread = e.target.closest("[data-dread]"); if (!dcycle && !ddetail && !dread) return; if (dcycle) { if (!requirePerm("Valider")) return; const x = s.docs.find(v => v.id == dcycle.dataset.dcycle); if (x) { x.st = docNextStatus(x.st); x.history = [...(x.history || []), { t: now(), a: "Cycle -> " + x.st, u: (s.u && s.u.name) || "Utilisateur" }]; markSaved(x); log("Cycle documentaire", "Documents", x.ref + " -> " + x.st); save("Cycle documentaire mis a jour"); render() } } if (ddetail) { const x = s.docs.find(v => v.id == ddetail.dataset.ddetail), summary = $("#dSummary"); if (x && summary) summary.innerHTML = docDetail(normDoc(x)); else if (x) sync("Fiche document disponible depuis le tableau principal") } if (dread) { if (!requirePerm("Telecharger")) return; const x = s.docs.find(v => v.id == dread.dataset.dread); if (x && x.url) window.open(x.url, "_blank"); else sync("Aucun lien fichier associe a ce document") } }
-    function orgDocAct(e) { const review = e.target.closest("[data-odreview]"), approve = e.target.closest("[data-odapprove]"), diffuse = e.target.closest("[data-oddiffuse]"), correct = e.target.closest("[data-odcorrect]"), detail = e.target.closest("[data-oddetail]"), read = e.target.closest("[data-odread]"), archive = e.target.closest("[data-odarchive]"), tpl = e.target.closest("[data-odtemplate]"), edit = e.target.closest("[data-odedit]"), topPrepare = e.target.closest("[data-odtop-prepare]"), topUpload = e.target.closest("[data-odtop-upload]"), view = e.target.closest("[data-odview]"), cOpen = e.target.closest("[data-odcentral-open]"), cRead = e.target.closest("[data-odcentral-read]"), cDetail = e.target.closest("[data-odcentral-detail]"), cArchive = e.target.closest("[data-odcentral-archive]"), cStatus = e.target.closest("[data-odcentral-status]"); if (!review && !approve && !diffuse && !correct && !detail && !read && !archive && !tpl && !edit && !topPrepare && !topUpload && !view && !cOpen && !cRead && !cDetail && !cArchive && !cStatus) return; if (view) openDocTemplate(view.dataset.odview); if (edit) openDocTemplate(edit.dataset.odedit); if (topPrepare) prepareTopPyramidDocument(topPrepare.dataset.odtopPrepare, false); if (topUpload) prepareTopPyramidDocument(topUpload.dataset.odtopUpload, true); if (tpl) { $("#odty").value = tpl.dataset.odtemplate; sync("Modele selectionne : " + tpl.dataset.odtemplate) } if (review) setOrgDocStatus(review.dataset.odreview, "En revue", "Envoi pour verification"); if (approve) setOrgDocStatus(approve.dataset.odapprove, "Approuve", "Approbation"); if (diffuse) setOrgDocStatus(diffuse.dataset.oddiffuse, "Diffuse", "Diffusion"); if (correct) setOrgDocStatus(correct.dataset.odcorrect, "A corriger", "Demande de correction"); if (archive) setOrgDocStatus(archive.dataset.odarchive, "Archive", "Archivage"); if (detail) { const x = (s.orgDocs || []).find(v => v.id == detail.dataset.oddetail); if (x) setOrgSummaryContent(`<div class="card">${orgDocDetail(normDoc(x))}</div>`) } if (read) { if (!requirePerm("Telecharger")) return; const x = (s.orgDocs || []).find(v => v.id == read.dataset.odread); if (x) readOrgDocFile(x); else sync("Aucun document selectionne") } if (cOpen) openDocumentationCentralDocument(cOpen.dataset.odcentralOpen); if (cRead) readDocumentationCentralDocument(cRead.dataset.odcentralRead); if (cDetail) { const x = (docCentralState.documents || []).find(v => String(v.id) === String(cDetail.dataset.odcentralDetail)); if (x) setOrgSummaryContent(docCentralDetailHtml(x)) } if (cArchive) { archiveDocumentationCentralFile(cArchive.dataset.odcentralArchive) } if (cStatus) { updateDocumentationCentralStatus(cStatus.dataset.odcentralStatus, cStatus.dataset.odcentralNext) } }
+    function orgDocAct(e) { const review = e.target.closest("[data-odreview]"), approve = e.target.closest("[data-odapprove]"), diffuse = e.target.closest("[data-oddiffuse]"), correct = e.target.closest("[data-odcorrect]"), detail = e.target.closest("[data-oddetail]"), read = e.target.closest("[data-odread]"), archive = e.target.closest("[data-odarchive]"), tpl = e.target.closest("[data-odtemplate]"), edit = e.target.closest("[data-odedit]"), topPrepare = e.target.closest("[data-odtop-prepare]"), topUpload = e.target.closest("[data-odtop-upload]"), view = e.target.closest("[data-odview]"), cOpen = e.target.closest("[data-odcentral-open]"), cRead = e.target.closest("[data-odcentral-read]"), cDetail = e.target.closest("[data-odcentral-detail]"), cEdit = e.target.closest("[data-odcentral-edit]"), cArchive = e.target.closest("[data-odcentral-archive]"), cStatus = e.target.closest("[data-odcentral-status]"); if (!review && !approve && !diffuse && !correct && !detail && !read && !archive && !tpl && !edit && !topPrepare && !topUpload && !view && !cOpen && !cRead && !cDetail && !cEdit && !cArchive && !cStatus) return; if (view) openDocTemplate(view.dataset.odview); if (edit) openDocTemplate(edit.dataset.odedit); if (topPrepare) prepareTopPyramidDocument(topPrepare.dataset.odtopPrepare, false); if (topUpload) prepareTopPyramidDocument(topUpload.dataset.odtopUpload, false); if (tpl) { $("#odty").value = tpl.dataset.odtemplate; sync("Modele selectionne : " + tpl.dataset.odtemplate) } if (review) setOrgDocStatus(review.dataset.odreview, "En revue", "Envoi pour verification"); if (approve) setOrgDocStatus(approve.dataset.odapprove, "Approuve", "Approbation"); if (diffuse) setOrgDocStatus(diffuse.dataset.oddiffuse, "Diffuse", "Diffusion"); if (correct) setOrgDocStatus(correct.dataset.odcorrect, "A corriger", "Demande de correction"); if (archive) setOrgDocStatus(archive.dataset.odarchive, "Archive", "Archivage"); if (detail) { const x = (s.orgDocs || []).find(v => v.id == detail.dataset.oddetail); if (x) setOrgSummaryContent(`<div class="card">${orgDocDetail(normDoc(x))}</div>`) } if (read) { if (!requirePerm("Telecharger")) return; const x = (s.orgDocs || []).find(v => v.id == read.dataset.odread); if (x) readOrgDocFile(x); else sync("Aucun document selectionne") } if (cOpen) openDocumentationCentralDocument(cOpen.dataset.odcentralOpen); if (cRead) readDocumentationCentralDocument(cRead.dataset.odcentralRead); if (cDetail) { const x = (docCentralState.documents || []).find(v => String(v.id) === String(cDetail.dataset.odcentralDetail)); if (x) setOrgSummaryContent(docCentralDetailHtml(x)) } if (cEdit) loadDocumentationCentralIntoForm(cEdit.dataset.odcentralEdit); if (cArchive) { archiveDocumentationCentralFile(cArchive.dataset.odcentralArchive) } if (cStatus) { updateDocumentationCentralStatus(cStatus.dataset.odcentralStatus, cStatus.dataset.odcentralNext) } }
     function exp() { const b = new Blob([JSON.stringify(s, null, 2)], { type: "application/json" }), u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = "QUALI-export.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); sync("Export genere") }
     function imp(f) { if (!f) return; const r = new FileReader(); r.onload = () => { try { s = { ...c(D), ...JSON.parse(r.result) }; log("Importation", "Systeme", "Importation JSON"); save("Importation terminee"); render() } catch (e) { sync("Importation echouee") } }; r.readAsText(f) }
     function refreshCurrentPage() { render(); page(currentPage, true); sync("Page actualisee") }
