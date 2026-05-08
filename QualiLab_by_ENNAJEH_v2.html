@@ -6771,7 +6771,6 @@
         </div>
         <div class="card">
           <h3>Documents de tete de la pyramide <span class="mut">(optionnel)</span></h3>
-          <p class="mut">Ce bloc n'est pas obligatoire. Utilise-le seulement si l'organisme souhaite gerer le manuel qualite et la politique qualite directement dans l'application.</p>
           <div id="odTopDocs" class="s2"></div>
         </div>
         <div class="bar card" style="grid-template-columns:1.2fr auto auto auto auto auto">
@@ -9908,14 +9907,7 @@
       return ORG_TOP_DOC_TYPES.map(type => {
         const docs = topPyramidDocuments(type);
         const currentDoc = docs.find(x => x.status !== "Archive") || null;
-        const paths = topPyramidStoragePaths(type);
-        const note = currentDoc
-          ? `Document en vigueur : ${esc(currentDoc.ref || "-")} - ${esc(currentDoc.title || type)}`
-          : "Aucun document en vigueur dans ce dossier. Utilise ce bloc pour l'ajouter et l'organiser directement sur le serveur local.";
-        const usage = currentDoc
-          ? "Le document est disponible. Tu peux maintenant l'ouvrir, le lire ou consulter sa fiche."
-          : "Les actions Ouvrir, Lire et Fiche deviennent actives apres l'importation d'un document dans ce dossier.";
-        return `<div class="it template-card"><b>${type}</b><p class="template-note">${note}</p><p class="template-path">Dossier en vigueur : ${esc(paths.current)}<br>Dossier archive : ${esc(paths.archive)}</p><p class="template-note">${usage}</p><div class="reader-actions"><button class="btn2 btn" type="button" data-odtop-upload="${esc(type)}">${currentDoc ? "Ajouter / remplacer le document" : "Ajouter le document"}</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-open="${currentDoc.id}"` : "disabled"}>Ouvrir</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-read="${currentDoc.id}"` : "disabled"}>Lire</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-detail="${currentDoc.id}"` : "disabled"}>Fiche</button></div></div>`
+        return `<div class="it template-card"><b>${type}</b><div class="reader-actions"><button class="btn2 btn" type="button" data-odtop-upload="${esc(type)}">${currentDoc ? "Ajouter / remplacer le document" : "Ajouter le document"}</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-open="${currentDoc.id}"` : "disabled"}>Ouvrir</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-read="${currentDoc.id}"` : "disabled"}>Lire</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-detail="${currentDoc.id}"` : "disabled"}>Fiche</button></div></div>`
       }).join("")
     }
     function orgWorkflowCards(list) { return ORG_WORKFLOW.map(([st, label]) => `<div class="mini"><strong>${label}</strong><span class="${tag(st)}">${list.filter(x => x.st === st).length}</span></div>`).join("") }
