@@ -10247,6 +10247,12 @@
       if ($("#odCentralRef") && !$("#odCentralRef").value.trim()) $("#odCentralRef").value = file.name.replace(/\.[^.]+$/, "").toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30) || "DOC-001";
       const box = $("#odCentralFileMeta");
       if (box) box.innerHTML = docCentralFileMetaHtml();
+      if (docCentralState.manualImportPending) {
+        docCentralState.manualImportPending = false;
+        sync("Fichier selectionne. Importation vers D: en cours...");
+        await importDocumentationCentralFile();
+        return
+      }
       if (docCentralState.topDocAutoImport && ORG_TOP_DOC_TYPES.includes((($("#odCentralType") && $("#odCentralType").value) || "").trim())) {
         docCentralState.topDocAutoImport = false;
         sync("Fichier selectionne. Importation du document de tete en cours...");
@@ -10260,7 +10266,16 @@
       if (!pilotEmail) return;
       docCentralState.topDocAutoImport = false;
       const file = docCentralState.selectedFile;
-      if (!file) { sync("Choisis d'abord le fichier a importer dans la bibliotheque centrale"); return }
+      if (!file) {
+        docCentralState.manualImportPending = true;
+        sync("Choisis le fichier a importer vers D:");
+        const input = $("#odCentralFile");
+        if (input) {
+          input.value = "";
+          input.click();
+        }
+        return
+      }
       const title = ($("#odCentralTitle") && $("#odCentralTitle").value || "").trim();
       const docRef = ($("#odCentralRef") && $("#odCentralRef").value || "").trim();
       const processName = ($("#odCentralProc") && $("#odCentralProc").value || "").trim();
