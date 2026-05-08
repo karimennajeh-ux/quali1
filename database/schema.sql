@@ -144,6 +144,20 @@ CREATE TABLE IF NOT EXISTS document_events (
   FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS change_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  pilot_id INTEGER NOT NULL,
+  pilot_email TEXT NOT NULL,
+  module_key TEXT NOT NULL,
+  entity_type TEXT NOT NULL DEFAULT '',
+  entity_id TEXT NOT NULL DEFAULT '',
+  action TEXT NOT NULL,
+  payload_json TEXT NOT NULL DEFAULT '{}',
+  actor_name TEXT DEFAULT '',
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (pilot_id) REFERENCES pilots(id) ON DELETE CASCADE
+);
+
 CREATE INDEX IF NOT EXISTS idx_users_pilot_id ON users(pilot_id);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_doc_settings_pilot_id ON doc_settings(pilot_id);
@@ -154,3 +168,6 @@ CREATE INDEX IF NOT EXISTS idx_documents_folder_id ON documents(folder_id);
 CREATE INDEX IF NOT EXISTS idx_documents_doc_ref ON documents(doc_ref);
 CREATE INDEX IF NOT EXISTS idx_document_versions_document_id ON document_versions(document_id);
 CREATE INDEX IF NOT EXISTS idx_document_events_document_id ON document_events(document_id);
+CREATE INDEX IF NOT EXISTS idx_change_events_pilot_id ON change_events(pilot_id);
+CREATE INDEX IF NOT EXISTS idx_change_events_pilot_email ON change_events(pilot_email);
+CREATE INDEX IF NOT EXISTS idx_change_events_module_key ON change_events(module_key);

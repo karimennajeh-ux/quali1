@@ -71,6 +71,7 @@ const MODULE_ACCESS_CONFIG = [
 const PERMS = ["Ajouter", "Modifier", "Supprimer", "Valider", "Telecharger", "Importer", "Exporter", "Parametres", "Comptes"];
 const liveReloadClients = new Set();
 const documentationEventClients = new Map();
+const pilotEventClients = new Map();
 let liveReloadVersion = Date.now();
 let liveReloadDebounce = null;
 let liveReloadWatcherStarted = false;
@@ -194,27 +195,141 @@ function documentationClientBucket(pilotEmail) {
   return documentationEventClients.get(key);
 }
 
-function emitDocumentationEvent(pilotEmail, action = "documentation-update", payload = {}) {
+function pilotEventBucket(pilotEmail) {
   const key = normEmail(pilotEmail);
-  if (!key) return;
-  const bucket = documentationEventClients.get(key);
+  if (!pilotEventClients.has(key)) pilotEventClients.set(key, new Set());
+  return pilotEventClients.get(key);
+}
+
+function recordPilotChangeEvent(pilot, moduleKey, action, payload = {}) {
+  if (!pilot || !pilot.id) return null;
+  const event = {
+    pilotId: Number(pilot.id),
+    pilotEmail: normEmail(pilot.email),
+    moduleKey: String(moduleKey || "app").trim() || "app",
+    entityType: String(payload.entityType || "").trim(),
+    entityId: String(payload.entityId || "").trim(),
+    action: String(action || "update").trim() || "update",
+    actorName: String(payload.actorName || "").trim(),
+    createdAt: now(),
+    payload: {
+      ...payload,
+      entityType: undefined,
+      entityId: undefined,
+      actorName: undefined
+    }
+  };
+  db.prepare(`
+    INSERT INTO change_events (
+      pilot_id, pilot_email, module_key, entity_type, entity_id, action, payload_json, actor_name, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    event.pilotId,
+    event.pilotEmail,
+    event.moduleKey,
+    event.entityType,
+    event.entityId,
+    event.action,
+    JSON.stringify(event.payload || {}),
+    event.actorName,
+    event.createdAt
+  );
+  return event;
+}
+
+function emitPilotEvent(pilot, moduleKey, action = "update", payload = {}) {
+  if (!pilot || !pilot.email) return;
+  const event = recordPilotChangeEvent(pilot, moduleKey, action, payload) || {
+    pilotEmail: normEmail(pilot.email),
+    moduleKey,
+    action,
+    actorName: String(payload.actorName || "").trim(),
+    createdAt: now(),
+    payload
+  };
+  const bucket = pilotEventClients.get(normEmail(pilot.email));
   if (!bucket || !bucket.size) return;
   const data = JSON.stringify({
     ok: true,
-    action,
-    pilotEmail: key,
-    time: now(),
-    ...payload
+    pilotEmail: event.pilotEmail,
+    moduleKey: event.moduleKey,
+    action: event.action,
+    actorName: event.actorName,
+    createdAt: event.createdAt,
+    payload: event.payload || {}
   });
   [...bucket].forEach((res) => {
     try {
-      res.write(`event: documentation-update\n`);
+      res.write(`event: pilot-update\n`);
       res.write(`data: ${data}\n\n`);
     } catch (_error) {
       bucket.delete(res);
     }
   });
-  if (!bucket.size) documentationEventClients.delete(key);
+  if (!bucket.size) pilotEventClients.delete(normEmail(pilot.email));
+}
+
+function summarizeStateArray(items, keyField = "id") {
+  const arr = Array.isArray(items) ? items : [];
+  return JSON.stringify(arr.map((item) => {
+    const row = item && typeof item === "object" ? item : {};
+    return {
+      id: row[keyField] ?? row.id ?? row.ref ?? "",
+      status: row.status ?? row.st ?? "",
+      updatedAt: row.updatedAt ?? row.updated_at ?? row.savedAt ?? row.modified ?? ""
+    };
+  }));
+}
+
+function detectStateModuleChanges(prevState, nextState) {
+  const prev = prevState && typeof prevState === "object" ? prevState : {};
+  const next = nextState && typeof nextState === "object" ? nextState : {};
+  const checks = [
+    { moduleKey: "docorg", entityType: "orgDocs", summary: summarizeStateArray(prev.orgDocs), nextSummary: summarizeStateArray(next.orgDocs), count: Array.isArray(next.orgDocs) ? next.orgDocs.length : 0 },
+    { moduleKey: "plan", entityType: "planning", summary: summarizeStateArray(prev.plan), nextSummary: summarizeStateArray(next.plan), count: Array.isArray(next.plan) ? next.plan.length : 0 },
+    { moduleKey: "stat", entityType: "statistique", summary: summarizeStateArray(prev.stat), nextSummary: summarizeStateArray(next.stat), count: Array.isArray(next.stat) ? next.stat.length : 0 }
+  ];
+  return checks.filter((item) => item.summary !== item.nextSummary).map((item) => ({
+    moduleKey: item.moduleKey,
+    entityType: item.entityType,
+    count: item.count
+  }));
+}
+
+function emitDocumentationEvent(pilotEmail, action = "documentation-update", payload = {}) {
+  const key = normEmail(pilotEmail);
+  if (!key) return;
+  const bucket = documentationEventClients.get(key);
+  if (bucket && bucket.size) {
+    const data = JSON.stringify({
+      ok: true,
+      action,
+      pilotEmail: key,
+      time: now(),
+      ...payload
+    });
+    [...bucket].forEach((res) => {
+      try {
+        res.write(`event: documentation-update\n`);
+        res.write(`data: ${data}\n\n`);
+      } catch (_error) {
+        bucket.delete(res);
+      }
+    });
+    if (!bucket.size) documentationEventClients.delete(key);
+  }
+  const pilot = getPilotByEmail(key);
+  if (pilot) {
+    emitPilotEvent(pilot, "docorg", action, {
+      actorName: payload.actorName || "",
+      entityType: "documentation",
+      entityId: String(payload.documentId || payload.ref || ""),
+      eventLabel: payload.eventLabel || "",
+      processName: payload.processName || "",
+      docType: payload.docType || "",
+      versionLabel: payload.versionLabel || ""
+    });
+  }
 }
 
 function startLiveReloadWatcher() {
@@ -1534,13 +1649,68 @@ app.get("/api/pilots/:pilotEmail/state", (req, res) => {
 app.put("/api/pilots/:pilotEmail/state", (req, res) => {
   const pilot = getPilotByEmail(req.params.pilotEmail);
   if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+  const previousRow = db.prepare(`
+    SELECT state_json
+    FROM pilot_app_state
+    WHERE pilot_id = ?
+  `).get(pilot.id);
+  const previousState = parseJson(previousRow && previousRow.state_json, {});
+  const nextState = req.body && req.body.state ? req.body.state : {};
   const timestamp = now();
   db.prepare(`
     INSERT INTO pilot_app_state (pilot_id, state_json, created_at, updated_at)
     VALUES (?, ?, ?, ?)
     ON CONFLICT(pilot_id) DO UPDATE SET state_json = excluded.state_json, updated_at = excluded.updated_at
-  `).run(pilot.id, JSON.stringify(req.body && req.body.state ? req.body.state : {}), timestamp, timestamp);
+  `).run(pilot.id, JSON.stringify(nextState), timestamp, timestamp);
+  const actorName = String((req.body && req.body.actorName) || "").trim() || pilot.name || "Pilote";
+  detectStateModuleChanges(previousState, nextState).forEach((change) => {
+    emitPilotEvent(pilot, change.moduleKey, "state-sync", {
+      actorName,
+      entityType: change.entityType,
+      entityId: "",
+      source: "pilot_app_state",
+      count: change.count,
+      syncedAt: timestamp
+    });
+  });
   res.json({ ok: true, updatedAt: timestamp });
+});
+
+app.get("/api/pilots/:pilotEmail/events/stream", (req, res) => {
+  const pilot = getPilotByEmail(req.params.pilotEmail);
+  if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+  res.set({
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-store, no-cache, must-revalidate",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no"
+  });
+  if (typeof res.flushHeaders === "function") res.flushHeaders();
+  res.write(`retry: 1200\n`);
+  res.write(`event: pilot-update\n`);
+  res.write(`data: ${JSON.stringify({
+    ok: true,
+    status: "connected",
+    pilotEmail: normEmail(pilot.email),
+    time: now()
+  })}\n\n`);
+  const bucket = pilotEventBucket(pilot.email);
+  bucket.add(res);
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(`: ping ${Date.now()}\n\n`);
+    } catch (_error) {
+      clearInterval(heartbeat);
+      bucket.delete(res);
+      if (!bucket.size) pilotEventClients.delete(normEmail(pilot.email));
+    }
+  }, 25000);
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    bucket.delete(res);
+    if (!bucket.size) pilotEventClients.delete(normEmail(pilot.email));
+    try { res.end(); } catch (_error) { }
+  });
 });
 
 app.get("/api/pilots/:pilotEmail/documentation/settings", (req, res) => {

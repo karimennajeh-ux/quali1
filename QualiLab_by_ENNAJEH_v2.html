@@ -8990,7 +8990,7 @@
     let orgHandle = null, orgFilesMap = new Map(), orgPreviewUrl = "", activeOrgProc = "", orgRootName = "QUALI_Organisme", orgFiles = [], activeOrgType = "", activeOrgStatus = "";
     let orgReqFilesMap = new Map(), orgReqPreviewUrl = "", activeOrgReqDoc = "", orgDocFilesMap = new Map();
     let docCentralState = { server: null, settings: null, folders: [], documents: [], events: [], loading: false, ready: false, error: "", syncedAt: "", selectedFile: null, selectedMeta: null, pilotEmail: "", streamConnected: false, streamStatus: "", streamLastEvent: null };
-    let docCentralEventSource = null, docCentralRefreshTimer = null;
+    let docCentralEventSource = null, docCentralRefreshTimer = null, pilotRealtimeSource = null, pilotRealtimeRefreshTimer = 0;
     let currentPage = "hub", pageHistory = [], nextPageHistory = [], currentOrgTab = "general", editingDocId = "", editingEqId = "", editingNcId = "", editingAudId = "", editingRiskId = "", editingSwotId = "", editingSatId = "", editingPersonnelId = "", editingPersonnelHabId = "", editingPersonnelQualId = "", editingReclId = "", editingNcAuditRef = "", editingPrestId = "", editingAciId = "", editingRevcId = "", editingPlanId = "", editingPlanAuditId = "", editingPlanInterId = "", aciDraftLoaded = false;
     function c(v) { return JSON.parse(JSON.stringify(v)) }
     function ss(k, v) { try { localStorage.setItem(k, v) } catch (e) { M[k] = v; sync("Session locale sans stockage") } }
@@ -9091,7 +9091,14 @@
       return data && data.state && typeof data.state === "object" ? data.state : null
     }
     async function apiSavePilotState(pilotEmail, state) {
-      return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/state", { method: "PUT", body: { state } })
+      return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/state", {
+        method: "PUT",
+        body: {
+          state,
+          actorName: (s.u && s.u.name) || "Utilisateur",
+          currentPage
+        }
+      })
     }
     async function apiDocServerInfo() {
       return apiRequest("/documentation/server")
@@ -9290,7 +9297,7 @@
     async function verifyHandle(h, w) { if (!h) return false; const o = { mode: w ? "readwrite" : "read" }; if ((await h.queryPermission(o)) === "granted") return true; return (await h.requestPermission(o)) === "granted" }
     function tag(v) { return ["Valide", "Approuve", "Diffuse", "Cloture", "Cloturee"].includes(v) ? "ok" : ["Brouillon", "En revue", "A corriger", "A valider", "A etalonner", "En cours", "Planifie", "Majeure"].includes(v) ? "wa" : ["Obsolete", "Archive", "Hors service", "Ouverte", "Critique"].includes(v) ? "er" : "bl" }
     function log(a, m, x) { ensureTrailWeek(); const u = s.u || {}; s.trail.unshift({ t: now(), u: u.name || "Utilisateur", email: u.email || "", role: u.role || "", a, m, x }); s.trail = s.trail.slice(0, 500) }
-    function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); page(canViewModule("hub") ? "hub" : "db", true); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
+    function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); page(canViewModule("hub") ? "hub" : "db", true); connectPilotRealtimeStream(pilotEmailForApi()); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
     function pilotAccount() { return normalizeUserAccount({ name: "Pilote QUALI", firstName: "Pilote", lastName: "QUALI", email: MAIN_PILOT_EMAIL, role: "Administrateur", dept: "Pilotage application", func: "Pilote de l'application", matricule: "PILOT-001", ini: "PQ", perms: [...PERMS], moduleAccess: fullModuleAccess(), passwordHint: "Mot de passe pilote : " + MAIN_PILOT_PASSWORD, pilot: true, status: "Actif", accountType: "Pilote" }) }
     function pilotAccounts() { const fallback = [mainPilotRegistryAccount()]; const raw = sg(ACCK); if (!raw) return fallback; try { const parsed = JSON.parse(raw); return Array.isArray(parsed) && parsed.length ? parsed : fallback } catch (e) { return fallback } }
     function savePilotAccounts(arr) { ss(ACCK, JSON.stringify(arr)) }
@@ -9495,7 +9502,7 @@
     function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"), acc = findPilotAccount(email); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; }
     async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); const i = accounts.findIndex(x => authNormEmail(x.email) === authNormEmail(email)); if (i < 0) { msg.textContent = "Compte pilote introuvable."; return } accounts[i] = { ...accounts[i], password: pw }; savePilotAccounts(accounts); if (await apiHealth()) await ensureRemotePilotAccount(accounts[i]); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; }
     async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value; try { if (await apiHealth()) { try { const remote = await apiLogin(e, p); if (remote && remote.ok && remote.pilot && remote.user) { loadPilotApp(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); if (remote.type === "pilot") { s.u = normalizeUserAccount(remote.user); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })); await syncUsersFromApi(); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } await syncUsersFromApi(); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } } catch (apiErr) { console.error(apiErr) } } if (isPilotLogin(e, p)) { const acc = loadPilotApp(e); if (!acc) throw new Error("Compte pilote introuvable"); await ensureRemotePilotAccount(acc); await loadPilotStateFromApi(acc.email); ss(S, JSON.stringify({ email: acc.email, pilotEmail: acc.email, type: "pilot" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } const found = findUserLogin(e, p); if (!found) { $("#lmsg").textContent = "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h"); return } loadPilotApp(found.pilot.email); await ensureRemotePilotAccount(found.pilot); await loadPilotStateFromApi(found.pilot.email); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(found.user.email)); if (!current) throw new Error("Compte utilisateur introuvable dans la base du pilote"); s.u = normalizeUserAccount(current); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: found.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp() } catch (err) { console.error(err); $("#lmsg").textContent = "Erreur de connexion. Verifie l'application puis recommence."; sr(S); $("#auth").classList.remove("h"); $("#app").classList.add("h") } }
-    function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); disconnectDocumentationCentralStream(); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
+    function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); disconnectPilotRealtimeStream(); disconnectDocumentationCentralStream(); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
     const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestataire externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, stat: { cls: "module-stat", title: "Statistique", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
     function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card module-org-compact"><div class="module-org-line"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-line"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-line"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-line"><strong>Adresse</strong><p>${esc(addr)}</p></div></div></div>` }
     function buildModuleRail(id) { const meta = moduleRailMeta[id]; if (!meta) return null; const rail = document.createElement("aside"); rail.className = "module-rail"; rail.innerHTML = `<div class="module-rail-logo"><img src="image/logo/SVG/Asset 5.svg" alt="QUALI"></div><div class="module-rail-head"><b>${esc(meta.title)}</b><span>${esc(meta.tag)}</span></div>${moduleOrgRailHtml()}`; return rail }
@@ -9828,6 +9835,74 @@
       docCentralState.streamConnected = false;
       docCentralState.streamStatus = "Temps reel arrete";
     }
+    function disconnectPilotRealtimeStream() {
+      clearTimeout(pilotRealtimeRefreshTimer);
+      if (pilotRealtimeSource) {
+        try { pilotRealtimeSource.close() } catch (e) { }
+        pilotRealtimeSource = null;
+      }
+      docCentralState.streamConnected = false;
+      if (!docCentralState.streamStatus || docCentralState.streamStatus.includes("temps reel")) docCentralState.streamStatus = "Temps reel arrete";
+    }
+    function realtimeModuleLabel(moduleKey) {
+      return ({ docorg: "Documentation", plan: "Planning", stat: "Statistique" })[moduleKey] || "donnees"
+    }
+    function schedulePilotRealtimeRefresh(moduleKey, action, payload) {
+      clearTimeout(pilotRealtimeRefreshTimer);
+      pilotRealtimeRefreshTimer = setTimeout(async () => {
+        const pilotEmail = pilotEmailForApi();
+        if (!pilotEmail) return;
+        const isDocumentationEvent = moduleKey === "docorg" && String((payload && payload.source) || "") !== "pilot_app_state";
+        try {
+          if (isDocumentationEvent) {
+            docCentralState.streamLastEvent = { action, ...(payload || {}) };
+            await refreshDocumentationCentral((payload && payload.eventLabel) || "Mise a jour documentaire recue");
+          } else {
+            await loadPilotStateFromApi(pilotEmail);
+            render();
+            const label = realtimeModuleLabel(moduleKey);
+            sync((currentPage === moduleKey ? "Mise a jour temps reel appliquee : " : "Mise a jour temps reel recue : ") + label);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }, 220);
+    }
+    function connectPilotRealtimeStream(pilotEmail) {
+      if (!pilotEmail || typeof EventSource === "undefined" || location.protocol === "file:") return;
+      const target = authNormEmail(pilotEmail);
+      if (pilotRealtimeSource && currentPilotEmail === target) return;
+      disconnectPilotRealtimeStream();
+      try {
+        pilotRealtimeSource = new EventSource("/api/pilots/" + encodeURIComponent(target) + "/events/stream");
+        docCentralState.streamStatus = "Connexion temps reel globale...";
+        pilotRealtimeSource.addEventListener("pilot-update", ev => {
+          let data = null;
+          try { data = JSON.parse(ev.data || "{}") } catch (e) { data = null }
+          if (!data) return;
+          docCentralState.streamConnected = true;
+          if (data.status === "connected") {
+            docCentralState.streamStatus = "Canal temps reel global connecte";
+            render();
+            return;
+          }
+          const moduleKey = String(data.moduleKey || "").trim();
+          if (!["docorg", "plan", "stat"].includes(moduleKey)) return;
+          docCentralState.streamStatus = "Evenement temps reel recu";
+          if (moduleKey === "docorg") docCentralState.streamLastEvent = { action: data.action, ...(data.payload || {}) };
+          schedulePilotRealtimeRefresh(moduleKey, data.action, data.payload || {});
+        });
+        pilotRealtimeSource.onerror = () => {
+          docCentralState.streamConnected = false;
+          docCentralState.streamStatus = "Connexion temps reel interrompue";
+          render();
+        };
+      } catch (e) {
+        console.error(e);
+        docCentralState.streamConnected = false;
+        docCentralState.streamStatus = "Temps reel indisponible";
+      }
+    }
     function scheduleDocumentationCentralRefresh(notice) {
       clearTimeout(docCentralRefreshTimer);
       docCentralRefreshTimer = setTimeout(() => refreshDocumentationCentral(notice), 260);
@@ -9899,7 +9974,6 @@
         docCentralState.ready = true;
         docCentralState.syncedAt = now();
         fillDocumentationProcessSelectors();
-        connectDocumentationCentralStream(pilotEmail);
         render();
         if (notice) sync(notice);
         return true
