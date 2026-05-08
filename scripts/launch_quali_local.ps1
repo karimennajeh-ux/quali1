@@ -5,6 +5,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $appUrl = 'http://localhost:3000/QualiLab_by_ENNAJEH_v2.html'
 $healthUrl = 'http://localhost:3000/api/health'
 $serverScript = Join-Path $projectRoot 'server.js'
+$nodeExe = (Get-Command node -ErrorAction SilentlyContinue).Source
 
 function Test-Health {
   try {
@@ -25,14 +26,18 @@ if (-not (Test-Path -LiteralPath $serverScript)) {
   exit 1
 }
 
+if (-not $nodeExe -or -not (Test-Path -LiteralPath $nodeExe)) {
+  [System.Windows.Forms.MessageBox]::Show(
+    "Node.js est introuvable sur ce PC.`nVerifie l'installation de Node.js.",
+    'Quali by ENNAJEH',
+    [System.Windows.Forms.MessageBoxButtons]::OK,
+    [System.Windows.Forms.MessageBoxIcon]::Warning
+  ) | Out-Null
+  exit 1
+}
+
 if (-not (Test-Health)) {
-  Start-Process -FilePath 'powershell.exe' -ArgumentList @(
-    '-NoProfile',
-    '-ExecutionPolicy', 'Bypass',
-    '-WindowStyle', 'Hidden',
-    '-Command',
-    "Set-Location -LiteralPath '$projectRoot'; node '$serverScript'"
-  ) -WindowStyle Hidden | Out-Null
+  Start-Process -FilePath $nodeExe -ArgumentList @($serverScript) -WorkingDirectory $projectRoot -WindowStyle Hidden | Out-Null
 
   $ready = $false
   for ($i = 0; $i -lt 40; $i++) {
