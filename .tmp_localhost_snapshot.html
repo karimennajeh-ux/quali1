@@ -428,22 +428,6 @@
       min-height: 48px;
     }
 
-    .field-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 6px
-    }
-
-    .field-wrap label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #3f5d86
-    }
-
-    .field-wrap .req {
-      color: #d94b63
-    }
-
     .chart {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -1655,29 +1639,13 @@
       background: #fbfcff
     }
 
-    .template-card .template-note {
-      margin: 6px 0 2px;
-      color: #5e7196;
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .template-card .template-path {
-      margin: 2px 0 0;
-      color: #7c8ea9;
-      font-size: 11px;
-      line-height: 1.45;
-      word-break: break-word;
-    }
-
     .template-card .reader-actions {
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 6px;
     }
 
     .template-card .reader-actions .btn {
-      flex: 1 1 150px;
-      width: auto;
+      width: calc((100% - 12px)/3);
       min-width: 0;
       min-height: 34px;
       display: inline-flex;
@@ -3291,19 +3259,6 @@
       overflow: hidden
     }
 
-    .module-rail:after {
-      content: "";
-      position: absolute;
-      inset: -18% auto auto -32%;
-      width: 78%;
-      height: 46%;
-      background: linear-gradient(110deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .42), rgba(255, 255, 255, 0));
-      transform: rotate(10deg);
-      opacity: .7;
-      pointer-events: none;
-      animation: moduleRailSheen 6.8s ease-in-out infinite;
-    }
-
     .app:not(.hub-mode) .main {
       height: 100vh;
       min-height: 0;
@@ -3325,7 +3280,7 @@
     }
 
     .module-rail:before {
-      content: "*";
+      content: "✦";
       position: absolute;
       right: 18px;
       bottom: 16px;
@@ -3352,9 +3307,7 @@
       padding: 16px;
       border-radius: 22px;
       background: rgba(255, 255, 255, .96);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 10px 24px rgba(20, 36, 79, .14);
-      transform-origin: center;
-      transition: transform .32s ease, box-shadow .32s ease, background .32s ease;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 10px 24px rgba(20, 36, 79, .14)
     }
 
     .module-rail-logo img {
@@ -3362,9 +3315,7 @@
       max-width: 100%;
       height: auto;
       object-fit: contain;
-      object-position: center center;
-      filter: drop-shadow(0 10px 18px rgba(61, 144, 226, .12));
-      transition: transform .34s ease, filter .34s ease;
+      object-position: center center
     }
 
     .module-rail-head b {
@@ -3391,9 +3342,7 @@
       border-radius: 18px;
       background: rgba(255, 255, 255, .52);
       border: 1px solid rgba(255, 255, 255, .66);
-      backdrop-filter: blur(6px);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .62), 0 10px 24px rgba(52, 99, 164, .10);
-      transition: transform .32s ease, box-shadow .32s ease, background .32s ease, border-color .32s ease;
+      backdrop-filter: blur(6px)
     }
 
     .module-org-card strong {
@@ -3420,7 +3369,6 @@
       gap: 4px;
       padding-bottom: 8px;
       border-bottom: 1px solid rgba(36, 92, 149, .12);
-      transition: transform .28s ease, opacity .28s ease, border-color .28s ease;
     }
 
     .module-org-line:last-child {
@@ -3439,28 +3387,6 @@
       font-size: 12px;
       line-height: 1.5;
       word-break: break-word;
-    }
-
-    .module-rail:hover .module-rail-logo {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 16px 30px rgba(20, 36, 79, .18);
-      background: rgba(255, 255, 255, .99);
-    }
-
-    .module-rail:hover .module-rail-logo img {
-      transform: scale(1.03);
-      filter: drop-shadow(0 14px 22px rgba(61, 144, 226, .18));
-    }
-
-    .module-rail:hover .module-org-card {
-      transform: translateY(-2px);
-      background: rgba(255, 255, 255, .60);
-      border-color: rgba(255, 255, 255, .84);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .74), 0 16px 30px rgba(52, 99, 164, .14);
-    }
-
-    .module-rail:hover .module-org-line {
-      border-color: rgba(36, 92, 149, .18);
     }
 
     .module-content {
@@ -3701,64 +3627,6 @@
       }
     }
 
-    @keyframes moduleRailSheen {
-      0%,
-      100% {
-        transform: translate3d(-18%, 0, 0) rotate(10deg);
-        opacity: .18;
-      }
-
-      48% {
-        opacity: .42;
-      }
-
-      62% {
-        transform: translate3d(108%, 18%, 0) rotate(10deg);
-        opacity: .08;
-      }
-    }
-
-    @keyframes moduleRailLogoFloat {
-      0% {
-        opacity: 0;
-        transform: translateY(14px) scale(.94);
-      }
-
-      65% {
-        opacity: 1;
-        transform: translateY(-3px) scale(1.018);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes moduleRailCardRise {
-      0% {
-        opacity: 0;
-        transform: translateY(18px) scale(.97);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes moduleRailLineReveal {
-      0% {
-        opacity: 0;
-        transform: translateX(-8px);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
     @keyframes modulePremiumFloatGlow {
       0%,
       100% {
@@ -3783,30 +3651,6 @@
 
     .module-shell.module-live .module-rail {
       animation: modulePremiumRail .52s cubic-bezier(.2, .8, .2, 1) both
-    }
-
-    .module-shell.module-live .module-rail-logo {
-      animation: moduleRailLogoFloat .86s cubic-bezier(.2, .8, .2, 1) both
-    }
-
-    .module-shell.module-live .module-org-card {
-      animation: moduleRailCardRise .74s cubic-bezier(.2, .8, .2, 1) both .06s
-    }
-
-    .module-shell.module-live .module-org-line:nth-child(1) {
-      animation: moduleRailLineReveal .5s ease both .16s
-    }
-
-    .module-shell.module-live .module-org-line:nth-child(2) {
-      animation: moduleRailLineReveal .5s ease both .24s
-    }
-
-    .module-shell.module-live .module-org-line:nth-child(3) {
-      animation: moduleRailLineReveal .5s ease both .32s
-    }
-
-    .module-shell.module-live .module-org-line:nth-child(4) {
-      animation: moduleRailLineReveal .5s ease both .40s
     }
 
     .module-shell.module-live .module-content>* {
@@ -5113,41 +4957,8 @@
     .auth-panel-actions {
       display: flex;
       flex-wrap: wrap;
-      column-gap: 16px;
-      row-gap: 12px;
+      gap: 10px;
       align-items: center;
-    }
-
-    .auth-login-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      align-items: stretch;
-    }
-
-    .auth-login-actions .auth-link-btn {
-      width: 100%;
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding-inline: 16px;
-    }
-
-    .auth-login-actions #openPilotManagePanel,
-    .auth-login-actions #pwaInstallBtn {
-      grid-column: 1 / -1;
-    }
-
-    @media (max-width: 640px) {
-      .auth-login-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .auth-login-actions #openPilotManagePanel,
-      .auth-login-actions #pwaInstallBtn {
-        grid-column: auto;
-      }
     }
 
     .auth-link-btn {
@@ -6137,21 +5948,25 @@
   <div id="intro">
     <div class="intro-shell">
       <div class="intro-card">
+        <div class="intro-badge">Plateforme qualite digitale</div>
         <div class="intro-logo-wrap">
           <img src="image/logo/SVG/Asset 5.svg" alt="QUALI by ENNAJEH" class="intro-logo">
         </div>
         <h1>QUALI by ENNAJEH</h1>
+        <p>Centralise les modules qualite, les documents, les indicateurs et la tracabilite du laboratoire dans une experience claire et professionnelle.</p>
         <button id="introContinueBtn" class="intro-continue" type="button"><span>Continuer</span></button>
+        <div class="intro-note">Acces a la page de connexion securisee</div>
       </div>
     </div>
   </div>
 
   <div id="auth" class="auth h">
     <div class="authshell">
-      <div class="auth-ico left1">*</div>
-      <div class="auth-ico left2">+</div>
-      <div class="auth-ico right2">/</div>
-      <div class="auth-ico right1">#</div>
+      <div class="auth-ico left1">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°</div>
+      <div class="auth-ico left2">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢</div>
+      <div class="auth-ico right2">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â°ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¹
+      </div>
+      <div class="auth-ico right1">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£</div>
       <div class="authleft">
         <div class="authpanel">
           <img src="assets/quali-logo.png" alt="QUALI" class="brand-logo brand-logo-auth">
@@ -6161,11 +5976,19 @@
       <div class="authright">
         <div class="authright-inner">
           <div class="authbox">
+            <div class="auth-premium-badge">Acces securise � Temps reel � Multi-ecrans</div>
             <div class="auth-hero-row">
               <div class="auth-title-copy">
                 <img src="image/logo/SVG/Asset 6.svg" alt="QUALI" class="brand-logo brand-logo-auth"
                   style="width:88px; height:auto; margin-bottom:18px;">
+                <span class="auth-kicker">Plateforme qualite centralisee</span>
                 <h2>Bienvenue sur QUALI</h2>
+                <p>Connecte-toi a ton espace pour suivre les documents, les workflows qualite et les actions en temps reel depuis un seul environnement maitrise.</p>
+              </div>
+              <div class="auth-signal-strip">
+                <div class="auth-signal"><b>100%</b><span>Acces pilote et utilisateurs controles</span></div>
+                <div class="auth-signal"><b>24/7</b><span>Donnees centralisees sur le serveur local</span></div>
+                <div class="auth-signal"><b>Live</b><span>Mises a jour visibles sur le reseau interne</span></div>
               </div>
             </div>
             <div id="authLoginPanel">
@@ -6178,13 +6001,18 @@
                       aria-pressed="false">Afficher</button></div>
                 </div>
                 <button id="lbtn" class="btn" style="font-weight: 500; font-family: var(--ui-font-stack);">Se connecter</button>
-                <div class="auth-panel-actions auth-login-actions">
+                <div class="auth-panel-actions">
                   <button id="openForgotPanel" class="auth-link-btn" type="button">Mot de passe oublie ?</button>
                   <button id="openCreatePanel" class="auth-link-btn" type="button">Creer un compte pilote</button>
                   <button id="openPilotManagePanel" class="auth-link-btn" type="button">Modifier / supprimer un compte pilote</button>
                   <button id="pwaInstallBtn" class="auth-link-btn h" type="button">Installer l'application</button>
                 </div>
                 <p id="lmsg" class="mut auth-status">Connexion locale prete.</p>
+              </div>
+              <div class="auth-benefits">
+                <div class="auth-benefit"><b>Connexion securisee</b><span>Acces pilote et comptes utilisateurs avec controle des droits.</span></div>
+                <div class="auth-benefit"><b>Bibliotheque centralisee</b><span>Documents, statuts et historique relies au serveur documentaire local.</span></div>
+                <div class="auth-benefit"><b>Experience fluide</b><span>Compatible PC, tablette et telephone sur le meme reseau interne.</span></div>
               </div>
             </div>
             <div id="authCreatePanel" class="auth-panel h">
@@ -6373,30 +6201,30 @@
       <div class="nav" id="nav">
         <button class="on" data-p="hub"><span class="menu-ico">Q</span><span class="menu-label">Modules</span></button>
         <button data-p="db"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â </span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â </span><span
             class="menu-label">Tableau de bord</span></button>
         <button data-p="docs"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾</span><span
             class="menu-label">Maitrise documentaire</span></button>
         <button data-p="revc"><span class="menu-ico">LC</span><span class="menu-label">Liste client</span></button>
         <button data-p="eq"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª</span><span
             class="menu-label">Gestion des equipements</span></button>
         <button data-p="nc"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
             class="menu-label">Non-conformites</span></button>
         <button data-p="aud"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¹</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¹</span><span
             class="menu-label">Audits</span></button>
         <button data-p="usr"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¹Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¤</span><span
             class="menu-label">Utilisateurs</span></button>
         <button data-p="disc"><span class="menu-ico">DI</span><span class="menu-label">Discussion</span></button>
         <button data-p="set"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
             class="menu-label">Parametres</span></button>
         <button data-p="diag"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â </span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â </span><span
             class="menu-label">Diagnostic ISO 17025</span></button>
         <button data-p="risk"><span class="menu-ico">AR</span><span class="menu-label">Analyse de risque</span></button>
         <button data-p="swot"><span class="menu-ico">SW</span><span class="menu-label">Analyse SWOT</span></button>
@@ -6409,10 +6237,10 @@
         <button data-p="plan"><span class="menu-ico">PL</span><span class="menu-label">Planning</span></button>
         <button data-p="stat"><span class="menu-ico">ST</span><span class="menu-label">Statistique</span></button>
         <button data-p="repo"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
             class="menu-label">Dossier principal</span></button>
         <button data-p="docorg"><span
-            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
+            class="menu-ico">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â</span><span
             class="menu-label">Documentation</span></button>
       </div>
       <div class="userbox"><b id="uname">Utilisateur</b>
@@ -6683,8 +6511,8 @@
           </select>
           <select id="dtf">
             <option value="all">Tous les types</option>
-            <option>Manuel qualité</option>
-            <option>Politique Qualité</option>
+            <option>Manuel qualite</option>
+            <option>Politique qualite</option>
             <option>Procedure</option>
             <option>Instruction</option>
             <option>Formulaire</option>
@@ -6708,8 +6536,8 @@
               <option>Processus operationnel</option>
               <option>Processus support</option>
             </select><select id="dty">
-              <option>Manuel qualité</option>
-              <option>Politique Qualité</option>
+              <option>Manuel qualite</option>
+              <option>Politique qualite</option>
               <option>Procedure</option>
               <option>Instruction</option>
               <option>Formulaire</option>
@@ -6799,8 +6627,6 @@
           </select>
           <select id="odtf">
             <option value="all">Tous les types</option>
-            <option>Manuel qualité</option>
-            <option>Politique Qualité</option>
             <option>Procedure</option>
             <option>Instruction</option>
             <option>Formulaire</option>
@@ -6823,7 +6649,6 @@
           <div id="odServerInfo" class="list"></div>
           <div class="reader-actions">
             <button class="btn2 btn" id="odServerRefresh" type="button">Actualiser le depot</button>
-            <button class="btn2 btn" id="odServerScan" type="button">Scanner les dossiers sur D:</button>
             <button class="btn" id="odServerBootstrap" type="button">Initialiser les dossiers sur D:</button>
           </div>
         </div>
@@ -6846,8 +6671,6 @@
               <option>Processus support</option>
             </select>
             <select id="odcfType">
-              <option>Manuel qualité</option>
-              <option>Politique Qualité</option>
               <option>Procedure</option>
               <option>Instruction</option>
               <option>Formulaire</option>
@@ -6859,47 +6682,41 @@
           </div>
           <div id="odFolderResult" class="list mt12"></div>
         </div>
-        <div class="card" id="odCentralImportCard">
+        <div class="card">
           <h3>4. Importation vers la bibliotheque centrale</h3>
           <div class="g4">
-            <div class="field-wrap"><label for="odCentralTitle">Titre du document <span class="req">*</span></label><input id="odCentralTitle" placeholder="Titre du document"></div>
-            <div class="field-wrap"><label for="odCentralRef">Reference documentaire <span class="req">*</span></label><input id="odCentralRef" placeholder="Reference documentaire"></div>
-            <div class="field-wrap"><label for="odCentralProc">Processus <span class="req">*</span></label><select id="odCentralProc">
-              <option value="">Choisir un processus</option>
+            <input id="odCentralTitle" placeholder="Titre du document">
+            <input id="odCentralRef" placeholder="Reference documentaire">
+            <select id="odCentralProc">
               <option>Processus pilotage</option>
               <option>Processus operationnel</option>
               <option>Processus support</option>
-            </select></div>
-            <div class="field-wrap"><label for="odCentralType">Type documentaire <span class="req">*</span></label><select id="odCentralType">
-              <option value="">Choisir un type</option>
-              <option>Manuel qualité</option>
-              <option>Politique Qualité</option>
+            </select>
+            <select id="odCentralType">
               <option>Procedure</option>
               <option>Instruction</option>
               <option>Formulaire</option>
               <option>Enregistrement</option>
-            </select></div>
-            <div class="field-wrap"><label for="odCentralVersion">Version <span class="req">*</span></label><input id="odCentralVersion" placeholder="Version : 1.0"></div>
-            <div class="field-wrap"><label for="odCentralStatus">Statut <span class="req">*</span></label><select id="odCentralStatus">
-              <option value="">Choisir un statut</option>
+            </select>
+            <input id="odCentralVersion" placeholder="Version : 1.0">
+            <select id="odCentralStatus">
               <option>Brouillon</option>
               <option>En revue</option>
               <option>A corriger</option>
               <option>Approuve</option>
               <option>Diffuse</option>
               <option>Archive</option>
-            </select></div>
-            <div class="field-wrap"><label for="odCentralOwner">Responsable / redacteur <span class="req">*</span></label><input id="odCentralOwner" placeholder="Responsable / redacteur"></div>
-            <div class="field-wrap"><label for="odCentralVerifier">Verificateur <span class="req">*</span></label><input id="odCentralVerifier" placeholder="Verificateur"></div>
-            <div class="field-wrap"><label for="odCentralApprover">Approbateur <span class="req">*</span></label><input id="odCentralApprover" placeholder="Approbateur"></div>
-            <div class="field-wrap"><label for="odCentralDiffuser">Diffuseur <span class="req">*</span></label><input id="odCentralDiffuser" placeholder="Diffuseur"></div>
-            <div class="field-wrap" style="grid-column: span 2"><label for="odCentralNotes">Observation / note documentaire <span class="req">*</span></label><textarea id="odCentralNotes" placeholder="Observation / note documentaire"></textarea></div>
-            <div class="field-wrap"><label for="odCentralPickBtn">Fichier a importer <span class="req">*</span></label><button class="btn2 btn" id="odCentralPickBtn" type="button">Choisir le fichier</button></div>
-            <div class="field-wrap"><label for="odCentralImportBtn">Validation de l'import <span class="req">*</span></label><button class="btn" id="odCentralImportBtn" type="button">Importer vers D:</button></div>
+            </select>
+            <input id="odCentralOwner" placeholder="Responsable / redacteur">
+            <input id="odCentralVerifier" placeholder="Verificateur">
+            <input id="odCentralApprover" placeholder="Approbateur">
+            <input id="odCentralDiffuser" placeholder="Diffuseur">
+            <textarea id="odCentralNotes" placeholder="Observation / note documentaire"></textarea>
+            <button class="btn2 btn" id="odCentralPickBtn" type="button">Choisir le fichier</button>
+            <button class="btn" id="odCentralImportBtn" type="button">Importer vers D:</button>
             <input type="file" id="odCentralFile" accept=".doc,.docx,.xls,.xlsx,.pdf,.png,.jpg,.jpeg,.gif,.bmp,.svg,.ppt,.pptx,.txt,.csv,.odt,.ods,.odp" style="display:none">
           </div>
           <div id="odCentralFileMeta" class="list mt12"></div>
-          <div id="odCentralImportResult" class="list mt12"></div>
         </div>
         <div class="card">
           <h3>5. Bibliotheque documentaire centralisee</h3>
@@ -7466,86 +7283,45 @@
         <div class="card">
           <h3>Creation d'un nouveau utilisateur</h3>
           <p class="mut mt-neg6">Presentation simplifiee par etapes pour creer rapidement un compte utilisateur.</p>
-          <form action="pilots.php" method="POST" class="user-step-grid" id="formPilots">
+          <div class="user-step-grid">
             <div class="user-step-card">
               <div class="user-step-badge">Etape 1</div>
               <h4>Informations du compte</h4>
               <div class="g">
-                <input id="ufn" placeholder="Prenom" name="prenom" required>
-                <input id="uln" placeholder="Nom" name="nom" required>
-                <input id="ue" type="email" placeholder="Adresse e-mail du compte" name="email" required>
-                <input id="upw" type="password" placeholder="Mot de passe : minimum 4 chiffres" name="mot_de_passe" required>
-                <input id="upw2" type="password" placeholder="Confirmer le mot de passe" name="confirmer_mot_de_passe" required>
-                <input id="umat" placeholder="Matricule de l'agent" name="matricule" required>
+                <input id="ufn" placeholder="Prenom">
+                <input id="uln" placeholder="Nom">
+                <input id="ue" type="email" placeholder="Adresse e-mail du compte">
+                <input id="upw" type="password" placeholder="Mot de passe : minimum 4 chiffres">
+                <input id="upw2" type="password" placeholder="Confirmer le mot de passe">
+                <input id="umat" placeholder="Matricule de l'agent">
               </div>
             </div>
             <div class="user-step-card">
               <div class="user-step-badge">Etape 2</div>
               <h4>Profil et statut</h4>
               <div class="g">
-                <select id="ur" name="role">
+                <select id="ur">
                   <option>Administrateur</option>
                   <option>Responsable qualite</option>
                   <option>Technicien</option>
                   <option>Lecture seule</option>
                 </select>
-                <input id="ufunc" placeholder="Poste / fonction de l'agent" name="poste_fonction" required>
-                <input id="ud" placeholder="Departement / service" name="departement_service">
-                <select id="uStatus" name="statut">
+                <input id="ufunc" placeholder="Poste / fonction de l'agent">
+                <input id="ud" placeholder="Departement / service">
+                <select id="uStatus">
                   <option>Actif</option>
                   <option>Inactif</option>
                 </select>
-                <select id="uProfile" name="profil">
+                <select id="uProfile">
                   <option value="Administrateur">Profil : Administrateur</option>
                   <option value="Responsable qualite">Profil : Responsable qualite</option>
                   <option value="Technicien">Profil : Technicien</option>
                   <option value="Lecture seule">Profil : Lecture seule</option>
                   <option value="Personnalise">Profil : Personnalise</option>
                 </select>
-                <button class="btn2 btn" id="uApplyProfile" type="button">Appliquer le profil</button>
+                <button class="btn2 btn" id="uApplyProfile">Appliquer le profil</button>
               </div>
             </div>
-            <script>
-              document.addEventListener("DOMContentLoaded", function () {
-                const form = document.getElementById("formPilots");
-                if (!form) return;
-                const pwd = document.getElementById("upw");
-                const pwd2 = document.getElementById("upw2");
-                if (pwd2) {
-                  pwd2.addEventListener("input", function() {
-                    if (pwd && pwd.value !== pwd2.value) {
-                      pwd2.setCustomValidity("Les mots de passe ne correspondent pas.");
-                    } else {
-                      pwd2.setCustomValidity("");
-                    }
-                  });
-                }
-                form.addEventListener("submit", function (event) {
-                  const requiredFields = [
-                    { id: "ufn", name: "Prenom" },
-                    { id: "uln", name: "Nom" },
-                    { id: "ue", name: "Adresse e-mail" },
-                    { id: "upw", name: "Mot de passe" },
-                    { id: "upw2", name: "Confirmation du mot de passe" },
-                    { id: "ufunc", name: "Poste / fonction" },
-                    { id: "umat", name: "Matricule de l'agent" }
-                  ];
-                  const missing = requiredFields.filter(field => {
-                    const el = document.getElementById(field.id);
-                    return !el || !el.value.trim();
-                  });
-                  if (missing.length) {
-                    event.preventDefault();
-                    alert("Veuillez renseigner le(s) champ(s) requis : " + missing.map(f => f.name).join(", "));
-                    return;
-                  }
-                  if (pwd && pwd2 && pwd.value !== pwd2.value) {
-                    event.preventDefault();
-                    alert("La confirmation du mot de passe ne correspond pas.");
-                  }
-                });
-              });
-            </script>
             <div class="user-step-card">
               <div class="user-step-badge">Etape 3</div>
               <h4>Autorisations generales</h4>
@@ -7564,8 +7340,6 @@
                 </div>
               </div>
             </div>
-          </form>
-          <form method="">
             <div class="user-step-card">
               <div class="user-step-badge">Etape 4</div>
               <h4>Acces par module</h4>
@@ -7573,9 +7347,9 @@
               <div id="uModuleAccess" class="access-matrix"></div>
             </div>
             <div class="acts">
-              <button class="btn" id="usv" type="submit">Enregistrer le compte</button>
+              <button class="btn" id="usv">Enregistrer le compte</button>
             </div>
-          </form>
+          </div>
         </div>
         <div class="row s2">
           <div class="card">
@@ -8232,7 +8006,7 @@
         <div class="card">
           <h3>Registre suivi des reclamations client</h3>
           <div class="g4">
-            <input id="recNo" placeholder="NÂ° reclamation">
+            <input id="recNo" placeholder="N° reclamation">
             <div style="grid-column:1/-1;font-weight:800;color:#245ccc;padding:4px 0 0">1. Reception de la reclamation</div>
             <input id="recDate" type="date" title="Date reception">
             <select id="recMode">
@@ -8307,7 +8081,7 @@
           <table>
             <thead>
               <tr>
-                <th>NÂ°</th>
+                <th>N°</th>
                 <th>Date</th>
                 <th>Client / contact</th>
                 <th>Reception / type / service</th>
@@ -8648,7 +8422,7 @@
           <table>
             <thead>
               <tr>
-                <th>NÂ°</th>
+                <th>N°</th>
                 <th>Demandeur / service</th>
                 <th>Document concerne</th>
                 <th>Modification demandee</th>
@@ -8700,7 +8474,7 @@
           </select>
           <span class="mut" id="planCount"></span>
           <button class="btn" id="planSearchBtn" type="button">Rechercher</button>
-          <button class="btn2 btn" id="planPrint" type="button">Imprimer</button>
+   perHabTabbtn" id="planPrint" type="button">Imprimer</button>
           <button class="btn2 btn" id="planDownload" type="button">Telecharger</button>
         </div>
         <div class="card">
@@ -8912,7 +8686,7 @@
           </div>
         </div>
         <div class="bar card">
-          <input id="statSearch" placeholder="Rechercher N° affaire, region, mois ou annee">
+          <input id="statSearch" placeholder="Rechercher N� affaire, region, mois ou annee">
           <select id="statRegionFilter">
             <option value="all">Toutes les regions</option>
           </select>
@@ -8930,7 +8704,7 @@
         <div class="card">
           <h3>Creation des statistiques</h3>
           <div class="g4 compact">
-            <input id="statRef" placeholder="N° affaire">
+            <input id="statRef" placeholder="N� affaire">
             <input id="statRegion" placeholder="Region">
             <input id="statFamily" placeholder="Famille / domaine (produit et/ou service)">
             <input id="statCountry" placeholder="Pays">
@@ -9013,7 +8787,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>N° affaire</th>
+                  <th>N� affaire</th>
                   <th>Region</th>
                   <th>Famille / domaine</th>
                   <th>Pays</th>
@@ -9125,7 +8899,7 @@
       { id: "d705", chapter: "7", clause: "7.5", title: "Enregistrements techniques", q: "Les enregistrements techniques permettent-ils de repeter l'activite et de tracer les modifications apportees ?" },
       { id: "d706", chapter: "7", clause: "7.6", title: "Incertitude de mesure", q: "Les sources d'incertitude de mesure sont-elles identifiees et l'incertitude evaluee lorsque requis ?" },
       { id: "d707", chapter: "7", clause: "7.7", title: "Validite des resultats", q: "La validite des resultats est-elle surveillee via controles qualite, tendances, comparaisons ou essais d'aptitude ?" },
-      { id: "d708", chapter: "7", clause: "7.8", title: "Rapports", q: "Les rapports sont-ils revus, approuves et, si besoin, accompagnÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©s de regles de decision et declarations de conformite ?" },
+      { id: "d708", chapter: "7", clause: "7.8", title: "Rapports", q: "Les rapports sont-ils revus, approuves et, si besoin, accompagnÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©s de regles de decision et declarations de conformite ?" },
       { id: "d709", chapter: "7", clause: "7.9", title: "Reclamations", q: "Le traitement des reclamations est-il documente, impartial et trace ?" },
       { id: "d710", chapter: "7", clause: "7.10", title: "Travaux non conformes", q: "La gestion des travaux non conformes permet-elle d'identifier, maitriser, corriger et enregistrer toute situation ?" },
       { id: "d711", chapter: "7", clause: "7.11", title: "Donnees et information", q: "Les donnees, calculs, transferts et systemes d'information sont-ils proteges, verifies et maitrises ?" },
@@ -9216,8 +8990,8 @@
     let repoHandle = null, repoFilesMap = new Map(), previewUrl = "";
     let orgHandle = null, orgFilesMap = new Map(), orgPreviewUrl = "", activeOrgProc = "", orgRootName = "QUALI_Organisme", orgFiles = [], activeOrgType = "", activeOrgStatus = "";
     let orgReqFilesMap = new Map(), orgReqPreviewUrl = "", activeOrgReqDoc = "", orgDocFilesMap = new Map();
-    let docCentralState = { server: null, settings: null, folders: [], documents: [], events: [], loading: false, ready: false, error: "", syncedAt: "", selectedFile: null, selectedMeta: null, lastImportedId: "", lastImportedItem: null, editingDocumentId: "", pilotEmail: "", streamConnected: false, streamStatus: "", streamLastEvent: null };
-    let docCentralEventSource = null, docCentralRefreshTimer = null, pilotRealtimeSource = null, pilotRealtimeRefreshTimer = 0;
+    let docCentralState = { server: null, settings: null, folders: [], documents: [], events: [], loading: false, ready: false, error: "", syncedAt: "", selectedFile: null, selectedMeta: null, pilotEmail: "", streamConnected: false, streamStatus: "", streamLastEvent: null };
+    let docCentralEventSource = null, docCentralRefreshTimer = null;
     let currentPage = "hub", pageHistory = [], nextPageHistory = [], currentOrgTab = "general", editingDocId = "", editingEqId = "", editingNcId = "", editingAudId = "", editingRiskId = "", editingSwotId = "", editingSatId = "", editingPersonnelId = "", editingPersonnelHabId = "", editingPersonnelQualId = "", editingReclId = "", editingNcAuditRef = "", editingPrestId = "", editingAciId = "", editingRevcId = "", editingPlanId = "", editingPlanAuditId = "", editingPlanInterId = "", aciDraftLoaded = false;
     function c(v) { return JSON.parse(JSON.stringify(v)) }
     function ss(k, v) { try { localStorage.setItem(k, v) } catch (e) { M[k] = v; sync("Session locale sans stockage") } }
@@ -9318,14 +9092,7 @@
       return data && data.state && typeof data.state === "object" ? data.state : null
     }
     async function apiSavePilotState(pilotEmail, state) {
-      return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/state", {
-        method: "PUT",
-        body: {
-          state,
-          actorName: (s.u && s.u.name) || "Utilisateur",
-          currentPage
-        }
-      })
+      return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/state", { method: "PUT", body: { state } })
     }
     async function apiDocServerInfo() {
       return apiRequest("/documentation/server")
@@ -9345,9 +9112,6 @@
     async function apiDocDocuments(pilotEmail) {
       return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/documents")
     }
-    async function apiDocScan(pilotEmail, payload) {
-      return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/scan", { method: "POST", body: payload })
-    }
     async function apiDocImport(pilotEmail, payload) {
       return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/documents/import", { method: "POST", body: payload })
     }
@@ -9359,9 +9123,6 @@
     }
     async function apiDocOpen(pilotEmail, documentId, actorName, mode) {
       return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/documents/" + encodeURIComponent(String(documentId)) + "/open", { method: "POST", body: { actorName, mode } })
-    }
-    async function apiDocReveal(pilotEmail, documentId, actorName) {
-      return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/documents/" + encodeURIComponent(String(documentId)) + "/reveal", { method: "POST", body: { actorName } })
     }
     async function apiDocEvents(pilotEmail, limit = 60) {
       return apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/events?limit=" + encodeURIComponent(String(limit)))
@@ -9478,7 +9239,7 @@
       if ($("#lmsg")) $("#lmsg").textContent = "Connexion locale prete.";
       updateBackButton();
     }
-    function isBackArrowButton(btn) { const title = String(btn && (btn.getAttribute("aria-label") || btn.title || "") || "").toLowerCase(), img = btn ? btn.querySelector("img") : null, imgAlt = String(img && img.alt || "").toLowerCase(); return title.includes("precedente") || title.includes("précédente") || imgAlt.includes("left") }
+    function isBackArrowButton(btn) { const title = String(btn && (btn.getAttribute("aria-label") || btn.title || "") || "").toLowerCase(), img = btn ? btn.querySelector("img") : null, imgAlt = String(img && img.alt || "").toLowerCase(); return title.includes("precedente") || title.includes("pr�c�dente") || imgAlt.includes("left") }
     function placeBackButton() { const heads = $all(".hub-app-head"); heads.forEach(head => { const nav = head.querySelector(".back-nav"); if (nav) nav.classList.remove("in-rail") }); const activeHead = $("#" + currentPage + " .hub-app-head"); if (!activeHead) return; const activeNav = activeHead.querySelector(".back-nav"); if (activeNav) activeNav.classList.add("in-rail") }
     function updateBackButton() {
       const buttons = $all(".hub-app-head .back-nav .back-btn");
@@ -9512,7 +9273,7 @@
     function csvTable(txt, sep = ",") { const rows = String(txt || "").replace(/\r/g, "").split("\n").filter(Boolean).slice(0, 16).map(r => r.split(sep).slice(0, 8)); if (!rows.length) return ""; const head = rows[0], body = rows.slice(1); return `<div class="it"><b>Apercu tabulaire</b><div style="overflow:auto"><table><thead><tr>${head.map(x => `<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${body.map(r => `<tr>${head.map((_, i) => `<td>${esc(r[i] || "")}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>` }
     function hexDump(buf) { const bytes = [...new Uint8Array(buf)].slice(0, 192), lines = []; for (let i = 0; i < bytes.length; i += 16) { const chunk = bytes.slice(i, i + 16), hex = chunk.map(b => b.toString(16).padStart(2, "0")).join(" "), asc = chunk.map(b => (b >= 32 && b <= 126) ? String.fromCharCode(b) : ".").join(""); lines.push(i.toString(16).padStart(4, "0") + "  " + hex.padEnd(47, " ") + "  " + asc) } return lines.join("\n") }
     async function objectUrlForFile(f) { const mime = mimeForName(f.name); if (!mime || f.type && f.type !== "application/octet-stream") return URL.createObjectURL(f); const clone = new File([await f.arrayBuffer()], f.name, { type: mime, lastModified: f.lastModified }); return URL.createObjectURL(clone) }
-    async function buildFilePreview(f, url, t) { const mime = mimeForName(f.name) || f.type || "Non detecte", ext = fileExt(f.name); let body = `<div class="it"><b>${esc(f.name)}</b><p>Type : ${esc(t.label)}</p><p>Extension : ${esc(ext || "-")}</p><p>MIME : ${esc(mime)}</p><p>Taille : ${fmtSize(f.size)}</p><p>Derniere modification : ${fmtDate(f.lastModified)}</p><p><a href="${url}" target="_blank" download="${esc(f.name)}">Ouvrir ou telecharger</a></p></div>`; if (t.kind === "image") return body + `<div class="it"><img src="${url}" alt="${esc(f.name)}" style="max-width:100%;border-radius:14px"></div>`; if (t.kind === "pdf") return body + `<div class="it"><iframe src="${url}" style="width:100%;height:460px;border:0;border-radius:12px"></iframe></div>`; if (t.kind === "video") return body + `<div class="it"><video controls style="width:100%;border-radius:14px"><source src="${url}" type="${esc(mimeForName(f.name) || "video/mp4")}"></video></div>`; if (t.kind === "audio") return body + `<div class="it"><audio controls style="width:100%"><source src="${url}" type="${esc(mimeForName(f.name) || "audio/mpeg")}"></audio></div>`; if (t.kind === "html") { const txt = await f.text(); return body + `<div class="it"><iframe src="${url}" style="width:100%;height:440px;border:1px solid #e7edf6;border-radius:12px;background:#fff"></iframe></div><div class="it"><b>Code source</b><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 8000))}</pre></div>` } if (t.kind === "table") { const txt = await f.text(), sep = ext === "tsv" ? "\t" : ","; return body + csvTable(txt, sep) + `<div class="it"><b>Contenu brut</b><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 8000))}</pre></div>` } if (t.kind === "text") { const txt = await f.text(); return body + `<div class="it"><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 12000))}</pre></div>` } body += `<div class="it"><b>Lecture integree</b><p>QUALI tente un affichage direct de ce fichier dans l'application. Selon le navigateur, l'aperÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§u peut apparaitre pour Word, Excel, PowerPoint, archives ou autres formats.</p><div style="display:grid;gap:10px"><object data="${url}" type="${esc(mimeForName(f.name) || f.type || "application/octet-stream")}" style="width:100%;height:460px;border:1px solid #e7edf6;border-radius:12px;background:#fff"></object><iframe src="${url}" style="width:100%;height:460px;border:1px solid #e7edf6;border-radius:12px;background:#fff"></iframe></div></div>`; if (canReadTextFile(f.name)) { try { const txt = await f.text(); if (txt.trim()) body += `<div class="it"><b>Lecture texte</b><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 12000))}</pre></div>` } catch (e) { } } else { try { const hex = hexDump(await f.slice(0, 192).arrayBuffer()); body += `<div class="it"><b>Apercu technique</b><p>Le contenu n'est pas lisible directement en texte. QUALI affiche les premiers octets du fichier pour confirmer sa lecture.</p><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(hex)}</pre></div>` } catch (e) { } } return body }
+    async function buildFilePreview(f, url, t) { const mime = mimeForName(f.name) || f.type || "Non detecte", ext = fileExt(f.name); let body = `<div class="it"><b>${esc(f.name)}</b><p>Type : ${esc(t.label)}</p><p>Extension : ${esc(ext || "-")}</p><p>MIME : ${esc(mime)}</p><p>Taille : ${fmtSize(f.size)}</p><p>Derniere modification : ${fmtDate(f.lastModified)}</p><p><a href="${url}" target="_blank" download="${esc(f.name)}">Ouvrir ou telecharger</a></p></div>`; if (t.kind === "image") return body + `<div class="it"><img src="${url}" alt="${esc(f.name)}" style="max-width:100%;border-radius:14px"></div>`; if (t.kind === "pdf") return body + `<div class="it"><iframe src="${url}" style="width:100%;height:460px;border:0;border-radius:12px"></iframe></div>`; if (t.kind === "video") return body + `<div class="it"><video controls style="width:100%;border-radius:14px"><source src="${url}" type="${esc(mimeForName(f.name) || "video/mp4")}"></video></div>`; if (t.kind === "audio") return body + `<div class="it"><audio controls style="width:100%"><source src="${url}" type="${esc(mimeForName(f.name) || "audio/mpeg")}"></audio></div>`; if (t.kind === "html") { const txt = await f.text(); return body + `<div class="it"><iframe src="${url}" style="width:100%;height:440px;border:1px solid #e7edf6;border-radius:12px;background:#fff"></iframe></div><div class="it"><b>Code source</b><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 8000))}</pre></div>` } if (t.kind === "table") { const txt = await f.text(), sep = ext === "tsv" ? "\t" : ","; return body + csvTable(txt, sep) + `<div class="it"><b>Contenu brut</b><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 8000))}</pre></div>` } if (t.kind === "text") { const txt = await f.text(); return body + `<div class="it"><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 12000))}</pre></div>` } body += `<div class="it"><b>Lecture integree</b><p>QUALI tente un affichage direct de ce fichier dans l'application. Selon le navigateur, l'aperÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§u peut apparaitre pour Word, Excel, PowerPoint, archives ou autres formats.</p><div style="display:grid;gap:10px"><object data="${url}" type="${esc(mimeForName(f.name) || f.type || "application/octet-stream")}" style="width:100%;height:460px;border:1px solid #e7edf6;border-radius:12px;background:#fff"></object><iframe src="${url}" style="width:100%;height:460px;border:1px solid #e7edf6;border-radius:12px;background:#fff"></iframe></div></div>`; if (canReadTextFile(f.name)) { try { const txt = await f.text(); if (txt.trim()) body += `<div class="it"><b>Lecture texte</b><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(txt.slice(0, 12000))}</pre></div>` } catch (e) { } } else { try { const hex = hexDump(await f.slice(0, 192).arrayBuffer()); body += `<div class="it"><b>Apercu technique</b><p>Le contenu n'est pas lisible directement en texte. QUALI affiche les premiers octets du fichier pour confirmer sa lecture.</p><pre style="margin:0;white-space:pre-wrap;word-break:break-word;font:12px Consolas,monospace">${esc(hex)}</pre></div>` } catch (e) { } } return body }
     function moduleFromPath(p) { const m = REPO_DIRS.find(x => p.includes(x[0] + "/") || p.includes(x[0] + "\\") || p === x[0]); return m ? m[1] : "Autre" }
     function previewDefault() { return `<div class="it"><b>Aucun fichier selectionne</b><p>Choisis un fichier dans la liste pour afficher ses informations et son apercu directement dans l'application.</p><p>QUALI prend en charge PDF, images, audio, video, HTML, CSV, fichiers texte, Word, Excel, PowerPoint, archives et autres formats avec tentative de lecture integree ou repli adapte.</p></div>` }
     function orgPreviewDefault() { return `<div class="it"><b>Lecture directe QUALI</b><p>Connecte le dossier exact <code>D:\\QUALI_Organisme</code>, puis choisis un fichier pour le lire directement dans ce module.</p><p>QUALI essaye maintenant de lire tous les types de fichiers dans l'application : affichage natif si possible, sinon apercu technique ou ouverture locale.</p></div>` }
@@ -9530,7 +9291,7 @@
     async function verifyHandle(h, w) { if (!h) return false; const o = { mode: w ? "readwrite" : "read" }; if ((await h.queryPermission(o)) === "granted") return true; return (await h.requestPermission(o)) === "granted" }
     function tag(v) { return ["Valide", "Approuve", "Diffuse", "Cloture", "Cloturee"].includes(v) ? "ok" : ["Brouillon", "En revue", "A corriger", "A valider", "A etalonner", "En cours", "Planifie", "Majeure"].includes(v) ? "wa" : ["Obsolete", "Archive", "Hors service", "Ouverte", "Critique"].includes(v) ? "er" : "bl" }
     function log(a, m, x) { ensureTrailWeek(); const u = s.u || {}; s.trail.unshift({ t: now(), u: u.name || "Utilisateur", email: u.email || "", role: u.role || "", a, m, x }); s.trail = s.trail.slice(0, 500) }
-    function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); page(canViewModule("hub") ? "hub" : "db", true); connectPilotRealtimeStream(pilotEmailForApi()); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
+    function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); page(canViewModule("hub") ? "hub" : "db", true); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
     function pilotAccount() { return normalizeUserAccount({ name: "Pilote QUALI", firstName: "Pilote", lastName: "QUALI", email: MAIN_PILOT_EMAIL, role: "Administrateur", dept: "Pilotage application", func: "Pilote de l'application", matricule: "PILOT-001", ini: "PQ", perms: [...PERMS], moduleAccess: fullModuleAccess(), passwordHint: "Mot de passe pilote : " + MAIN_PILOT_PASSWORD, pilot: true, status: "Actif", accountType: "Pilote" }) }
     function pilotAccounts() { const fallback = [mainPilotRegistryAccount()]; const raw = sg(ACCK); if (!raw) return fallback; try { const parsed = JSON.parse(raw); return Array.isArray(parsed) && parsed.length ? parsed : fallback } catch (e) { return fallback } }
     function savePilotAccounts(arr) { ss(ACCK, JSON.stringify(arr)) }
@@ -9683,35 +9444,6 @@
       const accounts = ensureMainPilotRegistry();
       if (accounts.some(x => authNormEmail(x.email) === authNormEmail(pending.email))) { msg.textContent = "Ce compte pilote existe deja."; return }
       const account = { name: pending.name, firstName: pending.firstName, lastName: pending.lastName, email: pending.email, password: pending.pw, role: "Administrateur", dept: "Pilotage application", func: pending.func, matricule: pending.uid, orgName: pending.orgName, pilot: true, status: "Actif" };
-      // Send to PHP
-      try {
-        const response = await fetch('create_pilot.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            firstName: pending.firstName,
-            lastName: pending.lastName,
-            func: pending.func,
-            uid: pending.uid,
-            orgName: pending.orgName,
-            email: pending.email,
-            pw: pending.pw
-          })
-        });
-        const result = await response.json();
-        if (result.success) {
-          msg.textContent = "Compte pilote cree avec succes dans la base de donnees.";
-        } else {
-          msg.textContent = "Erreur lors de la creation du compte pilote: " + result.message;
-          return;
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        msg.textContent = "Erreur de connexion au serveur.";
-        return;
-      }
       accounts.unshift(account); savePilotAccounts(accounts); let serverNote = "";
       if (await apiHealth()) { const remoteReady = await ensureRemotePilotAccount(account); if (!remoteReady) serverNote = " Synchronisation base en attente."; }
       sr("QUALI_pending_pilot_signup");
@@ -9764,7 +9496,7 @@
     function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"), acc = findPilotAccount(email); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; }
     async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); const i = accounts.findIndex(x => authNormEmail(x.email) === authNormEmail(email)); if (i < 0) { msg.textContent = "Compte pilote introuvable."; return } accounts[i] = { ...accounts[i], password: pw }; savePilotAccounts(accounts); if (await apiHealth()) await ensureRemotePilotAccount(accounts[i]); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; }
     async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value; try { if (await apiHealth()) { try { const remote = await apiLogin(e, p); if (remote && remote.ok && remote.pilot && remote.user) { loadPilotApp(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); if (remote.type === "pilot") { s.u = normalizeUserAccount(remote.user); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })); await syncUsersFromApi(); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } await syncUsersFromApi(); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } } catch (apiErr) { console.error(apiErr) } } if (isPilotLogin(e, p)) { const acc = loadPilotApp(e); if (!acc) throw new Error("Compte pilote introuvable"); await ensureRemotePilotAccount(acc); await loadPilotStateFromApi(acc.email); ss(S, JSON.stringify({ email: acc.email, pilotEmail: acc.email, type: "pilot" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } const found = findUserLogin(e, p); if (!found) { $("#lmsg").textContent = "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h"); return } loadPilotApp(found.pilot.email); await ensureRemotePilotAccount(found.pilot); await loadPilotStateFromApi(found.pilot.email); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(found.user.email)); if (!current) throw new Error("Compte utilisateur introuvable dans la base du pilote"); s.u = normalizeUserAccount(current); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: found.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp() } catch (err) { console.error(err); $("#lmsg").textContent = "Erreur de connexion. Verifie l'application puis recommence."; sr(S); $("#auth").classList.remove("h"); $("#app").classList.add("h") } }
-    function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); disconnectPilotRealtimeStream(); disconnectDocumentationCentralStream(); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
+    function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); disconnectDocumentationCentralStream(); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
     const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestataire externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, stat: { cls: "module-stat", title: "Statistique", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
     function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card module-org-compact"><div class="module-org-line"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-line"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-line"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-line"><strong>Adresse</strong><p>${esc(addr)}</p></div></div></div>` }
     function buildModuleRail(id) { const meta = moduleRailMeta[id]; if (!meta) return null; const rail = document.createElement("aside"); rail.className = "module-rail"; rail.innerHTML = `<div class="module-rail-logo"><img src="image/logo/SVG/Asset 5.svg" alt="QUALI"></div><div class="module-rail-head"><b>${esc(meta.title)}</b><span>${esc(meta.tag)}</span></div>${moduleOrgRailHtml()}`; return rail }
@@ -9894,7 +9626,7 @@
       dashboardCharts();
       renderDashboardCalendar();
     }
-    function stats() { const a = [["Documents", s.docs.length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾", "k-blue"], ["Equipements", s.eq.length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "k-green"], ["Non-conformites ouvertes", s.nc.filter(x => x.st === "Ouverte").length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â", "k-orange"], ["Audits a realiser", s.aud.filter(x => x.st !== "Cloture").length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¹", "k-red"]]; $("#stats").innerHTML = a.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">Mise a jour locale</div></div></div></div>`).join("") }
+    function stats() { const a = [["Documents", s.docs.length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾", "k-blue"], ["Equipements", s.eq.length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "k-green"], ["Non-conformites ouvertes", s.nc.filter(x => x.st === "Ouverte").length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â", "k-orange"], ["Audits a realiser", s.aud.filter(x => x.st !== "Cloture").length, "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¹", "k-red"]]; $("#stats").innerHTML = a.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">Mise a jour locale</div></div></div></div>`).join("") }
     function alerts() {
       const box = $("#alerts"); if (!box) return;
       let a = [];
@@ -9934,15 +9666,15 @@
       if (quickBox) quickBox.innerHTML = q.map(x => `<div class="mini"><strong>${esc(x[0])}</strong><span class="bl">${esc(String(x[1]))}</span></div>`).join("");
       if (diagBox) diagBox.innerHTML = `<div class="dash-diag"><div class="it"><div class="diag-score">${dm.score}%</div><p>Niveau : ${diagLevel(dm.score)}</p><p>Evaluateur : ${st.person || "-"}</p><p>Date d'evaluation : ${st.date || "-"}</p><p>Taux de completion : ${dm.completion}%</p><p>Questions evaluees : ${dm.answered}/${DIAG_ITEMS.length}</p></div><div class="radar-box">${radarSvg(dm.chapters, 190)}</div></div><div class="mini"><strong>Chapitre prioritaire</strong><span class="${diagTheme(lowChapter.score)}">${lowChapter.chapter}</span></div>`;
     }
-    const DOC_PROCS = ["Processus pilotage", "Processus operationnel", "Processus support"], ORG_TOP_DOC_TYPES = ["Manuel qualité", "Politique Qualité"], ORG_DOC_TYPES = ["Procedure", "Instruction", "Formulaire", "Enregistrement"], DOC_TYPES = [...ORG_TOP_DOC_TYPES, ...ORG_DOC_TYPES], DOC_FORMATS = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"], ORG_DIR_BASE = "D:\\QUALI_Organisme", ORG_TEMPLATES = {};
+    const DOC_PROCS = ["Processus pilotage", "Processus operationnel", "Processus support"], ORG_TOP_DOC_TYPES = ["Manuel qualite", "Politique qualite"], ORG_DOC_TYPES = ["Procedure", "Instruction", "Formulaire", "Enregistrement"], DOC_TYPES = [...ORG_TOP_DOC_TYPES, ...ORG_DOC_TYPES], DOC_FORMATS = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"], ORG_DIR_BASE = "D:\\QUALI_Organisme", ORG_TEMPLATES = {};
     function normDoc(x) { const st = x.st === "Valide" ? "Approuve" : x.st === "A valider" ? "En revue" : x.st || "Brouillon"; return { ...x, p: x.p || "Processus support", ie: x.ie || "-", st, verif: x.verif || "-", app: x.app || "-", review: x.review || "-", diff: x.diff || "-", body: x.body || "", history: x.history || [] } }
     Object.assign(ORG_TEMPLATES, {
-      Procedure: "/database/word_documents/templates/modèle procédure.docx",
-      Instruction: "/database/word_documents/templates/modèle instruction.docx",
-      Formulaire: "/database/word_documents/templates/modèle formulaire.docx",
-      Enregistrement: "/database/word_documents/templates/modèle Enregistrement.docx",
-      "Manuel qualite": "/database/word_documents/templates/modèle procédure.docx",
-      "Politique qualite": "/database/word_documents/templates/modèle procédure.docx"
+      Procedure: "/database/word_documents/templates/mod�le proc�dure.docx",
+      Instruction: "/database/word_documents/templates/mod�le instruction.docx",
+      Formulaire: "/database/word_documents/templates/mod�le formulaire.docx",
+      Enregistrement: "/database/word_documents/templates/mod�le Enregistrement.docx",
+      "Manuel qualite": "/database/word_documents/templates/mod�le proc�dure.docx",
+      "Politique qualite": "/database/word_documents/templates/mod�le proc�dure.docx"
     });
     const ORG_WORKFLOW = [["Brouillon", "Creation"], ["En revue", "Verification"], ["Approuve", "Approbation"], ["Diffuse", "Diffusion"]];
     function docStoragePath(x) { const clean = v => String(v || "").replace(/[\\/:*?"<>|]/g, "_").replace(/\s+/g, "_"), proc = clean(x.p || "Processus support"), type = clean(x.type || "Document"), st = clean(x.st || "A_valider"), name = clean((x.ref || "DOC") + "_" + (x.title || "document")); return `QUALI_Documents/${proc}/${type}/${st}/${name}` }
@@ -9956,55 +9688,15 @@
     function orgProcessButtons(list) { return docHierarchy(list, true) }
     function folderPath(proc, type, fmt) { return `${ORG_DIR_BASE}\\${proc}\\${type}\\${fmt}` }
     function processRootPath(proc) { return `${ORG_DIR_BASE}\\${proc}` }
-    function templateHref(type) { const fallback = type === "Manuel qualité" ? ORG_TEMPLATES["Manuel qualite"] : type === "Politique Qualité" ? ORG_TEMPLATES["Politique qualite"] : ""; return encodeURI(ORG_TEMPLATES[type] || fallback || ORG_TEMPLATES.Procedure || "") }
-    function templateDocName(type) { const href = decodeURI(templateHref(type)); return href.split(/[\\/]/).pop() || "modele.docx" }
+    function templateHref(type) { return encodeURI(ORG_TEMPLATES[type] || ORG_TEMPLATES.Procedure || "") }
+    function templateDocName(type) { return (ORG_TEMPLATES[type] || ORG_TEMPLATES.Procedure || "").split(/[\\/]/).pop() || "modele.docx" }
     function templateSummaryHtml(type) { const href = templateHref(type), name = templateDocName(type); return `<div class="card"><h3>Modele : ${esc(type)}</h3><div class="it"><b>${esc(name)}</b><p>Le modele est disponible dans l'application. Pour un fichier Word, le navigateur peut l'ouvrir, le telecharger ou proposer Word selon l'appareil utilise.</p><div class="reader-actions"><a class="btn2 btn" href="${href}" target="_blank" rel="noopener">Ouvrir le modele</a><a class="btn btn" href="${href}" download="${esc(name)}">Telecharger</a></div></div></div>` }
     function setOrgSummaryContent(html) { const box = $("#odSummary"); if (!box) return; box.dataset.state = "active"; box.classList.remove("h"); box.innerHTML = html }
     function clearOrgSummaryContent() { const box = $("#odSummary"); if (!box) return; box.dataset.state = ""; box.innerHTML = ""; box.classList.add("h") }
     function showTemplateSummary(type) { setOrgSummaryContent(templateSummaryHtml(type)) }
     function templateCards() { return ORG_DOC_TYPES.map(type => `<div class="it template-card"><b>${type}</b><div class="reader-actions"><button class="btn2 btn" type="button" data-odview="${esc(type)}">Voir le modele</button><button class="btn" type="button" data-odedit="${esc(type)}">Modifier</button><button class="btn2 btn" type="button" data-odtemplate="${esc(type)}">Utiliser</button></div></div>`).join("") }
     function openDocTemplate(type) { const href = templateHref(type); showTemplateSummary(type); if (href) window.open(href, "_blank") }
-    function topPyramidDocuments(type) {
-      return (docCentralState.documents || [])
-        .filter(x => x.docType === type)
-        .sort((a, b) => {
-          const aArchive = a.status === "Archive" ? 1 : 0;
-          const bArchive = b.status === "Archive" ? 1 : 0;
-          if (aArchive !== bArchive) return aArchive - bArchive;
-          return String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || "")) || Number(b.id || 0) - Number(a.id || 0)
-        })
-    }
-    function topPyramidReference(type) { return type === "Manuel qualité" ? "MQ-001" : "POL-001" }
-    function topPyramidStoragePaths(type) {
-      const root = ((docCentralState.settings && docCentralState.settings.pilotRoot) || "").trim();
-      const base = root ? `${root}\\${type}` : `${type}`;
-      return { current: `${base}\\document en vigueur`, archive: `${base}\\document en archive` }
-    }
-    function prepareTopPyramidDocument(type, pickFile = false) {
-      const currentDocs = topPyramidDocuments(type);
-      const currentDoc = currentDocs.find(x => x.status !== "Archive") || currentDocs[0] || null;
-      if ($("#odCentralTitle")) $("#odCentralTitle").value = currentDoc ? (currentDoc.title || type) : type;
-      if ($("#odCentralRef")) $("#odCentralRef").value = currentDoc ? (currentDoc.ref || topPyramidReference(type)) : topPyramidReference(type);
-      if ($("#odCentralProc")) $("#odCentralProc").value = "Processus pilotage";
-      if ($("#odCentralType")) $("#odCentralType").value = type;
-      if ($("#odCentralVersion")) $("#odCentralVersion").value = currentDoc ? (currentDoc.versionLabel || currentDoc.version || "1.0") : ($("#odCentralVersion") && $("#odCentralVersion").value.trim()) || "1.0";
-      if ($("#odCentralStatus")) $("#odCentralStatus").value = currentDoc && currentDoc.status && currentDoc.status !== "Archive" ? currentDoc.status : "Brouillon";
-      if ($("#odCentralNotes") && !$("#odCentralNotes").value.trim()) $("#odCentralNotes").value = `Document de tete de la pyramide : ${type}`;
-      if ($("#odCentralFile")) $("#odCentralFile").value = "";
-      if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml();
-      docCentralState.topDocAutoImport = false;
-      const target = $("#odCentralImportCard") || $("#odCentralTitle") || $("#odCentralImportBtn");
-      if (target && typeof target.scrollIntoView === "function") target.scrollIntoView({ behavior: "smooth", block: "start" });
-      sync(`${currentDoc ? "Mise a jour" : "Preparation"} du dossier ${type} prete. Complete tous les champs obligatoires puis importe le fichier vers D:`);
-      if (pickFile && $("#odCentralFile")) $("#odCentralFile").click()
-    }
-    function topDocCards() {
-      return ORG_TOP_DOC_TYPES.map(type => {
-        const docs = topPyramidDocuments(type);
-        const currentDoc = docs.find(x => x.status !== "Archive") || null;
-        return `<div class="it template-card"><b>${type}</b><div class="reader-actions"><button class="btn2 btn" type="button" data-odtop-upload="${esc(type)}">${currentDoc ? "Ajouter / remplacer le document" : "Ajouter le document"}</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-open="${currentDoc.id}"` : "disabled"}>Ouvrir</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-read="${currentDoc.id}"` : "disabled"}>Lire</button><button class="btn2 btn" type="button" ${currentDoc ? `data-odcentral-detail="${currentDoc.id}"` : "disabled"}>Fiche</button></div></div>`
-      }).join("")
-    }
+    function topDocCards(list) { return ORG_TOP_DOC_TYPES.map(type => { const x = list.find(d => d.type === type); return `<div class="it template-card"><b>${type}</b><div class="reader-actions"><button class="btn2 btn" type="button" data-odview="${esc(type)}">Voir le modele</button><button class="btn" type="button" data-odedit="${esc(type)}">Modifier</button><button class="btn2 btn" type="button" data-odtop="${esc(type)}">Utiliser ce champ</button>${x ? `<button class="btn2 btn" data-oddetail="${x.id}">Fiche</button>` : ""}</div></div>` }).join("") }
     function orgWorkflowCards(list) { return ORG_WORKFLOW.map(([st, label]) => `<div class="mini"><strong>${label}</strong><span class="${tag(st)}">${list.filter(x => x.st === st).length}</span></div>`).join("") }
     function orgImportedList(list) { const docs = list.filter(x => x.imported); return docs.length ? docs.slice(0, 6).map(x => `<div class="it"><b>${esc(x.title)}</b><div class="reader-actions"><button class="btn2 btn" data-odreview="${x.id}">Envoyer verification</button><button class="btn2 btn" data-oddetail="${x.id}">Fiche</button><button class="btn2 btn" data-odread="${x.id}">Lire</button></div></div>`).join("") : `<div class="it"><b>Aucun document importe</b></div>` }
     function docCentralProcessFolders() {
@@ -10059,11 +9751,6 @@
       if (!meta) return `<div class="it"><b>Aucun fichier selectionne</b><p>Choisis un fichier Word, PDF, Excel ou image a importer vers le depot central.</p></div>`;
       return `<div class="it"><b>${esc(meta.name)}</b><p>Type : ${esc(meta.label)} | Taille : ${esc(meta.size)}</p><p>Derniere modification : ${esc(meta.modified)}</p></div>`
     }
-    function docCentralImportResultHtml() {
-      const x = docCentralState.lastImportedItem;
-      if (!x) return "";
-      return `<div class="it"><b>Document enregistre avec succes</b><p><b>${esc(x.ref || "-")} - ${esc(x.title || "-")}</b></p><p>Adresse d'enregistrement sur D: <code>${esc(x.absPath || "-")}</code></p><p>Dossier application : <code>${esc(x.relPath || "-")}</code></p><div class="reader-actions"><button class="btn2 btn" type="button" data-odcentral-open="${x.id}">Ouvrir</button><button class="btn2 btn" type="button" data-odcentral-read="${x.id}">Lire</button><button class="btn2 btn" type="button" data-odcentral-detail="${x.id}">Fiche</button><button class="btn2 btn" type="button" data-odcentral-edit="${x.id}">Modifier</button><a class="btn btn" href="${esc(x.webUrl || "#")}" download="${esc(x.fileName || "document")}">Telecharger</a></div></div>`
-    }
     function docCentralRecentEvents(documentId = "", limit = 12) {
       const all = Array.isArray(docCentralState.events) ? docCentralState.events : [];
       const filtered = documentId ? all.filter(x => String(x.documentId || "") === String(documentId)) : all;
@@ -10094,26 +9781,7 @@
       return `<div class="card mt12"><h3>Lecture integree</h3><div class="it"><b>Apercu navigateur limite pour ce format</b><p>Ce type de fichier s'ouvre mieux dans son application native. Utilise les boutons ci-dessous pour l'ouvrir ou le telecharger directement depuis le depot central.</p><div class="reader-actions"><a class="btn2 btn" href="${esc(x.webUrl || "#")}" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a><a class="btn btn" href="${esc(x.webUrl || "#")}" download="${esc(x.fileName || "document")}">Telecharger</a></div></div></div>`
     }
     function docCentralDetailHtml(x, mode = "detail") {
-      return `<div class="card"><h3>${mode === "read" ? "Lecture du document central" : "Fiche du document central"}</h3><div class="it"><b>${esc(x.ref)} - ${esc(x.title)}</b><p>Processus : ${esc(x.processName || "-")} | Type : ${esc(x.docType || "-")} | Version : ${esc(x.versionLabel || "-")}</p><p>Statut : <span class="${centralDocStatusTag(x.status)}">${esc(x.status || "-")}</span> | Responsable : ${esc(x.ownerName || "-")}</p><p>Fichier : ${esc(x.fileName || "-")} | Taille : ${fmtSize(Number(x.fileSize || 0))}</p><p>Chemin D: : <code>${esc(x.absPath || "-")}</code></p><p>Lien application : <a href="${esc(x.webUrl || "#")}" target="_blank" rel="noopener">${esc(x.webUrl || "-")}</a></p><p>Observation : ${esc(x.notes || "-")}</p><div class="reader-actions"><button class="btn2 btn" type="button" data-odcentral-open="${x.id}">Ouvrir</button><button class="btn2 btn" type="button" data-odcentral-read="${x.id}">Lire dans l'application</button><button class="btn2 btn" type="button" data-odcentral-edit="${x.id}">Modifier</button><a class="btn btn" href="${esc(x.webUrl || "#")}" download="${esc(x.fileName || "document")}">Telecharger</a><button class="btn3 btn" type="button" data-odcentral-archive="${x.id}">Archiver</button></div>${centralDocWorkflowActions(x)}<div class="card mt12"><h3>Historique recent</h3><div class="list">${docCentralEventsHtml(x.id)}</div></div></div></div>${mode === "read" ? docCentralPreviewHtml(x) : ""}`
-    }
-    function loadDocumentationCentralIntoForm(id) {
-      const x = (docCentralState.documents || []).find(v => String(v.id) === String(id));
-      if (!x) { sync("Document central introuvable"); return }
-      if ($("#odCentralTitle")) $("#odCentralTitle").value = x.title || "";
-      if ($("#odCentralRef")) $("#odCentralRef").value = x.ref || "";
-      if ($("#odCentralProc")) $("#odCentralProc").value = x.processName || "";
-      if ($("#odCentralType")) $("#odCentralType").value = x.docType || "";
-      if ($("#odCentralVersion")) $("#odCentralVersion").value = x.versionLabel || "";
-      if ($("#odCentralStatus")) $("#odCentralStatus").value = x.status || "";
-      if ($("#odCentralOwner")) $("#odCentralOwner").value = x.ownerName || "";
-      if ($("#odCentralVerifier")) $("#odCentralVerifier").value = x.verifierName || "";
-      if ($("#odCentralApprover")) $("#odCentralApprover").value = x.approverName || "";
-      if ($("#odCentralDiffuser")) $("#odCentralDiffuser").value = x.diffuserName || "";
-      if ($("#odCentralNotes")) $("#odCentralNotes").value = x.notes || "";
-      docCentralState.editingDocumentId = String(x.id || "");
-      const target = $("#odCentralImportCard") || $("#odCentralTitle");
-      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: "smooth", block: "start" });
-      sync("Le document a ete recharge dans le formulaire. Modifie les champs, choisis le nouveau fichier puis importe vers D:")
+      return `<div class="card"><h3>${mode === "read" ? "Lecture du document central" : "Fiche du document central"}</h3><div class="it"><b>${esc(x.ref)} - ${esc(x.title)}</b><p>Processus : ${esc(x.processName || "-")} | Type : ${esc(x.docType || "-")} | Version : ${esc(x.versionLabel || "-")}</p><p>Statut : <span class="${centralDocStatusTag(x.status)}">${esc(x.status || "-")}</span> | Responsable : ${esc(x.ownerName || "-")}</p><p>Fichier : ${esc(x.fileName || "-")} | Taille : ${fmtSize(Number(x.fileSize || 0))}</p><p>Chemin D: : <code>${esc(x.absPath || "-")}</code></p><p>Lien application : <a href="${esc(x.webUrl || "#")}" target="_blank" rel="noopener">${esc(x.webUrl || "-")}</a></p><p>Observation : ${esc(x.notes || "-")}</p><div class="reader-actions"><button class="btn2 btn" type="button" data-odcentral-open="${x.id}">Ouvrir</button><button class="btn2 btn" type="button" data-odcentral-read="${x.id}">Lire dans l'application</button><button class="btn3 btn" type="button" data-odcentral-archive="${x.id}">Archiver</button></div>${centralDocWorkflowActions(x)}<div class="card mt12"><h3>Historique recent</h3><div class="list">${docCentralEventsHtml(x.id)}</div></div></div></div>${mode === "read" ? docCentralPreviewHtml(x) : ""}`
     }
     function docCentralTableRows() {
       const q = ($("#ods") && $("#ods").value || "").trim().toLowerCase();
@@ -10137,8 +9805,6 @@
         const current = el.value;
         if (id === "#odpf") {
           el.innerHTML = `<option value="all">Tous les processus</option>` + items.map(x => `<option>${esc(x)}</option>`).join("");
-        } else if (id === "#odCentralProc") {
-          el.innerHTML = `<option value="">Choisir un processus</option>` + items.map(x => `<option>${esc(x)}</option>`).join("");
         } else {
           el.innerHTML = items.map(x => `<option>${esc(x)}</option>`).join("");
         }
@@ -10162,74 +9828,6 @@
       }
       docCentralState.streamConnected = false;
       docCentralState.streamStatus = "Temps reel arrete";
-    }
-    function disconnectPilotRealtimeStream() {
-      clearTimeout(pilotRealtimeRefreshTimer);
-      if (pilotRealtimeSource) {
-        try { pilotRealtimeSource.close() } catch (e) { }
-        pilotRealtimeSource = null;
-      }
-      docCentralState.streamConnected = false;
-      if (!docCentralState.streamStatus || docCentralState.streamStatus.includes("temps reel")) docCentralState.streamStatus = "Temps reel arrete";
-    }
-    function realtimeModuleLabel(moduleKey) {
-      return ({ docorg: "Documentation", plan: "Planning", stat: "Statistique" })[moduleKey] || "donnees"
-    }
-    function schedulePilotRealtimeRefresh(moduleKey, action, payload) {
-      clearTimeout(pilotRealtimeRefreshTimer);
-      pilotRealtimeRefreshTimer = setTimeout(async () => {
-        const pilotEmail = pilotEmailForApi();
-        if (!pilotEmail) return;
-        const isDocumentationEvent = moduleKey === "docorg" && String((payload && payload.source) || "") !== "pilot_app_state";
-        try {
-          if (isDocumentationEvent) {
-            docCentralState.streamLastEvent = { action, ...(payload || {}) };
-            await refreshDocumentationCentral((payload && payload.eventLabel) || "Mise a jour documentaire recue");
-          } else {
-            await loadPilotStateFromApi(pilotEmail);
-            render();
-            const label = realtimeModuleLabel(moduleKey);
-            sync((currentPage === moduleKey ? "Mise a jour temps reel appliquee : " : "Mise a jour temps reel recue : ") + label);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }, 220);
-    }
-    function connectPilotRealtimeStream(pilotEmail) {
-      if (!pilotEmail || typeof EventSource === "undefined" || location.protocol === "file:") return;
-      const target = authNormEmail(pilotEmail);
-      if (pilotRealtimeSource && currentPilotEmail === target) return;
-      disconnectPilotRealtimeStream();
-      try {
-        pilotRealtimeSource = new EventSource("/api/pilots/" + encodeURIComponent(target) + "/events/stream");
-        docCentralState.streamStatus = "Connexion temps reel globale...";
-        pilotRealtimeSource.addEventListener("pilot-update", ev => {
-          let data = null;
-          try { data = JSON.parse(ev.data || "{}") } catch (e) { data = null }
-          if (!data) return;
-          docCentralState.streamConnected = true;
-          if (data.status === "connected") {
-            docCentralState.streamStatus = "Canal temps reel global connecte";
-            render();
-            return;
-          }
-          const moduleKey = String(data.moduleKey || "").trim();
-          if (!["docorg", "plan", "stat"].includes(moduleKey)) return;
-          docCentralState.streamStatus = "Evenement temps reel recu";
-          if (moduleKey === "docorg") docCentralState.streamLastEvent = { action: data.action, ...(data.payload || {}) };
-          schedulePilotRealtimeRefresh(moduleKey, data.action, data.payload || {});
-        });
-        pilotRealtimeSource.onerror = () => {
-          docCentralState.streamConnected = false;
-          docCentralState.streamStatus = "Connexion temps reel interrompue";
-          render();
-        };
-      } catch (e) {
-        console.error(e);
-        docCentralState.streamConnected = false;
-        docCentralState.streamStatus = "Temps reel indisponible";
-      }
     }
     function scheduleDocumentationCentralRefresh(notice) {
       clearTimeout(docCentralRefreshTimer);
@@ -10299,12 +9897,10 @@
         docCentralState.folders = Array.isArray(foldersRes && foldersRes.items) ? foldersRes.items : [];
         docCentralState.documents = Array.isArray(docsRes && docsRes.items) ? docsRes.items : [];
         docCentralState.events = Array.isArray(eventsRes && eventsRes.items) ? eventsRes.items : [];
-        if (docCentralState.lastImportedId) {
-          docCentralState.lastImportedItem = docCentralState.documents.find(x => String(x.id) === String(docCentralState.lastImportedId)) || docCentralState.lastImportedItem || null;
-        }
         docCentralState.ready = true;
         docCentralState.syncedAt = now();
         fillDocumentationProcessSelectors();
+        connectDocumentationCentralStream(pilotEmail);
         render();
         if (notice) sync(notice);
         return true
@@ -10331,18 +9927,6 @@
       } catch (e) {
         console.error(e);
         sync(e.message || "Mise a jour de la hierarchie impossible");
-      }
-    }
-    async function scanDocumentationCentralRepository() {
-      const pilotEmail = pilotEmailForApi();
-      if (!pilotEmail) return;
-      try {
-        const res = await apiDocScan(pilotEmail, { actorName: (s.u && s.u.name) || "Pilote" });
-        const summary = res && res.summary ? res.summary : { scannedCount: 0, addedCount: 0, skippedCount: 0 };
-        await refreshDocumentationCentral(`Scan termine : ${summary.addedCount} ajoute(s), ${summary.skippedCount} deja connus, ${summary.scannedCount} fichier(s) analyse(s).`);
-      } catch (e) {
-        console.error(e);
-        sync(e.message || "Scan documentaire impossible");
       }
     }
     async function createDocumentationCentralFolder() {
@@ -10379,50 +9963,23 @@
       if ($("#odCentralRef") && !$("#odCentralRef").value.trim()) $("#odCentralRef").value = file.name.replace(/\.[^.]+$/, "").toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30) || "DOC-001";
       const box = $("#odCentralFileMeta");
       if (box) box.innerHTML = docCentralFileMetaHtml();
-      if (docCentralState.manualImportPending) {
-        docCentralState.manualImportPending = false;
-        sync("Fichier selectionne. Importation vers D: en cours...");
-        await importDocumentationCentralFile();
-        return
-      }
-      if (docCentralState.topDocAutoImport && ORG_TOP_DOC_TYPES.includes((($("#odCentralType") && $("#odCentralType").value) || "").trim())) {
-        docCentralState.topDocAutoImport = false;
-        sync("Fichier selectionne. Importation du document de tete en cours...");
-        await importDocumentationCentralFile();
-        return
-      }
       sync("Fichier pret pour l'importation vers le depot central")
     }
     async function importDocumentationCentralFile() {
       const pilotEmail = pilotEmailForApi();
       if (!pilotEmail) return;
-      docCentralState.topDocAutoImport = false;
       const file = docCentralState.selectedFile;
-      if (!file) {
-        docCentralState.manualImportPending = true;
-        sync("Choisis le fichier a importer vers D:");
-        const input = $("#odCentralFile");
-        if (input) {
-          input.value = "";
-          input.click();
-        }
-        return
-      }
+      if (!file) { sync("Choisis d'abord le fichier a importer dans la bibliotheque centrale"); return }
       const title = ($("#odCentralTitle") && $("#odCentralTitle").value || "").trim();
       const docRef = ($("#odCentralRef") && $("#odCentralRef").value || "").trim();
       const processName = ($("#odCentralProc") && $("#odCentralProc").value || "").trim();
       const docType = ($("#odCentralType") && $("#odCentralType").value || "").trim();
-      const versionLabel = ($("#odCentralVersion") && $("#odCentralVersion").value || "").trim();
-      const status = ($("#odCentralStatus") && $("#odCentralStatus").value || "").trim();
-      const ownerName = ($("#odCentralOwner") && $("#odCentralOwner").value || "").trim();
-      const verifierName = ($("#odCentralVerifier") && $("#odCentralVerifier").value || "").trim();
-      const approverName = ($("#odCentralApprover") && $("#odCentralApprover").value || "").trim();
-      const diffuserName = ($("#odCentralDiffuser") && $("#odCentralDiffuser").value || "").trim();
-      const notes = ($("#odCentralNotes") && $("#odCentralNotes").value || "").trim();
-      if (!title || !docRef || !processName || !docType || !versionLabel || !status || !ownerName || !verifierName || !approverName || !diffuserName || !notes) { sync("Tous les champs marques par une etoile rouge sont obligatoires pour l'importation"); return }
+      const versionLabel = ($("#odCentralVersion") && $("#odCentralVersion").value || "1.0").trim() || "1.0";
+      const status = ($("#odCentralStatus") && $("#odCentralStatus").value || "Brouillon").trim() || "Brouillon";
+      if (!title || !docRef) { sync("Renseigne le titre et la reference du document a importer"); return }
       try {
         const dataUrl = await fileToDataUrl(file);
-        const res = await apiDocImport(pilotEmail, {
+        await apiDocImport(pilotEmail, {
           actorName: (s.u && s.u.name) || "Pilote",
           title,
           docRef,
@@ -10430,24 +9987,18 @@
           docType,
           versionLabel,
           status,
-          ownerName,
-          verifierName,
-          approverName,
-          diffuserName,
-          notes,
+          ownerName: ($("#odCentralOwner") && $("#odCentralOwner").value || "").trim(),
+          verifierName: ($("#odCentralVerifier") && $("#odCentralVerifier").value || "").trim(),
+          approverName: ($("#odCentralApprover") && $("#odCentralApprover").value || "").trim(),
+          diffuserName: ($("#odCentralDiffuser") && $("#odCentralDiffuser").value || "").trim(),
+          notes: ($("#odCentralNotes") && $("#odCentralNotes").value || "").trim(),
           fileName: file.name,
           mimeType: file.type || mimeForName(file.name) || "application/octet-stream",
           dataUrl
         });
-        docCentralState.lastImportedItem = res && res.item ? res.item : null;
-        docCentralState.lastImportedId = docCentralState.lastImportedItem ? String(docCentralState.lastImportedItem.id || "") : "";
-        docCentralState.editingDocumentId = "";
         docCentralState.selectedFile = null;
         docCentralState.selectedMeta = null;
         clearFields(["#odCentralTitle", "#odCentralRef", "#odCentralVersion", "#odCentralOwner", "#odCentralVerifier", "#odCentralApprover", "#odCentralDiffuser", "#odCentralNotes"]);
-        if ($("#odCentralProc")) $("#odCentralProc").value = "";
-        if ($("#odCentralType")) $("#odCentralType").value = "";
-        if ($("#odCentralStatus")) $("#odCentralStatus").value = "";
         if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml();
         await refreshDocumentationCentral("Document importe dans la bibliotheque centrale");
       } catch (e) {
@@ -10489,35 +10040,15 @@
     async function openDocumentationCentralDocument(id) {
       const x = (docCentralState.documents || []).find(v => String(v.id) === String(id));
       if (!x || !x.webUrl) { sync("Document central introuvable"); return }
-      await markDocumentationCentralOpen(id, "download");
-      const a = document.createElement("a");
-      a.href = x.webUrl;
-      a.download = x.fileName || "document";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      sync("Telechargement du document lance");
+      await markDocumentationCentralOpen(id, "open");
+      setOrgSummaryContent(docCentralDetailHtml(x));
+      window.open(x.webUrl, "_blank");
     }
     async function readDocumentationCentralDocument(id) {
       const x = (docCentralState.documents || []).find(v => String(v.id) === String(id));
       if (!x) { sync("Document central introuvable"); return }
       await markDocumentationCentralOpen(id, "read");
       setOrgSummaryContent(docCentralDetailHtml(x, "read"));
-      const target = $("#odSummary");
-      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: "smooth", block: "start" });
-      sync("Lecture du document ouverte dans l'application");
-    }
-    async function revealDocumentationCentralDocument(id) {
-      const pilotEmail = pilotEmailForApi();
-      const x = (docCentralState.documents || []).find(v => String(v.id) === String(id));
-      if (!pilotEmail || !x) { sync("Document central introuvable"); return }
-      try {
-        const res = await apiDocReveal(pilotEmail, id, (s.u && s.u.name) || "Pilote");
-        sync("Emplacement local ouvert : " + ((res && res.folderPath) || x.absPath || "D:"));
-      } catch (e) {
-        console.error(e);
-        sync(e.message || "Ouverture de l'emplacement local impossible");
-      }
     }
     function processStorage(proc) { const docs = (s.orgDocs || []).map(normDoc).filter(x => (x.p || "Processus support") === proc), root = processRootPath(proc), mode = orgHandle ? "Lecture integree active" : "Lecture integree a activer"; return `<h4>Espace de stockage</h4><div class="storage-path">${root}</div><div class="storage-mini"><div class="mini"><strong>Total docs</strong><span class="bl">${docs.length}</span></div><div class="mini"><strong>En revue</strong><span class="wa">${docs.filter(x => x.st === "En revue").length}</span></div><div class="mini"><strong>Approuve</strong><span class="ok">${docs.filter(x => x.st === "Approuve").length}</span></div><div class="mini"><strong>Diffuse</strong><span class="ok">${docs.filter(x => x.st === "Diffuse").length}</span></div></div><div class="reader-actions"><span class="st">${mode}</span><button class="btn2 btn" type="button" data-orgpick="1">Activer lecture dans l'application</button><button class="btn2 btn" type="button" data-orgscan="1">Actualiser la lecture</button></div>` }
     function orgFolders(proc) { const docs = (s.orgDocs || []).map(normDoc).filter(x => (x.p || "Processus support") === proc); return ORG_DOC_TYPES.map(t => { const items = docs.filter(x => x.type === t), subs = DOC_FORMATS.map(fmt => { const files = items.filter(x => (x.st || "Brouillon") === fmt), nums = files.length ? files.map((_, i) => String(i + 1)).join("<br>") : "Aucun fichier.", cls = ["Approuve", "Diffuse"].includes(fmt) ? "valide" : fmt === "Archive" ? "obsolete" : "avalider"; return `<div class="subfolder ${cls}"><strong>${fmt}</strong><p>${files.length} document${files.length > 1 ? "s" : ""}</p><p>${nums}</p><div class="reader-actions"><button class="btn2 btn" type="button" data-orgpick="1" data-otype="${esc(t)}" data-ost="${esc(fmt)}">Activer lecture dans l'application</button><button class="btn2 btn" type="button" data-orgscan="1" data-otype="${esc(t)}" data-ost="${esc(fmt)}">Actualiser la lecture</button></div></div>` }).join(""); return `<div class="it folder-item"><b>${t}</b><p>${items.length} document${items.length > 1 ? "s" : ""}</p><div class="subfolders">${subs}</div></div>` }).join("") }
@@ -10536,7 +10067,7 @@
     function downloadDocsTable() { if (!requirePerm("Exporter")) return; const { arr } = filteredDocs(); downloadText("liste_documents_" + stamp() + ".xls", docExportHtml(arr), "application/vnd.ms-excel;charset=utf-8"); sync("Liste des documents telechargee") }
     function docs() { const { all, arr } = filteredDocs(); $("#dc").textContent = arr.length + " document" + (arr.length > 1 ? "s" : ""); const summary = $("#dSummary"); if (summary) summary.innerHTML = all.length ? docSummary(all) : `<div class="e">Aucun document.</div>`; $("#dtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${x.ref}</td><td><b>${x.title}</b><br><small></small></td><td>${x.p}</td><td>${x.type}</td><td>${x.v}</td><td><span class="${tag(x.st)}">${x.st}</span></td><td>${storageCell(x)}</td><td>${x.o}</td><td>${esc(x.verif)}<br>${esc(x.app)}</td><td>${esc(x.review)}</td><td>${esc(x.diff)}</td></tr><tr class="doc-action-row"><td colspan="11">${docActions(x)}</td></tr>`).join("") : `<tr><td colspan="11" class="e">Aucun document.</td></tr>` }
     function orgDocActions(x) { return `<div class="doc-row-actions"><button class="btn2 btn" data-odreview="${x.id}">Verification</button><button class="btn2 btn" data-odapprove="${x.id}">Approbation</button><button class="btn2 btn" data-oddiffuse="${x.id}">Diffuser</button><button class="btn2 btn" data-odcorrect="${x.id}">Correction</button><button class="btn2 btn" data-oddetail="${x.id}">Fiche</button><button class="btn2 btn" data-odread="${x.id}">Lire</button><button class="btn3 btn" data-odarchive="${x.id}">Archiver</button><button class="btn3 btn" data-odd="${x.id}">Supprimer</button></div>` }
-    function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = $("#ods").value.trim().toLowerCase(), pf = $("#odpf").value, tf = $("#odtf").value, f = $("#odf").value, all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && (pf === "all" || x.p === pf) && (tf === "all" || x.type === tf) && (f === "all" || x.st === f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.processName, x.docType, x.status, x.fileName, x.ownerName, x.notes].join(" ").toLowerCase(); return hay.includes(q) && (pf === "all" || x.processName === pf) && (tf === "all" || x.docType === tf) && (f === "all" || x.status === f) }); $("#odc").textContent = (arr.length + centralDocs.length) + " document" + ((arr.length + centralDocs.length) > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralImportResult")) $("#odCentralImportResult").innerHTML = docCentralImportResultHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
+    function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = $("#ods").value.trim().toLowerCase(), pf = $("#odpf").value, tf = $("#odtf").value, f = $("#odf").value, all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && (pf === "all" || x.p === pf) && (tf === "all" || x.type === tf) && (f === "all" || x.st === f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.processName, x.docType, x.status, x.fileName, x.ownerName, x.notes].join(" ").toLowerCase(); return hay.includes(q) && (pf === "all" || x.processName === pf) && (tf === "all" || x.docType === tf) && (f === "all" || x.status === f) }); $("#odc").textContent = (arr.length + centralDocs.length) + " document" + ((arr.length + centralDocs.length) > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(all); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
     function eqItem(x) { return { ...x, dom: x.dom || x.domain || x.domaine || "-", n: x.n || x.designation || "-", brand: x.brand || x.b || x.marque || "-", m: x.m || x.model || x.modele || "-", sn: x.sn || x.serial || x.serie || "-", code: x.code || x.id || "-", l: x.l || x.start || x.mise || "-", st: x.st || "Valide" } }
     function filteredEq() { const q = ($("#es").value || "").trim().toLowerCase(), f = ($("#ef").value || "all"); return (s.eq || []).map(eqItem).filter(x => [x.dom, x.n, x.brand, x.m, x.sn, x.code].join(" ").toLowerCase().includes(q) && (f === "all" || x.st === f)) }
     function eqExportHtml(items) { const rows = items.map(x => `<tr><td>${esc(x.dom)}</td><td>${esc(x.n)}</td><td>${esc(x.brand)}</td><td>${esc(x.m)}</td><td>${esc(x.sn)}</td><td>${esc(x.code)}</td><td>${esc(x.l)}</td><td>${esc(x.st)}</td></tr>`).join("") || `<tr><td colspan="9">Aucun equipement.</td></tr>`; return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Liste des equipements</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>Liste des equipements</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre d'equipements :</b> ${items.length}</p><table><thead><tr><th>Domaine</th><th>Designation</th><th>Marque</th><th>Modele</th><th>N de serie</th><th>Code</th><th>Date mise en service</th><th>Statut</th></tr></thead><tbody>${rows}</tbody></table></body></html>` }
@@ -10551,7 +10082,7 @@
     function ncAuditOptions() { const opts = `<option value="all">Tous les audits</option>` + ncAudits().map(a => `<option value="${esc(a.ref)}">Ref ${esc(a.ref)} - ${esc(a.type || "Audit")}</option>`).join(""), optsNew = `<option value="">Sans audit</option>` + ncAudits().map(a => `<option value="${esc(a.ref)}">Ref ${esc(a.ref)} - ${esc(a.type || "Audit")}</option>`).join(""); const f = $("#nAudit"), n = $("#nAuditNew"), fv = f ? f.value : "all", nv = n ? n.value : ""; if (f) { f.innerHTML = opts; f.value = [...f.options].some(o => o.value === fv) ? fv : "all" } if (n) { n.innerHTML = optsNew; n.value = [...n.options].some(o => o.value === nv) ? nv : "" } }
     function ncAuditSummary(a) { const list = s.nc.filter(x => x.auditId === a.ref), maj = list.filter(x => ["Majeure", "Critique"].includes(x.g)).length, min = list.filter(x => x.g === "Mineure").length; return `<table class="audit-report"><tbody><tr><th>Type d'audit</th><td>${esc(a.type || "-")}</td></tr><tr><th>Reference audit</th><td>${esc(a.ref || "-")}</td></tr><tr><th>Date debut d'audit</th><td>${esc(a.start || "-")}</td></tr><tr><th>Date fin d'audit</th><td>${esc(a.end || "-")}</td></tr><tr><th>Nom auditeur</th><td>${esc(a.auditor || "-")}</td></tr><tr><th>Champ de l'evaluation</th><td>${esc(a.evaluation || "-")}</td></tr><tr><th>Site de l'evaluation</th><td>${esc(a.site || "-")}</td></tr><tr><th>Duree d'audit</th><td>${esc(a.duration || auditDuration(a.start, a.end) || "-")}</td></tr><tr><th>Nombre total des non-conformites</th><td><span class="bl">${list.length}</span></td></tr><tr><th>NC majeures</th><td><span class="er">${maj}</span></td></tr><tr><th>NC mineures</th><td><span class="wa">${min}</span></td></tr></tbody></table>` }
     function ncRowsPlain(rows) { return rows.length ? rows.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.desc)}</td><td>${esc(x.g)}</td><td>${esc(x.act)}</td><td>${esc(x.st)}</td><td>${esc(x.o)}</td><td>${esc(x.due)}</td></tr>`).join("") : `<tr><td colspan="7">Aucune NC pour cet audit.</td></tr>` }
-    function ncClosedItems() { return (s.nc || []).filter(x => ["Cloturee", "Soldee", "SoldÃ©e"].includes(x.st)) }
+    function ncClosedItems() { return (s.nc || []).filter(x => ["Cloturee", "Soldee", "Soldée"].includes(x.st)) }
     function ncClosedRows(rows) { return rows.length ? rows.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.desc)}</td><td>${esc(x.g)}</td><td>${esc(x.act)}</td><td>${esc(x.st)}</td><td>${esc(x.o)}</td><td>${esc(x.due)}</td></tr>`).join("") : `<tr><td colspan="7" class="e">Aucune non-conformite cloturee ou soldee.</td></tr>` }
     function ncClosedHtml(rows) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Non conformites cloturees</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#25324b;padding:24px}h1{margin:0 0 12px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe6f5;padding:8px 10px;text-align:left;vertical-align:top}th{background:#f7f9fd}</style><body><h1>Les non conformites cloturees / soldees</h1><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th></tr></thead><tbody>${ncClosedRows(rows)}</tbody></table></body></html>` }
     function auditReportHtml(a, rows, includeList = true) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Audit Ref ${esc(a.ref)}</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#25324b;padding:24px}h1,h2{margin:0 0 12px;color:#25324b}table{width:100%;border-collapse:collapse;margin-bottom:16px}th,td{border:1px solid #dbe6f5;padding:8px 10px;text-align:left;vertical-align:top}th{background:#f7f9fd;color:#51627f}.wa{background:#fff4df;color:#9a6500;padding:4px 8px;border-radius:999px;font-weight:700}.er{background:#ffeaea;color:#b42323;padding:4px 8px;border-radius:999px;font-weight:700}.bl{background:#edf3ff;color:#2f67d8;padding:4px 8px;border-radius:999px;font-weight:700}@page{size:landscape;margin:12mm}</style><body><h1>Audit : Ref ${esc(a.ref)}</h1>${ncAuditSummary(a)}${includeList ? `<h2>Liste de non conformite</h2><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th></tr></thead><tbody>${ncRowsPlain(rows)}</tbody></table>` : ""}</body></html>` }
@@ -10574,10 +10105,10 @@
     const PLAN_AUDIT_ACTIVITY_DEFAULTS = ["IPFNA", "PRESSION", "TEMPERATURE", "DIMENSIONNEL", "ELECTRIQUE", "SMQ"];
     const PLAN_INTER_SCOPE_DEFAULTS = ["IPFNA", "PRESSION", "TEMPERATURE", "DIMENSIONNEL", "ELECTRIQUE", "SMQ"];
     const PLAN_AUDIT_TEMPLATE = { year: "2025", rows: [{ id: "PA-001", activity: "IPFNA", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-002", activity: "PRESSION", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-003", activity: "TEMPERATURE", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-004", activity: "DIMENSIONNEL", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-005", activity: "ELECTRIQUE", responsible: "ENNAJEH Karim : RT", auditors: "A definir", months: {} }, { id: "PA-006", activity: "SMQ", responsible: "Mongi SOUAYED : RMQ", auditors: "A definir", months: {} }] };
-    const PLAN_INTERCOMP_TEMPLATE = [{ year: "2020", pression: "Chaine de mesure de basse pression gaz 0 a 20 bars au laboratoire", temperature: "Caracterisation enceinte climatique 10-40Â°C / 20-80%HR", pesage: "-", electrique: "-", dimensionnelle: "Pied a coulisse - Micrometre" }, { year: "2021", pression: "Manometre 20 bar gaz - Manometre 600 bars huile au laboratoire", temperature: "-", pesage: "-", electrique: "-", dimensionnelle: "Projecteur de profil" }, { year: "2022", pression: "-", temperature: "PT100 au laboratoire -30Â°C a 600Â°C", pesage: "-", electrique: "Multimetre - Pince amperometrique", dimensionnelle: "Comparateur - Micrometre" }, { year: "2023", pression: "-", temperature: "PT100 au laboratoire -30Â°C a 156Â°C", pesage: "IPFNA de precision 220 g", electrique: "Simulation electrique source / mesure - Calibreur", dimensionnelle: "Trusquin - Jauge de profondeur - Micrometre specifique" }, { year: "2024", pression: "Chaine de mesure de basse pression 0 a 600 bars sur site", temperature: "Caracterisation des enceintes thermostatiques <2m -20 a 200Â°C - Bain marie", pesage: "IPFNA 15 kg", electrique: "CIL au laboratoire -30 a 600 - Resistance", dimensionnelle: "Niveau a bulle - Rapporteur d'angle" }];
-    const PLAN_HABIL_TEMPLATE = { IPFNA: { item: "Etalons de classe E2", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "TempÃ©rature": { item: "Chaine de tempÃ©rature - TC", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Pression: { item: "Classe superieure a 0.2", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Dimensionnelle: { item: "Pied a coulisse", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "ElectricitÃ© & MagnÃ©tisme": { item: "Multimetres - Mesureur de tension", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] } };
+    const PLAN_INTERCOMP_TEMPLATE = [{ year: "2020", pression: "Chaine de mesure de basse pression gaz 0 a 20 bars au laboratoire", temperature: "Caracterisation enceinte climatique 10-40°C / 20-80%HR", pesage: "-", electrique: "-", dimensionnelle: "Pied a coulisse - Micrometre" }, { year: "2021", pression: "Manometre 20 bar gaz - Manometre 600 bars huile au laboratoire", temperature: "-", pesage: "-", electrique: "-", dimensionnelle: "Projecteur de profil" }, { year: "2022", pression: "-", temperature: "PT100 au laboratoire -30°C a 600°C", pesage: "-", electrique: "Multimetre - Pince amperometrique", dimensionnelle: "Comparateur - Micrometre" }, { year: "2023", pression: "-", temperature: "PT100 au laboratoire -30°C a 156°C", pesage: "IPFNA de precision 220 g", electrique: "Simulation electrique source / mesure - Calibreur", dimensionnelle: "Trusquin - Jauge de profondeur - Micrometre specifique" }, { year: "2024", pression: "Chaine de mesure de basse pression 0 a 600 bars sur site", temperature: "Caracterisation des enceintes thermostatiques <2m -20 a 200°C - Bain marie", pesage: "IPFNA 15 kg", electrique: "CIL au laboratoire -30 a 600 - Resistance", dimensionnelle: "Niveau a bulle - Rapporteur d'angle" }];
+    const PLAN_HABIL_TEMPLATE = { IPFNA: { item: "Etalons de classe E2", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "Température": { item: "Chaine de température - TC", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Pression: { item: "Classe superieure a 0.2", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, Dimensionnelle: { item: "Pied a coulisse", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] }, "Electricité & Magnétisme": { item: "Multimetres - Mesureur de tension", spec: "A definir", specOptions: ["A definir"], action: "Planifie", date: "", years: ["2023", "2024"], operators: [{ code: "1", name: "Ennajeh Karim" }, { code: "2", name: "Bouassida Intissar" }] } };
     const PLAN_REVIEW_TEMPLATE = { years: ["2024", "2025", "2026", "2027", "2028"], months: ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"] };
-    const PLAN_CAL_TEMPLATE = { Dimensionnel: [{ no: "1", designation: "Cale etalon 500 mm", code: "D.Ca07", period: "1 an", cert: "C 220928-01", date: "28/09/2022" }, { no: "2", designation: "Cale etalon 400 mm", code: "D.Ca22", period: "1 an", cert: "C 220801-01", date: "01/08/2022" }, { no: "3", designation: "Cale etalon 300 mm", code: "D.Ca09", period: "1 an", cert: "C 221003-04", date: "03/10/2022" }, { no: "4", designation: "Cale etalon 200 mm", code: "D.Ca12", period: "1 an", cert: "C 221003-03", date: "03/10/2022" }, { no: "5", designation: "Cale etalon 150 mm", code: "D.Ca24", period: "1 an", cert: "C 220729-04", date: "29/07/2022" }, { no: "6", designation: "Cale etalon 25 mm", code: "D.Ca23", period: "1 an", cert: "C 220729-06", date: "29/07/2022" }, { no: "7", designation: "Bague Ã˜ 5 mm", code: "D.Ba20", period: "1 an", cert: "C 221130-06", date: "30/11/2022" }, { no: "8", designation: "Bague Ã˜ 50 mm", code: "D.Ba21", period: "1 an", cert: "C 221130-07", date: "30/11/2022" }, { no: "9", designation: "Micrometre", code: "D.Mc25", period: "1 an", cert: "C 221017-01", date: "17/10/2022" }, { no: "10", designation: "Marbre", code: "D.Mr08", period: "3 ans", cert: "C 21060-01", date: "20/06/2022" }, { no: "11", designation: "Regle en verre", code: "D.Rv15", period: "1 an", cert: "E-223-220608", date: "08/06/2022" }], Pression: [], "TempÃ©rature": [], Pesage: [], Electrique: [] };
+    const PLAN_CAL_TEMPLATE = { Dimensionnel: [{ no: "1", designation: "Cale etalon 500 mm", code: "D.Ca07", period: "1 an", cert: "C 220928-01", date: "28/09/2022" }, { no: "2", designation: "Cale etalon 400 mm", code: "D.Ca22", period: "1 an", cert: "C 220801-01", date: "01/08/2022" }, { no: "3", designation: "Cale etalon 300 mm", code: "D.Ca09", period: "1 an", cert: "C 221003-04", date: "03/10/2022" }, { no: "4", designation: "Cale etalon 200 mm", code: "D.Ca12", period: "1 an", cert: "C 221003-03", date: "03/10/2022" }, { no: "5", designation: "Cale etalon 150 mm", code: "D.Ca24", period: "1 an", cert: "C 220729-04", date: "29/07/2022" }, { no: "6", designation: "Cale etalon 25 mm", code: "D.Ca23", period: "1 an", cert: "C 220729-06", date: "29/07/2022" }, { no: "7", designation: "Bague Ø 5 mm", code: "D.Ba20", period: "1 an", cert: "C 221130-06", date: "30/11/2022" }, { no: "8", designation: "Bague Ø 50 mm", code: "D.Ba21", period: "1 an", cert: "C 221130-07", date: "30/11/2022" }, { no: "9", designation: "Micrometre", code: "D.Mc25", period: "1 an", cert: "C 221017-01", date: "17/10/2022" }, { no: "10", designation: "Marbre", code: "D.Mr08", period: "3 ans", cert: "C 21060-01", date: "20/06/2022" }, { no: "11", designation: "Regle en verre", code: "D.Rv15", period: "1 an", cert: "E-223-220608", date: "08/06/2022" }], Pression: [], "Température": [], Pesage: [], Electrique: [] };
     function planSaveMeta() { if (!s.planSaveMeta) s.planSaveMeta = { audit: "", inter: "", habil: "", cal: "" }; return s.planSaveMeta }
     function planSaveLabel(id) { return (planSaveMeta()[id] || "").trim() || "-" }
     function storePlanningSection(id, label) { planSaveMeta()[id] = now(); log("Enregistrement", "Planning", label + " enregistre manuellement"); save(label + " enregistre"); render() }
@@ -10698,7 +10229,7 @@
     function savePlanCalInstrument() { if (!requirePerm("Ajouter")) return; const lab = currentPlanCalLab(), designation = ($("#planCalDesignation") && $("#planCalDesignation").value || "").trim(), code = ($("#planCalCode") && $("#planCalCode").value || "").trim(), period = ($("#planCalPeriod") && $("#planCalPeriod").value || "").trim(), lastDate = ($("#planCalLastDate") && $("#planCalLastDate").value || "").trim(); if (!designation || !code || !period || !lastDate) { sync("Renseigne designation, code, periodicite en mois et date dernier etalonnage"); return } if (planCalRows(lab).some(r => String(r.code || "").toLowerCase() === code.toLowerCase())) { sync("Ce code instrument existe deja dans ce domaine"); return } planCalRows(lab).push({ no: String(planCalRows(lab).length + 1), designation, code, periodMonths: period, period: period + " mois", lastDate, nextDate: planCalNextDate(lastDate, period) }); clearFields(["#planCalDesignation", "#planCalCode", "#planCalPeriod", "#planCalLastDate"]); renderPlanCalControls(lab); save("Instrument etalonnage cree"); render() }
     function updatePlanCalInstrument() { if (!requirePerm("Modifier")) return; const lab = currentPlanCalLab(), idx = $("#planCalEditRow") && $("#planCalEditRow").value, row = idx === "" ? null : planCalRows(lab)[+idx], designation = ($("#planCalDesignation") && $("#planCalDesignation").value || "").trim(), code = ($("#planCalCode") && $("#planCalCode").value || "").trim(), period = ($("#planCalPeriod") && $("#planCalPeriod").value || "").trim(), lastDate = ($("#planCalLastDate") && $("#planCalLastDate").value || "").trim(); if (!row) { sync("Choisis l'instrument a modifier"); return } if (!designation || !code || !period || !lastDate) { sync("Renseigne designation, code, periodicite en mois et date dernier etalonnage"); return } const duplicate = planCalRows(lab).some((r, i) => i !== +idx && String(r.code || "").toLowerCase() === code.toLowerCase()); if (duplicate) { sync("Ce code instrument existe deja dans ce domaine"); return } Object.assign(row, { designation, code, periodMonths: period, period: period + " mois", lastDate, nextDate: planCalNextDate(lastDate, period) }); renderPlanCalControls(lab); save("Instrument etalonnage modifie"); render() }
     function deletePlanCalInstrument() { if (!requirePerm("Supprimer")) return; const lab = currentPlanCalLab(), idx = $("#planCalEditRow") && $("#planCalEditRow").value; if (idx === "") { sync("Choisis l'instrument a supprimer"); return } PLAN_CAL_TEMPLATE[lab] = planCalRows(lab).filter((_, i) => i !== +idx).map((r, i) => ({ ...r, no: String(i + 1) })); clearFields(["#planCalDesignation", "#planCalCode", "#planCalPeriod", "#planCalLastDate"]); renderPlanCalControls(lab); save("Instrument etalonnage supprime"); render() }
-    function planCalHtml() { const lab = currentPlanCalLab(), rows = planCalRows(lab); renderPlanCalControls(lab); if (!rows.length) return `<div class="e">Aucun instrument configure pour le domaine ${esc(lab)}.</div>`; return `<table><thead><tr><th>NÂ°</th><th>Domaine</th><th>Designation</th><th>Code</th><th>Periodicite/mois</th><th>Dernier etalonnage</th><th>Prochain etalonnage estime</th></tr></thead><tbody>${rows.map((r, i) => { const period = r.periodMonths || planCalPeriodMonths(r.period), last = r.lastDate || planCalDateValue(r.date) || "-", next = r.nextDate || planCalNextDate(last, period); return `<tr><td>${esc(r.no || String(i + 1))}</td><td>${esc(lab)}</td><td><b>${esc(r.designation)}</b></td><td>${esc(r.code)}</td><td>${esc(period || "-")}</td><td>${esc(last)}</td><td><span class="bl">${esc(next)}</span></td></tr>` }).join("")}</tbody></table>` }
+    function planCalHtml() { const lab = currentPlanCalLab(), rows = planCalRows(lab); renderPlanCalControls(lab); if (!rows.length) return `<div class="e">Aucun instrument configure pour le domaine ${esc(lab)}.</div>`; return `<table><thead><tr><th>N°</th><th>Domaine</th><th>Designation</th><th>Code</th><th>Periodicite/mois</th><th>Dernier etalonnage</th><th>Prochain etalonnage estime</th></tr></thead><tbody>${rows.map((r, i) => { const period = r.periodMonths || planCalPeriodMonths(r.period), last = r.lastDate || planCalDateValue(r.date) || "-", next = r.nextDate || planCalNextDate(last, period); return `<tr><td>${esc(r.no || String(i + 1))}</td><td>${esc(lab)}</td><td><b>${esc(r.designation)}</b></td><td>${esc(r.code)}</td><td>${esc(period || "-")}</td><td>${esc(last)}</td><td><span class="bl">${esc(next)}</span></td></tr>` }).join("")}</tbody></table>` }
     function selectedPlanningType() { return ($("#planFilter") && $("#planFilter").value) || "all" }
     function selectedPlanningLabel(type = selectedPlanningType()) { return type === "all" ? "Tous les planings" : type }
     function planningFileLabel(type = selectedPlanningType()) { return selectedPlanningLabel(type).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "") || "Planning" }
@@ -10722,7 +10253,7 @@
     function prestItems() { if (!Array.isArray(s.prest)) s.prest = []; return s.prest }
     function prestScore(q, c, d) { const score = (Number(q || 0) * 0.4) + (Number(c || 0) * 0.3) + (Number(d || 0) * 0.3); return Math.round(score * 100) / 100 }
     function prestHasEvaluation(x) { return [x && x.evalQuality, x && x.evalComm, x && x.evalDelay].some(v => v !== "" && v !== null && v !== undefined && !Number.isNaN(Number(v))) }
-    function prestDecision(score) { return Number(score || 0) >= 2 ? "AgreÃ©" : "A reevaluer" }
+    function prestDecision(score) { return Number(score || 0) >= 2 ? "Agreé" : "A reevaluer" }
     function prestRetention(score) { return Number(score || 0) > 2 ? "RETENU" : "NON RETENU" }
     function prestEvalLabel(v) { const n = Number(v || 0); if (n === 1.25) return "Insatisfait"; if (n === 2.5) return "Peut satisfait"; if (n === 3.75) return "Satisfait"; if (n === 5) return "Tres satisfait"; return "-" }
     function prestEvaluationText(x) { if (!prestHasEvaluation(x)) return "Evaluation non renseignee"; const score = Number(x.evalGlobal ?? prestScore(x.evalQuality, x.evalComm, x.evalDelay)); const decision = x.evalDecision || prestDecision(score); const retention = x.evalRetention || prestRetention(score); return `Q: ${prestEvalLabel(x.evalQuality)} - C: ${prestEvalLabel(x.evalComm)} - D: ${prestEvalLabel(x.evalDelay)} - Note globale : ${score.toFixed(2)} - ${decision} - ${retention}` }
@@ -10734,14 +10265,14 @@
     function filteredStat() { const f = statFilters(); return statItems().filter(x => { const hay = [x.ref, x.region, x.family, x.country, x.month, x.year, x.prestations, x.note].join(" ").toLowerCase(); return hay.includes(f.q) && (f.region === "all" || String(x.region || "").toLowerCase() === f.region) && (f.family === "all" || String(x.family || "").toLowerCase() === f.family) && (f.year === "all" || String(x.year || "") === f.year) }) }
     function resetStatForm() { editingStatId = ""; clearFields(["#statRef", "#statRegion", "#statFamily", "#statCountry", "#statYear", "#statPrestations", "#statNote"]); const month = $("#statMonth"); if (month) month.value = ""; const btn = $("#statSave"); if (btn) btn.textContent = "Enregistrer" }
     function editStat(id) { if (!requirePerm("Modifier")) return; const x = statItems().find(v => String(v.id) === String(id)); if (!x) return; editingStatId = String(id); $("#statRef").value = x.ref || ""; $("#statRegion").value = x.region || ""; $("#statFamily").value = x.family || ""; $("#statCountry").value = x.country || ""; $("#statMonth").value = x.month || ""; $("#statYear").value = x.year || ""; $("#statPrestations").value = x.prestations ?? ""; $("#statNote").value = x.note || ""; const btn = $("#statSave"); if (btn) btn.textContent = "Modifier"; sync("Statistique chargee pour modification"); $("#statRef").scrollIntoView({ behavior: "smooth", block: "center" }) }
-    function saveStat() { if (!requirePerm(editingStatId ? "Modifier" : "Ajouter")) return; const ref = ($("#statRef").value || "").trim(), region = ($("#statRegion").value || "").trim(), family = ($("#statFamily").value || "").trim(), country = ($("#statCountry").value || "").trim(), month = $("#statMonth").value, year = ($("#statYear").value || "").trim(), prestations = +($("#statPrestations").value || 0), note = ($("#statNote").value || "").trim(); if (!ref || !region || !family || !month || !year) { sync("Renseigne le N° affaire, la region, la famille / domaine, le mois et l'annee"); return } const items = statItems(), index = items.findIndex(v => String(v.id) === String(editingStatId)); const row = markSaved({ id: index >= 0 ? items[index].id : "STAT-" + stamp(), ref, region, family, country: country || "Tunisie", month, year, prestations, note: note || "-" }); if (index >= 0) { items[index] = row; log("Modification", "Statistique", ref + " mise a jour"); save("Statistique modifiee automatiquement") } else { items.unshift(row); log("Creation", "Statistique", ref + " ajoutee"); save("Statistique enregistree automatiquement") } resetStatForm(); render() }
+    function saveStat() { if (!requirePerm(editingStatId ? "Modifier" : "Ajouter")) return; const ref = ($("#statRef").value || "").trim(), region = ($("#statRegion").value || "").trim(), family = ($("#statFamily").value || "").trim(), country = ($("#statCountry").value || "").trim(), month = $("#statMonth").value, year = ($("#statYear").value || "").trim(), prestations = +($("#statPrestations").value || 0), note = ($("#statNote").value || "").trim(); if (!ref || !region || !family || !month || !year) { sync("Renseigne le N� affaire, la region, la famille / domaine, le mois et l'annee"); return } const items = statItems(), index = items.findIndex(v => String(v.id) === String(editingStatId)); const row = markSaved({ id: index >= 0 ? items[index].id : "STAT-" + stamp(), ref, region, family, country: country || "Tunisie", month, year, prestations, note: note || "-" }); if (index >= 0) { items[index] = row; log("Modification", "Statistique", ref + " mise a jour"); save("Statistique modifiee automatiquement") } else { items.unshift(row); log("Creation", "Statistique", ref + " ajoutee"); save("Statistique enregistree automatiquement") } resetStatForm(); render() }
     function deleteStat(id) { if (!requirePerm("Supprimer")) return; const x = statItems().find(v => String(v.id) === String(id)); s.stat = statItems().filter(v => String(v.id) !== String(id)); if (editingStatId === String(id)) resetStatForm(); log("Suppression", "Statistique", x ? x.ref : id); save("Statistique supprimee"); render() }
     function statRowActions(x) { return `<tr class="doc-action-row"><td colspan="9"><div class="doc-row-actions"><button class="btn2 btn" data-stat-edit="${esc(x.id)}" type="button">Modifier</button><button class="btn3 btn" data-stat-del="${esc(x.id)}" type="button">Supprimer</button></div></td></tr>` }
     function statRows(items, actions = true) { return items.length ? items.map(x => { const row = `<tr><td>${esc(x.ref)}</td><td>${esc(x.region || "-")}</td><td>${esc(x.family || "-")}</td><td>${esc(x.country || "-")}</td><td>${esc(x.month || "-")}</td><td>${esc(String(x.year || "-"))}</td><td>${esc(String(x.prestations ?? 0))}</td><td>${esc(x.note || "-")}</td><td>${actions ? "Actions dessous" : "-"}</td></tr>`; return actions ? row + statRowActions(x) : row }).join("") : `<tr><td colspan="9" class="e">Aucune statistique enregistree.</td></tr>` }
     function statSummaryByRegion(items) { const map = {}; items.forEach(x => { const key = x.region || "-"; map[key] = map[key] || { region: key, affairs: 0, prestations: 0 }; map[key].affairs += 1; map[key].prestations += +(x.prestations || 0) }); return Object.values(map).sort((a, b) => b.prestations - a.prestations) }
     function statSummaryByFamily(items) { const map = {}; items.forEach(x => { const key = x.family || "-"; map[key] = map[key] || { family: key, affairs: 0, prestations: 0 }; map[key].affairs += 1; map[key].prestations += +(x.prestations || 0) }); return Object.values(map).sort((a, b) => b.prestations - a.prestations) }
     function statSummaryByPeriod(items) { const order = { Janvier: 1, Fevrier: 2, Mars: 3, Avril: 4, Mai: 5, Juin: 6, Juillet: 7, Aout: 8, Septembre: 9, Octobre: 10, Novembre: 11, Decembre: 12 }, map = {}; items.forEach(x => { const key = `${x.year || "-"}|${x.month || "-"}`; map[key] = map[key] || { year: x.year || "-", month: x.month || "-", affairs: 0, prestations: 0 }; map[key].affairs += 1; map[key].prestations += +(x.prestations || 0) }); return Object.values(map).sort((a, b) => String(b.year).localeCompare(String(a.year)) || ((order[a.month] || 99) - (order[b.month] || 99))) }
-    function statExportHtml(items = filteredStat()) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Statistique</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;padding:22px}h1{color:#245ccc;margin-bottom:10px}table{border-collapse:collapse;width:100%;margin-top:12px}th,td{padding:7px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>Statistique</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre d'affaires :</b> ${items.length}<br><b>Prestations effectuees :</b> ${items.reduce((sum, x) => sum + +(x.prestations || 0), 0)}</p><table><thead><tr><th>N° affaire</th><th>Region</th><th>Famille / domaine</th><th>Pays</th><th>Mois</th><th>Annee</th><th>Prestations</th><th>Observation</th></tr></thead><tbody>${items.length ? items.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.region || "-")}</td><td>${esc(x.family || "-")}</td><td>${esc(x.country || "-")}</td><td>${esc(x.month || "-")}</td><td>${esc(String(x.year || "-"))}</td><td>${esc(String(x.prestations ?? 0))}</td><td>${esc(x.note || "-")}</td></tr>`).join("") : `<tr><td colspan="8">Aucune statistique enregistree.</td></tr>`}</tbody></table></body></html>` }
+    function statExportHtml(items = filteredStat()) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Statistique</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;padding:22px}h1{color:#245ccc;margin-bottom:10px}table{border-collapse:collapse;width:100%;margin-top:12px}th,td{padding:7px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>Statistique</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre d'affaires :</b> ${items.length}<br><b>Prestations effectuees :</b> ${items.reduce((sum, x) => sum + +(x.prestations || 0), 0)}</p><table><thead><tr><th>N� affaire</th><th>Region</th><th>Famille / domaine</th><th>Pays</th><th>Mois</th><th>Annee</th><th>Prestations</th><th>Observation</th></tr></thead><tbody>${items.length ? items.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.region || "-")}</td><td>${esc(x.family || "-")}</td><td>${esc(x.country || "-")}</td><td>${esc(x.month || "-")}</td><td>${esc(String(x.year || "-"))}</td><td>${esc(String(x.prestations ?? 0))}</td><td>${esc(x.note || "-")}</td></tr>`).join("") : `<tr><td colspan="8">Aucune statistique enregistree.</td></tr>`}</tbody></table></body></html>` }
     function printStat() { if (!requirePerm("Imprimer")) return; const html = statExportHtml(filteredStat()), w = window.open("", "_blank", "width=1200,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer les statistiques"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Statistiques pretes a imprimer") }
     function downloadStat() { if (!requirePerm("Telecharger")) return; downloadText("Statistique_" + stamp() + ".xls", statExportHtml(filteredStat()), "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Statistique", "Statistiques exportees"); save("Statistiques telechargees") }
     function statView() { const all = statItems(), items = filteredStat(), regions = [...new Set(all.map(x => x.region).filter(Boolean))].sort(), families = [...new Set(all.map(x => x.family).filter(Boolean))].sort(), years = [...new Set(all.map(x => String(x.year || "")).filter(Boolean))].sort((a, b) => b.localeCompare(a)); const rf = $("#statRegionFilter"), ff = $("#statFamilyFilter"), yf = $("#statYearFilter"); if (rf) { const current = rf.value || "all"; rf.innerHTML = `<option value="all">Toutes les regions</option>` + regions.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(""); rf.value = regions.includes(current) ? current : "all" } if (ff) { const current = ff.value || "all"; ff.innerHTML = `<option value="all">Toutes les familles / domaines</option>` + families.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(""); ff.value = families.includes(current) ? current : "all" } if (yf) { const current = yf.value || "all"; yf.innerHTML = `<option value="all">Toutes les annees</option>` + years.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(""); yf.value = years.includes(current) ? current : "all" } $("#statCount").textContent = `${items.length} affaire${items.length > 1 ? "s" : ""}`; $("#statTotalAffaires").textContent = String(items.length); $("#statTotalPrestations").textContent = String(items.reduce((sum, x) => sum + +(x.prestations || 0), 0)); $("#statTotalRegions").textContent = String(new Set(items.map(x => x.region).filter(Boolean)).size); $("#statTotalYears").textContent = String(new Set(items.map(x => String(x.year || "")).filter(Boolean)).size); $("#statRegionTab").innerHTML = statSummaryByRegion(items).length ? statSummaryByRegion(items).map(x => `<tr><td><b>${esc(x.region)}</b></td><td>${esc(String(x.affairs))}</td><td>${esc(String(x.prestations))}</td></tr>`).join("") : `<tr><td colspan="3" class="e">Aucune donnee statistique.</td></tr>`; $("#statFamilyTab").innerHTML = statSummaryByFamily(items).length ? statSummaryByFamily(items).map(x => `<tr><td><b>${esc(x.family)}</b></td><td>${esc(String(x.affairs))}</td><td>${esc(String(x.prestations))}</td></tr>`).join("") : `<tr><td colspan="3" class="e">Aucune donnee statistique.</td></tr>`; $("#statSummaryTab").innerHTML = statSummaryByPeriod(items).length ? statSummaryByPeriod(items).map(x => `<tr><td><b>${esc(String(x.year))}</b></td><td>${esc(x.month)}</td><td>${esc(String(x.affairs))}</td><td>${esc(String(x.prestations))}</td></tr>`).join("") : `<tr><td colspan="4" class="e">Aucune synthese disponible.</td></tr>`; $("#statTab").innerHTML = statRows(items) }
@@ -10792,7 +10323,7 @@
     function printRiskRegister() { const q = ($("#riskSearch").value || "").toLowerCase(), sheet = $("#riskSheet").value, items = riskItems().filter(x => (sheet === "all" || x.sheet === sheet) && [x.sheet, x.chapter, x.risk, x.action, x.resp, x.follow, x.criterion, x.eff].join(" ").toLowerCase().includes(q)); const rows = items.map(x => { const c0 = riskScore(x), c1 = riskReScore(x); return `<tr><td>${esc(x.chapter)}</td><td>${esc(x.risk)}</td><td>${esc(x.p)}</td><td>${esc(x.g)}</td><td>${c0}</td><td>${esc(x.action)}</td><td>${esc(x.delay)}</td><td>${esc(x.resp)}</td><td>${esc(x.follow)}</td><td>${esc(x.rp)}</td><td>${esc(x.rg)}</td><td>${c1}</td><td>${esc(x.criterion)}</td><td>${esc(x.eff)}</td></tr>` }).join("") || `<tr><td colspan="14">Aucun risque trouve.</td></tr>`, html = `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Rigistre des risques</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#1f2a37;padding:22px}h1{margin:0 0 8px;color:#10260f}.meta{margin:0 0 14px;color:#6f7d99;font-weight:700}table{width:100%;border-collapse:collapse}th,td{border:1px solid #7f8f57;padding:6px;vertical-align:top;text-align:left}th{background:#fff;text-align:center}.score{text-align:center;font-weight:700}@page{size:landscape;margin:12mm}</style><body><h1>Rigistre des risques</h1><p class="meta">Derniere mise a jour : ${esc(s.riskUpdatedAt || "-")}</p><table><thead><tr><th rowspan="2">Paragraphe / chapitre</th><th rowspan="2">Risque</th><th colspan="3">Evaluation initiale</th><th rowspan="2">Actions a realiser</th><th rowspan="2">Delai</th><th rowspan="2">Responsable / Operateur</th><th rowspan="2">Suivi</th><th colspan="3">Reevaluation</th><th rowspan="2">Critere d'evaluation</th><th rowspan="2">Efficacite</th></tr><tr><th>P</th><th>G</th><th>C</th><th>P</th><th>G</th><th>C</th></tr></thead><tbody>${rows}</tbody></table></body></html>`; const w = window.open("", "_blank", "width=1200,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer le registre des risques"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Rigistre des risques pret a imprimer") }
     function downloadRiskExcel() { if (!requirePerm("Telecharger")) return; const rows = riskRowsHtml(filteredRisks()), html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><style>table{border-collapse:collapse}th,td{border:1px solid #7f8f57;padding:6px;vertical-align:top}th{text-align:center;font-weight:700}</style></head><body><table><thead><tr><th colspan="14">Rigistre des risques</th></tr><tr><th colspan="14">Derniere mise a jour : ${esc(s.riskUpdatedAt || "-")}</th></tr><tr><th rowspan="2">Paragraphe / chapitre</th><th rowspan="2">Risque</th><th colspan="3">Evaluation initiale</th><th rowspan="2">Actions a realiser</th><th rowspan="2">Delai</th><th rowspan="2">Responsable / Operateur</th><th rowspan="2">Suivi</th><th colspan="3">Reevaluation</th><th rowspan="2">Critere d'evaluation</th><th rowspan="2">Efficacite</th></tr><tr><th>P</th><th>G</th><th>C</th><th>P</th><th>G</th><th>C</th></tr></thead><tbody>${rows}</tbody></table></body></html>`; downloadText("Rigistre_des_risques_" + stamp() + ".xls", html, "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Analyse de risque", "Rigistre des risques exporte sous Excel"); save("Registre des risques telecharge sous Excel") }
     function swotItems() { if (!Array.isArray(s.swot)) s.swot = c(SWOT_DEFAULTS); return s.swot }
-    function swotClass(t) { return String(t || "").toLowerCase().replaceAll("Ã©", "e").replaceAll("Ã¨", "e").replaceAll(" ", "-") }
+    function swotClass(t) { return String(t || "").toLowerCase().replaceAll("é", "e").replaceAll("è", "e").replaceAll(" ", "-") }
     function filteredSwot() { const q = ($("#swotSearch").value || "").toLowerCase(), type = $("#swotType").value; return swotItems().filter(x => (type === "all" || x.type === type) && [x.type, x.item, x.action, x.resp, x.delay, x.follow].join(" ").toLowerCase().includes(q)) }
     function swotMini(items, type) { const arr = items.filter(x => x.type === type); return arr.length ? arr.map(x => `<div class="it"><b>${esc(x.item)}</b></div>`).join("") : `<div class="e">Aucun element.</div>` }
     function swotRowsHtml(items, actions = true) { const types = ["Forces", "Faiblesses", "Opportunites", "Menaces"], cols = actions ? 7 : 6, groups = types.map(t => [t, items.filter(x => x.type === t)]).filter(g => g[1].length); return groups.length ? groups.map(([type, rows]) => rows.map((x, i) => `<tr>${i === 0 ? `<td rowspan="${rows.length}"><span class="swot-type ${swotClass(type)}">${esc(type)}</span></td>` : ""}<td>${esc(x.item)}</td><td>${esc(x.action || "-")}</td><td>${esc(x.resp || "-")}</td><td>${esc(x.delay || "-")}</td><td>${tag(x.follow || "-")}</td>${actions ? `<td><div class="risk-actions"><button class="btn2 btn" data-swot-edit="${esc(x.id)}" type="button">Modifier</button><button class="btn2 btn" data-swot-del="${esc(x.id)}" type="button">Supprimer</button></div></td>` : ""}</tr>`).join("")).join("") : `<tr><td colspan="${cols}" class="e">Aucun element SWOT trouve.</td></tr>` }
@@ -10833,7 +10364,7 @@
     function saveReclamation() { if (!requirePerm(editingReclId ? "Modifier" : "Ajouter")) return; const x = reclamationFormData(); if (!x.client || !x.label) { sync("Renseigne le client et le libelle de la reclamation"); return } const items = reclamationItems(), i = items.findIndex(v => v.id === editingReclId); if (i >= 0) { items[i] = { ...items[i], ...x }; log("Modification", "Reclamation client", x.no + " mise a jour"); save("Reclamation client modifiee automatiquement") } else { items.unshift(x); log("Creation", "Reclamation client", x.no + " ajoutee"); save("Reclamation client enregistree automatiquement") } resetReclamationForm(); render() }
     function editReclamation(id) { if (!requirePerm("Modifier")) return; const x = reclamationItems().find(v => v.id === id); if (!x) return; editingReclId = id; $("#recNo").value = x.no || ""; $("#recClient").value = x.client || ""; $("#recContact").value = x.contact || ""; $("#recLabel").value = x.label || ""; $("#recDate").value = x.date || ""; $("#recMode").value = x.mode || "Email"; $("#recType").value = x.type || "Apres prestation"; $("#recService").value = x.service || ""; $("#recAnalysisResp").value = x.analysisResp || ""; $("#recCause").value = x.cause || ""; $("#recFounded").value = x.founded || "Fondee : A verifier"; $("#recImmediate").value = x.immediate || ""; $("#recCorrective").value = x.corrective || ""; $("#recResp").value = x.resp || ""; $("#recDue").value = x.due && x.due !== "-" ? x.due : ""; $("#recResponseDate").value = x.responseDate && x.responseDate !== "-" ? x.responseDate : ""; $("#recResponse").value = x.response || ""; $("#recSatisfaction").value = x.satisfaction || ""; $("#recCloseDate").value = x.closeDate && x.closeDate !== "-" ? x.closeDate : ""; $("#recValidation").value = x.validation || ""; $("#recStatus").value = x.status || "Ouverte"; $("#recObs").value = x.obs || ""; sync("Reclamation chargee pour modification"); reclamationView(); $("#recNo").scrollIntoView({ behavior: "smooth", block: "center" }) }
     function deleteReclamation(id) { if (!requirePerm("Supprimer")) return; const x = reclamationItems().find(v => v.id === id); s.recl = reclamationItems().filter(v => v.id !== id); if (editingReclId === id) resetReclamationForm(); log("Suppression", "Reclamation client", x ? x.no : id); save("Reclamation client supprimee"); render() }
-    function reclamationExportHtml(items) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Registre suivi reclamations</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;padding:22px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:14px}th,td{padding:7px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}@page{size:landscape;margin:10mm}</style><body><h1>Registre suivi des reclamations client</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre :</b> ${items.length}</p><table><thead><tr><th>NÂ°</th><th>Date</th><th>Client / contact</th><th>Reception / type / service</th><th>Reclamation</th><th>Analyse</th><th>Actions</th><th>Suivi / cloture</th><th>Statut</th></tr></thead><tbody>${reclamationRows(items, false)}</tbody></table></body></html>` }
+    function reclamationExportHtml(items) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Registre suivi reclamations</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;padding:22px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:14px}th,td{padding:7px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}@page{size:landscape;margin:10mm}</style><body><h1>Registre suivi des reclamations client</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre :</b> ${items.length}</p><table><thead><tr><th>N°</th><th>Date</th><th>Client / contact</th><th>Reception / type / service</th><th>Reclamation</th><th>Analyse</th><th>Actions</th><th>Suivi / cloture</th><th>Statut</th></tr></thead><tbody>${reclamationRows(items, false)}</tbody></table></body></html>` }
     function reclamationStatsExportHtml() { const rows = reclamationStatsData().map(x => `<tr><td>${esc(x[0])}</td><td>${x[1]}</td></tr>`).join(""); return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Synthese reclamations client</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;padding:22px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:14px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left}th{background:#eef4ff}</style><body><h1>Synthese des reclamations client</h1><p><b>Date d'edition :</b> ${esc(now())}</p><table><thead><tr><th>Indicateur</th><th>Nombre</th></tr></thead><tbody>${rows}</tbody></table></body></html>` }
     function printReclamations() { if (!requirePerm("Exporter")) return; const html = reclamationExportHtml(filteredReclamations()), w = window.open("", "_blank", "width=1200,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer les reclamations"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Registre des reclamations pret a imprimer") }
     function downloadReclamations() { if (!requirePerm("Telecharger")) return; downloadText("Registre_reclamations_client_" + stamp() + ".xls", reclamationExportHtml(filteredReclamations()), "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Reclamation client", "Registre exporte sous Excel"); save("Registre des reclamations telecharge") }
@@ -10865,7 +10396,7 @@
     function saveAci() { if (!requirePerm(editingAciId ? "Modifier" : "Ajouter")) return; const x = aciFormData(); if (!x.requester || !x.docTitle) { sync("Renseigne le demandeur et le titre du document"); return } const items = aciItems(), i = items.findIndex(v => v.id === editingAciId); if (i >= 0) { items[i] = { ...items[i], ...x }; log("Modification", "Amelioration continue", x.no + " mise a jour"); save("Demande d'amelioration continue modifiee automatiquement") } else { items.unshift(x); log("Creation", "Amelioration continue", x.no + " ajoutee"); save("Demande d'amelioration continue enregistree automatiquement") } clearAciDrafts(); resetAciForm(); render() }
     function editAci(id) { if (!requirePerm("Modifier")) return; const x = aciItems().find(v => v.id === id); if (!x) return; editingAciId = id; aciDraftLoaded = true; $("#aciNo").value = x.no || ""; $("#aciDate").value = x.date && x.date !== "-" ? x.date : ""; $("#aciRequester").value = x.requester || ""; $("#aciDept").value = x.dept || ""; $("#aciContact").value = x.contact || ""; $("#aciDocTitle").value = x.docTitle || ""; $("#aciDocRef").value = x.docRef || ""; $("#aciVersion").value = x.version || ""; $("#aciVersionDate").value = x.versionDate && x.versionDate !== "-" ? x.versionDate : ""; $("#aciType").value = x.type || "Correction"; $("#aciDesc").value = x.desc || ""; $("#aciPart").value = x.part || ""; $("#aciReason").value = x.reason || "Non-conformite"; $("#aciGoal").value = x.goal || ""; $("#aciImpactProcess").value = x.impactProcess || ""; $("#aciImpactService").value = x.impactService || ""; $("#aciImpactPeople").value = x.impactPeople || ""; $("#aciImpactEquip").value = x.impactEquip || ""; $("#aciCriticality").value = x.criticality || "Faible"; $("#aciQualityManager").value = x.qualityManager || ""; $("#aciProcessOwner").value = x.processOwner || ""; $("#aciDecision").value = x.decision || "Acceptee"; $("#aciValidationDate").value = x.validationDate && x.validationDate !== "-" ? x.validationDate : ""; $("#aciImplOwner").value = x.implOwner || ""; $("#aciPlannedDate").value = x.plannedDate && x.plannedDate !== "-" ? x.plannedDate : ""; $("#aciRevisedVersion").value = x.revisedVersion || ""; $("#aciEffectiveDate").value = x.effectiveDate && x.effectiveDate !== "-" ? x.effectiveDate : ""; $("#aciVerification").value = x.verification || ""; $("#aciTraceAction").value = x.traceAction || ""; $("#aciTraceAudit").value = x.traceAudit || ""; $("#aciTraceComplaint").value = x.traceComplaint || ""; $("#aciArchive").value = x.archive || ""; sync("Demande d'amelioration continue chargee pour modification"); ameliorationView(); $("#aciNo").scrollIntoView({ behavior: "smooth", block: "center" }) }
     function deleteAci(id) { if (!requirePerm("Supprimer")) return; const x = aciItems().find(v => v.id === id); s.aci = aciItems().filter(v => v.id !== id); if (editingAciId === id) resetAciForm(); log("Suppression", "Amelioration continue", x ? x.no : id); save("Demande d'amelioration continue supprimee"); render() }
-    function aciExportHtml(items) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Amelioration continue</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;padding:22px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:14px}th,td{padding:7px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}@page{size:landscape;margin:10mm}</style><body><h1>Amelioration continue - demandes de modification</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre :</b> ${items.length}</p><table><thead><tr><th>NÂ°</th><th>Demandeur / service</th><th>Document concerne</th><th>Modification demandee</th><th>Justification / impact</th><th>Validation</th><th>Suivi</th><th>Tracabilite</th><th>Decision</th></tr></thead><tbody>${aciRows(items, false)}</tbody></table></body></html>` }
+    function aciExportHtml(items) { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Amelioration continue</title><style>body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;padding:22px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:14px}th,td{padding:7px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}@page{size:landscape;margin:10mm}</style><body><h1>Amelioration continue - demandes de modification</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre :</b> ${items.length}</p><table><thead><tr><th>N°</th><th>Demandeur / service</th><th>Document concerne</th><th>Modification demandee</th><th>Justification / impact</th><th>Validation</th><th>Suivi</th><th>Tracabilite</th><th>Decision</th></tr></thead><tbody>${aciRows(items, false)}</tbody></table></body></html>` }
     function printAci() { if (!requirePerm("Exporter")) return; const html = aciExportHtml(filteredAci()), w = window.open("", "_blank", "width=1200,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer l'amelioration continue"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Demandes d'amelioration continue pretes a imprimer") }
     function downloadAci() { if (!requirePerm("Telecharger")) return; downloadText("Amelioration_continue_" + stamp() + ".xls", aciExportHtml(filteredAci()), "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Amelioration continue", "Registre exporte sous Excel"); save("Registre amelioration continue telecharge") }
     function personnelItems() { if (!Array.isArray(s.personnel)) s.personnel = c(PERSONNEL_DEFAULTS); return s.personnel }
@@ -11061,8 +10592,8 @@
     function orgDocDetail(x) { return `<div class="it"><b>Fiche de creation : ${esc(x.ref)} - ${esc(x.title)}</b><p>Objectif : ${esc(x.ie || "-")}</p><p>Processus : ${esc(x.p)} | Type : ${esc(x.type)} | Version : ${esc(x.v)} | Statut : ${esc(x.st)}</p><p>Redacteur : ${esc(x.o || "-")} | Verificateur : ${esc(x.verif || "-")} | Approbateur : ${esc(x.app || "-")}</p><p>Diffusion : ${esc(x.diff || "-")}</p><p>Contenu principal : ${esc(x.body || "-")}</p><p>Stockage : ${esc(x.store || "-")} | ${esc(x.url || "-")}</p><b>Historique</b>${orgDocHistory(x)}</div>` }
     function syncApprovedOrgDoc(x, action = "Approbation") { s.docs = (s.docs || []).map(normDoc); const d = markSaved({ id: x.masterId || Date.now() + 1, orgId: x.id, ref: x.ref, title: x.title, p: x.p, type: x.type, v: x.v, st: x.st === "Diffuse" ? "Diffuse" : "Approuve", o: x.o, verif: x.verif || "-", app: x.app || "-", review: x.d || now().slice(0, 10), diff: x.diff || "-", d: now().slice(0, 10), store: x.store || "A definir", url: x.url || "", history: [...(x.history || []), { t: now(), a: "Transfert vers Maitrise documentaire", u: (s.u && s.u.name) || "Utilisateur" }] }); const i = s.docs.findIndex(v => v.orgId === x.id || v.ref === x.ref); if (i >= 0) s.docs[i] = { ...s.docs[i], ...d, id: s.docs[i].id }; else s.docs.unshift(d); x.masterId = (i >= 0 ? s.docs[i].id : d.id); log(action, "Maitrise documentaire", x.ref + " enregistre dans la liste maitresse") }
     function setOrgDocStatus(id, st, label) { const x = (s.orgDocs || []).find(v => v.id == id); if (!x) return; if ((st === "Approuve" || st === "Diffuse") && !requirePerm("Valider")) return; if (["A corriger", "Archive", "En revue"].includes(st) && !requirePerm("Modifier")) return; x.st = st; if (st === "En revue" && x.verif === "-") x.verif = (s.u && s.u.name) || "Verificateur"; if (st === "Approuve" && x.app === "-") x.app = (s.u && s.u.name) || "Approbateur"; if (st === "Diffuse" && (!x.diff || x.diff === "-")) x.diff = "Systeme management qualite"; x.history = [...(x.history || []), { t: now(), a: label + " -> " + st, u: (s.u && s.u.name) || "Utilisateur" }]; markSaved(x); if (["Approuve", "Diffuse"].includes(st)) syncApprovedOrgDoc(x, label); log(label, "Documentation", x.ref + " -> " + st); save("Document organisme mis a jour"); render() }
-    function orgTypeFromName(n) { const v = String(n || "").toLowerCase(); if (v.includes("formulaire")) return "Formulaire"; if (v.includes("instruction")) return "Instruction"; if (v.includes("enregistrement")) return "Enregistrement"; if (v.includes("politique")) return "Politique Qualité"; if (v.includes("manuel")) return "Manuel qualité"; return "Procedure" }
-    function orgRefFromFile(f, type) { const prefix = { Procedure: "PRO", Instruction: "INS", Formulaire: "FOR", Enregistrement: "ENR", "Manuel qualité": "MQ", "Politique Qualité": "POL" }[type] || "DOC"; return `${prefix}-${stamp()}` }
+    function orgTypeFromName(n) { const v = String(n || "").toLowerCase(); if (v.includes("formulaire")) return "Formulaire"; if (v.includes("instruction")) return "Instruction"; if (v.includes("enregistrement")) return "Enregistrement"; if (v.includes("politique")) return "Politique qualite"; if (v.includes("manuel")) return "Manuel qualite"; return "Procedure" }
+    function orgRefFromFile(f, type) { const prefix = { Procedure: "PRO", Instruction: "INS", Formulaire: "FOR", Enregistrement: "ENR", "Manuel qualite": "MQ", "Politique qualite": "POL" }[type] || "DOC"; return `${prefix}-${stamp()}` }
     function importOrgDocs(list) { if (!requirePerm("Importer")) return; if (!list || !list.length) return; s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc);[...list].forEach((f, i) => { const type = orgTypeFromName(f.name), id = Date.now() + i, ref = orgRefFromFile(f, type), t = fileType(f.name), doc = markSaved({ id, ref, title: f.name.replace(/\.[^.]+$/, ""), ie: "Document importe pour creation", p: $("#odpr").value || "Processus support", type, v: "1.0", st: "Brouillon", o: (s.u && s.u.name) || "Utilisateur", verif: "-", app: "-", diff: "A definir", body: `Fichier importe : ${f.name} (${t.label}, ${fmtSize(f.size)})`, d: now().slice(0, 10), store: "Import local", url: "", fileName: f.name, imported: true, history: [{ t: now(), a: "Importation pour creation", u: (s.u && s.u.name) || "Utilisateur" }] }); orgDocFilesMap.set(id, f); s.orgDocs.unshift(doc); log("Importation", "Documentation", ref + " importe depuis " + f.name) }); save("Documents importes dans Documentation"); render(); sync(list.length + " document(s) importe(s) dans le circuit documentaire") }
     async function readOrgDocFile(x) { const f = orgDocFilesMap.get(x.id); if (f) { const t = fileType(f.name); if (orgPreviewUrl) try { URL.revokeObjectURL(orgPreviewUrl) } catch (e) { } orgPreviewUrl = await objectUrlForFile(f); setOrgSummaryContent(await buildFilePreview(f, orgPreviewUrl, t)); return } if (x.url) { window.open(x.url, "_blank"); setOrgSummaryContent(`<div class="card"><h3>Lecture du document</h3><div class="it"><b>${esc(x.title || x.ref || "Document")}</b><p>Le document est associe a un lien externe ou cloud.</p><div class="reader-actions"><a class="btn2 btn" href="${esc(x.url)}" target="_blank" rel="noopener">Ouvrir le document</a></div></div></div>`); return } sync("Le fichier importe n'est pas disponible dans cette session. Reimporte le document ou ajoute un lien fichier.") }
     function addOrgDoc() { if (!requirePerm("Ajouter")) return; const t = $("#odt").value.trim(), r = $("#odr").value.trim(), type = $("#odty").value; if (!t || !r) { sync("Renseigne le titre et la reference du document organisme"); return } s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const top = ORG_TOP_DOC_TYPES.includes(type), old = top ? s.orgDocs.find(x => x.type === type) : null, prev = s.orgDocs.filter(x => x.ref === r).length, doc = markSaved({ id: old ? old.id : Date.now(), ref: r, title: t, ie: $("#odie").value.trim() || "-", p: $("#odpr").value, type, v: old ? old.v : (prev ? "1." + prev : "1.0"), st: $("#odstat").value, o: $("#odo").value.trim() || s.u.name, verif: $("#odverif").value.trim() || "-", app: $("#odapp").value.trim() || "-", diff: $("#oddiff").value.trim() || "-", body: $("#odbody").value.trim() || "-", d: now().slice(0, 10), store: $("#odst").value, url: $("#odurl").value.trim(), history: [...(old && old.history ? old.history : []), { t: now(), a: old ? "Mise a jour du document de tete" : "Creation brouillon", u: (s.u && s.u.name) || "Utilisateur" }] }); if (old) s.orgDocs = s.orgDocs.map(x => x.id === old.id ? doc : x); else s.orgDocs.unshift(doc); if (doc.st === "Approuve") syncApprovedOrgDoc(doc, "Creation approuvee"); log(old ? "Mise a jour" : "Creation", "Documentation", r + " enregistre avec statut " + doc.st); save("Document organisme enregistre automatiquement"); clearFields(["#odt", "#odr", "#odie", "#odo", "#odverif", "#odapp", "#oddiff", "#odbody", "#odurl"]); render() }
@@ -11123,7 +10654,7 @@
     function diagField(e) { const t = e.target; if (t.matches("[data-diag]")) saveDiag(t.dataset.diag, t.value); if (t.matches("[data-dnote]")) { saveDiagNote(t.dataset.dnote, t.value); render() } if (t.id === "diagPerson" || t.id === "diagDate") saveDiagMeta() }
     function act(e) { const da = e.target.closest("[data-da]"), doo = e.target.closest("[data-do]"), dd = e.target.closest("[data-dd]"), oda = e.target.closest("[data-oda]"), odo = e.target.closest("[data-odo]"), odd = e.target.closest("[data-odd]"), op = e.target.closest("[data-oproc]"), orgpick = e.target.closest("[data-orgpick]"), orgscan = e.target.closest("[data-orgscan]"), orgf = e.target.closest("[data-orgf]"), orgReqImport = e.target.closest("[data-orgreq-import]"), orgReqRead = e.target.closest("[data-orgreq-read]"), ee = e.target.closest("[data-ee]"), et = e.target.closest("[data-et]"), ed = e.target.closest("[data-ed]"), ne = e.target.closest("[data-ne]"), nt = e.target.closest("[data-nt]"), nd = e.target.closest("[data-nd]"), ae = e.target.closest("[data-ae]"), at = e.target.closest("[data-at]"), ad = e.target.closest("[data-ad]"), rt = e.target.closest("[data-rt]"), rd = e.target.closest("[data-rd]"), ud = e.target.closest("[data-ud]"), rf = e.target.closest("[data-rf]"); if ((da || oda) && !requirePerm("Valider")) return; if ((doo || odo || ee || et || ne || nt || ae || at || rt) && !requirePerm("Modifier")) return; if ((dd || odd || ed || nd || ad || rd || ud) && !requirePerm("Supprimer")) return; if (op) openProcessWindow(op.dataset.oproc); if (orgpick) { activeOrgType = orgpick.dataset.otype || activeOrgType; activeOrgStatus = orgpick.dataset.ost || activeOrgStatus; chooseOrgDir() } if (orgscan && activeOrgProc) { activeOrgType = orgscan.dataset.otype || activeOrgType; activeOrgStatus = orgscan.dataset.ost || activeOrgStatus; scanOrgProc(activeOrgProc) } if (orgf) openOrgFile(orgf.dataset.orgf); if (orgReqImport) pickReqDoc(orgReqImport.dataset.orgreqImport); if (orgReqRead) readReqDoc(orgReqRead.dataset.orgreqRead); if (da) { let x = s.docs.find(v => v.id == da.dataset.da); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Documents", x.ref + " valide"); save("Document valide"); render() } } if (doo) { let x = s.docs.find(v => v.id == doo.dataset.do); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Documents", x.ref + " obsolete"); save("Document obsolete"); render() } } if (dd) { let x = s.docs.find(v => v.id == dd.dataset.dd); if (x) { s.docs = s.docs.filter(v => v.id != dd.dataset.dd); log("Suppression", "Documents", x.ref + " supprime"); save("Document supprime"); render() } } if (oda) { let x = (s.orgDocs || []).find(v => v.id == oda.dataset.oda); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Document organisme", x.ref + " valide"); save("Document organisme valide"); render() } } if (odo) { let x = (s.orgDocs || []).find(v => v.id == odo.dataset.odo); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Document organisme", x.ref + " obsolete"); save("Document organisme obsolete"); render() } } if (odd) { let x = (s.orgDocs || []).find(v => v.id == odd.dataset.odd); if (x) { s.orgDocs = s.orgDocs.filter(v => v.id != odd.dataset.odd); log("Suppression", "Document organisme", x.ref + " supprime"); save("Document organisme supprime"); render() } } if (ee) editEq(ee.dataset.ee); if (et) { let x = s.eq.find(v => String((v.code || v.id)) == String(et.dataset.et)); if (x) { x.st = x.st === "Valide" ? "A etalonner" : x.st === "A etalonner" ? "Hors service" : "Valide"; markSaved(x); log("Mise a jour", "Equipements", (x.code || x.id) + " -> " + x.st); save("Equipement mis a jour"); render() } } if (ed) { let x = s.eq.find(v => String((v.code || v.id)) == String(ed.dataset.ed)); if (x) { s.eq = s.eq.filter(v => String((v.code || v.id)) != String(ed.dataset.ed)); if (editingEqId === String(ed.dataset.ed)) resetEqForm(); log("Suppression", "Equipements", (x.code || x.id) + " supprime"); save("Equipement supprime"); render() } } if (ne) editNc(ne.dataset.ne); if (nt) { let x = s.nc.find(v => v.ref == nt.dataset.nt); x.st = x.st === "Ouverte" ? "En cours" : "Cloturee"; markSaved(x); log("Mise a jour", "NC", x.ref + " -> " + x.st); save("NC mise a jour"); render() } if (nd) { let x = s.nc.find(v => v.ref == nd.dataset.nd); if (x) { s.nc = s.nc.filter(v => v.ref != nd.dataset.nd); log("Suppression", "NC", x.ref + " supprimee"); save("NC supprimee"); render() } } if (ae) editAud(ae.dataset.ae); if (at) { let x = s.aud.find(v => v.ref == at.dataset.at); x.st = x.st === "Planifie" ? "En cours" : "Cloture"; markSaved(x); log("Mise a jour", "Audits", x.ref + " -> " + x.st); save("Audit mis a jour"); render() } if (ad) { let x = s.aud.find(v => v.ref == ad.dataset.ad); if (x) { s.aud = s.aud.filter(v => v.ref != ad.dataset.ad); log("Suppression", "Audits", x.ref + " supprime"); save("Audit supprime"); render() } } if (rt) { let x = (s.revc || []).find(v => v.ref == rt.dataset.rt); if (x) { x.st = x.st === "A revoir" ? "En attente client" : x.st === "En attente client" ? "Approuvee" : "Approuvee"; markSaved(x); log("Mise a jour", "Liste client", x.ref + " -> " + x.st); save("Liste client mise a jour"); render() } } if (rd) { let x = (s.revc || []).find(v => v.ref == rd.dataset.rd); if (x) { s.revc = s.revc.filter(v => v.ref != rd.dataset.rd); if (editingRevcId === x.ref) resetRevcForm(); log("Suppression", "Liste client", x.ref + " supprime"); save("Liste client supprime"); render() } } if (ud) { let x = (s.usr || []).map(normalizeUserAccount).find(v => v.email == ud.dataset.ud); if (x) { if (x.pilot) { sync("Le compte pilote principal ne peut pas etre supprime depuis ce module"); return } if (authNormEmail((s.u && s.u.email) || "") === authNormEmail(x.email)) { sync("Le compte connecte ne peut pas etre supprime pendant la session"); return } s.usr = s.usr.filter(v => authNormEmail(v.email) != authNormEmail(ud.dataset.ud)); log("Suppression", "Utilisateurs", x.email + " supprime"); save("Utilisateur supprime"); render() } } if (rf) openRepoFile(rf.dataset.rf) }
     function docAct(e) { const dcycle = e.target.closest("[data-dcycle]"), ddetail = e.target.closest("[data-ddetail]"), dread = e.target.closest("[data-dread]"); if (!dcycle && !ddetail && !dread) return; if (dcycle) { if (!requirePerm("Valider")) return; const x = s.docs.find(v => v.id == dcycle.dataset.dcycle); if (x) { x.st = docNextStatus(x.st); x.history = [...(x.history || []), { t: now(), a: "Cycle -> " + x.st, u: (s.u && s.u.name) || "Utilisateur" }]; markSaved(x); log("Cycle documentaire", "Documents", x.ref + " -> " + x.st); save("Cycle documentaire mis a jour"); render() } } if (ddetail) { const x = s.docs.find(v => v.id == ddetail.dataset.ddetail), summary = $("#dSummary"); if (x && summary) summary.innerHTML = docDetail(normDoc(x)); else if (x) sync("Fiche document disponible depuis le tableau principal") } if (dread) { if (!requirePerm("Telecharger")) return; const x = s.docs.find(v => v.id == dread.dataset.dread); if (x && x.url) window.open(x.url, "_blank"); else sync("Aucun lien fichier associe a ce document") } }
-    function orgDocAct(e) { const review = e.target.closest("[data-odreview]"), approve = e.target.closest("[data-odapprove]"), diffuse = e.target.closest("[data-oddiffuse]"), correct = e.target.closest("[data-odcorrect]"), detail = e.target.closest("[data-oddetail]"), read = e.target.closest("[data-odread]"), archive = e.target.closest("[data-odarchive]"), tpl = e.target.closest("[data-odtemplate]"), edit = e.target.closest("[data-odedit]"), topPrepare = e.target.closest("[data-odtop-prepare]"), topUpload = e.target.closest("[data-odtop-upload]"), view = e.target.closest("[data-odview]"), cOpen = e.target.closest("[data-odcentral-open]"), cRead = e.target.closest("[data-odcentral-read]"), cDetail = e.target.closest("[data-odcentral-detail]"), cEdit = e.target.closest("[data-odcentral-edit]"), cArchive = e.target.closest("[data-odcentral-archive]"), cStatus = e.target.closest("[data-odcentral-status]"); if (!review && !approve && !diffuse && !correct && !detail && !read && !archive && !tpl && !edit && !topPrepare && !topUpload && !view && !cOpen && !cRead && !cDetail && !cEdit && !cArchive && !cStatus) return; if (view) openDocTemplate(view.dataset.odview); if (edit) openDocTemplate(edit.dataset.odedit); if (topPrepare) prepareTopPyramidDocument(topPrepare.dataset.odtopPrepare, false); if (topUpload) prepareTopPyramidDocument(topUpload.dataset.odtopUpload, false); if (tpl) { $("#odty").value = tpl.dataset.odtemplate; sync("Modele selectionne : " + tpl.dataset.odtemplate) } if (review) setOrgDocStatus(review.dataset.odreview, "En revue", "Envoi pour verification"); if (approve) setOrgDocStatus(approve.dataset.odapprove, "Approuve", "Approbation"); if (diffuse) setOrgDocStatus(diffuse.dataset.oddiffuse, "Diffuse", "Diffusion"); if (correct) setOrgDocStatus(correct.dataset.odcorrect, "A corriger", "Demande de correction"); if (archive) setOrgDocStatus(archive.dataset.odarchive, "Archive", "Archivage"); if (detail) { const x = (s.orgDocs || []).find(v => v.id == detail.dataset.oddetail); if (x) setOrgSummaryContent(`<div class="card">${orgDocDetail(normDoc(x))}</div>`) } if (read) { if (!requirePerm("Telecharger")) return; const x = (s.orgDocs || []).find(v => v.id == read.dataset.odread); if (x) readOrgDocFile(x); else sync("Aucun document selectionne") } if (cOpen) openDocumentationCentralDocument(cOpen.dataset.odcentralOpen); if (cRead) readDocumentationCentralDocument(cRead.dataset.odcentralRead); if (cDetail) revealDocumentationCentralDocument(cDetail.dataset.odcentralDetail); if (cEdit) loadDocumentationCentralIntoForm(cEdit.dataset.odcentralEdit); if (cArchive) { archiveDocumentationCentralFile(cArchive.dataset.odcentralArchive) } if (cStatus) { updateDocumentationCentralStatus(cStatus.dataset.odcentralStatus, cStatus.dataset.odcentralNext) } }
+    function orgDocAct(e) { const review = e.target.closest("[data-odreview]"), approve = e.target.closest("[data-odapprove]"), diffuse = e.target.closest("[data-oddiffuse]"), correct = e.target.closest("[data-odcorrect]"), detail = e.target.closest("[data-oddetail]"), read = e.target.closest("[data-odread]"), archive = e.target.closest("[data-odarchive]"), tpl = e.target.closest("[data-odtemplate]"), edit = e.target.closest("[data-odedit]"), top = e.target.closest("[data-odtop]"), view = e.target.closest("[data-odview]"), cOpen = e.target.closest("[data-odcentral-open]"), cRead = e.target.closest("[data-odcentral-read]"), cDetail = e.target.closest("[data-odcentral-detail]"), cArchive = e.target.closest("[data-odcentral-archive]"), cStatus = e.target.closest("[data-odcentral-status]"); if (!review && !approve && !diffuse && !correct && !detail && !read && !archive && !tpl && !edit && !top && !view && !cOpen && !cRead && !cDetail && !cArchive && !cStatus) return; if (view) openDocTemplate(view.dataset.odview); if (edit) openDocTemplate(edit.dataset.odedit); if (top) { const ty = top.dataset.odtop; $("#odt").value = ty; $("#odr").value = ty === "Manuel qualite" ? "MQ-001" : "POL-001"; $("#odie").value = "Document de tete de la pyramide documentaire"; if (!$all("#odty option").some(o => o.value === ty)) $("#odty").insertAdjacentHTML("beforeend", `<option>${esc(ty)}</option>`); $("#odty").value = ty; sync("Champ specifique selectionne : " + ty) } if (tpl) { $("#odty").value = tpl.dataset.odtemplate; sync("Modele selectionne : " + tpl.dataset.odtemplate) } if (review) setOrgDocStatus(review.dataset.odreview, "En revue", "Envoi pour verification"); if (approve) setOrgDocStatus(approve.dataset.odapprove, "Approuve", "Approbation"); if (diffuse) setOrgDocStatus(diffuse.dataset.oddiffuse, "Diffuse", "Diffusion"); if (correct) setOrgDocStatus(correct.dataset.odcorrect, "A corriger", "Demande de correction"); if (archive) setOrgDocStatus(archive.dataset.odarchive, "Archive", "Archivage"); if (detail) { const x = (s.orgDocs || []).find(v => v.id == detail.dataset.oddetail); if (x) setOrgSummaryContent(`<div class="card">${orgDocDetail(normDoc(x))}</div>`) } if (read) { if (!requirePerm("Telecharger")) return; const x = (s.orgDocs || []).find(v => v.id == read.dataset.odread); if (x) readOrgDocFile(x); else sync("Aucun document selectionne") } if (cOpen) openDocumentationCentralDocument(cOpen.dataset.odcentralOpen); if (cRead) readDocumentationCentralDocument(cRead.dataset.odcentralRead); if (cDetail) { const x = (docCentralState.documents || []).find(v => String(v.id) === String(cDetail.dataset.odcentralDetail)); if (x) setOrgSummaryContent(docCentralDetailHtml(x)) } if (cArchive) { archiveDocumentationCentralFile(cArchive.dataset.odcentralArchive) } if (cStatus) { updateDocumentationCentralStatus(cStatus.dataset.odcentralStatus, cStatus.dataset.odcentralNext) } }
     function exp() { const b = new Blob([JSON.stringify(s, null, 2)], { type: "application/json" }), u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = "QUALI-export.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); sync("Export genere") }
     function imp(f) { if (!f) return; const r = new FileReader(); r.onload = () => { try { s = { ...c(D), ...JSON.parse(r.result) }; log("Importation", "Systeme", "Importation JSON"); save("Importation terminee"); render() } catch (e) { sync("Importation echouee") } }; r.readAsText(f) }
     function refreshCurrentPage() { render(); page(currentPage, true); sync("Page actualisee") }
@@ -11208,7 +10739,7 @@
     bindClick("planAuditActivityAdd", addPlanAuditActivity); bindClick("planAuditActivityDelete", deletePlanAuditActivity); bindClick("planInterScopeAdd", addPlanInterScope); bindClick("planInterScopeDelete", deletePlanInterScope);
     bindClick("planHabAdd", addPlanHabSheet); bindClick("planHabDelete", deletePlanHabSheet); bindClick("planHabSpecAdd", addPlanHabSpec); bindClick("planHabSpecDelete", deletePlanHabSpec); bindClick("planHabCreate", createPlanHabEntry); bindClick("planHabAppend", appendPlanHabEntry); bindClick("planHabUpdate", updatePlanHabEntry); bindClick("planHabRowDelete", deletePlanHabEntry); bindClick("planAuditStore", () => storePlanningSection("audit", "Planning d'audit interne")); bindClick("planInterStore", () => storePlanningSection("inter", "Planning des inter-comparaisons")); bindClick("planHabStore", () => storePlanningSection("habil", "Planning de maintien d'habilitation")); bindClick("planCalStore", () => storePlanningSection("cal", "Planning d'etalonnage des equipements par laboratoire"));
     bindClick("planCalAddLab", addPlanCalLab); bindClick("planCalDeleteLab", deletePlanCalLab); bindClick("planCalCreate", savePlanCalInstrument); bindClick("planCalUpdate", updatePlanCalInstrument); bindClick("planCalDelete", deletePlanCalInstrument);
-    bindClick("dsearch", () => { docs(); sync("Recherche documentaire actualisee") }); bindClick("dsv", addDoc); bindClick("dprint", printDocsTable); bindClick("ddownload", downloadDocsTable); bindClick("odsearch", () => { orgDocsView(); sync("Recherche documentaire actualisee") }); bindClick("odServerRefresh", () => refreshDocumentationCentral("Depot documentaire central actualise")); bindClick("odServerScan", scanDocumentationCentralRepository); bindClick("odServerBootstrap", async () => { const pilotEmail = pilotEmailForApi(); if (!pilotEmail) return; try { await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/bootstrap", { method: "POST", body: { actorName: (s.u && s.u.name) || "Pilote" } }); await refreshDocumentationCentral("Depot documentaire initialise sur D:") } catch (e) { console.error(e); sync(e.message || "Initialisation documentaire impossible") } }); bindClick("odHierarchySave", saveDocumentationHierarchy); bindClick("odCreateFolderBtn", createDocumentationCentralFolder); bindClick("odCentralPickBtn", pickDocumentationCentralFile); bindClick("odCentralImportBtn", importDocumentationCentralFile); ["odadd", "odsv"].forEach(id => bindClick(id, addOrgDoc)); bindClick("odImportBtn", () => { $("#odImportFile").value = ""; $("#odImportFile").click() }); const odFileInput = $("#odImportFile"); if (odFileInput) odFileInput.addEventListener("change", e => { if (e.target.files && e.target.files.length) importOrgDocs(e.target.files) }); const odCentralFileInput = $("#odCentralFile"); if (odCentralFileInput) odCentralFileInput.addEventListener("change", e => { if (e.target.files && e.target.files[0]) handleDocumentationCentralFile(e.target.files[0]) }); bindClick("eadd", () => { eq(); sync("Recherche equipements actualisee") }); bindClick("esv", addEq); bindClick("eprint", printEq); bindClick("edownload", downloadEq); bindClick("nadd", () => { nc(); sync("Recherche non-conformites actualisee") }); bindClick("nsv", addNc); bindClick("naSave", addNcAudit); bindClick("naSaveInline", addNcAudit); bindClick("aadd", () => { aud(); sync("Recherche audits actualisee") }); bindClick("asv", addAud); bindClick("radd", () => { revc(); sync("Recherche clients actualisee") }); bindClick("rsv", addRevc); bindClick("rprint", printRevc); bindClick("rdownload", downloadRevc); bindClick("pxadd", () => { prestView(); sync("Recherche prestataires actualisee") }); bindClick("pxsv", addPrest); bindClick("pxprint", printPrest); bindClick("pxdownload", downloadPrestPdf); bindClick("planAuditCreate", createPlanAudit); bindClick("planAuditSave", savePlanAudit); bindClick("planAuditDelete", deletePlanAudit); bindClick("planInterCreate", createPlanInter); bindClick("planInterSave", savePlanInter); bindClick("planInterDelete", deletePlanInter); const planInterSelect = $("#planInterEditRow"); if (planInterSelect) { planInterSelect.addEventListener("input", loadPlanInterForEdit); planInterSelect.addEventListener("change", loadPlanInterForEdit) } bindClick("planSave", savePlanning); bindClick("planPrint", printPlanning); bindClick("planDownload", downloadPlanning); bindClick("planSearchBtn", () => { planningView(); sync("Recherche planning actualisee") }); bindClick("uApplyProfile", () => applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Lecture seule"))); bindClick("usv", addUsr); bindClick("riskSave", addRisk); bindClick("riskPrint", printRiskRegister); bindClick("riskDownload", downloadRiskExcel); bindClick("riskSearchBtn", () => { riskView(); sync("Recherche risques actualisee") }); bindClick("swotSave", addSwot); bindClick("swotPrint", printSwotRegister); bindClick("swotDownload", downloadSwotExcel); bindClick("swotSearchBtn", () => { swotView(); sync("Recherche SWOT actualisee") }); bindClick("satSave", saveSat); bindClick("satSearchBtn", () => { satView(); sync("Recherche satisfaction actualisee") }); bindClick("satPrint", printSatList); bindClick("satDownload", downloadSatList); bindClick("recSave", saveReclamation); bindClick("recSearchBtn", () => { reclamationView(); sync("Recherche reclamations actualisee") }); bindClick("recPrint", printReclamations); bindClick("recDownload", downloadReclamations); bindClick("recStatsPrint", printReclamationStats); bindClick("recStatsDownload", downloadReclamationStats); bindClick("perSave", addPersonnel); bindClick("perSearchBtn", () => { personnelView(); sync("Recherche personnel actualisee") }); bindClick("perPrint", printPersonnel); bindClick("perDownload", downloadPersonnel); bindClick("perHabSave", addPersonnelHab); bindClick("perHabPrint", () => printPersonnelGrid("hab")); bindClick("perHabDownload", () => downloadPersonnelGrid("hab")); bindClick("perQualSave", addPersonnelQual); bindClick("perQualPrint", () => printPersonnelGrid("qual")); bindClick("perQualDownload", () => downloadPersonnelGrid("qual")); bindClick("aciRequesterSave", () => saveAciDraftSection("requester")); bindClick("aciRequestSave", () => saveAciDraftSection("request")); bindClick("aciTreatmentSave", () => saveAciDraftSection("treatment")); bindClick("aciCurrentDownload", downloadAciCurrentReport); bindClick("aciSave", saveAci); bindClick("aciSearchBtn", () => { ameliorationView(); sync("Recherche amelioration continue actualisee") }); bindClick("aciPrint", printAci); bindClick("aciDownload", downloadAci); bindClick("statSave", saveStat); bindClick("statSearchBtn", () => { statView(); sync("Recherche statistique actualisee") }); bindClick("statPrint", printStat); bindClick("statDownload", downloadStat); bindClick("fsearch", () => { repoView(); sync("Recherche fichiers actualisee") });
+    bindClick("dsearch", () => { docs(); sync("Recherche documentaire actualisee") }); bindClick("dsv", addDoc); bindClick("dprint", printDocsTable); bindClick("ddownload", downloadDocsTable); bindClick("odsearch", () => { orgDocsView(); sync("Recherche documentaire actualisee") }); bindClick("odServerRefresh", () => refreshDocumentationCentral("Depot documentaire central actualise")); bindClick("odServerBootstrap", async () => { const pilotEmail = pilotEmailForApi(); if (!pilotEmail) return; try { await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/bootstrap", { method: "POST", body: { actorName: (s.u && s.u.name) || "Pilote" } }); await refreshDocumentationCentral("Depot documentaire initialise sur D:") } catch (e) { console.error(e); sync(e.message || "Initialisation documentaire impossible") } }); bindClick("odHierarchySave", saveDocumentationHierarchy); bindClick("odCreateFolderBtn", createDocumentationCentralFolder); bindClick("odCentralPickBtn", pickDocumentationCentralFile); bindClick("odCentralImportBtn", importDocumentationCentralFile); ["odadd", "odsv"].forEach(id => bindClick(id, addOrgDoc)); bindClick("odImportBtn", () => { $("#odImportFile").value = ""; $("#odImportFile").click() }); const odFileInput = $("#odImportFile"); if (odFileInput) odFileInput.addEventListener("change", e => { if (e.target.files && e.target.files.length) importOrgDocs(e.target.files) }); const odCentralFileInput = $("#odCentralFile"); if (odCentralFileInput) odCentralFileInput.addEventListener("change", e => { if (e.target.files && e.target.files[0]) handleDocumentationCentralFile(e.target.files[0]) }); bindClick("eadd", () => { eq(); sync("Recherche equipements actualisee") }); bindClick("esv", addEq); bindClick("eprint", printEq); bindClick("edownload", downloadEq); bindClick("nadd", () => { nc(); sync("Recherche non-conformites actualisee") }); bindClick("nsv", addNc); bindClick("naSave", addNcAudit); bindClick("naSaveInline", addNcAudit); bindClick("aadd", () => { aud(); sync("Recherche audits actualisee") }); bindClick("asv", addAud); bindClick("radd", () => { revc(); sync("Recherche clients actualisee") }); bindClick("rsv", addRevc); bindClick("rprint", printRevc); bindClick("rdownload", downloadRevc); bindClick("pxadd", () => { prestView(); sync("Recherche prestataires actualisee") }); bindClick("pxsv", addPrest); bindClick("pxprint", printPrest); bindClick("pxdownload", downloadPrestPdf); bindClick("planAuditCreate", createPlanAudit); bindClick("planAuditSave", savePlanAudit); bindClick("planAuditDelete", deletePlanAudit); bindClick("planInterCreate", createPlanInter); bindClick("planInterSave", savePlanInter); bindClick("planInterDelete", deletePlanInter); const planInterSelect = $("#planInterEditRow"); if (planInterSelect) { planInterSelect.addEventListener("input", loadPlanInterForEdit); planInterSelect.addEventListener("change", loadPlanInterForEdit) } bindClick("planSave", savePlanning); bindClick("planPrint", printPlanning); bindClick("planDownload", downloadPlanning); bindClick("planSearchBtn", () => { planningView(); sync("Recherche planning actualisee") }); bindClick("uApplyProfile", () => applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Lecture seule"))); bindClick("usv", addUsr); bindClick("riskSave", addRisk); bindClick("riskPrint", printRiskRegister); bindClick("riskDownload", downloadRiskExcel); bindClick("riskSearchBtn", () => { riskView(); sync("Recherche risques actualisee") }); bindClick("swotSave", addSwot); bindClick("swotPrint", printSwotRegister); bindClick("swotDownload", downloadSwotExcel); bindClick("swotSearchBtn", () => { swotView(); sync("Recherche SWOT actualisee") }); bindClick("satSave", saveSat); bindClick("satSearchBtn", () => { satView(); sync("Recherche satisfaction actualisee") }); bindClick("satPrint", printSatList); bindClick("satDownload", downloadSatList); bindClick("recSave", saveReclamation); bindClick("recSearchBtn", () => { reclamationView(); sync("Recherche reclamations actualisee") }); bindClick("recPrint", printReclamations); bindClick("recDownload", downloadReclamations); bindClick("recStatsPrint", printReclamationStats); bindClick("recStatsDownload", downloadReclamationStats); bindClick("perSave", addPersonnel); bindClick("perSearchBtn", () => { personnelView(); sync("Recherche personnel actualisee") }); bindClick("perPrint", printPersonnel); bindClick("perDownload", downloadPersonnel); bindClick("perHabSave", addPersonnelHab); bindClick("perHabPrint", () => printPersonnelGrid("hab")); bindClick("perHabDownload", () => downloadPersonnelGrid("hab")); bindClick("perQualSave", addPersonnelQual); bindClick("perQualPrint", () => printPersonnelGrid("qual")); bindClick("perQualDownload", () => downloadPersonnelGrid("qual")); bindClick("aciRequesterSave", () => saveAciDraftSection("requester")); bindClick("aciRequestSave", () => saveAciDraftSection("request")); bindClick("aciTreatmentSave", () => saveAciDraftSection("treatment")); bindClick("aciCurrentDownload", downloadAciCurrentReport); bindClick("aciSave", saveAci); bindClick("aciSearchBtn", () => { ameliorationView(); sync("Recherche amelioration continue actualisee") }); bindClick("aciPrint", printAci); bindClick("aciDownload", downloadAci); bindClick("statSave", saveStat); bindClick("statSearchBtn", () => { statView(); sync("Recherche statistique actualisee") }); bindClick("statPrint", printStat); bindClick("statDownload", downloadStat); bindClick("fsearch", () => { repoView(); sync("Recherche fichiers actualisee") });
     $("#riskTab").addEventListener("click", e => { const edit = e.target.closest("[data-risk-edit]"), del = e.target.closest("[data-risk-del]"); if (edit) editRisk(edit.dataset.riskEdit); if (del) deleteRisk(del.dataset.riskDel) });
     $("#swotTab").addEventListener("click", e => { const edit = e.target.closest("[data-swot-edit]"), del = e.target.closest("[data-swot-del]"); if (edit) editSwot(edit.dataset.swotEdit); if (del) deleteSwot(del.dataset.swotDel) });
     $("#satTab").addEventListener("click", e => { const detail = e.target.closest("[data-sat-detail]"), edit = e.target.closest("[data-sat-edit]"), del = e.target.closest("[data-sat-del]"); if (detail) { showSatDetail(detail.dataset.satDetail); sync("Note detaillee affichee") } if (edit) editSat(edit.dataset.satEdit); if (del) deleteSat(del.dataset.satDel) });
@@ -11239,7 +10770,7 @@
           const title = (btn.getAttribute('aria-label') || btn.title || '').toLowerCase();
           const img = btn.querySelector('img');
           const imgAlt = (img && img.alt || '').toLowerCase();
-          const isBack = /precede|pr[eÃ©]cedente|left/.test(title) || /left/.test(imgAlt);
+          const isBack = /precede|pr[eé]cedente|left/.test(title) || /left/.test(imgAlt);
           if (isBack) { if (typeof goBackPage === 'function') return goBackPage(); return window.history.back(); }
           else { if (typeof goNextPage === 'function') return goNextPage(); return window.history.forward(); }
         });
@@ -11269,4 +10800,5 @@
 </body>
 
 </html>
+
 
