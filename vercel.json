@@ -60,7 +60,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/QualiLab_by_ENNAJEH_v2.html"
+      "destination": "/index.html"
     }
   ]
 }

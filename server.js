@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const { spawn } = require("node:child_process");
 const express = require("express");
 const { DatabaseSync } = require("node:sqlite");
@@ -14,7 +15,7 @@ const PRIMARY_DB_PATH = path.join(PRIMARY_DB_DIR, "qualilab.sqlite");
 const FALLBACK_DB_DIR = process.env.QUALILAB_DATA_FALLBACK_DIR || path.join(os.tmpdir(), "QualiByEnnajeh", "data");
 const FALLBACK_DB_PATH = path.join(FALLBACK_DB_DIR, "qualilab.sqlite");
 const SCHEMA_PATH = path.join(ROOT, "database", "schema.sql");
-const APP_HTML_PATH = path.join(ROOT, "QualiLab_by_ENNAJEH_v2.html");
+const APP_HTML_PATH = path.join(ROOT, "index.html");
 const LIVE_RELOAD_WATCH_INTERVAL = Number(process.env.QUALI_LIVE_RELOAD_INTERVAL || 700);
 const DOC_SERVER_ROOT = process.env.QUALI_DOCS_ROOT || path.join(ROOT, "database", "QUALI_DATA_SERVER");
 const DOC_SERVER_DIRS = {
@@ -35,7 +36,7 @@ const DEFAULT_DOC_HIERARCHY = {
 
 const MAIN_PILOT = {
   email: "karimennajeh@gmail.com",
-  password: "09318872karim@",
+  passwordHash: "scrypt$48a0294c0c76e26cf003854057a81802$1f17a131ab586a9ff3b0e6429f860fb05cc37aabc8f2509dff7610a8e9d0a84b33228b5de63551e2eb47ceb4409039d801ef4917cb124e86d0260fe2492d0425",
   name: "Pilote QUALI",
   firstName: "Pilote",
   lastName: "QUALI",
@@ -85,6 +86,31 @@ function now() {
 
 function normEmail(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function isPasswordHash(value) {
+  return /^scrypt\$[a-f0-9]{32}\$[a-f0-9]{128}$/i.test(String(value || ""));
+}
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(String(password || ""), salt, 64).toString("hex");
+  return `scrypt$${salt}$${hash}`;
+}
+
+function normalizeStoredPassword(value) {
+  const password = String(value || "");
+  return isPasswordHash(password) ? password : hashPassword(password);
+}
+
+function verifyPassword(password, stored) {
+  const saved = String(stored || "");
+  if (!saved) return false;
+  if (!isPasswordHash(saved)) return saved === String(password || "");
+  const [, salt, expected] = saved.split("$");
+  const actual = crypto.scryptSync(String(password || ""), salt, 64);
+  const expectedBuffer = Buffer.from(expected, "hex");
+  return expectedBuffer.length === actual.length && crypto.timingSafeEqual(expectedBuffer, actual);
 }
 
 function ensureDir(dir) {
@@ -444,7 +470,7 @@ function normalizePilotPayload(payload = {}) {
     lastName,
     name,
     email: normEmail(payload.email),
-    password: String(payload.password || ""),
+    passwordHash: payload.password ? String(payload.password) : (isPasswordHash(payload.passwordHash) ? String(payload.passwordHash) : ""),
     role: String(payload.role || "Administrateur").trim() || "Administrateur",
     dept: String(payload.dept || "Pilotage application").trim() || "Pilotage application",
     func: String(payload.func || "Pilote de l'application").trim() || "Pilote de l'application",
@@ -471,7 +497,7 @@ function ensureDatabase(dbPath) {
     `);
     const result = insertPilot.run(
       MAIN_PILOT.email,
-      MAIN_PILOT.password,
+      MAIN_PILOT.passwordHash,
       MAIN_PILOT.name,
       MAIN_PILOT.firstName,
       MAIN_PILOT.lastName,
@@ -494,7 +520,7 @@ function ensureDatabase(dbPath) {
       SET password = ?, name = ?, first_name = ?, last_name = ?, role = ?, dept = ?, func = ?, matricule = ?, org_name = ?, status = ?, updated_at = ?
       WHERE email = ?
     `).run(
-      MAIN_PILOT.password,
+      MAIN_PILOT.passwordHash,
       MAIN_PILOT.name,
       MAIN_PILOT.firstName,
       MAIN_PILOT.lastName,
@@ -549,7 +575,7 @@ function pilotToAccount(row) {
     id: row.id,
     pilot: true,
     email: row.email,
-    password: row.password,
+    passwordHash: row.password,
     name: row.name,
     firstName: row.first_name,
     lastName: row.last_name,
@@ -576,7 +602,6 @@ function userToAccount(row) {
     pilotName: row.pilot_name,
     pilot: false,
     email: row.email,
-    password: row.password,
     name: row.name,
     firstName: row.first_name,
     lastName: row.last_name,
@@ -593,6 +618,18 @@ function userToAccount(row) {
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
+}
+
+function publicPilotAccount(pilot) {
+  if (!pilot) return null;
+  const { passwordHash, ...safe } = pilot;
+  return safe;
+}
+
+function publicUserAccount(user) {
+  if (!user) return null;
+  const { passwordHash, password, ...safe } = user;
+  return safe;
 }
 
 const SQL_SELECT_PILOT_BY_EMAIL = "SELECT * FROM pilots WHERE email = ?";
@@ -1647,7 +1684,7 @@ function updateExistingPilotAccount(email, payload = {}) {
     ...existing,
     ...payload,
     email: target,
-    password: String(payload.password || existing.password || "")
+    passwordHash: payload.password ? String(payload.password) : String(existing.passwordHash || "")
   };
   return upsertPilotAccount(next);
 }
@@ -1681,18 +1718,19 @@ function upsertPilotAccount(payload) {
     error.status = 400;
     throw error;
   }
-  if (!pilot.password) {
+  if (!pilot.passwordHash) {
     const error = new Error("Mot de passe pilote obligatoire");
     error.status = 400;
     throw error;
   }
+  const passwordHash = normalizeStoredPassword(pilot.passwordHash);
 
   const existing = selectPilotByEmailStmt().get(pilot.email);
   const timestamp = now();
   if (!existing) {
     const result = insertPilotAccountStmt().run(
       pilot.email,
-      pilot.password,
+      passwordHash,
       pilot.name,
       pilot.firstName,
       pilot.lastName,
@@ -1708,7 +1746,7 @@ function upsertPilotAccount(payload) {
     ensurePilotStateRowStmt().run(Number(result.lastInsertRowid), timestamp, timestamp);
   } else {
     updatePilotAccountByEmailStmt().run(
-      pilot.password,
+      passwordHash,
       pilot.name,
       pilot.firstName,
       pilot.lastName,
@@ -1764,10 +1802,11 @@ function createUserForPilot(pilotEmail, payload) {
   }
 
   const timestamp = now();
+  const passwordHash = normalizeStoredPassword(user.password);
   const result = insertUserStmt().run(
     pilot.id,
     user.email,
-    user.password,
+    passwordHash,
     user.name,
     user.firstName,
     user.lastName,
@@ -1787,6 +1826,7 @@ function createUserForPilot(pilotEmail, payload) {
 
   return getUserByPilotAndEmail(pilot.email, user.email) || {
     ...user,
+    password: undefined,
     id: Number(result.lastInsertRowid),
     pilotId: pilot.id,
     pilotEmail: pilot.email,
@@ -1879,7 +1919,23 @@ app.post("/api/auth/login", (req, res) => {
   }
 
   const pilot = getPilotByEmail(email);
-  if (pilot && pilot.password === password && pilot.status === "Actif") {
+  if (pilot && verifyPassword(password, pilot.passwordHash) && pilot.status === "Actif") {
+    if (!isPasswordHash(pilot.passwordHash)) {
+      updatePilotAccountByEmailStmt().run(
+        hashPassword(password),
+        pilot.name,
+        pilot.firstName,
+        pilot.lastName,
+        pilot.role,
+        pilot.dept,
+        pilot.func,
+        pilot.matricule,
+        pilot.orgName,
+        pilot.status,
+        now(),
+        pilot.email
+      );
+    }
     return res.json({
       ok: true,
       type: "pilot",
@@ -1887,7 +1943,7 @@ app.post("/api/auth/login", (req, res) => {
         email: pilot.email,
         name: pilot.name
       },
-      user: pilot
+      user: publicPilotAccount(pilot)
     });
   }
 
@@ -1898,9 +1954,12 @@ app.post("/api/auth/login", (req, res) => {
     WHERE u.email = ? AND u.status = 'Actif'
   `).all(email);
 
-  const userRow = users.find((row) => String(row.password || "") === password);
+  const userRow = users.find((row) => verifyPassword(password, row.password));
   if (!userRow) {
     return res.status(401).json({ ok: false, message: "Acces refuse : e-mail ou mot de passe incorrect." });
+  }
+  if (!isPasswordHash(userRow.password)) {
+    db.prepare("UPDATE users SET password = ?, updated_at = ? WHERE id = ?").run(hashPassword(password), now(), userRow.id);
   }
 
   const user = userToAccount(userRow);
@@ -1911,8 +1970,14 @@ app.post("/api/auth/login", (req, res) => {
       email: user.pilotEmail,
       name: user.pilotName
     },
-    user
+    user: publicUserAccount(user)
   });
+});
+
+app.get("/api/pilots/:pilotEmail", (req, res) => {
+  const pilot = getPilotByEmail(req.params.pilotEmail);
+  if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
+  return res.json({ ok: true, pilot: publicPilotAccount(pilot) });
 });
 
 app.post("/api/pilots/register", (req, res) => {
@@ -1920,18 +1985,7 @@ app.post("/api/pilots/register", (req, res) => {
     const pilot = upsertPilotAccount(req.body || {});
     res.status(201).json({
       ok: true,
-      pilot: {
-        email: pilot.email,
-        name: pilot.name,
-        firstName: pilot.firstName,
-        lastName: pilot.lastName,
-        role: pilot.role,
-        dept: pilot.dept,
-        func: pilot.func,
-        matricule: pilot.matricule,
-        orgName: pilot.orgName,
-        status: pilot.status
-      }
+      pilot: publicPilotAccount(pilot)
     });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Creation pilote impossible" });
@@ -1943,18 +1997,7 @@ app.put("/api/pilots/:pilotEmail", (req, res) => {
     const pilot = updateExistingPilotAccount(req.params.pilotEmail, req.body || {});
     res.json({
       ok: true,
-      pilot: {
-        email: pilot.email,
-        name: pilot.name,
-        firstName: pilot.firstName,
-        lastName: pilot.lastName,
-        role: pilot.role,
-        dept: pilot.dept,
-        func: pilot.func,
-        matricule: pilot.matricule,
-        orgName: pilot.orgName,
-        status: pilot.status
-      }
+      pilot: publicPilotAccount(pilot)
     });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Modification pilote impossible" });
@@ -1974,13 +2017,13 @@ app.get("/api/pilots/:pilotEmail/users", (req, res) => {
   const pilotEmail = normEmail(req.params.pilotEmail);
   const pilot = getPilotByEmail(pilotEmail);
   if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
-  res.json({ ok: true, items: listUsersByPilotEmail(pilotEmail) });
+  res.json({ ok: true, items: listUsersByPilotEmail(pilotEmail).map(publicUserAccount) });
 });
 
 app.post("/api/pilots/:pilotEmail/users", (req, res) => {
   try {
     const created = createUserForPilot(req.params.pilotEmail, req.body || {});
-    res.status(201).json({ ok: true, item: created });
+    res.status(201).json({ ok: true, item: publicUserAccount(created) });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Creation impossible" });
   }

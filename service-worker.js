@@ -31,10 +31,10 @@ self.addEventListener("fetch", (event) => {
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/QualiLab_by_ENNAJEH_v2.html", copy)).catch(() => {});
+          caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy)).catch(() => {});
           return response;
         })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match("/QualiLab_by_ENNAJEH_v2.html")))
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("/index.html")))
     );
     return;
   }

@@ -6173,7 +6173,7 @@
                 <div class="f"><label>Adresse e-mail</label><input id="lemail" type="email" value="karimennajeh@gmail.com">
                 </div>
                 <div class="f mt12"><label>Mot de passe</label>
-                  <div class="password-wrap"><input id="lpwd" type="password" value="09318872karim@"><button id="togglePwd"
+                  <div class="password-wrap"><input id="lpwd" type="password"><button id="togglePwd"
                       class="password-toggle" type="button" aria-label="Afficher le mot de passe"
                       aria-pressed="false">Afficher</button></div>
                 </div>
@@ -7466,7 +7466,7 @@
         <div class="card">
           <h3>Creation d'un nouveau utilisateur</h3>
           <p class="mut mt-neg6">Presentation simplifiee par etapes pour creer rapidement un compte utilisateur.</p>
-          <form action="pilots.php" method="POST" class="user-step-grid" id="formPilots">
+          <form class="user-step-grid" id="formPilots" onsubmit="return false">
             <div class="user-step-card">
               <div class="user-step-badge">Etape 1</div>
               <h4>Informations du compte</h4>
@@ -7565,7 +7565,7 @@
               </div>
             </div>
           </form>
-          <form method="">
+          <form onsubmit="return false">
             <div class="user-step-card">
               <div class="user-step-badge">Etape 4</div>
               <h4>Acces par module</h4>
@@ -9202,7 +9202,6 @@
     ];
     const D = { u: { name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, org: { name: "QUALI by ENNAJEH", fiscal: "MF-2026-001", acc: "Accredite", accDate: "2026-01-15", validDate: "2027-01-15", manager: "John Doe", phone: "+216 71 000 000", fax: "+216 71 000 001", mail: "contact@QUALI.tn", address: "Zone industrielle, Tunis, Tunisie", docs: "Manuel qualite\nCertificat d'accreditation\nAnnexe technique\nPolitique qualite de l'organisme" }, diag: { person: "", date: "", answers: {}, notes: {}, updated: "" }, repo: { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }, docs: [{ id: 1, ref: "PRO-LAB-001", title: "Programme d'etalonnage", p: "Processus support", type: "Procedure", v: "2.1", st: "A valider", o: "Resp. qualite", d: "2026-04-01" }, { id: 2, ref: "INS-LAB-004", title: "Utilisation balance analytique", p: "Processus operationnel", type: "Instruction", v: "1.3", st: "Valide", o: "Technicien senior", d: "2026-03-18" }], orgDocs: [{ id: 101, ref: "PRO-PIL-001", title: "Audit client", ie: "IE-01", p: "Processus pilotage", type: "Procedure", page: "1/3", v: "1.0", st: "Valide", o: "Direction", d: "2026-03-12" }, { id: 102, ref: "INS-OPE-002", title: "Reception et traitement des echantillons", ie: "IE-02", p: "Processus operationnel", type: "Instruction", page: "1/2", v: "2.0", st: "A valider", o: "Chef laboratoire", d: "2026-04-02" }, { id: 103, ref: "FOR-SUP-003", title: "Demande d'achat de consommables", ie: "IE-03", p: "Processus support", type: "Formulaire", page: "1/1", v: "1.4", st: "Valide", o: "Service achats", d: "2026-02-20" }, { id: 104, ref: "ENR-SUP-004", title: "Fiche de maintenance preventive", ie: "IE-04", p: "Processus support", type: "Enregistrement", page: "1/1", v: "3.1", st: "Valide", o: "Metrologie", d: "2026-03-25" }], eq: [{ id: "EQ-001", n: "Balance analytique", m: "Mettler XS-205", sn: "SN-1234", l: "2026-01-10", nx: "2026-04-10", st: "A etalonner", ciq: "Quotidien", u: "+/- 0.1 mg" }, { id: "EQ-002", n: "pH-metre", m: "Metrohm 914", sn: "SN-5678", l: "2026-02-01", nx: "2026-08-01", st: "Valide", ciq: "Avant usage", u: "+/- 0.01 pH" }], nc: [{ ref: "NC-2026-001", desc: "Certificat manquant", g: "Critique", act: "Bloquer l'equipement", st: "Ouverte", o: "Resp. qualite", due: "2026-04-10" }, { ref: "NC-2026-002", desc: "Rapport incomplet", g: "Majeure", act: "Corriger modele", st: "En cours", o: "Technicien", due: "2026-04-15" }], aud: [{ ref: "AI-2026-001", ty: "Audit interne", sc: "Equipements et tracabilite", o: "A. Bensalem", d: "2026-04-20", st: "Planifie", f: "-" }, { ref: "AC-2026-001", ty: "Audit externe (client)", sc: "Systeme complet", o: "Direction", d: "2026-05-05", st: "En cours", f: "2 actions" }], revc: [{ ref: "1", client: "arco sonia sarl", address: "Z.I Enfidha", city: "SOUSSE", phone: "36 381 720", fax: "-", mail: "khassan@valvulasarco.com", st: "Actif" }, { ref: "2", client: "STE DE NUTRITION ANIMALE SA (SNA)", address: "SIDI EL HENI", city: "SOUSSE", phone: "73 280 400", fax: "73 240 409", mail: "achat_seh2@snasidielheni.com", st: "Actif" }, { ref: "3", client: "Ste LA TRINGLE", address: "WG7M+HPV Akouda Sousse", city: "AKOUDA", phone: "73342077", fax: "-", mail: "mariem.latringle@gnet.tn", st: "Actif" }, { ref: "4", client: "AMC", address: "ROUTE DE MSAKEN KM 147 ZAOUIET", city: "SOUSSE", phone: "73 386 040", fax: "-", mail: "achat@amctunisie.com", st: "Actif" }, { ref: "5", client: "VIVIER MARITIME DE TUNISIE (VMT)", address: "Port de peche Hergla", city: "SOUSSE", phone: "73 251 799", fax: "-", mail: "safrjb@gmail.com", st: "Actif" }, { ref: "6", client: "SOCIETE SAMELEC", address: "Rue Maarouf Roussafi, ZI", city: "ZAGHOUAN", phone: "72680122", fax: "72680090", mail: "amel.bensassi@apem.com", st: "Actif" }], prest: [{ id: "PREST-2026-001", ref: "PREST-2026-001", name: "Lab Expert Services", service: "Maintenance et qualification", contact: "Sami Trabelsi", mail: "contact@labexpert.tn", phone: "+216 71 123 456", scope: "Maintenance preventive des equipements critiques", d: "2026-04-08", st: "Actif", obs: "Intervention sous 48h" }, { id: "PREST-2026-002", ref: "PREST-2026-002", name: "Metrology Support", service: "Etalonnage externe", contact: "Nadia Ben Amor", mail: "support@metrology.tn", phone: "+216 70 555 222", scope: "Etalonnage balance, pipettes et sondes", d: "2026-04-15", st: "A evaluer", obs: "Dossier fournisseur a completer" }], aci: [{ id: "ACI-001", no: "AC-2026-001", date: "2026-04-20", requester: "Responsable qualite", dept: "Qualite", contact: "qualite@qualilab.tn", docTitle: "Procedure maitrise documentaire", docRef: "PRO-DOC-001", version: "2.0", versionDate: "2026-03-01", type: "Mise a jour", desc: "Ajout des exigences de tracabilite des demandes de modification.", part: "Chapitre 6 et annexe historique", reason: "Amelioration", goal: "Renforcer la conformite ISO 9001 et ISO 17025.", impactProcess: "Pilotage documentaire", impactService: "Aucun impact direct sur le service client", impactPeople: "Brief de sensibilisation", impactEquip: "Aucun", criticality: "Moyenne", qualityManager: "Responsable qualite", processOwner: "Pilote documentaire", decision: "Acceptee", validationDate: "2026-04-22", implOwner: "Assistant qualite", plannedDate: "2026-04-25", revisedVersion: "2.1", effectiveDate: "2026-04-28", verification: "Verification en revue documentaire", traceAction: "AC-2026-014", traceAudit: "AI-2026-001", traceComplaint: "-", archive: "Archive documentaire / version precedente" }], plan: [{ id: "PLAN-IC-001", type: "Inter-comparaison", ref: "PIC-2026-001", lab: "Laboratoire chimie", scope: "Programme inter-comparaison eau potable et solutions etalon", resp: "Responsable technique", start: "2026-05-10", end: "2026-05-20", freq: "Annuel", status: "Planifie", notes: "Coordination avec organisme externe et preparation des echantillons" }, { id: "PLAN-AUD-001", type: "Audit interne", ref: "PAI-2026-001", lab: "Systeme management qualite", scope: "Audit interne de tous les processus du laboratoire", resp: "Responsable qualite", start: "2026-06-01", end: "2026-06-05", freq: "Semestriel", status: "Planifie", notes: "Couvrir documentation, equipements, competences et reclamations" }, { id: "PLAN-HAB-001", type: "Maintien habilitation personnel", ref: "PHAB-2026-001", lab: "Personnel technique", scope: "Suivi des habilitations, observations terrain et reevaluations", resp: "Chef laboratoire", start: "2026-05-02", end: "2026-05-30", freq: "Trimestriel", status: "En cours", notes: "Verifier les techniciens actifs sur chaque methode" }, { id: "PLAN-RD-001", type: "Revue de direction", ref: "PRD-2026-001", lab: "Direction", scope: "Preparation des indicateurs, actions, risques et satisfaction client", resp: "Direction generale", start: "2026-07-10", end: "2026-07-15", freq: "Annuel", status: "Planifie", notes: "Inclure bilan objectifs qualite et besoins en ressources" }, { id: "PLAN-ETA-001", type: "Etalonnage laboratoire", ref: "PETA-2026-001", lab: "Laboratoire metrologie", scope: "Balance analytique, pipettes, thermometres, masses et verrerie", resp: "Metrologue interne", start: "2026-05-12", end: "2026-05-28", freq: "Mensuel", status: "Planifie", notes: "Plan par instrument avec echeances et priorites critiques" }], stat: [{ id: "STAT-001", ref: "AFF-2026-001", region: "Sousse", country: "Tunisie", month: "Janvier", year: "2026", prestations: 12, note: "Prestations du debut d'annee" }, { id: "STAT-002", ref: "AFF-2025-014", region: "Tunis", country: "Tunisie", month: "Mars", year: "2025", prestations: 8, note: "Activite client secteur industriel" }], disc: [], usr: [{ name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, { name: "Amina El Idrissi", email: "amina@ener.tn", role: "Responsable qualite", dept: "Qualite", ini: "AE" }], trailWeek: "", trailArchive: [], trail: [{ t: "2026-04-07 09:30", u: "John Doe", a: "Connexion", m: "Session", x: "Ouverture de l'application" }, { t: "2026-04-07 09:10", u: "Amina El Idrissi", a: "Creation", m: "NC", x: "NC-2026-001 ajoutee" }] };
     const MAIN_PILOT_EMAIL = "karimennajeh@gmail.com";
-    const MAIN_PILOT_PASSWORD = "09318872karim@";
     function authNormEmail(v) { return String(v || "").trim().toLowerCase() }
     function pilotDataKey(email) { const e = authNormEmail(email); return !e || e === MAIN_PILOT_EMAIL ? K : `${K}__${encodeURIComponent(e)}` }
     function sessionEmail() { try { const raw = localStorage.getItem(S); if (!raw) return ""; const parsed = JSON.parse(raw); return authNormEmail((parsed && (parsed.pilotEmail || parsed.email)) || "") } catch (e) { return "" } }
@@ -9269,6 +9268,10 @@
     async function apiLogin(email, password) {
       return apiRequest("/auth/login", { method: "POST", body: { email, password } })
     }
+    async function apiGetPilot(pilotEmail) {
+      const data = await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)));
+      return data && data.pilot ? data.pilot : null
+    }
     async function apiListUsers(pilotEmail) {
       const data = await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/users");
       return Array.isArray(data && data.items) ? data.items.map(normalizeUserAccount) : []
@@ -9276,7 +9279,6 @@
     async function apiUpsertPilot(pilot) {
       const body = {
         email: authNormEmail(pilot && pilot.email),
-        password: String((pilot && pilot.password) || ""),
         name: String((pilot && pilot.name) || "").trim(),
         firstName: String((pilot && pilot.firstName) || "").trim(),
         lastName: String((pilot && pilot.lastName) || "").trim(),
@@ -9287,12 +9289,12 @@
         orgName: String((pilot && pilot.orgName) || "").trim() || "QUALI by ENNAJEH",
         status: String((pilot && pilot.status) || "Actif").trim() || "Actif"
       };
+      if (pilot && pilot.password) body.password = String(pilot.password);
       const data = await apiRequest("/pilots/register", { method: "POST", body });
       return data && data.pilot ? data.pilot : null
     }
     async function apiUpdatePilot(pilotEmail, pilot) {
       const body = {
-        password: String((pilot && pilot.password) || ""),
         name: String((pilot && pilot.name) || "").trim(),
         firstName: String((pilot && pilot.firstName) || "").trim(),
         lastName: String((pilot && pilot.lastName) || "").trim(),
@@ -9303,6 +9305,7 @@
         orgName: String((pilot && pilot.orgName) || "").trim() || "QUALI by ENNAJEH",
         status: String((pilot && pilot.status) || "Actif").trim() || "Actif"
       };
+      if (pilot && pilot.password) body.password = String(pilot.password);
       const data = await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)), { method: "PUT", body });
       return data && data.pilot ? data.pilot : null
     }
@@ -9531,11 +9534,9 @@
     function tag(v) { return ["Valide", "Approuve", "Diffuse", "Cloture", "Cloturee"].includes(v) ? "ok" : ["Brouillon", "En revue", "A corriger", "A valider", "A etalonner", "En cours", "Planifie", "Majeure"].includes(v) ? "wa" : ["Obsolete", "Archive", "Hors service", "Ouverte", "Critique"].includes(v) ? "er" : "bl" }
     function log(a, m, x) { ensureTrailWeek(); const u = s.u || {}; s.trail.unshift({ t: now(), u: u.name || "Utilisateur", email: u.email || "", role: u.role || "", a, m, x }); s.trail = s.trail.slice(0, 500) }
     function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); page(canViewModule("hub") ? "hub" : "db", true); connectPilotRealtimeStream(pilotEmailForApi()); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
-    function pilotAccount() { return normalizeUserAccount({ name: "Pilote QUALI", firstName: "Pilote", lastName: "QUALI", email: MAIN_PILOT_EMAIL, role: "Administrateur", dept: "Pilotage application", func: "Pilote de l'application", matricule: "PILOT-001", ini: "PQ", perms: [...PERMS], moduleAccess: fullModuleAccess(), passwordHint: "Mot de passe pilote : " + MAIN_PILOT_PASSWORD, pilot: true, status: "Actif", accountType: "Pilote" }) }
-    function pilotAccounts() { const fallback = [mainPilotRegistryAccount()]; const raw = sg(ACCK); if (!raw) return fallback; try { const parsed = JSON.parse(raw); return Array.isArray(parsed) && parsed.length ? parsed : fallback } catch (e) { return fallback } }
-    function savePilotAccounts(arr) { ss(ACCK, JSON.stringify(arr)) }
-    function mainPilotRegistryAccount() { const p = pilotAccount(); return { name: p.name, firstName: p.firstName, lastName: p.lastName, email: p.email, password: MAIN_PILOT_PASSWORD, role: p.role, dept: p.dept, func: p.func, matricule: p.matricule, orgName: "QUALI by ENNAJEH", pilot: true } }
-    function ensureMainPilotRegistry() { const accounts = pilotAccounts(), email = authNormEmail(MAIN_PILOT_EMAIL); const i = accounts.findIndex(x => authNormEmail(x.email) === email); if (i >= 0) accounts[i] = { ...accounts[i], ...mainPilotRegistryAccount() }; else accounts.unshift(mainPilotRegistryAccount()); savePilotAccounts(accounts); return accounts }
+    function pilotAccounts() { return [] }
+    function ensureMainPilotRegistry() { return pilotAccounts() }
+    function savePilotAccounts(arr) { /* Database-only: no localStorage */ }
     let editingPilotEmail = "", pilotCreateStep = 1;
     function pilotManageTargetEmail() { return authNormEmail(($("#cpManageLookupEmail") && $("#cpManageLookupEmail").value) || ($("#cpEmail") && $("#cpEmail").value) || "") }
     function pilotManageAllowed(email = editingPilotEmail || pilotManageTargetEmail()) { return !!email && authNormEmail(email) !== MAIN_PILOT_EMAIL }
@@ -9592,8 +9593,8 @@
       $("#cpOrgName").value = account.orgName || "";
       $("#cpEmail").value = account.email || "";
       $("#cpEmail2").value = account.email || "";
-      $("#cpPwd").value = account.password || "";
-      $("#cpPwd2").value = account.password || "";
+      $("#cpPwd").value = "";
+      $("#cpPwd2").value = "";
       $("#cpCode").value = "";
       if ($("#cpManageLookupEmail")) $("#cpManageLookupEmail").value = account.email || "";
       setPilotCreateStep(1);
@@ -9621,7 +9622,7 @@
     }
     function validatePilotAccountStep() {
       const draft = createDraftPayload();
-      if (!draft.email || !draft.email2 || !draft.pw || !draft.pw2) {
+      if (!draft.email || !draft.email2 || (!editingPilotEmail && (!draft.pw || !draft.pw2))) {
         pilotPanelMessage("Renseigne tous les champs obligatoires de l'etape 2.");
         return false;
       }
@@ -9629,11 +9630,11 @@
         pilotPanelMessage("La confirmation de l'adresse e-mail est incorrecte.");
         return false;
       }
-      if (!validPassword(draft.pw)) {
+      if ((draft.pw || draft.pw2) && !validPassword(draft.pw)) {
         pilotPanelMessage("Mot de passe invalide : saisir au minimum 4 chiffres.");
         return false;
       }
-      if (draft.pw !== draft.pw2) {
+      if ((draft.pw || draft.pw2) && draft.pw !== draft.pw2) {
         pilotPanelMessage("La confirmation du mot de passe est incorrecte.");
         return false;
       }
@@ -9680,40 +9681,19 @@
       let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null }
       if (!pending) { msg.textContent = "Le brouillon du compte pilote est invalide. Renvoie un nouveau code."; return }
       if (!entered || entered !== String(pending.code || "")) { msg.textContent = "Le code de validation est incorrect."; return }
-      const accounts = ensureMainPilotRegistry();
-      if (accounts.some(x => authNormEmail(x.email) === authNormEmail(pending.email))) { msg.textContent = "Ce compte pilote existe deja."; return }
       const account = { name: pending.name, firstName: pending.firstName, lastName: pending.lastName, email: pending.email, password: pending.pw, role: "Administrateur", dept: "Pilotage application", func: pending.func, matricule: pending.uid, orgName: pending.orgName, pilot: true, status: "Actif" };
-      // Send to PHP
       try {
-        const response = await fetch('create_pilot.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            firstName: pending.firstName,
-            lastName: pending.lastName,
-            func: pending.func,
-            uid: pending.uid,
-            orgName: pending.orgName,
-            email: pending.email,
-            pw: pending.pw
-          })
-        });
-        const result = await response.json();
-        if (result.success) {
-          msg.textContent = "Compte pilote cree avec succes dans la base de donnees.";
-        } else {
-          msg.textContent = "Erreur lors de la creation du compte pilote: " + result.message;
-          return;
-        }
+        if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible : impossible de creer le compte pilote."; return }
+        const existing = await apiGetPilot(pending.email).catch(() => null);
+        if (existing) { msg.textContent = "Ce compte pilote existe deja."; return }
+        await apiUpsertPilot(account);
       } catch (error) {
         console.error('Error:', error);
-        msg.textContent = "Erreur de connexion au serveur.";
+        msg.textContent = error && error.message ? error.message : "Erreur de connexion au serveur.";
         return;
       }
+      const accounts = ensureMainPilotRegistry();
       accounts.unshift(account); savePilotAccounts(accounts); let serverNote = "";
-      if (await apiHealth()) { const remoteReady = await ensureRemotePilotAccount(account); if (!remoteReady) serverNote = " Synchronisation base en attente."; }
       sr("QUALI_pending_pilot_signup");
       msg.textContent = "Compte pilote valide. Retour a la connexion pour ouvrir l'application avec ce compte." + serverNote;
       $("#lemail").value = account.email; $("#lpwd").value = ""; resetPilotManageForm("Compte pilote cree. Tu peux maintenant retourner a la connexion."); authPanel("authLoginPanel"); $("#lmsg").textContent = "Compte pilote cree. Connecte-toi avec ton e-mail et ton mot de passe.";
@@ -9722,48 +9702,57 @@
       if (editingPilotEmail) return updatePilotManageAccount();
       return createPilotAccount();
     }
-    function loadPilotAccountForManage(openEditor = false) {
+    async function loadPilotAccountForManage(openEditor = false) {
       const email = pilotManageTargetEmail();
       if (!email) { pilotPanelMessage("Renseigne l'adresse e-mail du compte pilote a charger.", true); return }
-      const account = ensureMainPilotRegistry().find(x => authNormEmail(x.email) === email);
-      if (!account) { pilotPanelMessage("Compte pilote introuvable sur cet appareil.", true); return }
-      loadPilotManageForm(account);
-      const baseMsg = email === MAIN_PILOT_EMAIL ? "Compte pilote principal charge. Sa suppression et sa modification sont bloquees dans cet ecran." : "Compte pilote charge. Tu peux maintenant le modifier ou le supprimer.";
-      pilotPanelMessage(baseMsg, true);
-      if (openEditor) openPilotCreateWizard(1, email === MAIN_PILOT_EMAIL ? "Le compte pilote principal ne se modifie pas dans cet ecran." : "Compte pilote charge. Modifie les champs puis poursuis les etapes pour valider la modification.");
+      try {
+        if (!await apiHealth(true)) { pilotPanelMessage("Serveur local indisponible.", true); return }
+        const account = await apiGetPilot(email);
+        if (!account) { pilotPanelMessage("Compte pilote introuvable.", true); return }
+        loadPilotManageForm(account);
+        const baseMsg = email === MAIN_PILOT_EMAIL ? "Compte pilote principal charge. Sa suppression et sa modification sont bloquees dans cet ecran." : "Compte pilote charge. Tu peux maintenant le modifier ou le supprimer.";
+        pilotPanelMessage(baseMsg, true);
+        if (openEditor) openPilotCreateWizard(1, email === MAIN_PILOT_EMAIL ? "Le compte pilote principal ne se modifie pas dans cet ecran." : "Compte pilote charge. Modifie les champs puis poursuis les etapes pour valider la modification.");
+      } catch (error) {
+        console.error(error);
+        pilotPanelMessage("Erreur lors du chargement du compte pilote.", true);
+      }
     }
     async function updatePilotManageAccount() {
       const msg = $("#cpMsg"), draft = createDraftPayload();
       if (!editingPilotEmail) { msg.textContent = "Charge d'abord un compte pilote existant."; return }
       if (!pilotManageAllowed(editingPilotEmail)) { msg.textContent = "Le compte pilote principal ne se modifie pas dans cet ecran."; return }
       if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
-      const accounts = ensureMainPilotRegistry(), index = accounts.findIndex(x => authNormEmail(x.email) === editingPilotEmail);
-      if (index < 0) { msg.textContent = "Compte pilote introuvable."; return }
-      const updated = { ...accounts[index], name: draft.name, firstName: draft.firstName, lastName: draft.lastName, email: editingPilotEmail, password: draft.pw, role: "Administrateur", dept: "Pilotage application", func: draft.func, matricule: draft.uid, orgName: draft.orgName, pilot: true, status: "Actif" };
-      accounts[index] = updated; savePilotAccounts(accounts); let serverNote = "";
-      if (await apiHealth()) { try { await apiUpdatePilot(editingPilotEmail, updated) } catch (e) { console.error(e); serverNote = " Synchronisation base en attente." } }
-      loadPilotManageForm(updated);
-      msg.textContent = "Compte pilote modifie avec succes." + serverNote;
-      pilotPanelMessage("Compte pilote modifie avec succes." + serverNote, true);
+      try {
+        if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible."; return }
+        await apiUpdatePilot(editingPilotEmail, { name: draft.name, firstName: draft.firstName, lastName: draft.lastName, role: "Administrateur", dept: "Pilotage application", func: draft.func, matricule: draft.uid, orgName: draft.orgName, password: draft.pw });
+        msg.textContent = "Compte pilote mis a jour.";
+        resetPilotManageForm();
+        openPilotManageWizard("Compte pilote mis a jour.");
+      } catch (error) {
+        console.error(error);
+        msg.textContent = error && error.message ? error.message : "Erreur lors de la mise a jour.";
+      }
     }
     async function deletePilotManageAccount() {
       const email = editingPilotEmail || pilotManageTargetEmail();
       if (!email) { pilotPanelMessage("Charge d'abord un compte pilote a supprimer.", true); return }
-      if (!pilotManageAllowed(email)) { pilotPanelMessage("Le compte pilote principal ne peut pas etre supprime.", true); return }
-      const account = ensureMainPilotRegistry().find(x => authNormEmail(x.email) === authNormEmail(email));
-      if (!account) { pilotPanelMessage("Compte pilote introuvable.", true); return }
+      if (email === MAIN_PILOT_EMAIL) { pilotPanelMessage("Le compte pilote principal ne peut pas etre supprime.", true); return }
       if (!confirm("Confirmer la suppression de ce compte pilote et de ses donnees associees ?")) return;
-      savePilotAccounts(ensureMainPilotRegistry().filter(x => authNormEmail(x.email) !== authNormEmail(email)));
-      sr(pilotDataKey(email));
-      const session = sessionInfo(); if (session && authNormEmail(session.pilotEmail) === authNormEmail(email)) sr(S);
-      let serverNote = "";
-      if (await apiHealth()) { try { await apiDeletePilot(email) } catch (e) { console.error(e); serverNote = " Suppression base en attente." } }
-      resetPilotManageForm("Renseigne tous les champs obligatoires avant de passer a l'etape suivante.");
-      openPilotManageWizard("Compte pilote supprime." + serverNote);
+      try {
+        if (!await apiHealth(true)) { pilotPanelMessage("Serveur local indisponible.", true); return }
+        await apiDeletePilot(email);
+        pilotPanelMessage("Compte pilote supprime.", true);
+        resetPilotManageForm();
+        openPilotManageWizard("Compte pilote supprime.");
+      } catch (error) {
+        console.error(error);
+        pilotPanelMessage(error && error.message ? error.message : "Erreur lors de la suppression.", true);
+      }
     }
-    function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"), acc = findPilotAccount(email); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; }
-    async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } const accounts = ensureMainPilotRegistry(); const i = accounts.findIndex(x => authNormEmail(x.email) === authNormEmail(email)); if (i < 0) { msg.textContent = "Compte pilote introuvable."; return } accounts[i] = { ...accounts[i], password: pw }; savePilotAccounts(accounts); if (await apiHealth()) await ensureRemotePilotAccount(accounts[i]); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; }
-    async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value; try { if (await apiHealth()) { try { const remote = await apiLogin(e, p); if (remote && remote.ok && remote.pilot && remote.user) { loadPilotApp(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); if (remote.type === "pilot") { s.u = normalizeUserAccount(remote.user); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })); await syncUsersFromApi(); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } await syncUsersFromApi(); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } } catch (apiErr) { console.error(apiErr) } } if (isPilotLogin(e, p)) { const acc = loadPilotApp(e); if (!acc) throw new Error("Compte pilote introuvable"); await ensureRemotePilotAccount(acc); await loadPilotStateFromApi(acc.email); ss(S, JSON.stringify({ email: acc.email, pilotEmail: acc.email, type: "pilot" })); log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } const found = findUserLogin(e, p); if (!found) { $("#lmsg").textContent = "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h"); return } loadPilotApp(found.pilot.email); await ensureRemotePilotAccount(found.pilot); await loadPilotStateFromApi(found.pilot.email); s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(found.user.email)); if (!current) throw new Error("Compte utilisateur introuvable dans la base du pilote"); s.u = normalizeUserAccount(current); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: found.pilot.email, type: "user" })); log("Connexion", "Session", e); save("Session ouverte"); openApp() } catch (err) { console.error(err); $("#lmsg").textContent = "Erreur de connexion. Verifie l'application puis recommence."; sr(S); $("#auth").classList.remove("h"); $("#app").classList.add("h") } }
+    async function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } try { if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible."; return } const acc = await apiGetPilot(email); if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; } catch (error) { console.error(error); msg.textContent = "Erreur lors de la verification du compte."; } }
+    async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } try { if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible."; return } const acc = await apiGetPilot(email); await apiUpdatePilot(email, { ...acc, password: pw }); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; } catch (error) { console.error(error); msg.textContent = error && error.message ? error.message : "Erreur lors de la mise a jour du mot de passe."; } }
+    async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value, msg = $("#lmsg"); try { if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible : demarre le serveur QUALI puis recommence."; return } const remote = await apiLogin(e, p); if (!remote || !remote.ok || !remote.pilot || !remote.user) throw new Error("Reponse d'authentification invalide"); switchPilotStore(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); await syncUsersFromApi(); if (remote.type === "pilot") { s.u = normalizeUserAccount({ ...remote.user, pilot: true }); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })) } else { s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })) } log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } catch (err) { console.error(err); msg.textContent = err && err.message ? err.message : "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h") } }
     function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); disconnectPilotRealtimeStream(); disconnectDocumentationCentralStream(); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
     const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestataire externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, stat: { cls: "module-stat", title: "Statistique", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
     function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card module-org-compact"><div class="module-org-line"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-line"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-line"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-line"><strong>Adresse</strong><p>${esc(addr)}</p></div></div></div>` }
@@ -11042,7 +11031,7 @@
     function currentUserProfile() { return ($("#uProfile") && $("#uProfile").value) || ($("#ur") && $("#ur").value) || "Lecture seule" }
     function defaultModuleAccessForForm() { return moduleAccessForProfile(currentUserProfile()) }
     function defaultPermsForForm() { return profilePerms(currentUserProfile()) }
-    function ensurePilotAccount() { const acc = findPilotAccount(currentPilotEmail) || mainPilotRegistryAccount(), p = pilotRegistryToUser(acc), oldEmail = "admin@ener.tn"; s.usr = Array.isArray(s.usr) ? s.usr.map(normalizeUserAccount) : []; const aliases = [authNormEmail(p.email), authNormEmail(oldEmail)].filter(Boolean); const i = s.usr.findIndex(x => aliases.includes(authNormEmail(x.email))); if (i >= 0) s.usr[i] = { ...s.usr[i], ...p }; else s.usr.unshift(markSaved(p)); if (aliases.includes(authNormEmail((s.u && s.u.email) || ""))) s.u = normalizeUserAccount({ ...s.u, ...p }) }
+    function ensurePilotAccount() { const acc = findPilotAccount(currentPilotEmail), p = acc ? pilotRegistryToUser(acc) : null, oldEmail = "admin@ener.tn"; s.usr = Array.isArray(s.usr) ? s.usr.map(normalizeUserAccount) : []; if (p) { const aliases = [authNormEmail(p.email), authNormEmail(oldEmail)].filter(Boolean); const i = s.usr.findIndex(x => aliases.includes(authNormEmail(x.email))); if (i >= 0) s.usr[i] = { ...s.usr[i], ...p }; else s.usr.unshift(markSaved(p)); if (aliases.includes(authNormEmail((s.u && s.u.email) || ""))) s.u = normalizeUserAccount({ ...s.u, ...p }) } }
     function normalizeUserAccount(u = {}) { const full = String(u.name || [u.firstName, u.lastName].filter(Boolean).join(" ") || "Utilisateur").trim(); const role = u.role || "Utilisateur", profile = u.profile || (ACCOUNT_PROFILES[role] ? role : "Personnalise"), perms = Array.isArray(u.perms) ? [...new Set(u.perms.filter(x => PERMS.includes(x)))] : (ACCOUNT_PROFILES[role] ? [...ACCOUNT_PROFILES[role].perms] : ["Telecharger"]), moduleAccess = u.pilot ? fullModuleAccess() : normalizeModuleAccess(u.moduleAccess || (ACCOUNT_PROFILES[profile] ? ACCOUNT_PROFILES[profile].moduleAccess : {})); return { ...u, name: full, firstName: u.firstName || full.split(" ")[0] || full, lastName: u.lastName || full.split(" ").slice(1).join(" "), role, dept: u.dept || "-", func: u.func || "-", matricule: u.matricule || "-", ini: u.ini || ini(full), perms, moduleAccess, profile, status: u.status || "Actif", accountType: u.accountType || (u.pilot ? "Pilote" : "Utilisateur"), password: u.password || "", pilot: !!u.pilot } }
     function userPerms(u = s.u) { const account = normalizeUserAccount(u || {}); return account.pilot ? [...PERMS] : account.perms }
     function visibleModuleAccess(u = s.u) { const account = normalizeUserAccount(u || {}); return account.pilot ? fullModuleAccess() : account.moduleAccess }
@@ -11185,7 +11174,7 @@
     registerLocalLiveReload();
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
-    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", () => loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", () => loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", sendResetPilotCode); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); syncPilotManageButtons(); registerPwa();
+    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); syncPilotManageButtons(); registerPwa();
     ["#cpManageLookupEmail", "#cpEmail", "#cpEmail2"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPilotManageButtons); el.addEventListener("change", syncPilotManageButtons) } });
     ["#ds", "#dpf", "#dtf", "#df", "#ods", "#odpf", "#odtf", "#odf", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });

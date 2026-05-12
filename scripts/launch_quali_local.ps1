@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
-$appUrl = 'http://localhost:3000/QualiLab_by_ENNAJEH_v2.html'
+$appUrl = 'http://localhost:3000/'
 $healthUrl = 'http://localhost:3000/api/health'
 $serverScript = Join-Path $projectRoot 'server.js'
 $nodeExe = (Get-Command node -ErrorAction SilentlyContinue).Source
