@@ -9458,11 +9458,11 @@
     }
     function save(m) { persistLocalState(); schedulePilotStateSave(); sync(m || "Sauvegarde locale active") }
     const API_BASE = (() => {
-      if (location.protocol === "file:") return "http://localhost:3000/api";
+      if (location.protocol === "file:") return "http://localhost/QUALI/api.php";
       if (location.port === "3000") return "/api";
-      const host = location.hostname || "localhost";
-      return `${location.protocol}//${host}:3000/api`;
+      return new URL("api.php", location.href).href;
     })();
+    const API_MODE = API_BASE.includes("api.php") ? "xampp" : "node";
     function apiUrl(path) { return API_BASE + path }
     let apiHealthCache = null, apiHealthCheckedAt = 0;
     async function apiRequest(path, options = {}) {
@@ -9934,7 +9934,7 @@
       if (!entered || entered !== String(pending.code || "")) { msg.textContent = "Le code de validation est incorrect."; return }
       const account = { name: pending.name, firstName: pending.firstName, lastName: pending.lastName, email: pending.email, password: pending.pw, role: "Administrateur", dept: "Pilotage application", func: pending.func, matricule: pending.uid, orgName: pending.orgName, pilot: true, status: "Actif" };
       try {
-        if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible : impossible de creer le compte pilote."; return }
+        if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible : demarre Apache et MySQL puis recommence."; return }
         const existing = await apiGetPilot(pending.email).catch(() => null);
         if (existing) { msg.textContent = "Ce compte pilote existe deja."; return }
         await apiUpsertPilot(account);
@@ -9957,7 +9957,7 @@
       const email = pilotManageTargetEmail();
       if (!email) { pilotPanelMessage("Renseigne l'adresse e-mail du compte pilote a charger.", true); return }
       try {
-        if (!await apiHealth(true)) { pilotPanelMessage("Serveur local indisponible.", true); return }
+        if (!await apiHealth(true)) { pilotPanelMessage("XAMPP/PHP/MySQL indisponible.", true); return }
         const account = await apiGetPilot(email);
         if (!account) { pilotPanelMessage("Compte pilote introuvable.", true); return }
         loadPilotManageForm(account);
@@ -9975,7 +9975,7 @@
       if (!pilotManageAllowed(editingPilotEmail)) { msg.textContent = "Le compte pilote principal ne se modifie pas dans cet ecran."; return }
       if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
       try {
-        if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible."; return }
+        if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible."; return }
         await apiUpdatePilot(editingPilotEmail, { name: draft.name, firstName: draft.firstName, lastName: draft.lastName, role: "Administrateur", dept: "Pilotage application", func: draft.func, matricule: draft.uid, orgName: draft.orgName, password: draft.pw });
         msg.textContent = "Compte pilote mis a jour.";
         resetPilotManageForm();
@@ -9991,7 +9991,7 @@
       if (email === MAIN_PILOT_EMAIL) { pilotPanelMessage("Le compte pilote principal ne peut pas etre supprime.", true); return }
       if (!confirm("Confirmer la suppression de ce compte pilote et de ses donnees associees ?")) return;
       try {
-        if (!await apiHealth(true)) { pilotPanelMessage("Serveur local indisponible.", true); return }
+        if (!await apiHealth(true)) { pilotPanelMessage("XAMPP/PHP/MySQL indisponible.", true); return }
         await apiDeletePilot(email);
         pilotPanelMessage("Compte pilote supprime.", true);
         resetPilotManageForm();
@@ -10001,9 +10001,9 @@
         pilotPanelMessage(error && error.message ? error.message : "Erreur lors de la suppression.", true);
       }
     }
-    async function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } try { if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible."; return } const acc = await apiGetPilot(email); if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; } catch (error) { console.error(error); msg.textContent = "Erreur lors de la verification du compte."; } }
-    async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } try { if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible."; return } const acc = await apiGetPilot(email); await apiUpdatePilot(email, { ...acc, password: pw }); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; } catch (error) { console.error(error); msg.textContent = error && error.message ? error.message : "Erreur lors de la mise a jour du mot de passe."; } }
-    async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value, msg = $("#lmsg"); try { if (!await apiHealth(true)) { msg.textContent = "Serveur local indisponible : demarre le serveur QUALI puis recommence."; return } const remote = await apiLogin(e, p); if (!remote || !remote.ok || !remote.pilot || !remote.user) throw new Error("Reponse d'authentification invalide"); switchPilotStore(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); await syncUsersFromApi(); if (remote.type === "pilot") { s.u = normalizeUserAccount({ ...remote.user, pilot: true }); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })) } else { s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })) } log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } catch (err) { console.error(err); msg.textContent = err && err.message ? err.message : "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h") } }
+    async function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } try { if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible."; return } const acc = await apiGetPilot(email); if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } const code = sixCode(); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, code, createdAt: now() })); sendPilotMailCode(acc.email, code, "reset"); msg.textContent = "Code de reinitialisation envoye. Verifie ton e-mail puis saisis le code."; } catch (error) { console.error(error); msg.textContent = "Erreur lors de la verification du compte."; } }
+    async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (String(pending.code || "") !== code) { msg.textContent = "Le code de validation est incorrect."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } try { if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible."; return } const acc = await apiGetPilot(email); await apiUpdatePilot(email, { ...acc, password: pw }); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; } catch (error) { console.error(error); msg.textContent = error && error.message ? error.message : "Erreur lors de la mise a jour du mot de passe."; } }
+    async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value, msg = $("#lmsg"); try { if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible : demarre Apache et MySQL puis recommence."; return } const remote = await apiLogin(e, p); if (!remote || !remote.ok || !remote.pilot || !remote.user) throw new Error("Reponse d'authentification invalide"); switchPilotStore(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); await syncUsersFromApi(); if (remote.type === "pilot") { s.u = normalizeUserAccount({ ...remote.user, pilot: true }); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })) } else { s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })) } log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } catch (err) { console.error(err); msg.textContent = err && err.message ? err.message : "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h") } }
     function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); disconnectPilotRealtimeStream(); disconnectDocumentationCentralStream(); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
     const moduleRailMeta = { db: { cls: "module-db", title: "Tableau de bord", tag: "" }, docs: { cls: "module-docs", title: "Maitrise documentaire", tag: "" }, docorg: { cls: "module-docorg", title: "Documentation", tag: "" }, eq: { cls: "module-eq", title: "Gestion des equipements", tag: "" }, nc: { cls: "module-nc", title: "Non-conformites", tag: "" }, aud: { cls: "module-aud", title: "Audits", tag: "" }, revc: { cls: "module-revc", title: "Liste client", tag: "" }, usr: { cls: "module-usr", title: "Utilisateurs", tag: "" }, disc: { cls: "module-disc", title: "Discussion", tag: "" }, set: { cls: "module-set", title: "Parametres", tag: "" }, diag: { cls: "module-diag", title: "Diagnostic ISO 17025", tag: "" }, risk: { cls: "module-risk", title: "Analyse de risque", tag: "" }, swot: { cls: "module-swot", title: "Analyse SWOT", tag: "" }, sat: { cls: "module-sat", title: "Satisfaction client", tag: "" }, recl: { cls: "module-recl", title: "Reclamation client", tag: "" }, pers: { cls: "module-pers", title: "Personnel", tag: "" }, prest: { cls: "module-prest", title: "Prestataire externe", tag: "" }, aci: { cls: "module-aci", title: "Amelioration continue", tag: "" }, plan: { cls: "module-plan", title: "Planning", tag: "" }, stat: { cls: "module-stat", title: "Statistique", tag: "" }, repo: { cls: "module-repo", title: "Dossier principal", tag: "" } };
     function moduleOrgRailHtml() { const o = s.org || {}, name = o.name || "QUALI by ENNAJEH", mail = o.mail || "contact@QUALI.tn", phone = o.phone || "+216 71 000 000", addr = [o.address, o.city].filter(Boolean).join(" - ") || "Tunis, Tunisie", ref = o.accRef || o.acc || "Accredite"; return `<div class="module-org"><div class="module-org-card module-org-compact"><div class="module-org-line"><strong>Organisme</strong><p>${esc(name)}</p></div><div class="module-org-line"><strong>Reference</strong><p>${esc(o.accStd || "ISO/IEC 17025:2017")}<br>${esc(ref)}</p></div><div class="module-org-line"><strong>Contact</strong><p>${esc(mail)}<br>${esc(phone)}</p></div><div class="module-org-line"><strong>Adresse</strong><p>${esc(addr)}</p></div></div></div>` }
@@ -10581,7 +10581,7 @@
       }, 220);
     }
     function connectPilotRealtimeStream(pilotEmail) {
-      if (!pilotEmail || typeof EventSource === "undefined" || location.protocol === "file:") return;
+      if (API_MODE !== "node" || !pilotEmail || typeof EventSource === "undefined" || location.protocol === "file:") return;
       const target = authNormEmail(pilotEmail);
       if (pilotRealtimeSource && currentPilotEmail === target) return;
       disconnectPilotRealtimeStream();
@@ -10620,7 +10620,7 @@
       docCentralRefreshTimer = setTimeout(() => refreshDocumentationCentral(notice), 260);
     }
     function connectDocumentationCentralStream(pilotEmail) {
-      if (!pilotEmail || typeof EventSource === "undefined" || location.protocol === "file:") return;
+      if (API_MODE !== "node" || !pilotEmail || typeof EventSource === "undefined" || location.protocol === "file:") return;
       const target = authNormEmail(pilotEmail);
       if (docCentralEventSource && docCentralState.pilotEmail === target && docCentralState.streamConnected) return;
       disconnectDocumentationCentralStream();
@@ -11516,7 +11516,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-13-6";
+    const PWA_VERSION = "2026-05-13-7";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
@@ -11529,7 +11529,7 @@
     }
     let liveReloadSource = null;
     function registerLocalLiveReload() {
-      if (!isLocalDevHost() || typeof EventSource === "undefined") return;
+      if (API_MODE !== "node" || !isLocalDevHost() || typeof EventSource === "undefined") return;
       try {
         if (liveReloadSource) liveReloadSource.close();
         liveReloadSource = new EventSource(apiUrl("/dev/live-reload"));

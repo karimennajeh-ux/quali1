@@ -31,8 +31,17 @@ CREATE TABLE IF NOT EXISTS users (
   dept VARCHAR(255),
   func VARCHAR(255),
   matricule VARCHAR(255),
+  profile VARCHAR(255),
   status VARCHAR(255) DEFAULT 'Actif',
   pilot_email VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (pilot_email) REFERENCES pilots(email) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS pilot_app_state (
+  pilot_email VARCHAR(255) PRIMARY KEY,
+  state_json LONGTEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (pilot_email) REFERENCES pilots(email) ON DELETE CASCADE
@@ -41,4 +50,14 @@ CREATE TABLE IF NOT EXISTS users (
 -- Insert main pilot
 INSERT INTO pilots (email, password, name, first_name, last_name, role, dept, func, matricule, org_name, status) VALUES
 ('karimennajeh@gmail.com', '$2y$10$HpBeTsZpuEoxqwhuMl1D1eBMr5uOlMV/vpJmu3DSj6ZRCFjMYs40.', 'Pilote QUALI', 'Pilote', 'QUALI', 'Administrateur', 'Pilotage application', 'Pilote de l\'application', 'PILOT-001', 'QUALI by ENNAJEH', 'Actif')
-ON DUPLICATE KEY UPDATE email=email;
+ON DUPLICATE KEY UPDATE
+  password=VALUES(password),
+  name=VALUES(name),
+  first_name=VALUES(first_name),
+  last_name=VALUES(last_name),
+  role=VALUES(role),
+  dept=VALUES(dept),
+  func=VALUES(func),
+  matricule=VALUES(matricule),
+  org_name=VALUES(org_name),
+  status=VALUES(status);
