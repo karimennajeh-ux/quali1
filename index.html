@@ -2315,6 +2315,22 @@
       gap: 16px;
     }
 
+    .dashboard-report-reader {
+      border: 1px solid #d8e4f8;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .96));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 14px 34px rgba(40, 66, 113, .10);
+      max-height: 72vh;
+      overflow: auto;
+      padding: 14px;
+      scroll-behavior: smooth;
+    }
+
+    .dashboard-report-reader:focus {
+      outline: 3px solid rgba(35, 107, 216, .28);
+      outline-offset: 3px;
+    }
+
     .dashboard-report-hero {
       display: grid;
       grid-template-columns: 1.2fr .8fr;
@@ -6706,7 +6722,11 @@
           <div class="row s4" id="stats"></div>
         </div>
         <div class="card h" id="dashboardReportCard">
-          <div id="dashboardReportPreview"></div>
+          <h3>Champ de lecture du rapport detaille</h3>
+          <div class="mut" style="margin-bottom:12px">Le rapport reste lisible dans l'application. Utiliser l'export PDF seulement pour l'archiver ou l'imprimer.</div>
+          <div class="dashboard-report-reader" id="dashboardReportReader" tabindex="0" role="document" aria-label="Lecture du rapport detaille du tableau de bord">
+            <div id="dashboardReportPreview"></div>
+          </div>
         </div>
         <div class="card">
           <h3>Calendrier du mois</h3>
@@ -10130,18 +10150,24 @@
       </div>`;
     }
     function renderDashboardReportPreview() {
-      const card = $("#dashboardReportCard"), box = $("#dashboardReportPreview");
+      const card = $("#dashboardReportCard"), box = $("#dashboardReportPreview"), reader = $("#dashboardReportReader");
       if (!card || !box) return;
       card.classList.toggle("h", !s.dashboardReportVisible);
-      if (s.dashboardReportVisible) box.innerHTML = dashboardReportAppHtml();
+      if (s.dashboardReportVisible) {
+        box.innerHTML = dashboardReportAppHtml();
+        if (reader) reader.scrollTop = 0;
+      }
     }
     function showDashboardReport() {
       s.dashboardReportVisible = true;
       renderDashboardReportPreview();
       log("Affichage", "Tableau de bord", "Rapport detaille affiche dans l'application");
       save("Rapport detaille affiche dans l'application");
-      const card = $("#dashboardReportCard");
-      if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+      const reader = $("#dashboardReportReader") || $("#dashboardReportCard");
+      if (reader) {
+        reader.scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(() => { try { reader.focus({ preventScroll: true }) } catch (e) { } }, 350);
+      }
     }
     function hideDashboardReport() {
       s.dashboardReportVisible = false;
@@ -11450,7 +11476,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-13-3";
+    const PWA_VERSION = "2026-05-13-4";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
