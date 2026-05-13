@@ -2303,6 +2303,166 @@
       background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(244, 249, 255, .96));
     }
 
+    #dashboardReportCard {
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(243, 248, 255, .94)),
+        radial-gradient(circle at 92% 10%, rgba(35, 107, 216, .10), transparent 30%);
+    }
+
+    .dashboard-report-view {
+      display: grid;
+      gap: 16px;
+    }
+
+    .dashboard-report-hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      align-items: stretch;
+      border-radius: 18px;
+      padding: 18px;
+      color: #fff;
+      background: linear-gradient(135deg, #24538a, #236bd8 58%, #20b26b);
+      box-shadow: 0 22px 42px rgba(36, 83, 138, .22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-report-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 18%, rgba(255,255,255,.18) 38%, transparent 58%);
+      animation: dashboardShine 7.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .dashboard-report-hero h3 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .dashboard-report-hero .mut {
+      color: rgba(255,255,255,.82);
+    }
+
+    .dashboard-report-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dashboard-report-meta div,
+    .dashboard-report-kpi,
+    .dashboard-report-panel {
+      border: 1px solid rgba(216, 228, 248, .86);
+      background: rgba(255, 255, 255, .94);
+      box-shadow: 0 14px 30px rgba(40, 66, 113, .10);
+    }
+
+    .dashboard-report-meta div {
+      color: #1f2d4d;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .dashboard-report-kpis,
+    .dashboard-report-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .dashboard-report-kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .dashboard-report-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-report-kpi,
+    .dashboard-report-panel {
+      border-radius: 16px;
+      padding: 14px;
+      animation: dashboardPanelReveal .5s cubic-bezier(.2, .82, .2, 1) both;
+    }
+
+    .dashboard-report-kpi {
+      border-left: 5px solid var(--accent, #236bd8);
+    }
+
+    .dashboard-report-kpi span {
+      display: block;
+      color: #6c7a96;
+      font-weight: 700;
+    }
+
+    .dashboard-report-kpi b {
+      display: block;
+      color: #1f2d4d;
+      font-size: 26px;
+      margin: 6px 0;
+    }
+
+    .dashboard-report-panel h3 {
+      color: #24538a;
+    }
+
+    .dashboard-report-view .bar-row {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) 42px minmax(120px, 1.6fr);
+      gap: 8px;
+      align-items: center;
+      margin: 8px 0;
+    }
+
+    .dashboard-report-view .bar-row i {
+      height: 10px;
+      background: #edf3ff;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .dashboard-report-view .bar-row em {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      animation: reportBarGrow .72s cubic-bezier(.2, .82, .2, 1) both;
+      transform-origin: left center;
+    }
+
+    .dashboard-report-view .bar-row small {
+      grid-column: 1 / -1;
+      color: #6c7a96;
+    }
+
+    @keyframes reportBarGrow {
+      0% { transform: scaleX(.08); opacity: .45; }
+      100% { transform: scaleX(1); opacity: 1; }
+    }
+
+    @media (max-width: 980px) {
+      .dashboard-report-hero,
+      .dashboard-report-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-report-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .dashboard-report-kpis,
+      .dashboard-report-meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @keyframes dashboardPanelReveal {
       0% {
         opacity: 0;
@@ -6539,9 +6699,14 @@
           <h3>Vue globale de l'organisme</h3>
           <div class="mut" style="margin-bottom:12px">Indicateurs, alertes, conformite et activite des modules</div>
           <div class="acts justify-start mb10">
-            <button class="btn" id="dashboardReport">Telecharger rapport detaille avec graphes</button>
+            <button class="btn" id="dashboardReport">Afficher / actualiser le rapport</button>
+            <button class="btn2 btn" id="dashboardReportPdf">Exporter le rapport PDF</button>
+            <button class="btn3 btn" id="dashboardReportHide">Masquer le rapport</button>
           </div>
           <div class="row s4" id="stats"></div>
+        </div>
+        <div class="card h" id="dashboardReportCard">
+          <div id="dashboardReportPreview"></div>
         </div>
         <div class="card">
           <h3>Calendrier du mois</h3>
@@ -9919,6 +10084,70 @@
       return { docs, eq, nc, aud, risk, recl, sat, stat, dm, kpis, docStatuses, eqStatuses, ncStates, auditStates, riskStates, reclStates, satScores, statRegions, statFamilies, statFamilyCounts, statFamilyColors };
     }
     function dashboardReportBarRows(items, max) { return (items || []).map(x => `<div class="bar-row"><b>${esc(x[0])}</b><span>${esc(String(x[1]))}</span><i><em style="width:${Math.max(4, Math.min(100, Math.round(((Number(x[1]) || 0) / Math.max(max || 1, 1)) * 100)))}%;background:${esc(x[2] || "#3f6fd8")}"></em></i><small>${esc(x[3] || "")}</small></div>`).join("") }
+    function dashboardReportAppHtml() {
+      const d = dashboardReportData(), modules = dashboardModuleSummary(), org = s.org || {}, edition = now(), accents = ["#236bd8", "#20b26b", "#f59e0b", "#ef4444", "#8b5cf6", "#14b8a6", "#64748b", "#ec4899", "#2bb673", "#4b7bec", "#f97316", "#24538a"];
+      const kpiCards = d.kpis.map((x, i) => `<div class="dashboard-report-kpi" style="--accent:${accents[i % accents.length]}"><span>${esc(x[0])}</span><b>${esc(String(x[1]))}</b><small>${esc(x[2])}</small></div>`).join("");
+      const moduleRows = modules.map(x => `<tr><td><b>${esc(x[0])}</b></td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
+      const alertRows = [
+        ...d.eq.filter(x => x.st !== "Valide").map(x => ["Equipement", x.id || x.n, x.st || "A surveiller"]),
+        ...d.nc.filter(x => x.st !== "Cloturee").map(x => ["Non-conformite", x.ref, x.st || "Ouverte"]),
+        ...d.recl.filter(x => x.status !== "Cloturee").map(x => ["Reclamation", x.no || x.client, x.status || "Ouverte"]),
+        ...d.risk.filter(x => riskScore(x) >= 15).map(x => ["Risque critique", x.chapter || "-", String(riskScore(x))])
+      ].slice(0, 12).map(x => `<tr><td>${esc(x[0])}</td><td>${esc(String(x[1] || "-"))}</td><td>${esc(String(x[2] || "-"))}</td></tr>`).join("") || `<tr><td colspan="3">Aucune alerte prioritaire.</td></tr>`;
+      return `<div class="dashboard-report-view">
+        <div class="dashboard-report-hero">
+          <div style="position:relative;z-index:1">
+            <h3>Rapport detaille du tableau de bord</h3>
+            <p class="mut">Vue globale de l'organisme avec indicateurs, graphes et alertes de pilotage.</p>
+            <p style="margin:14px 0 0"><b>${esc(org.name || "QUALI by ENNAJEH")}</b></p>
+          </div>
+          <div class="dashboard-report-meta">
+            <div><b>Edition</b><br>${esc(edition)}</div>
+            <div><b>Compte</b><br>${esc((s.u && s.u.name) || "-")}</div>
+            <div><b>Score ISO</b><br>${esc(String(d.dm.score))}%</div>
+            <div><b>Completion</b><br>${esc(String(d.dm.completion))}%</div>
+          </div>
+        </div>
+        <div class="dashboard-report-kpis">${kpiCards}</div>
+        <div class="dashboard-report-grid">
+          <div class="dashboard-report-panel"><h3>Cycle documentaire</h3>${dashboardReportBarRows(d.docStatuses, Math.max(d.docs.length, 1))}</div>
+          <div class="dashboard-report-panel"><h3>Non-conformites</h3><div style="display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center">${dashboardDonut(d.ncStates.map(x => x[1]), d.ncStates.map(x => x[2]), 140)}<div>${dashboardReportBarRows(d.ncStates, Math.max(d.nc.length, 1))}</div></div></div>
+          <div class="dashboard-report-panel"><h3>Satisfaction client</h3>${dashboardSparkline(d.satScores, "#3f6fd8", 360, 130)}<p class="mut">Courbe des derniers scores de satisfaction enregistres.</p></div>
+          <div class="dashboard-report-panel"><h3>Risques et audits</h3>${dashboardReportBarRows(d.riskStates, Math.max(d.risk.length, 1))}${dashboardReportBarRows(d.auditStates.map(x => ["Audit - " + x[0], x[1], x[2], ""]), Math.max(d.aud.length, 1))}</div>
+          <div class="dashboard-report-panel"><h3>Equipements</h3>${dashboardReportBarRows(d.eqStatuses, Math.max(d.eq.length, 1))}</div>
+          <div class="dashboard-report-panel"><h3>Reclamations client</h3>${dashboardReportBarRows(d.reclStates, Math.max(d.recl.length, 1))}</div>
+          <div class="dashboard-report-panel"><h3>Statistiques par region</h3>${d.statRegions.length ? dashboardReportBarRows(d.statRegions, Math.max(...d.statRegions.map(x => Number(x[1]) || 0), 1)) : `<p class="mut">Aucune statistique regionale.</p>`}</div>
+          <div class="dashboard-report-panel"><h3>Prestations par famille / domaine</h3>${d.statFamilies.length ? `<div style="display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center">${dashboardDonut(d.statFamilyCounts, d.statFamilyColors.slice(0, d.statFamilyCounts.length), 140)}<div>${dashboardReportBarRows(d.statFamilies.map((x, i) => [x.family, x.prestations, d.statFamilyColors[i], x.affairs + " affaire(s)"]), Math.max(...d.statFamilyCounts, 1))}</div></div>` : `<p class="mut">Aucune statistique par famille.</p>`}</div>
+        </div>
+        <div class="dashboard-report-panel">
+          <h3>Etat dynamique des modules</h3>
+          <div class="tb"><table><thead><tr><th>Module</th><th>Volume</th><th>Etat actuel</th><th>Indicateur</th></tr></thead><tbody>${moduleRows}</tbody></table></div>
+        </div>
+        <div class="dashboard-report-panel">
+          <h3>Alertes prioritaires</h3>
+          <div class="tb"><table><thead><tr><th>Famille</th><th>Reference</th><th>Etat / score</th></tr></thead><tbody>${alertRows}</tbody></table></div>
+        </div>
+      </div>`;
+    }
+    function renderDashboardReportPreview() {
+      const card = $("#dashboardReportCard"), box = $("#dashboardReportPreview");
+      if (!card || !box) return;
+      card.classList.toggle("h", !s.dashboardReportVisible);
+      if (s.dashboardReportVisible) box.innerHTML = dashboardReportAppHtml();
+    }
+    function showDashboardReport() {
+      s.dashboardReportVisible = true;
+      renderDashboardReportPreview();
+      log("Affichage", "Tableau de bord", "Rapport detaille affiche dans l'application");
+      save("Rapport detaille affiche dans l'application");
+      const card = $("#dashboardReportCard");
+      if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    function hideDashboardReport() {
+      s.dashboardReportVisible = false;
+      renderDashboardReportPreview();
+      sync("Rapport detaille masque");
+    }
     function dashboardReportHtml() {
       const d = dashboardReportData(), modules = dashboardModuleSummary(), org = s.org || {}, edition = now();
       const moduleRows = modules.map(x => `<tr><td>${esc(x[0])}</td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
@@ -9951,6 +10180,8 @@
     }
     function downloadDashboardReport() {
       if (!requirePerm("Exporter")) return;
+      s.dashboardReportVisible = true;
+      renderDashboardReportPreview();
       const html = dashboardReportHtml(), w = window.open("", "_blank", "width=1200,height=900");
       if (!w) { sync("Autorise les fenetres popup pour telecharger le rapport detaille"); return }
       w.document.open(); w.document.write(html); w.document.close();
@@ -9979,6 +10210,7 @@
       if (moduleTable) moduleTable.innerHTML = dashboardModuleSummary().map(x => `<tr><td><b>${esc(x[0])}</b></td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
       dashboardCharts();
       renderDashboardCalendar();
+      renderDashboardReportPreview();
     }
     function stats() { const a = [["Documents", s.docs.length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾", "k-blue"], ["Equipements", s.eq.length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "k-green"], ["Non-conformites ouvertes", s.nc.filter(x => x.st === "Ouverte").length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â", "k-orange"], ["Audits a realiser", s.aud.filter(x => x.st !== "Cloture").length, "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¹", "k-red"]]; $("#stats").innerHTML = a.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">Mise a jour locale</div></div></div></div>`).join("") }
     function alerts() {
@@ -11218,7 +11450,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-13-2";
+    const PWA_VERSION = "2026-05-13-3";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
@@ -11272,7 +11504,7 @@
     window.addEventListener("beforeunload", flushPilotStateBeforeUnload);
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
-    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", downloadDashboardReport); syncPilotManageButtons(); registerPwa();
+    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", showDashboardReport); bindClick("dashboardReportPdf", downloadDashboardReport); bindClick("dashboardReportHide", hideDashboardReport); syncPilotManageButtons(); registerPwa();
     ["#cpManageLookupEmail", "#cpEmail", "#cpEmail2"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPilotManageButtons); el.addEventListener("change", syncPilotManageButtons) } });
     ["#ds", "#dpf", "#dtf", "#df", "#ods", "#odpf", "#odtf", "#odf", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });
