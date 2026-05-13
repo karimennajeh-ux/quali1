@@ -6538,6 +6538,9 @@
         <div class="card">
           <h3>Vue globale de l'organisme</h3>
           <div class="mut" style="margin-bottom:12px">Indicateurs, alertes, conformite et activite des modules</div>
+          <div class="acts justify-start mb10">
+            <button class="btn" id="dashboardReport">Telecharger rapport detaille avec graphes</button>
+          </div>
           <div class="row s4" id="stats"></div>
         </div>
         <div class="card">
@@ -9888,6 +9891,73 @@
           </div>
         </div>`;
     }
+    function dashboardReportData() {
+      const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], aud = s.aud || [], risk = riskItems(), recl = reclamationItems(), sat = satItems(), stat = statItems(), pers = personnelItems(), prest = prestItems ? prestItems() : (s.prest || []), swot = swotItems ? swotItems() : [], aci = aciItems ? aciItems() : [], dm = diagMetrics();
+      const docStatuses = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"].map(st => [st, docs.filter(x => (x.st || "Brouillon") === st).length, st === "Approuve" || st === "Diffuse" ? "#2bb673" : st === "Archive" ? "#ef4444" : "#4b7bec"]);
+      const eqStatuses = [["Valide", eq.filter(x => x.st === "Valide").length, "#2bb673"], ["A etalonner", eq.filter(x => x.st === "A etalonner").length, "#f59e0b"], ["Autres", eq.filter(x => !["Valide", "A etalonner"].includes(x.st)).length, "#6b7a96"]];
+      const ncStates = [["Ouvertes", nc.filter(x => x.st === "Ouverte").length, "#ef4444"], ["En cours", nc.filter(x => x.st === "En cours").length, "#f59e0b"], ["Cloturees", nc.filter(x => x.st === "Cloturee").length, "#2bb673"]];
+      const auditStates = [["Planifies", aud.filter(x => x.st === "Planifie").length, "#4b7bec"], ["En cours", aud.filter(x => x.st === "En cours").length, "#f59e0b"], ["Clotures", aud.filter(x => x.st === "Cloture").length, "#2bb673"]];
+      const riskStates = [["Critiques", risk.filter(x => riskScore(x) >= 15).length, "#ef4444"], ["A surveiller", risk.filter(x => riskScore(x) >= 6 && riskScore(x) < 15).length, "#f59e0b"], ["Acceptables", risk.filter(x => riskScore(x) < 6).length, "#2bb673"]];
+      const reclStates = [["Ouvertes", recl.filter(x => x.status === "Ouverte").length, "#ef4444"], ["En cours", recl.filter(x => x.status === "En cours").length, "#f59e0b"], ["Cloturees", recl.filter(x => x.status === "Cloturee").length, "#2bb673"]];
+      const satScores = (sat.length ? sat.slice(0, 8) : [{ score: 0 }, { score: 0 }, { score: 0 }, { score: 0 }]).map(x => Number(x.score) || 0).reverse();
+      const statRegions = statSummaryByRegion(stat).slice(0, 8).map(x => [x.region, x.prestations, "#3f6fd8", x.affairs + " affaire(s)"]);
+      const statFamilies = statSummaryByFamily(stat).slice(0, 8), statFamilyCounts = statFamilies.map(x => x.prestations), statFamilyColors = ["#2bb673", "#4b7bec", "#f59e0b", "#ef4444", "#8b5cf6", "#14b8a6", "#64748b", "#ec4899"];
+      const kpis = [
+        ["Documents maitrises", docs.filter(x => ["Approuve", "Diffuse", "Valide"].includes(x.st)).length, docs.length + " document(s) au total"],
+        ["Equipements valides", eq.filter(x => x.st === "Valide").length, eq.length + " equipement(s) suivis"],
+        ["NC ouvertes", nc.filter(x => x.st !== "Cloturee").length, nc.length + " NC au registre"],
+        ["Score ISO 17025", dm.score + "%", "Completion " + dm.completion + "%"],
+        ["Reclamations actives", recl.filter(x => x.status !== "Cloturee").length, recl.length + " reclamation(s)"],
+        ["Satisfaction moyenne", (sat.length ? Math.round(sat.reduce((n, x) => n + (Number(x.score) || 0), 0) / sat.length) : 0) + "%", sat.length + " enquete(s)"],
+        ["Risques critiques", risk.filter(x => riskScore(x) >= 15).length, risk.length + " risque(s) suivis"],
+        ["Prestataires retenus", prest.filter(x => x.evalDecision === "RETENU").length, prest.length + " prestataire(s)"],
+        ["Personnel actif", pers.filter(x => x.status === "Actif").length, pers.length + " personne(s)"],
+        ["Actions SWOT en cours", swot.filter(x => x.follow === "en cours").length, swot.length + " entree(s)"],
+        ["Ameliorations actives", aci.filter(x => x.decision !== "Refusee").length, aci.length + " demande(s)"],
+        ["Prestations effectuees", stat.reduce((sum, x) => sum + +(x.prestations || 0), 0), stat.length + " affaire(s)"]
+      ];
+      return { docs, eq, nc, aud, risk, recl, sat, stat, dm, kpis, docStatuses, eqStatuses, ncStates, auditStates, riskStates, reclStates, satScores, statRegions, statFamilies, statFamilyCounts, statFamilyColors };
+    }
+    function dashboardReportBarRows(items, max) { return (items || []).map(x => `<div class="bar-row"><b>${esc(x[0])}</b><span>${esc(String(x[1]))}</span><i><em style="width:${Math.max(4, Math.min(100, Math.round(((Number(x[1]) || 0) / Math.max(max || 1, 1)) * 100)))}%;background:${esc(x[2] || "#3f6fd8")}"></em></i><small>${esc(x[3] || "")}</small></div>`).join("") }
+    function dashboardReportHtml() {
+      const d = dashboardReportData(), modules = dashboardModuleSummary(), org = s.org || {}, edition = now();
+      const moduleRows = modules.map(x => `<tr><td>${esc(x[0])}</td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
+      const kpiCards = d.kpis.map(x => `<div class="kpi-card"><span>${esc(x[0])}</span><b>${esc(String(x[1]))}</b><small>${esc(x[2])}</small></div>`).join("");
+      const alertRows = [
+        ...d.eq.filter(x => x.st !== "Valide").map(x => ["Equipement", x.id || x.n, x.st || "A surveiller"]),
+        ...d.nc.filter(x => x.st !== "Cloturee").map(x => ["Non-conformite", x.ref, x.st || "Ouverte"]),
+        ...d.recl.filter(x => x.status !== "Cloturee").map(x => ["Reclamation", x.no || x.client, x.status || "Ouverte"]),
+        ...d.risk.filter(x => riskScore(x) >= 15).map(x => ["Risque critique", x.chapter || "-", String(riskScore(x))])
+      ].slice(0, 25).map(x => `<tr><td>${esc(x[0])}</td><td>${esc(String(x[1] || "-"))}</td><td>${esc(String(x[2] || "-"))}</td></tr>`).join("") || `<tr><td colspan="3">Aucune alerte prioritaire.</td></tr>`;
+      return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Rapport tableau de bord QUALI</title><style>
+        @page{size:A4;margin:12mm}*{box-sizing:border-box}body{font:12px Segoe UI,Arial,sans-serif;color:#24324a;margin:0;background:#fff}h1{font-size:26px;color:#24538a;margin:0 0 6px}h2{font-size:18px;color:#24538a;margin:22px 0 10px}h3{font-size:14px;margin:0 0 10px;color:#1f2d4d}.mut{color:#6c7a96}.head{border-bottom:3px solid #24538a;padding-bottom:14px;margin-bottom:16px}.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.meta div,.kpi-card,.panel{border:1px solid #dbe6f5;border-radius:8px;padding:10px;background:#f8fbff}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.kpi-card span{display:block;color:#6c7a96}.kpi-card b{display:block;font-size:22px;color:#1f2d4d;margin:4px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.bar-row{display:grid;grid-template-columns:1fr 42px 1.6fr;gap:8px;align-items:center;margin:8px 0}.bar-row i{height:9px;background:#edf3ff;border-radius:999px;overflow:hidden}.bar-row em{display:block;height:100%;border-radius:999px}.bar-row small{grid-column:1/-1;color:#6c7a96}svg{max-width:100%;height:auto}table{border-collapse:collapse;width:100%;margin-top:8px}th,td{border:1px solid #dbe6f5;padding:7px;text-align:left;vertical-align:top}th{background:#eef4ff;color:#24538a}.page-break{break-before:page}@media print{button{display:none}.panel,.kpi-card,.meta div{break-inside:avoid}}
+      </style><body>
+        <div class="head"><h1>Rapport detaille du tableau de bord</h1><div class="mut">QUALI by ENNAJEH - indicateurs, graphes et alertes de pilotage</div><div class="meta"><div><b>Organisme</b><br>${esc(org.name || "-")}</div><div><b>Edition</b><br>${esc(edition)}</div><div><b>Compte</b><br>${esc((s.u && s.u.name) || "-")}</div><div><b>Diagnostic ISO</b><br>${esc(String(d.dm.score))}% / completion ${esc(String(d.dm.completion))}%</div></div></div>
+        <h2>1. Synthese des indicateurs</h2><div class="kpis">${kpiCards}</div>
+        <h2>2. Graphes de suivi</h2><div class="grid">
+          <div class="panel"><h3>Cycle documentaire</h3>${dashboardReportBarRows(d.docStatuses, Math.max(d.docs.length, 1))}</div>
+          <div class="panel"><h3>Non-conformites</h3><div style="display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center">${dashboardDonut(d.ncStates.map(x => x[1]), d.ncStates.map(x => x[2]), 130)}<div>${dashboardReportBarRows(d.ncStates, Math.max(d.nc.length, 1))}</div></div></div>
+          <div class="panel"><h3>Satisfaction client</h3>${dashboardSparkline(d.satScores, "#3f6fd8", 330, 130)}<p class="mut">Courbe des derniers scores enregistres.</p></div>
+          <div class="panel"><h3>Risques et audits</h3>${dashboardReportBarRows(d.riskStates, Math.max(d.risk.length, 1))}${dashboardReportBarRows(d.auditStates.map(x => ["Audit - " + x[0], x[1], x[2], ""]), Math.max(d.aud.length, 1))}</div>
+          <div class="panel"><h3>Equipements</h3>${dashboardReportBarRows(d.eqStatuses, Math.max(d.eq.length, 1))}</div>
+          <div class="panel"><h3>Reclamations client</h3>${dashboardReportBarRows(d.reclStates, Math.max(d.recl.length, 1))}</div>
+          <div class="panel"><h3>Statistiques par region</h3>${d.statRegions.length ? dashboardReportBarRows(d.statRegions, Math.max(...d.statRegions.map(x => Number(x[1]) || 0), 1)) : "<p class='mut'>Aucune statistique regionale.</p>"}</div>
+          <div class="panel"><h3>Prestations par famille / domaine</h3>${d.statFamilies.length ? `<div style="display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center">${dashboardDonut(d.statFamilyCounts, d.statFamilyColors.slice(0, d.statFamilyCounts.length), 130)}<div>${dashboardReportBarRows(d.statFamilies.map((x, i) => [x.family, x.prestations, d.statFamilyColors[i], x.affairs + " affaire(s)"]), Math.max(...d.statFamilyCounts, 1))}</div></div>` : "<p class='mut'>Aucune statistique par famille.</p>"}</div>
+        </div>
+        <h2 class="page-break">3. Etat dynamique des modules</h2><table><thead><tr><th>Module</th><th>Volume</th><th>Etat actuel</th><th>Indicateur</th></tr></thead><tbody>${moduleRows}</tbody></table>
+        <h2>4. Alertes prioritaires</h2><table><thead><tr><th>Famille</th><th>Reference</th><th>Etat / score</th></tr></thead><tbody>${alertRows}</tbody></table>
+        <h2>5. Conclusion de pilotage</h2><div class="panel"><p>${d.dm.score >= 75 ? "Le systeme presente un niveau de pilotage favorable. Les actions doivent consolider les preuves, les delais et la cloture des alertes." : "Le systeme demande un suivi rapproche. Prioriser les non-conformites, les risques critiques, les equipements non valides et les chapitres ISO les plus faibles."}</p><p class="mut">Pour obtenir le fichier PDF : dans la fenetre d'impression, choisir Imprimante / Destination : Enregistrer au format PDF.</p></div>
+      </body></html>`;
+    }
+    function downloadDashboardReport() {
+      if (!requirePerm("Exporter")) return;
+      const html = dashboardReportHtml(), w = window.open("", "_blank", "width=1200,height=900");
+      if (!w) { sync("Autorise les fenetres popup pour telecharger le rapport detaille"); return }
+      w.document.open(); w.document.write(html); w.document.close();
+      w.onload = () => setTimeout(() => w.print(), 300);
+      log("Telechargement", "Tableau de bord", "Rapport detaille avec indicateurs et graphes");
+      save("Rapport detaille du tableau de bord pret a enregistrer en PDF");
+    }
     function dashboardStats() {
       const stats = $("#stats"), moduleTable = $("#dbModuleTable");
       const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], aud = s.aud || [], recl = reclamationItems(), sat = satItems(), risk = riskItems(), pers = personnelItems(), prest = prestItems ? prestItems() : (s.prest || []), stat = statItems(), dm = diagMetrics();
@@ -11148,7 +11218,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-06-1";
+    const PWA_VERSION = "2026-05-13-2";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
@@ -11202,7 +11272,7 @@
     window.addEventListener("beforeunload", flushPilotStateBeforeUnload);
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
-    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); syncPilotManageButtons(); registerPwa();
+    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", downloadDashboardReport); syncPilotManageButtons(); registerPwa();
     ["#cpManageLookupEmail", "#cpEmail", "#cpEmail2"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPilotManageButtons); el.addEventListener("change", syncPilotManageButtons) } });
     ["#ds", "#dpf", "#dtf", "#df", "#ods", "#odpf", "#odtf", "#odf", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });
