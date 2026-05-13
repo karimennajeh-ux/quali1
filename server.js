@@ -2057,7 +2057,7 @@ app.get("/api/pilots/:pilotEmail/state", (req, res) => {
   });
 });
 
-app.put("/api/pilots/:pilotEmail/state", (req, res) => {
+function savePilotStateHandler(req, res) {
   const pilot = getPilotByEmail(req.params.pilotEmail);
   if (!pilot) return res.status(404).json({ ok: false, message: "Compte pilote introuvable" });
   const previousRow = db.prepare(`
@@ -2085,7 +2085,10 @@ app.put("/api/pilots/:pilotEmail/state", (req, res) => {
     });
   });
   res.json({ ok: true, updatedAt: timestamp });
-});
+}
+
+app.put("/api/pilots/:pilotEmail/state", savePilotStateHandler);
+app.post("/api/pilots/:pilotEmail/state", savePilotStateHandler);
 
 app.get("/api/pilots/:pilotEmail/events/stream", (req, res) => {
   const pilot = getPilotByEmail(req.params.pilotEmail);

@@ -9239,6 +9239,7 @@
       const host = location.hostname || "localhost";
       return `${location.protocol}//${host}:3000/api`;
     })();
+    function apiUrl(path) { return API_BASE + path }
     let apiHealthCache = null, apiHealthCheckedAt = 0;
     async function apiRequest(path, options = {}) {
       const cfg = { method: "GET", headers: { "Accept": "application/json" }, ...options };
@@ -9246,7 +9247,7 @@
         cfg.headers = { "Content-Type": "application/json", ...(cfg.headers || {}) };
         cfg.body = JSON.stringify(cfg.body);
       }
-      const res = await fetch(API_BASE + path, cfg);
+      const res = await fetch(apiUrl(path), cfg);
       let data = null;
       try { data = await res.json() } catch (e) { data = null }
       if (!res.ok) {
@@ -9430,9 +9431,11 @@
       try {
         remoteStateSaving = true;
         await apiSavePilotState(pilotEmail, stateForApi());
+        sync("Sauvegarde serveur local effectuee");
         return true
       } catch (e) {
         console.error(e);
+        sync("Sauvegarde locale active - serveur local indisponible");
         return false
       } finally {
         remoteStateSaving = false;
@@ -9446,6 +9449,25 @@
       if (remoteStateHydrating) return;
       clearTimeout(remoteSaveTimer);
       remoteSaveTimer = setTimeout(() => { pushPilotStateToApi() }, 500);
+    }
+    function flushPilotStateBeforeUnload() {
+      const pilotEmail = pilotEmailForApi();
+      if (!pilotEmail || remoteStateHydrating) return;
+      const payload = JSON.stringify({
+        state: stateForApi(),
+        actorName: (s.u && s.u.name) || "Utilisateur",
+        currentPage
+      });
+      const url = apiUrl("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/state");
+      try {
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(url, new Blob([payload], { type: "application/json" }));
+          return;
+        }
+      } catch (e) { }
+      try {
+        fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true }).catch(() => { });
+      } catch (e) { }
     }
     async function syncUsersFromApi(notice) {
       if (!currentPilotEmail || !await apiHealth()) return false;
@@ -10196,7 +10218,7 @@
       if (pilotRealtimeSource && currentPilotEmail === target) return;
       disconnectPilotRealtimeStream();
       try {
-        pilotRealtimeSource = new EventSource("/api/pilots/" + encodeURIComponent(target) + "/events/stream");
+        pilotRealtimeSource = new EventSource(apiUrl("/pilots/" + encodeURIComponent(target) + "/events/stream"));
         docCentralState.streamStatus = "Connexion temps reel globale...";
         pilotRealtimeSource.addEventListener("pilot-update", ev => {
           let data = null;
@@ -10235,7 +10257,7 @@
       if (docCentralEventSource && docCentralState.pilotEmail === target && docCentralState.streamConnected) return;
       disconnectDocumentationCentralStream();
       try {
-        docCentralEventSource = new EventSource("/api/pilots/" + encodeURIComponent(target) + "/documentation/events/stream");
+        docCentralEventSource = new EventSource(apiUrl("/pilots/" + encodeURIComponent(target) + "/documentation/events/stream"));
         docCentralState.streamStatus = "Connexion au journal documentaire...";
         docCentralEventSource.addEventListener("documentation-update", ev => {
           let payload = null;
@@ -11142,7 +11164,7 @@
       if (!isLocalDevHost() || typeof EventSource === "undefined") return;
       try {
         if (liveReloadSource) liveReloadSource.close();
-        liveReloadSource = new EventSource("/api/dev/live-reload");
+        liveReloadSource = new EventSource(apiUrl("/dev/live-reload"));
         liveReloadSource.addEventListener("reload", ev => {
           let payload = null;
           try { payload = JSON.parse(ev.data || "{}") } catch (e) { payload = null }
@@ -11177,6 +11199,7 @@
     }
     normalizeRuntimeRendering();
     registerLocalLiveReload();
+    window.addEventListener("beforeunload", flushPilotStateBeforeUnload);
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
     bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); syncPilotManageButtons(); registerPwa();
