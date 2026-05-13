@@ -8,9 +8,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Quali">
-  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="image/logo/SVG/Asset 5.svg" sizes="192x192" type="image/svg">
-  <link rel="apple-touch-icon" href="/Asset 5.svg">
+  <link rel="apple-touch-icon" href="image/logo/SVG/Asset 5.svg">
   <title>QUALI by ENNAJEH v2</title>
   <style>
     :root {
@@ -9233,7 +9233,12 @@
       return snap
     }
     function save(m) { persistLocalState(); schedulePilotStateSave(); sync(m || "Sauvegarde locale active") }
-    const API_BASE = "/api";
+    const API_BASE = (() => {
+      if (location.protocol === "file:") return "http://localhost:3000/api";
+      if (location.port === "3000") return "/api";
+      const host = location.hostname || "localhost";
+      return `${location.protocol}//${host}:3000/api`;
+    })();
     let apiHealthCache = null, apiHealthCheckedAt = 0;
     async function apiRequest(path, options = {}) {
       const cfg = { method: "GET", headers: { "Accept": "application/json" }, ...options };
@@ -11166,7 +11171,7 @@
         updatePwaInstallButton();
         return;
       }
-      if ("serviceWorker" in navigator && window.isSecureContext) navigator.serviceWorker.register("/service-worker.js?v=" + encodeURIComponent(PWA_VERSION), { updateViaCache: "none" }).then(reg => reg.update()).catch(err => console.error("Service worker indisponible", err));
+      if ("serviceWorker" in navigator && window.isSecureContext) navigator.serviceWorker.register("service-worker.js?v=" + encodeURIComponent(PWA_VERSION), { scope: "./", updateViaCache: "none" }).then(reg => reg.update()).catch(err => console.error("Service worker indisponible", err));
       window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPwaInstallPrompt = e; updatePwaInstallButton() });
       window.addEventListener("appinstalled", () => { deferredPwaInstallPrompt = null; updatePwaInstallButton(); sync("Application installee sur cet appareil") })
     }

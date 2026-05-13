@@ -73,6 +73,7 @@ const MODULE_ACCESS_CONFIG = [
   { id: "set", label: "Parametres" }
 ];
 const PERMS = ["Ajouter", "Modifier", "Supprimer", "Valider", "Telecharger", "Importer", "Exporter", "Parametres", "Comptes"];
+const LOCAL_CORS_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/i;
 const liveReloadClients = new Set();
 const documentationEventClients = new Map();
 const pilotEventClients = new Map();
@@ -1841,6 +1842,18 @@ if (dbReady && db) {
   const mainPilot = getPilotByEmail(MAIN_PILOT.email);
   if (mainPilot) ensureDocumentationBootstrapForPilot(mainPilot, "Systeme");
 }
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && LOCAL_CORS_ORIGIN.test(origin)) {
+    res.set("Access-Control-Allow-Origin", origin);
+    res.set("Vary", "Origin");
+    res.set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.set("Access-Control-Allow-Headers", "Content-Type,Accept");
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  return next();
+});
 
 app.use(express.json({ limit: "35mb" }));
 app.use((req, res, next) => {
