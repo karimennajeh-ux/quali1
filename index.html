@@ -2214,8 +2214,13 @@
       grid-column: 1 / -1;
     }
 
-    #dbReportCalendarRow {
+    #dbGlobalCard {
       order: 2;
+      grid-column: 1 / -1;
+    }
+
+    #dbReportCalendarRow {
+      order: 3;
       grid-column: 1 / -1;
       grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
       align-items: start;
@@ -2226,8 +2231,112 @@
       height: 100%;
     }
 
+    #db>div.row.s2:not(#dbReportCalendarRow),
     #db .module-content>.row.s2:not(#dbReportCalendarRow) {
-      order: 3;
+      order: 4;
+    }
+
+    .dashboard-global-card {
+      display: grid;
+      gap: 14px;
+    }
+
+    .dashboard-global-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .dashboard-global-head h3 {
+      margin: 0 0 6px;
+      color: #17446d;
+      font-size: 22px;
+    }
+
+    .dashboard-global-head p {
+      margin: 0;
+      color: #60708e;
+      font-weight: 700;
+    }
+
+    .dashboard-global-score {
+      display: grid;
+      place-items: center;
+      min-height: 112px;
+      border: 1px solid rgba(196, 215, 243, .96);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(35, 107, 216, .10), rgba(32, 178, 107, .12));
+      text-align: center;
+    }
+
+    .dashboard-global-score span {
+      color: #51627f;
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .dashboard-global-score b {
+      display: block;
+      margin-top: 4px;
+      color: #17345f;
+      font-size: 36px;
+      line-height: 1;
+    }
+
+    .dashboard-global-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .dashboard-global-indicator {
+      min-height: 124px;
+      padding: 12px;
+      border: 1px solid #dce7fb;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 12px 26px rgba(40, 66, 113, .08);
+    }
+
+    .dashboard-global-indicator strong {
+      display: block;
+      color: #24324a;
+      font-size: 13px;
+    }
+
+    .dashboard-global-indicator b {
+      display: block;
+      margin: 8px 0 6px;
+      color: var(--accent, #236bd8);
+      font-size: 24px;
+    }
+
+    .dashboard-global-indicator small {
+      display: block;
+      color: #6c7a96;
+      font-weight: 700;
+      min-height: 30px;
+    }
+
+    .dashboard-global-indicator i {
+      display: block;
+      height: 8px;
+      margin-top: 10px;
+      border-radius: 999px;
+      background: #edf3ff;
+      overflow: hidden;
+    }
+
+    .dashboard-global-indicator em {
+      display: block;
+      height: 100%;
+      width: var(--value, 0%);
+      border-radius: 999px;
+      background: var(--accent, #236bd8);
+      animation: reportBarGrow .72s cubic-bezier(.2, .82, .2, 1) both;
+      transform-origin: left center;
     }
 
     .dash-window-head {
@@ -2534,6 +2643,8 @@
     }
 
     @media (max-width: 980px) {
+      .dashboard-global-head,
+      .dashboard-global-grid,
       .dashboard-report-hero,
       #dbReportCalendarRow,
       .dashboard-report-grid {
@@ -2543,9 +2654,14 @@
       .dashboard-report-kpis {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .dashboard-global-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 620px) {
+      .dashboard-global-grid,
       .dashboard-report-kpis,
       .dashboard-report-meta {
         grid-template-columns: 1fr;
@@ -6794,6 +6910,19 @@
           </div>
           <div class="row s4" id="stats"></div>
         </div>
+        <div class="card dashboard-global-card" id="dbGlobalCard">
+          <div class="dashboard-global-head">
+            <div>
+              <h3>Indicateur global</h3>
+              <p>Presentation consolidee des indicateurs qualite, risques, clients et activite de l'organisme.</p>
+            </div>
+            <div class="dashboard-global-score" id="dbGlobalScore">
+              <span>Score global</span>
+              <b>-</b>
+            </div>
+          </div>
+          <div class="dashboard-global-grid" id="dbGlobalIndicators"></div>
+        </div>
         <div class="row s2" id="dbReportCalendarRow">
           <div class="card" id="dashboardReportCard">
             <h3>Champ de lecture du rapport detaille</h3>
@@ -10324,6 +10453,25 @@
       log("Telechargement", "Tableau de bord", "Rapport detaille avec indicateurs et graphes");
       save("Rapport detaille du tableau de bord pret a enregistrer en PDF");
     }
+    function dashboardPct(value, total, emptyValue = 0) { return total > 0 ? Math.round((value / total) * 100) : emptyValue }
+    function dashboardGlobalIndicatorCard(title, value, note, pct, color) {
+      return `<div class="dashboard-global-indicator" style="--accent:${esc(color)};--value:${Math.max(4, Math.min(100, Number(pct) || 0))}%"><strong>${esc(title)}</strong><b>${esc(String(value))}</b><small>${esc(note)}</small><i><em></em></i></div>`
+    }
+    function dashboardGlobalData() {
+      const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], risk = riskItems(), recl = reclamationItems(), sat = satItems(), stat = statItems(), aci = aciItems ? aciItems() : [], dm = diagMetrics();
+      const docsOk = docs.filter(x => ["Approuve", "Diffuse", "Valide"].includes(x.st)).length, eqOk = eq.filter(x => x.st === "Valide").length, ncClosed = nc.filter(x => x.st === "Cloturee").length, residualOk = risk.filter(x => riskReScore(x) < 15).length;
+      const docPct = dashboardPct(docsOk, docs.length), eqPct = dashboardPct(eqOk, eq.length), ncPct = dashboardPct(ncClosed, nc.length, 100), riskPct = dashboardPct(residualOk, risk.length, 100), satAvg = sat.length ? Math.round(sat.reduce((n, x) => n + (Number(x.score) || 0), 0) / sat.length) : 0;
+      const openActions = nc.filter(x => x.st !== "Cloturee").length + recl.filter(x => x.status !== "Cloturee").length + risk.filter(x => riskScore(x) >= 15).length + eq.filter(x => x.st !== "Valide").length;
+      const statPrestations = stat.reduce((sum, x) => sum + +(x.prestations || 0), 0), aciAccepted = aci.filter(x => x.decision === "Acceptee").length;
+      const globalScore = Math.round((docPct + eqPct + ncPct + riskPct + satAvg + dm.score) / 6);
+      return { globalScore, indicators: [["Conformite documentaire", docPct + "%", `${docsOk}/${docs.length} documents maitrises`, docPct, "#236bd8"], ["Equipements valides", eqPct + "%", `${eqOk}/${eq.length} equipements au statut valide`, eqPct, "#20b26b"], ["Maitrise des risques", riskPct + "%", `${residualOk}/${risk.length} risques sous seuil majeur`, riskPct, "#f59e0b"], ["Satisfaction client", satAvg + "%", `${sat.length} enquete(s) exploitee(s)`, satAvg, "#14b8a6"], ["Actions a piloter", openActions, "NC, reclamations, risques et equipements ouverts", Math.max(8, 100 - Math.min(100, openActions * 12)), "#ef4444"], ["Activite organisme", statPrestations, `${stat.length} affaire(s), ${aciAccepted} action(s) acceptee(s)`, Math.min(100, statPrestations * 8), "#8b5cf6"]] }
+    }
+    function renderDashboardGlobalIndicators() {
+      const scoreBox = $("#dbGlobalScore"), grid = $("#dbGlobalIndicators"); if (!scoreBox || !grid) return;
+      const data = dashboardGlobalData(), scoreClass = data.globalScore >= 80 ? "ok" : data.globalScore >= 60 ? "wa" : "er";
+      scoreBox.innerHTML = `<span>Score global</span><b class="${scoreClass}">${data.globalScore}%</b>`;
+      grid.innerHTML = data.indicators.map(x => dashboardGlobalIndicatorCard(x[0], x[1], x[2], x[3], x[4])).join("");
+    }
     function dashboardStats() {
       const stats = $("#stats"), moduleTable = $("#dbModuleTable");
       const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], aud = s.aud || [], recl = reclamationItems(), sat = satItems(), risk = riskItems(), pers = personnelItems(), prest = prestItems ? prestItems() : (s.prest || []), stat = statItems(), dm = diagMetrics();
@@ -10343,6 +10491,7 @@
       ];
       if (stats) stats.innerHTML = kpis.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">${x[4]}</div></div></div></div>`).join("");
       if (moduleTable) moduleTable.innerHTML = dashboardModuleSummary().map(x => `<tr><td><b>${esc(x[0])}</b></td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
+      renderDashboardGlobalIndicators();
       dashboardCharts();
       renderDashboardCalendar();
       renderDashboardReportPreview();
@@ -11609,7 +11758,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-13-10";
+    const PWA_VERSION = "2026-05-14-1";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
