@@ -2215,6 +2215,29 @@
       grid-column: 1 / -1;
     }
 
+    .dashboard-overview-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin: 12px 0 14px;
+    }
+
+    .dashboard-overview-details .mini {
+      min-height: 86px;
+      align-content: start;
+    }
+
+    .dashboard-overview-details .mini strong {
+      color: #17446d;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .dashboard-overview-details .mini span {
+      margin-top: 7px;
+      word-break: break-word;
+    }
+
     #dbReportCalendarRow {
       order: 2;
       grid-column: 1 / -1;
@@ -6794,6 +6817,7 @@
         <div class="card" id="dashboardOverviewCard">
           <h3>Vue globale de l'organisme</h3>
           <div class="mut" style="margin-bottom:12px">Indicateurs, alertes, conformite et activite des modules</div>
+          <div class="dashboard-overview-details" id="dashboardOverviewDetails"></div>
           <div class="acts justify-start mb10">
             <button class="btn" id="dashboardReport">Afficher / actualiser le rapport</button>
             <button class="btn2 btn" id="dashboardReportPdf">Exporter le rapport PDF</button>
@@ -10331,6 +10355,20 @@
       log("Telechargement", "Tableau de bord", "Rapport detaille avec indicateurs et graphes");
       save("Rapport detaille du tableau de bord pret a enregistrer en PDF");
     }
+    function dashboardOverviewDetailsHtml(data) {
+      const o = s.org || {}, openActions = data.nc.filter(x => x.st !== "Cloturee").length + data.recl.filter(x => x.status !== "Cloturee").length + data.risk.filter(x => riskScore(x) >= 15).length;
+      const rows = [
+        ["Organisme", o.name || "QUALI by ENNAJEH", "bl"],
+        ["Referentiel", o.accStd || "ISO/IEC 17025:2017", "ok"],
+        ["Responsable", o.manager || (s.u && s.u.name) || "-", "bl"],
+        ["Contact", [o.mail, o.phone].filter(Boolean).join(" / ") || "-", "bl"],
+        ["Documents", `${data.docs.length} document(s)`, "bl"],
+        ["Equipements", `${data.eq.length} equipement(s)`, "ok"],
+        ["Risques", `${data.risk.length} risque(s)`, "wa"],
+        ["Actions ouvertes", String(openActions), openActions ? "er" : "ok"]
+      ];
+      return rows.map(x => `<div class="mini"><strong>${esc(x[0])}</strong><span class="${x[2]}">${esc(x[1])}</span></div>`).join("")
+    }
     function dashboardStats() {
       const stats = $("#stats"), moduleTable = $("#dbModuleTable");
       const docs = s.docs || [], eq = s.eq || [], nc = s.nc || [], aud = s.aud || [], recl = reclamationItems(), sat = satItems(), risk = riskItems(), pers = personnelItems(), prest = prestItems ? prestItems() : (s.prest || []), stat = statItems(), dm = diagMetrics();
@@ -10348,6 +10386,8 @@
         ["Prestations effectuees", statPrestations, "PST", "k-gold", stat.length + " affaire(s) saisies"],
         ["Familles / domaines", statFamilies, "FAM", "k-indigo", "Synthese produit / service"]
       ];
+      const overviewDetails = $("#dashboardOverviewDetails");
+      if (overviewDetails) overviewDetails.innerHTML = dashboardOverviewDetailsHtml({ docs, eq, nc, recl, risk });
       if (stats) stats.innerHTML = kpis.map(x => `<div class="card stat k-card ${x[3]}"><div class="kpi"><i>${x[2]}</i><div><div class="mut">${x[0]}</div><b>${x[1]}</b><div class="mut">${x[4]}</div></div></div></div>`).join("");
       if (moduleTable) moduleTable.innerHTML = dashboardModuleSummary().map(x => `<tr><td><b>${esc(x[0])}</b></td><td>${esc(String(x[1]))}</td><td>${esc(String(x[2]))}</td><td>${esc(x[3])}</td></tr>`).join("");
       dashboardCharts();
@@ -11616,7 +11656,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-14-5";
+    const PWA_VERSION = "2026-05-14-6";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
