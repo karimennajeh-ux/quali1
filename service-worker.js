@@ -1,4 +1,4 @@
-const CACHE_NAME = "quali-shell-v13";
+const CACHE_NAME = "quali-shell-v14";
 const APP_SHELL = [
   "manifest.webmanifest",
   "image/logo/quali-shortcut.png",
