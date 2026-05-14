@@ -2379,25 +2379,10 @@
     .dash-window-body {
       display: grid;
       gap: 14px;
-      max-height: 430px;
-      overflow: auto;
-      padding-right: 4px;
-      overscroll-behavior: contain;
-      scrollbar-gutter: stable;
-      scrollbar-width: auto;
-      scrollbar-color: #236bd8 #e8eef9;
     }
 
     .dash-window-card.dash-min .dash-window-body {
       display: none;
-    }
-
-    .dash-window-card.dash-max {
-      grid-column: 1 / -1;
-    }
-
-    .dash-window-card.dash-max .dash-window-body {
-      max-height: 72vh;
     }
 
     .dash-window-card.dash-hidden .dash-window-body,
@@ -2436,49 +2421,6 @@
     #db .dash-window-hidden {
       border-radius: 14px;
       background: linear-gradient(180deg, #f6f9ff, #eef4ff);
-    }
-
-    #db #stats,
-    #dbGlobalIndicators,
-    #quick,
-    #diagDash,
-    #alerts,
-    #trailA,
-    #dbCharts,
-    #dbCalendar {
-      overflow: auto;
-      padding-right: 4px;
-      scrollbar-gutter: stable;
-      scrollbar-width: auto;
-      scrollbar-color: #236bd8 #e8eef9;
-    }
-
-    #db #stats {
-      max-height: 360px;
-      padding-top: 2px;
-      padding-bottom: 6px;
-    }
-
-    #dbGlobalIndicators {
-      max-height: 340px;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      padding-top: 2px;
-      padding-bottom: 6px;
-    }
-
-    #quick,
-    #diagDash,
-    #alerts,
-    #trailA {
-      max-height: 390px;
-    }
-
-    #dbCharts {
-      max-height: 430px;
-    }
-
-    #dbCalendar {
-      max-height: 540px;
     }
 
     #db .mini {
@@ -6982,7 +6924,6 @@
             <button class="btn" id="dashboardReport">Afficher / actualiser le rapport</button>
             <button class="btn2 btn" id="dashboardReportPdf">Exporter le rapport PDF</button>
             <button class="btn3 btn" id="dashboardReportHide">Masquer le rapport</button>
-            <button class="btn2 btn" id="dbPanelsRestore" type="button">Afficher toutes les fenetres</button>
           </div>
           <div class="row s4" id="stats"></div>
         </div>
@@ -11238,7 +11179,6 @@
     function restoreNcAuditCards() { s.ncAuditUi = s.ncAuditUi || {}; Object.keys(s.ncAuditUi).forEach(ref => s.ncAuditUi[ref] = { ...ncAuditUi(ref), hidden: false, min: false, max: false }); render() }
     function dbPanelUi(panel) { s.dbPanelUi = s.dbPanelUi || {}; return s.dbPanelUi[panel] || { min: false, max: false, hidden: false } }
     function setDbPanelUi(panel, patch) { s.dbPanelUi = s.dbPanelUi || {}; s.dbPanelUi[panel] = { ...dbPanelUi(panel), ...patch }; render() }
-    function restoreDashboardPanels() { s.dbPanelUi = { quick: { min: false, max: false, hidden: false }, diag: { min: false, max: false, hidden: false }, charts: { min: false, max: false, hidden: false }, modules: { min: false, max: false, hidden: false }, alerts: { min: false, max: false, hidden: false }, trail: { min: false, max: false, hidden: false } }; save("Toutes les fenetres du tableau de bord sont affichees"); render() }
     function applyDbPanelUi() { const map = { quick: $("#dbQuickCard"), diag: $("#dbDiagCard"), charts: $("#dbChartsCard"), modules: $("#dbModulesCard"), alerts: $("#dbAlertsCard"), trail: $("#dbTrailCard") }; Object.keys(map).forEach(key => { const el = map[key], ui = dbPanelUi(key); if (!el) return; el.classList.toggle("dash-min", !!ui.min); el.classList.toggle("dash-max", !!ui.max); el.classList.toggle("dash-hidden", !!ui.hidden) }) }
     function ncAuditGroups(arr) { const box = $("#ncAuditGroups"); if (!box) return; const audits = ncAudits(), visible = audits.filter(a => !ncAuditUi(a.ref).hidden), hiddenCount = audits.length - visible.length; box.innerHTML = audits.length ? `${hiddenCount ? `<div class="audit-hidden-bar"><span>${hiddenCount} audit${hiddenCount > 1 ? "s" : ""} masque${hiddenCount > 1 ? "s" : ""}</span><button class="btn2 btn" type="button" data-na-restore="all">Afficher tous les audits</button></div>` : ""}${visible.map(a => { const rows = arr.filter(x => x.auditId === a.ref), ui = ncAuditUi(a.ref); return `<div class="card audit-window-card${ui.min ? " audit-min" : ""}${ui.max ? " audit-max" : ""}"><div class="audit-report-head"><h3 class="audit-report-title">Audit : Ref ${esc(a.ref)}</h3><div class="audit-window-bar"><div class="audit-window-controls"><button class="audit-window-btn" type="button" title="Reduire" aria-label="Reduire" data-na-win="min" data-na-ref="${esc(a.ref)}">_</button><button class="audit-window-btn" type="button" title="Agrandir ou restaurer" aria-label="Agrandir ou restaurer" data-na-win="max" data-na-ref="${esc(a.ref)}">&#9633;</button><button class="audit-window-btn" type="button" title="Fermer" aria-label="Fermer" data-na-win="close" data-na-ref="${esc(a.ref)}">&times;</button></div><div class="acts"><button class="btn2 btn" data-na-edit="${esc(a.ref)}">Modifier</button><button class="btn2 btn" data-na-print="${esc(a.ref)}">Imprimer</button><button class="btn2 btn" data-na-download="${esc(a.ref)}">Telecharger</button></div></div></div><div class="audit-window-body">${ncAuditSummary(a)}<div class="audit-report-head mt12"><h3 class="audit-report-title">Liste de non conformite</h3><div class="acts"><button class="btn2 btn" data-nalist-print="${esc(a.ref)}">Imprimer</button><button class="btn2 btn" data-nalist-download="${esc(a.ref)}">Telecharger</button></div></div><div class="tb mt12"><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th><th>Actions</th></tr></thead><tbody>${rows.length ? rows.map(ncRow).join("") : `<tr><td colspan="9" class="e">Aucune NC pour cet audit.</td></tr>`}</tbody></table></div></div></div>` }).join("")}` : `<div class="card"><div class="e">Aucun audit cree pour les non-conformites.</div></div>` }
     function nc() { ncAuditOptions(); updateNcCountFields(); const q = $("#ns").value.trim().toLowerCase(), f = $("#nf").value, audit = $("#nAudit").value, arr = s.nc.filter(x => [x.ref, x.desc, x.act, x.o, x.auditId].join(" ").toLowerCase().includes(q) && (f === "all" || x.st === f) && (audit === "all" || x.auditId === audit)); $("#ncn").textContent = arr.length + " non-conformite" + (arr.length > 1 ? "s" : ""); $("#naCount").textContent = ncAudits().length + " audit" + (ncAudits().length > 1 ? "s" : ""); ncAuditGroups(arr); $("#ntab").innerHTML = arr.length ? arr.map(ncRow).join("") : `<tr><td colspan="9" class="e">Aucune NC.</td></tr>`; $("#ncClosedTab").innerHTML = ncClosedRows(ncClosedItems()) }
@@ -11835,7 +11775,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-14-3";
+    const PWA_VERSION = "2026-05-14-2";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
@@ -11889,7 +11829,7 @@
     window.addEventListener("beforeunload", flushPilotStateBeforeUnload);
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
-    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", showDashboardReport); bindClick("dashboardReportPdf", downloadDashboardReport); bindClick("dashboardReportHide", hideDashboardReport); bindClick("dbPanelsRestore", restoreDashboardPanels); syncPilotManageButtons(); registerPwa();
+    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", showDashboardReport); bindClick("dashboardReportPdf", downloadDashboardReport); bindClick("dashboardReportHide", hideDashboardReport); syncPilotManageButtons(); registerPwa();
     ["#cpManageLookupEmail", "#cpEmail", "#cpEmail2"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPilotManageButtons); el.addEventListener("change", syncPilotManageButtons) } });
     ["#ds", "#dpf", "#dtf", "#df", "#ods", "#odpf", "#odtf", "#odf", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });
