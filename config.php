@@ -5,7 +5,8 @@ $servername = getenv('QUALI_DB_HOST') ?: '127.0.0.1';
 $username = getenv('QUALI_DB_USER') ?: 'root';
 $password = getenv('QUALI_DB_PASSWORD') ?: '';
 $dbname = getenv('QUALI_DB_NAME') ?: 'quali';
-$port = (int) (getenv('QUALI_DB_PORT') ?: 3307);
+$port = (int) (getenv('QUALI_DB_PORT') ?: 0);
+$quali_db_port = null;
 
 function quali_json_error($message, $status = 500) {
     http_response_code($status);
@@ -104,11 +105,36 @@ function quali_bootstrap_schema(mysqli $conn, string $dbname): void {
     $stmt->close();
 }
 
+function quali_candidate_ports(int $preferredPort): array {
+    $ports = [];
+    foreach ([$preferredPort, 3307, 3306] as $candidate) {
+        $candidate = (int) $candidate;
+        if ($candidate > 0 && !in_array($candidate, $ports, true)) $ports[] = $candidate;
+    }
+    return $ports;
+}
+
+function quali_connect_mysql(string $servername, string $username, string $password, int $preferredPort): mysqli {
+    $lastError = null;
+    foreach (quali_candidate_ports($preferredPort) as $candidatePort) {
+        $mysqli = mysqli_init();
+        $mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, 2);
+        try {
+            $mysqli->real_connect($servername, $username, $password, '', $candidatePort);
+            $GLOBALS['quali_db_port'] = $candidatePort;
+            return $mysqli;
+        } catch (mysqli_sql_exception $e) {
+            $lastError = $e;
+        }
+    }
+    throw $lastError ?: new mysqli_sql_exception('MySQL connection failed');
+}
+
 try {
-    $conn = new mysqli($servername, $username, $password, '', $port);
+    $conn = quali_connect_mysql($servername, $username, $password, $port);
     $conn->set_charset('utf8mb4');
     quali_bootstrap_schema($conn, $dbname);
 } catch (mysqli_sql_exception $e) {
-    quali_json_error('Database connection failed');
+    quali_json_error('Connexion XAMPP/MySQL indisponible. Demarrez MySQL dans XAMPP puis rechargez.', 503);
 }
 ?>

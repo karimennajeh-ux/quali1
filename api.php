@@ -125,7 +125,14 @@ $parts = path_parts();
 
 try {
     if ($parts === ['health']) {
-        respond(['ok' => true, 'mode' => 'xampp-php-mysql', 'database' => 'mysql']);
+        respond([
+            'ok' => true,
+            'mode' => 'xampp-php-mysql',
+            'database' => 'mysql',
+            'dbName' => $dbname ?? 'quali',
+            'dbHost' => $servername ?? '127.0.0.1',
+            'dbPort' => $quali_db_port ?? null
+        ]);
     }
 
     if ($method === 'POST' && $parts === ['auth', 'login']) {

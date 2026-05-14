@@ -6618,6 +6618,7 @@
         if (btn) {
           btn.addEventListener("click", function () {
             setTimeout(function () {
+              if (typeof apiHealth === "function" || typeof apiLogin === "function") return;
               var app = document.getElementById("app");
               if (app && app.classList.contains("h")) secureOpen();
             }, 80);
@@ -11656,7 +11657,7 @@
     function closeProfileMenu() { const m = $("#profileMenu"); if (m) m.classList.add("h") }
     function toggleProfileMenu(btn) { const m = profileMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } closeNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 190, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - 240, r.right - 220)) + "px"; m.classList.remove("h") }
     function handleProfileAction(a) { closeProfileMenu(); if (a === "modules") { page("hub"); sync("Page des modules ouverte"); return } if (a === "profile") { page("usr"); sync("Parametres du profil ouverts"); return } if (a === "logout") { logout(); return } if (a === "switch") { $("#lemail").value = ""; $("#lpwd").value = ""; logout(); $("#lmsg").textContent = "Connecte-toi avec un autre compte." } }
-    const PWA_VERSION = "2026-05-14-6";
+    const PWA_VERSION = "2026-05-14-7";
     let deferredPwaInstallPrompt = null;
     function isLocalDevHost() { return ["localhost", "127.0.0.1", "::1"].includes(location.hostname) }
     function updatePwaInstallButton() { const btn = $("#pwaInstallBtn"); if (!btn) return; btn.classList.toggle("h", !deferredPwaInstallPrompt) }
