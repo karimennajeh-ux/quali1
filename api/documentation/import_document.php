@@ -34,37 +34,53 @@ $process = trim((string) ($input['processus'] ?? $input['processName'] ?? 'Proce
 $type = trim((string) ($input['type_document'] ?? $input['docType'] ?? 'Procedure'));
 $version = trim((string) ($input['version'] ?? $input['versionLabel'] ?? '1.0')) ?: '1.0';
 $status = trim((string) ($input['statut'] ?? $input['status'] ?? 'Brouillon')) ?: 'Brouillon';
-$fileName = basename(trim((string) ($input['fileName'] ?? 'document')));
+$fileName = basename(trim((string) ($input['fileName'] ?? ($input['document']['name'] ?? 'document'))));
+$mimeType = trim((string) ($input['mimeType'] ?? $input['mime_type'] ?? ''));
 $dataUrl = (string) ($input['dataUrl'] ?? '');
-if ($title === '' || $ref === '' || $fileName === '' || $dataUrl === '') {
+$sharepointUrl = trim((string) ($input['sharepoint_url'] ?? $input['sharepointUrl'] ?? ''));
+$storageType = 'local_server';
+$uploadDate = date('Y-m-d H:i:s');
+$uploadedBy = trim((string) ($input['uploaded_by'] ?? $input['uploadedBy'] ?? $actor));
+if ($title === '' || $ref === '' || $fileName === '' || ($dataUrl === '' && empty($_FILES['document']['tmp_name']))) {
     doc_error('Titre, reference et fichier obligatoires.', 422);
 }
 
 $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 if ($extension === '') doc_error('Extension de fichier manquante.', 422);
 
-[$targetDir, $processFolder, $typeFolder, $statusFolder, $cycle] = doc_target_directory($process, $type, $status, true);
-$targetName = import_slug($ref, 'REF') . '_' . import_slug($title, 'Titre') . '_V' . import_slug(preg_replace('/^v/i', '', $version), '1.0') . '.' . $extension;
+$targetDir = doc_upload_document_folder($ref, $type);
+$targetName = doc_upload_file_name($ref, $version, $extension);
 $targetPath = doc_unique_path($targetDir, $targetName);
-$bytes = import_data_url_bytes($dataUrl);
-if (file_put_contents($targetPath, $bytes) === false) doc_error('Copie du fichier dans le dossier Processus impossible.', 500);
+
+if (!empty($_FILES['document']['tmp_name']) && is_uploaded_file($_FILES['document']['tmp_name'])) {
+    if (!move_uploaded_file($_FILES['document']['tmp_name'], $targetPath)) {
+        doc_error('Deplacement du fichier uploadé impossible.', 500);
+    }
+    $mimeType = $mimeType !== '' ? $mimeType : ($_FILES['document']['type'] ?? '');
+} else {
+    $bytes = import_data_url_bytes($dataUrl);
+    if (file_put_contents($targetPath, $bytes) === false) {
+        doc_error('Copie du fichier dans le dossier de stockage impossible.', 500);
+    }
+}
 
 $fileReal = realpath($targetPath);
-$rootReal = realpath(doc_root());
-if (!$fileReal || !$rootReal || !doc_path_is_inside_root($fileReal, $rootReal)) {
-    doc_error('Fichier refuse hors du dossier documentaire autorise.', 403);
+if (!$fileReal) {
+    doc_error('Impossible de resoudre le chemin de destination.', 500);
 }
-$relative = doc_relative_path($fileReal);
+$relative = doc_upload_file_path($fileReal);
 
 $stmt = $pdo->prepare("
     INSERT INTO documents (
-      reference_documentaire, titre_document, nom_fichier, extension, type_document, processus, version, statut,
-      responsable_redacteur, verificateur, approbateur, diffuseur, chemin_fichier, chemin_relatif,
-      taille_fichier, date_modification, stockage, observation, cycle_documentaire, dossier_processus,
-      dossier_type, dossier_statut, date_creation_doc, est_version_active
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Local', ?, ?, ?, ?, ?, NOW(), 1)
+      reference_documentaire, document_number, titre_document, nom_fichier, extension, type_document,
+      processus, version, statut, responsable_redacteur, verificateur, approbateur, diffuseur,
+      chemin_fichier, chemin_relatif, file_path, file_storage_type, sharepoint_url, upload_date,
+      uploaded_by, taille_fichier, date_modification, stockage, observation, cycle_documentaire,
+      dossier_processus, dossier_type, dossier_statut, date_creation_doc, est_version_active
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 1)
     ON DUPLICATE KEY UPDATE
       titre_document = VALUES(titre_document),
+      document_number = VALUES(document_number),
       nom_fichier = VALUES(nom_fichier),
       extension = VALUES(extension),
       type_document = VALUES(type_document),
@@ -77,6 +93,11 @@ $stmt = $pdo->prepare("
       diffuseur = VALUES(diffuseur),
       chemin_fichier = VALUES(chemin_fichier),
       chemin_relatif = VALUES(chemin_relatif),
+      file_path = VALUES(file_path),
+      file_storage_type = VALUES(file_storage_type),
+      sharepoint_url = VALUES(sharepoint_url),
+      upload_date = VALUES(upload_date),
+      uploaded_by = VALUES(uploaded_by),
       taille_fichier = VALUES(taille_fichier),
       date_modification = VALUES(date_modification),
       stockage = VALUES(stockage),
@@ -89,6 +110,7 @@ $stmt = $pdo->prepare("
       updated_at = CURRENT_TIMESTAMP
 ");
 $stmt->execute([
+    $ref,
     $ref,
     $title,
     basename($fileReal),
@@ -103,8 +125,14 @@ $stmt->execute([
     trim((string) ($input['diffuseur'] ?? $input['diffuserName'] ?? '')),
     $fileReal,
     $relative,
+    $relative,
+    $storageType,
+    $sharepointUrl,
+    $uploadDate,
+    $uploadedBy,
     filesize($fileReal),
     date('Y-m-d H:i:s', filemtime($fileReal)),
+    'Local',
     trim((string) ($input['observation'] ?? $input['notes'] ?? '')),
     $cycle,
     $processFolder,

@@ -4,7 +4,75 @@ declare(strict_types=1);
 require_once __DIR__ . '/../db.php';
 
 const QUALI_DOCUMENT_ROOT = 'C:\\Users\\karim\\OneDrive\\Desktop\\projet fin d\'étude 2026\\Processus';
+const QUALI_UPLOAD_ROOT = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'DMS' . DIRECTORY_SEPARATOR . 'uploads';
 const QUALI_DOCUMENT_EXTENSIONS = ['doc', 'docx', 'xls', 'xlsx', 'pdf', 'png', 'jpg', 'jpeg'];
+
+function doc_upload_root(): string
+{
+    $root = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, QUALI_UPLOAD_ROOT);
+    if (!is_dir($root) && !mkdir($root, 0775, true) && !is_dir($root)) {
+        doc_error('Le dossier de stockage des fichiers imports est inaccessible.', 500);
+    }
+    $real = realpath($root);
+    if (!$real) {
+        doc_error('Impossible de resoudre le dossier de stockage des fichiers.', 500);
+    }
+    return $real;
+}
+
+function doc_upload_category_folder(string $type): string
+{
+    $key = doc_key($type);
+    if (str_contains($key, 'procedure')) {
+        return 'Procedures';
+    }
+    if (str_contains($key, 'instruction') || str_contains($key, 'work')) {
+        return 'WorkInstructions';
+    }
+    if (str_contains($key, 'formulaire') || str_contains($key, 'form')) {
+        return 'Forms';
+    }
+    if (str_contains($key, 'enregistrement') || str_contains($key, 'record')) {
+        return 'Records';
+    }
+    return 'Other';
+}
+
+function doc_upload_document_folder(string $documentNumber, string $type): string
+{
+    $root = doc_upload_root();
+    $category = doc_upload_category_folder($type);
+    $documentNumber = trim($documentNumber) !== '' ? preg_replace('/[^A-Za-z0-9_-]+/', '_', trim($documentNumber)) : 'DOC_000';
+    $folder = $root . DIRECTORY_SEPARATOR . $category . DIRECTORY_SEPARATOR . $documentNumber;
+    if (!is_dir($folder) && !mkdir($folder, 0775, true) && !is_dir($folder)) {
+        doc_error('Impossible de creer le dossier du document.', 500);
+    }
+    $real = realpath($folder);
+    if (!$real) {
+        doc_error('Impossible de resoudre le dossier du document.', 500);
+    }
+    return $real;
+}
+
+function doc_upload_file_path(string $path): string
+{
+    $root = doc_upload_root();
+    $real = realpath($path);
+    if (!$real) {
+        return $path;
+    }
+    if (str_starts_with($real, $root)) {
+        return ltrim(str_replace($root, '', $real), DIRECTORY_SEPARATOR);
+    }
+    return $real;
+}
+
+function doc_upload_file_name(string $documentNumber, string $version, string $extension): string
+{
+    $base = preg_replace('/[^A-Za-z0-9_-]+/', '_', trim($documentNumber) ?: 'DOC');
+    $ver = preg_replace('/[^A-Za-z0-9_.-]+/', '_', trim($version) ?: '1.0');
+    return $base . '_V' . $ver . ($extension !== '' ? '.' . ltrim($extension, '.') : '');
+}
 
 function doc_pdo(): PDO
 {
@@ -37,6 +105,7 @@ function doc_bootstrap(PDO $pdo): void
         CREATE TABLE IF NOT EXISTS documents (
           id INT AUTO_INCREMENT PRIMARY KEY,
           reference_documentaire VARCHAR(255) NOT NULL UNIQUE,
+          document_number VARCHAR(50) DEFAULT NULL,
           titre_document VARCHAR(255) NOT NULL,
           nom_fichier VARCHAR(255) NOT NULL,
           extension VARCHAR(20),
@@ -51,6 +120,11 @@ function doc_bootstrap(PDO $pdo): void
           diffuseur VARCHAR(255),
           chemin_fichier TEXT NOT NULL,
           chemin_relatif TEXT,
+          file_path VARCHAR(500) DEFAULT NULL,
+          file_storage_type VARCHAR(50) DEFAULT 'local_server',
+          sharepoint_url VARCHAR(500) DEFAULT NULL,
+          upload_date DATETIME NULL,
+          uploaded_by VARCHAR(255) DEFAULT NULL,
           taille_fichier BIGINT DEFAULT 0,
           date_modification DATETIME NULL,
           stockage VARCHAR(100) DEFAULT 'Local',
@@ -76,8 +150,12 @@ function doc_bootstrap(PDO $pdo): void
     doc_ensure_column($pdo, 'documents', 'poste_approbateur', "VARCHAR(255) NULL");
     doc_ensure_column($pdo, 'documents', 'date_diffusion', "DATETIME NULL");
     doc_ensure_column($pdo, 'documents', 'date_archivage', "DATETIME NULL");
-    doc_ensure_column($pdo, 'documents', 'motif_revision', "TEXT NULL");
-
+    doc_ensure_column($pdo, 'documents', 'motif_revision', "TEXT NULL");    doc_ensure_column($pdo, 'documents', 'document_number', "VARCHAR(50) DEFAULT NULL");
+    doc_ensure_column($pdo, 'documents', 'file_path', "VARCHAR(500) DEFAULT NULL");
+    doc_ensure_column($pdo, 'documents', 'file_storage_type', "VARCHAR(50) DEFAULT 'local_server'");
+    doc_ensure_column($pdo, 'documents', 'sharepoint_url', "VARCHAR(500) DEFAULT NULL");
+    doc_ensure_column($pdo, 'documents', 'upload_date', "DATETIME NULL");
+    doc_ensure_column($pdo, 'documents', 'uploaded_by', "VARCHAR(255) DEFAULT NULL");
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS document_versions (
           id INT AUTO_INCREMENT PRIMARY KEY,
@@ -437,6 +515,7 @@ function doc_item(array $row): array
     return [
         'id' => $id,
         'ref' => $row['reference_documentaire'] ?? '',
+        'documentNumber' => $row['document_number'] ?? $row['reference_documentaire'] ?? '',
         'title' => $row['titre_document'] ?? '',
         'fileName' => $row['nom_fichier'] ?? '',
         'fileExt' => $ext,
@@ -457,6 +536,11 @@ function doc_item(array $row): array
         'fileSize' => (int) ($row['taille_fichier'] ?? 0),
         'modifiedAt' => $row['date_modification'] ?? '',
         'storage' => $row['stockage'] ?? 'Local',
+        'filePath' => $row['file_path'] ?? $row['chemin_relatif'] ?? '',
+        'fileStorageType' => $row['file_storage_type'] ?? 'local_server',
+        'sharepointUrl' => $row['sharepoint_url'] ?? '',
+        'uploadDate' => $row['upload_date'] ?? $row['created_at'] ?? '',
+        'uploadedBy' => $row['uploaded_by'] ?? $row['responsable_redacteur'] ?? '',
         'notes' => $row['observation'] ?? '',
         'cycleDocumentaire' => $row['cycle_documentaire'] ?? '',
         'processFolder' => $row['dossier_processus'] ?? '',

@@ -341,7 +341,8 @@ function deleteDocument(docId) {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
   // Load initial documents
-  if (document.getElementById('docSharepointList')) {
+  const dmsInterfaceEnabled = document.querySelector('script[src*="dms_interface.js"]');
+  if (document.getElementById('docSharepointList') && !dmsInterfaceEnabled) {
     loadSharepointDocuments();
   }
 });

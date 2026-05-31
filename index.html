@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#245ccc">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Quali">
   <link rel="manifest" href="manifest.webmanifest">
@@ -8604,7 +8605,9 @@
     }
   </style>
   <link rel="stylesheet" href="api/documentation/sharepoint_styles.css">
+  <link rel="stylesheet" href="api/documentation/dms_styles.css">
   <script defer src="api/documentation/sharepoint_interface.js"></script>
+  <script defer src="api/documentation/dms_interface.js"></script>
 </head>
 
 <body>
@@ -9332,294 +9335,37 @@
                   src="assets/right arrow.png" alt="right arrow" class="arrow"></button></div>
           </div>
         </div>
-        <div class="card">
-          <h3>Manuel qualité et Politique qualité</h3>
-          <div id="odTopDocs" class="s2"></div>
-        </div>
-        <div class="card doc-search-card" id="odSearchPanel">
-          <div class="doc-search-quick doc-search-simple">
-            <input id="ods" placeholder="Rechercher : titre, référence, fichier, mot-clé, observation, rédacteur...">
-            <select id="odpf">
-              <option value="all">Tous les processus</option>
-              <option>Documents généraux</option>
-              <option>Processus pilotage</option>
-              <option>Processus opérationnel</option>
-              <option>Processus support</option>
-            </select>
-            <select id="odtf">
-              <option value="all">Tous les types</option>
-              <option>Manuel qualité</option>
-              <option>Politique qualité</option>
-              <option>Procédure</option>
-              <option>Instruction</option>
-              <option>Formulaire</option>
-              <option>Enregistrement</option>
-              <option>Rapport</option>
-              <option>Image</option>
-              <option>Autre</option>
-            </select>
-            <span class="doc-result-count" id="odc">0 document trouvé</span>
-          </div>
-          <details class="advanced-panel doc-classification-search" id="odAdvancedSearch">
-            <summary>Recherche avancée</summary>
-            <div class="g4 form-grid doc-search-advanced-grid">
-              <select id="odcycle">
-                <option value="all">Tous les cycles</option>
-                <option>Modèles</option>
-                <option>En cours</option>
-                <option>En vigueur</option>
-                <option>Archives</option>
-              </select>
-              <select id="odf">
-                <option value="all">Tous les statuts</option>
-                <option>Brouillon</option>
-                <option>En vérification</option>
-                <option>En correction</option>
-                <option>En approbation</option>
-                <option>Approuvé</option>
-                <option>Diffusé</option>
-                <option>En vigueur</option>
-                <option>Archivé</option>
-                <option>Exclu</option>
-                <option>Fichier introuvable</option>
-                <option>Dossier introuvable</option>
-              </select>
-              <select id="oddossier">
-                <option value="all">Tous les dossiers</option>
-              </select>
-              <select id="odsort">
-                <option value="updated_desc">Tri : dernière mise à jour</option>
-                <option value="title_asc">Titre A-Z</option>
-                <option value="ref_asc">Référence A-Z</option>
-                <option value="version_desc">Version décroissante</option>
-                <option value="status_asc">Statut A-Z</option>
-              </select>
-              <input id="odversion" placeholder="Version">
-              <input id="odowner" placeholder="Rédacteur">
-            </div>
-          </details>
-          <div class="reader-actions" style="margin-top:0">
-            <button class="btn2 btn" id="odResetFilters" type="button">Réinitialiser les filtres</button>
-          </div>
-        </div>
-        <div class="card doc-layout-toolbar" id="odLayoutToolbar">
-          <div class="reader-actions">
-            <button class="btn2 btn" type="button" data-doc-layout="toggle-mode">Mode simple / avancé</button>
-            <div class="doc-menu-wrap">
-              <button class="btn2 btn" type="button" data-doc-menu="sections">Sections</button>
-              <div class="doc-dropdown h" data-doc-menu-panel="sections">
-                <button class="btn2 btn" type="button" data-doc-layout="reduce-all">Réduire tous les blocs</button>
-                <button class="btn2 btn" type="button" data-doc-layout="show-all">Afficher tous les blocs</button>
-                <button class="btn2 btn h" id="odShowHiddenBlocks" type="button" data-doc-layout="show-hidden">Afficher sections masquées</button>
+
+        <div class="doc-sharepoint-container">
+          <div class="doc-toolbar">
+            <div class="doc-toolbar-left">
+              <div>
+                <h2>Maîtrise documentaire</h2>
+                <p class="mut">Gérez les documents, les droits d'accès et les statuts depuis un environnement moderne.</p>
               </div>
+              <input id="docSearchInput" placeholder="Rechercher un document..." aria-label="Rechercher un document">
             </div>
-            <div class="doc-menu-wrap">
-              <button class="btn btn" type="button" data-doc-menu="global">Plus d’actions</button>
-              <div class="doc-dropdown h" data-doc-menu-panel="global">
-                <button class="btn2 btn" id="odWordOpen" type="button">Créer document Word</button>
-                <button class="btn2 btn" id="odImportBtn" type="button">Importer document</button>
-                <button class="btn2 btn" type="button" data-doc-global-action="export">Exporter liste</button>
-                <button class="btn2 btn" type="button" data-doc-global-action="journal">Journal documentaire</button>
-                <button class="btn2 btn" type="button" data-doc-global-action="admin">Administration documentaire</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <h3>1. Serveur documentaire central</h3>
-          <div id="odServerInfo" class="list"></div>
-          <div class="reader-actions">
-            <button class="btn2 btn" id="odServerRefresh" type="button">Actualiser le depot</button>
-            <button class="btn2 btn" id="odServerScan" type="button">Scanner le dossier Processus</button>
-            <div class="doc-menu-wrap">
-              <button class="btn2 btn" type="button" data-doc-menu="admin">Administration documentaire</button>
-              <div class="doc-dropdown h" data-doc-menu-panel="admin">
-                <button class="btn2 btn" id="odServerBootstrap" type="button">Initialiser le serveur documentaire</button>
-                <button class="btn2 btn" id="odInitStructureBtn" type="button">Initialiser l’organisation documentaire</button>
-                <button class="btn2 btn" id="odPreviewOrganizationBtn" type="button">Prévisualiser l’organisation</button>
-                <button class="btn2 btn" id="odRunOrganizationBtn" type="button">Organiser automatiquement les documents</button>
-                <button class="btn2 btn" id="odScanAfterOrganizationBtn" type="button">Scanner après organisation</button>
-                <button class="btn2 btn" id="odCleanupBtn" type="button">Nettoyer la bibliothèque</button>
-              </div>
+            <div class="doc-toolbar-right">
+              <select id="docFilterSelect" aria-label="Filtrer les documents">
+                <option value="all">Tous les documents</option>
+                <option value="approved">Approuvés / Diffusés</option>
+                <option value="pending">En approbation</option>
+                <option value="draft">Brouillons</option>
+              </select>
+              <button class="btn2 btn" id="docImportBtn" type="button">Importer un fichier</button>
+              <button class="btn2 btn" id="docNewBtn" type="button">Nouveau document</button>
             </div>
           </div>
-          <div id="odOrganizationResult" class="list mt12"></div>
-        </div>
-        <div class="card">
-          <h3>2. Hierarchie documentaire du dossier Processus</h3>
-          <div class="g4">
-            <input id="odProc1" placeholder="Processus 1">
-            <input id="odProc2" placeholder="Processus 2">
-            <input id="odProc3" placeholder="Processus 3">
-            <button class="btn" id="odHierarchySave" type="button">Enregistrer la hierarchie</button>
-          </div>
-          <div id="odHierarchyPreview" class="list mt12"></div>
-        </div>
-        <div class="card">
-          <h3>3. Creation des dossiers documentaires</h3>
-          <div class="g4">
-            <select id="odcfProc">
-              <option>Processus pilotage</option>
-              <option>Processus operationnel</option>
-              <option>Processus support</option>
-            </select>
-            <select id="odcfType">
-              <option>Manuel qualité</option>
-              <option>Politique Qualité</option>
-              <option>Procedure</option>
-              <option>Instruction</option>
-              <option>Formulaire</option>
-              <option>Enregistrement</option>
-            </select>
-            <input id="odcfRef" placeholder="Reference du dossier">
-            <input id="odcfVersion" placeholder="Version : 1.0">
-            <button class="btn" id="odCreateFolderBtn" type="button">Creer le dossier documentaire</button>
-          </div>
-          <div id="odFolderResult" class="list mt12"></div>
-        </div>
-        <div class="card" id="odCentralImportCard">
-          <h3>4. Importation vers la bibliotheque centrale</h3>
-          <div class="g4">
-            <div class="field-wrap"><label for="odCentralTitle">Titre du document <span class="req">*</span></label><input id="odCentralTitle" placeholder="Titre du document"></div>
-            <div class="field-wrap"><label for="odCentralRef">Reference documentaire <span class="req">*</span></label><input id="odCentralRef" placeholder="Reference documentaire"></div>
-            <div class="field-wrap"><label for="odCentralProc">Processus <span class="req">*</span></label><select id="odCentralProc">
-              <option value="">Choisir un processus</option>
-              <option>Processus pilotage</option>
-              <option>Processus operationnel</option>
-              <option>Processus support</option>
-            </select></div>
-            <div class="field-wrap"><label for="odCentralType">Type documentaire <span class="req">*</span></label><select id="odCentralType">
-              <option value="">Choisir un type</option>
-              <option>Manuel qualité</option>
-              <option>Politique Qualité</option>
-              <option>Procedure</option>
-              <option>Instruction</option>
-              <option>Formulaire</option>
-              <option>Enregistrement</option>
-            </select></div>
-            <div class="field-wrap"><label for="odCentralVersion">Version <span class="req">*</span></label><input id="odCentralVersion" placeholder="Version : 1.0"></div>
-            <div class="field-wrap"><label for="odCentralStatus">Statut <span class="req">*</span></label><select id="odCentralStatus">
-              <option value="">Choisir un statut</option>
-              <option>Brouillon</option>
-              <option>En revue</option>
-              <option>A corriger</option>
-              <option>Approuve</option>
-              <option>Diffuse</option>
-              <option>Archivé</option>
-              <option>Exclu</option>
-              <option>Fichier introuvable</option>
-            </select></div>
-            <div class="field-wrap"><label for="odCentralOwner">Responsable / redacteur <span class="req">*</span></label><input id="odCentralOwner" placeholder="Responsable / redacteur"></div>
-            <div class="field-wrap"><label for="odCentralVerifier">Verificateur <span class="req">*</span></label><input id="odCentralVerifier" placeholder="Verificateur"></div>
-            <div class="field-wrap"><label for="odCentralApprover">Approbateur <span class="req">*</span></label><input id="odCentralApprover" placeholder="Approbateur"></div>
-            <div class="field-wrap"><label for="odCentralDiffuser">Diffuseur <span class="req">*</span></label><input id="odCentralDiffuser" placeholder="Diffuseur"></div>
-            <div class="field-wrap" style="grid-column: span 2"><label for="odCentralNotes">Observation / note documentaire <span class="req">*</span></label><textarea id="odCentralNotes" placeholder="Observation / note documentaire"></textarea></div>
-            <div class="field-wrap"><label for="odCentralPickBtn">Fichier a importer <span class="req">*</span></label><button class="btn2 btn" id="odCentralPickBtn" type="button">Choisir le fichier</button></div>
-            <div class="field-wrap"><label for="odCentralImportBtn">Validation de l'import <span class="req">*</span></label><button class="btn" id="odCentralImportBtn" type="button">Enregistrer dans le depot</button></div>
-            <input type="file" id="odCentralFile" accept=".doc,.docx,.xls,.xlsx,.pdf,.png,.jpg,.jpeg,.gif,.bmp,.svg,.ppt,.pptx,.txt,.csv,.odt,.ods,.odp" style="display:none">
-          </div>
-          <div id="odCentralFileMeta" class="list mt12"></div>
-          <div id="odCentralImportResult" class="list mt12"></div>
-        </div>
-        <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-            <h3 style="margin:0">5. Bibliotheque documentaire centralisee</h3>
-            <div class="reader-actions" style="margin:0">
-              <button class="btn2 btn" id="odCentralResetFilterBtn" type="button">Réinitialiser le filtre</button>
+
+          <div id="docSharepointList"></div>
+
+          <div class="card" style="padding: 16px;">
+            <div class="reader-actions">
+              <button class="btn2 btn" id="docResetFiltersBtn" type="button">Réinitialiser les filtres</button>
             </div>
           </div>
-          <div id="odCentralSummary" class="s4 mb12"></div>
-          <div id="odCleanupPanel" class="list mb12 h"></div>
-          <div id="odCentralRealtime" class="list mb12"></div>
-          <div id="odCentralMatrix" class="list mb12"></div>
-          <div id="odCentralFolders" class="list mb12"></div>
-          <div id="odCentralTableTitle" class="doc-central-table-title">Liste des documents actifs</div>
-          <div class="tb">
-            <table>
-              <thead>
-                <tr>
-                  <th>Référence</th>
-                  <th>Titre / fichier</th>
-                  <th>Processus</th>
-                  <th>Type</th>
-                  <th>Version</th>
-                  <th>Statut</th>
-                </tr>
-              </thead>
-              <tbody id="odCentralTable"></tbody>
-            </table>
-          </div>
         </div>
-        <div class="card">
-          <h3>6. Historique des activités documentaires</h3>
-          <div id="odCentralEvents" class="list"></div>
-        </div>
-        <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <h3 style="margin:0">7. Bibliotheque des modeles</h3>
-          </div>
-          <div id="odModels" class="template-grid"></div>
-        </div>
-        <div class="card">
-          <h3>8. Circuit documentaire interne</h3>
-          <div class="g4"><input id="odt" placeholder="Titre"><input id="odr" placeholder="Reference"><input id="odie"
-              placeholder="Objectif / domaine d'application"><select id="odpr">
-              <option>Processus pilotage</option>
-              <option>Processus operationnel</option>
-              <option>Processus support</option>
-            </select><select id="odty">
-              <option>Procedure</option>
-              <option>Instruction</option>
-              <option>Formulaire</option>
-              <option>Enregistrement</option>
-            </select><input id="odo" placeholder="Redacteur"><input id="odverif" placeholder="Verificateur"><input
-              id="odapp" placeholder="Approbateur"><select id="odstat">
-              <option>Brouillon</option>
-              <option>En revue</option>
-              <option>A corriger</option>
-              <option>Approuve</option>
-              <option>Diffuse</option>
-              <option>Archive</option>
-              <option>Exclu</option>
-              <option>Fichier introuvable</option>
-            </select><select id="odst">
-              <option>Cloud</option>
-              <option>Local</option>
-              <option>A definir</option>
-            </select><input id="oddiff" placeholder="Diffusion : services / personnes"><textarea id="odbody"
-              placeholder="Contenu principal / resume du document"></textarea><input id="odurl"
-              placeholder="Lien cloud ou chemin fichier Word / Excel / PDF / Image"><button class="btn"
-              id="odsv">Enregistrer brouillon</button><input type="file" id="odImportFile" multiple accept=".doc,.docx,.xls,.xlsx,.pdf,.png,.jpg,.jpeg,.gif,.bmp,.svg,.ppt,.pptx,.txt,.csv,.odt,.ods,.odp" style="display:none"></div>
-        </div>
-        <div class="card">
-          <h3>9. Validation du flux de travail</h3>
-          <div id="odFlow" class="s4 mb12"></div>
-          <div id="odImported" class="list"></div>
-        </div>
-        <div class="card">
-          <h3>10. Tableau des documents</h3>
-          <div id="odSummary" class="h"></div>
-          <div class="tb">
-            <table>
-              <thead>
-                <tr>
-                  <th>Ref</th>
-                  <th>Titre</th>
-                  <th>Objectif</th>
-                  <th>Processus</th>
-                  <th>Type</th>
-                  <th>Version</th>
-                  <th>Statut</th>
-                  <th>Validation</th>
-                  <th>Stockage</th>
-                </tr>
-              </thead>
-              <tbody id="odtab"></tbody>
-            </table>
-          </div>
-        </div>
-        
-        <!-- Permissions Modal -->
+
         <div id="docPermissionsModal" class="doc-permissions-modal">
           <div id="docPermissionsPanel" class="doc-permissions-panel"></div>
         </div>
@@ -13925,7 +13671,7 @@
     function downloadDocsTable() { if (!requirePerm("Exporter")) return; const { arr } = filteredDocs(); downloadText("liste_documents_" + stamp() + ".xls", docExportHtml(arr), "application/vnd.ms-excel;charset=utf-8"); sync("Liste des documents telechargee") }
     function docs() { const { all, arr } = filteredDocs(); if ($("#dc")) $("#dc").textContent = docMasterState.loading ? "Chargement..." : arr.length + " document" + (arr.length > 1 ? "s" : ""); const summary = $("#dSummary"); if (summary && !summary.classList.contains("h") && !summary.dataset.locked) summary.innerHTML = all.length ? docSummary(all) : `<div class="e">Aucun document.</div>`; if ($("#dtab")) $("#dtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small>${esc(x.fileName || "")}</small></td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.cycle || docCycleValue(x))}</td><td>${esc(String(x.updatedAt || x.review || "-").slice(0, 19))}</td><td>${docActions(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">${docMasterState.error ? esc(docMasterState.error) : "Aucun document."}</td></tr>` }
     function orgDocActions(x) { return `<div class="doc-row-actions"><button class="btn2 btn" data-odreview="${x.id}">Verification</button><button class="btn2 btn" data-odapprove="${x.id}">Approbation</button><button class="btn2 btn" data-oddiffuse="${x.id}">Diffuser</button><button class="btn2 btn" data-odcorrect="${x.id}">Correction</button><button class="btn2 btn" data-oddetail="${x.id}">Fiche</button><button class="btn2 btn" data-odread="${x.id}">Lire</button><button class="btn3 btn" data-odarchive="${x.id}">Archiver</button><button class="btn3 btn" data-odd="${x.id}">Supprimer</button></div>` }
-    function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = $("#ods").value.trim().toLowerCase(), pf = $("#odpf").value, tf = $("#odtf").value, cf = ($("#odcycle") && $("#odcycle").value) || "all", f = $("#odf").value, all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && docFilterMatch(x.p, pf) && docFilterMatch(x.type, tf) && docFilterMatch(x.st, f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.relPath, x.fileName, x.notes].join(" ").toLowerCase(), statusMatches = f === "all" || docFilterMatch(x.status, f) || (centralDocIsArchived(f) && centralDocIsArchived(x.status)); return hay.includes(q) && docFilterMatch(x.processName || x.relPath, pf) && docFilterMatch(x.docType, tf) && docFilterMatch(docCycleValue(x), cf) && statusMatches }); const foundCount = docCentralState.libraryFilter === "folderMissing" ? (docCentralState.folders || []).filter(x => x.status === "Dossier introuvable" || Number(x.active) === 0).length : centralDocs.length; $("#odc").textContent = foundCount + " document" + (foundCount > 1 ? "s" : "") + " trouvé" + (foundCount > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralTableTitle")) $("#odCentralTableTitle").textContent = docCentralTableTitle(); if ($("#odCleanupPanel")) { $("#odCleanupPanel").classList.toggle("h", !docCentralState.cleanupVisible); $("#odCleanupPanel").innerHTML = docCentralCleanupHtml() } if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralImportResult")) $("#odCentralImportResult").innerHTML = docCentralImportResultHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
+    function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = ($("#ods")?.value || "").trim().toLowerCase(), pf = $("#odpf")?.value || "all", tf = $("#odtf")?.value || "all", cf = ($("#odcycle")?.value) || "all", f = $("#odf")?.value || "all", all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && docFilterMatch(x.p, pf) && docFilterMatch(x.type, tf) && docFilterMatch(x.st, f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.relPath, x.fileName, x.notes].join(" ").toLowerCase(), statusMatches = f === "all" || docFilterMatch(x.status, f) || (centralDocIsArchived(f) && centralDocIsArchived(x.status)); return hay.includes(q) && docFilterMatch(x.processName || x.relPath, pf) && docFilterMatch(x.docType, tf) && docFilterMatch(docCycleValue(x), cf) && statusMatches }); const foundCount = docCentralState.libraryFilter === "folderMissing" ? (docCentralState.folders || []).filter(x => x.status === "Dossier introuvable" || Number(x.active) === 0).length : centralDocs.length; $("#odc").textContent = foundCount + " document" + (foundCount > 1 ? "s" : "") + " trouvé" + (foundCount > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralTableTitle")) $("#odCentralTableTitle").textContent = docCentralTableTitle(); if ($("#odCleanupPanel")) { $("#odCleanupPanel").classList.toggle("h", !docCentralState.cleanupVisible); $("#odCleanupPanel").innerHTML = docCentralCleanupHtml() } if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralImportResult")) $("#odCentralImportResult").innerHTML = docCentralImportResultHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
     function eqItem(x) { return { ...x, dom: x.dom || x.domain || x.domaine || "-", n: x.n || x.designation || "-", brand: x.brand || x.b || x.marque || "-", m: x.m || x.model || x.modele || "-", sn: x.sn || x.serial || x.serie || "-", code: x.code || x.id || "-", l: x.l || x.start || x.mise || "-", st: x.st || "Valide" } }
     function filteredEq() { const q = ($("#es").value || "").trim().toLowerCase(), f = ($("#ef").value || "all"), domain = ($("#edomf") && $("#edomf").value) || "all"; return (s.eq || []).map(eqItem).filter(x => [x.dom, x.n, x.brand, x.m, x.sn, x.code].join(" ").toLowerCase().includes(q) && (f === "all" || x.st === f) && (domain === "all" || docFilterMatch(x.dom, domain))) }
     function eqExportHtml(items) { const rows = items.map(x => `<tr><td>${esc(x.dom)}</td><td>${esc(x.n)}</td><td>${esc(x.brand)}</td><td>${esc(x.m)}</td><td>${esc(x.sn)}</td><td>${esc(x.code)}</td><td>${esc(x.l)}</td><td>${esc(x.st)}</td></tr>`).join("") || `<tr><td colspan="9">Aucun equipement.</td></tr>`; return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Liste des equipements</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>Liste des equipements</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre d'equipements :</b> ${items.length}</p><table><thead><tr><th>Domaine</th><th>Designation</th><th>Marque</th><th>Modele</th><th>N de serie</th><th>Code</th><th>Date mise en service</th><th>Statut</th></tr></thead><tbody>${rows}</tbody></table></body></html>` }

@@ -61,3 +61,23 @@ ON DUPLICATE KEY UPDATE
   matricule=VALUES(matricule),
   org_name=VALUES(org_name),
   status=VALUES(status);
+
+-- Documents table for DMS/uploads management
+CREATE TABLE IF NOT EXISTS documents (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    document_number VARCHAR(50),
+    title VARCHAR(255),
+    process VARCHAR(100),
+    version VARCHAR(20),
+    status VARCHAR(50),
+    file_name VARCHAR(255),
+    file_path VARCHAR(500),
+    upload_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    uploaded_by VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_document_number (document_number),
+    INDEX idx_process (process),
+    INDEX idx_status (status),
+    INDEX idx_upload_date (upload_date)
+);

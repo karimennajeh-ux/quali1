@@ -16,14 +16,20 @@ $title = trim((string) ($data['titre_document'] ?? $data['title'] ?? pathinfo($f
 $processus = trim((string) ($data['processus'] ?? $data['processName'] ?? doc_process_from_relative($relative)));
 $type = trim((string) ($data['type_document'] ?? $data['docType'] ?? doc_type_from_name($fileName, $extension)));
 
+$documentNumber = trim((string) ($data['document_number'] ?? $data['reference_documentaire'] ?? $data['ref'] ?? $ref));
+$filePath = doc_relative_path($path);
+$uploadDate = date('Y-m-d H:i:s');
+$uploadedBy = trim((string) ($data['responsable_redacteur'] ?? $data['ownerName'] ?? ''));
+
 $stmt = $pdo->prepare("
     INSERT INTO documents (
-      reference_documentaire, titre_document, nom_fichier, extension, type_document, processus, version, statut,
-      responsable_redacteur, verificateur, approbateur, diffuseur, chemin_fichier, chemin_relatif,
-      taille_fichier, date_modification, stockage, observation
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Local', ?)
+      reference_documentaire, document_number, titre_document, nom_fichier, extension, type_document, processus, version, statut,
+      responsable_redacteur, verificateur, approbateur, diffuseur, chemin_fichier, chemin_relatif, file_path,
+      file_storage_type, sharepoint_url, upload_date, uploaded_by, taille_fichier, date_modification, stockage, observation
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Local', ?)
     ON DUPLICATE KEY UPDATE
       titre_document = VALUES(titre_document),
+      document_number = VALUES(document_number),
       type_document = VALUES(type_document),
       processus = VALUES(processus),
       version = VALUES(version),
@@ -32,11 +38,19 @@ $stmt = $pdo->prepare("
       verificateur = VALUES(verificateur),
       approbateur = VALUES(approbateur),
       diffuseur = VALUES(diffuseur),
+      chemin_fichier = VALUES(chemin_fichier),
+      chemin_relatif = VALUES(chemin_relatif),
+      file_path = VALUES(file_path),
+      file_storage_type = VALUES(file_storage_type),
+      sharepoint_url = VALUES(sharepoint_url),
+      upload_date = VALUES(upload_date),
+      uploaded_by = VALUES(uploaded_by),
       observation = VALUES(observation),
       updated_at = CURRENT_TIMESTAMP
 ");
 $stmt->execute([
     $ref,
+    $documentNumber,
     $title,
     $fileName,
     $extension,
@@ -50,6 +64,11 @@ $stmt->execute([
     $data['diffuseur'] ?? $data['diffuserName'] ?? '',
     $path,
     $relative,
+    $filePath,
+    'local_server',
+    '',
+    $uploadDate,
+    $uploadedBy,
     filesize($path),
     date('Y-m-d H:i:s', filemtime($path)),
     $data['observation'] ?? $data['notes'] ?? '',
