@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/lib/quali_mailer.php';
 
 header('Content-Type: application/json');
 header('Cache-Control: no-store');
@@ -120,6 +121,68 @@ function upsert_pilot(mysqli $conn, array $data): array {
     return get_pilot($conn, $email);
 }
 
+function verification_subject(string $purpose): string {
+    return $purpose === 'reset' ? 'Code de reinitialisation QUALI' : 'Code de validation QUALI';
+}
+
+function verification_body(string $code, string $purpose): string {
+    $label = $purpose === 'reset' ? 'reinitialisation du mot de passe' : 'validation du compte pilote';
+    return "Bonjour,\n\nVotre code QUALI est : {$code}\n\nCe code expire dans 5 minutes.\nObjet : {$label}\n\nSi vous n'etes pas a l'origine de cette demande, ignorez ce message.";
+}
+
+function create_verification_code(mysqli $conn, string $email, string $purpose): array {
+    $email = norm_email($email);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) respond(['ok' => false, 'message' => 'Adresse e-mail invalide.'], 422);
+    $purpose = $purpose === 'reset' ? 'reset' : 'validation';
+    $stmt = $conn->prepare('UPDATE verification_codes SET used = 1 WHERE email = ? AND purpose = ? AND used = 0');
+    $stmt->bind_param('ss', $email, $purpose);
+    $stmt->execute();
+    $stmt->close();
+
+    do {
+        $code = (string) random_int(100000, 999999);
+        $check = $conn->prepare('SELECT id FROM verification_codes WHERE code = ? AND used = 0 AND expires_at > NOW() LIMIT 1');
+        $check->bind_param('s', $code);
+        $check->execute();
+        $exists = $check->get_result()->fetch_assoc();
+        $check->close();
+    } while ($exists);
+
+    $stmt = $conn->prepare('INSERT INTO verification_codes (email, code, expires_at, used, purpose, attempts) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 5 MINUTE), 0, ?, 0)');
+    $stmt->bind_param('sss', $email, $code, $purpose);
+    $stmt->execute();
+    $stmt->close();
+
+    $sent = quali_send_smtp_mail($conn, $email, verification_subject($purpose), verification_body($code, $purpose), $purpose);
+    return ['email' => $email, 'sent' => $sent, 'smtpConfigured' => quali_smtp_configured()];
+}
+
+function verify_code(mysqli $conn, string $email, string $code, string $purpose): void {
+    $email = norm_email($email);
+    $code = trim($code);
+    $purpose = $purpose === 'reset' ? 'reset' : 'validation';
+    if ($email === '' || $code === '') respond(['ok' => false, 'message' => 'Code de validation obligatoire.'], 422);
+    $stmt = $conn->prepare('SELECT * FROM verification_codes WHERE email = ? AND purpose = ? AND used = 0 ORDER BY created_at DESC, id DESC LIMIT 1');
+    $stmt->bind_param('ss', $email, $purpose);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    if (!$row) respond(['ok' => false, 'message' => 'Aucun code actif. Demandez un nouveau code.'], 404);
+    if ((int) ($row['attempts'] ?? 0) >= 5) respond(['ok' => false, 'message' => 'Nombre maximal de tentatives atteint. Demandez un nouveau code.'], 429);
+    if (strtotime((string) $row['expires_at']) < time()) {
+        $id = (int) $row['id'];
+        $conn->query("UPDATE verification_codes SET used = 1 WHERE id = {$id}");
+        respond(['ok' => false, 'message' => 'Code expire. Demandez un nouveau code.'], 410);
+    }
+    if (!hash_equals((string) $row['code'], $code)) {
+        $id = (int) $row['id'];
+        $conn->query("UPDATE verification_codes SET attempts = attempts + 1 WHERE id = {$id}");
+        respond(['ok' => false, 'message' => 'Code invalide.'], 422);
+    }
+    $id = (int) $row['id'];
+    $conn->query("UPDATE verification_codes SET used = 1 WHERE id = {$id}");
+}
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $parts = path_parts();
 
@@ -156,6 +219,34 @@ try {
     }
 
     if ($method === 'POST' && $parts === ['pilots', 'register']) {
+        $data = body_json();
+        if (!get_pilot($conn, (string) ($data['email'] ?? ''))) {
+            verify_code($conn, (string) ($data['email'] ?? ''), (string) ($data['verificationCode'] ?? ''), 'validation');
+        }
+        unset($data['verificationCode']);
+        respond(['ok' => true, 'pilot' => pilot_public(upsert_pilot($conn, $data))]);
+    }
+
+    if ($method === 'POST' && $parts === ['otp', 'send']) {
+        $data = body_json();
+        $purpose = (string) ($data['purpose'] ?? 'validation');
+        if ($purpose === 'reset' && !get_pilot($conn, (string) ($data['email'] ?? ''))) {
+            respond(['ok' => false, 'message' => 'Aucun compte pilote ne correspond a cette adresse.'], 404);
+        }
+        $result = create_verification_code($conn, (string) ($data['email'] ?? ''), $purpose);
+        $msg = $result['sent']
+            ? 'Code envoye par e-mail. Il expire dans 5 minutes.'
+            : 'Code genere, mais l e-mail SMTP n a pas pu etre envoye. Verifiez la configuration PHPMailer/SMTP.';
+        respond(['ok' => $result['sent'], 'message' => $msg, 'smtpConfigured' => $result['smtpConfigured']], $result['sent'] ? 200 : 503);
+    }
+
+    if ($method === 'POST' && $parts === ['otp', 'verify']) {
+        $data = body_json();
+        verify_code($conn, (string) ($data['email'] ?? ''), (string) ($data['code'] ?? ''), (string) ($data['purpose'] ?? 'validation'));
+        respond(['ok' => true, 'message' => 'Code valide.']);
+    }
+
+    if ($method === 'POST' && $parts === ['pilots', 'register_legacy']) {
         respond(['ok' => true, 'pilot' => pilot_public(upsert_pilot($conn, body_json()))]);
     }
 

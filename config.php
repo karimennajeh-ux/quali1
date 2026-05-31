@@ -4,7 +4,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $servername = getenv('QUALI_DB_HOST') ?: '127.0.0.1';
 $username = getenv('QUALI_DB_USER') ?: 'root';
 $password = getenv('QUALI_DB_PASSWORD') ?: '';
-$dbname = getenv('QUALI_DB_NAME') ?: 'quali';
+$dbname = getenv('QUALI_DB_NAME') ?: 'quali_db';
 $port = (int) (getenv('QUALI_DB_PORT') ?: 0);
 $quali_db_port = null;
 
@@ -73,6 +73,42 @@ function quali_bootstrap_schema(mysqli $conn, string $dbname): void {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           FOREIGN KEY (pilot_email) REFERENCES pilots(email) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ");
+
+    $conn->query("
+        CREATE TABLE IF NOT EXISTS verification_codes (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          email VARCHAR(255) NOT NULL,
+          code VARCHAR(20) NOT NULL,
+          expires_at DATETIME NOT NULL,
+          used TINYINT(1) DEFAULT 0,
+          purpose VARCHAR(50) DEFAULT 'validation',
+          attempts INT DEFAULT 0,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          INDEX idx_verification_email (email),
+          INDEX idx_verification_code (code),
+          INDEX idx_verification_expires (expires_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ");
+    $verificationColumns = [];
+    $res = $conn->query("SHOW COLUMNS FROM verification_codes");
+    while ($row = $res->fetch_assoc()) $verificationColumns[strtolower($row['Field'])] = true;
+    if (!isset($verificationColumns['purpose'])) {
+        $conn->query("ALTER TABLE verification_codes ADD COLUMN purpose VARCHAR(50) DEFAULT 'validation' AFTER used");
+    }
+    if (!isset($verificationColumns['attempts'])) {
+        $conn->query("ALTER TABLE verification_codes ADD COLUMN attempts INT DEFAULT 0 AFTER purpose");
+    }
+
+    $conn->query("
+        CREATE TABLE IF NOT EXISTS email_error_log (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          email VARCHAR(255) NOT NULL,
+          purpose VARCHAR(50) DEFAULT 'validation',
+          error_message TEXT NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          INDEX idx_email_error_email (email)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ");
     $stateColumns = [];

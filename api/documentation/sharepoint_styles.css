@@ -1,0 +1,250 @@
+/* Documentation Management - SharePoint Style */
+.doc-sharepoint-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.doc-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border: 1px solid #e0e6ed;
+}
+
+.doc-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.doc-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.doc-table-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e6ed;
+}
+
+.doc-sp-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.doc-sp-table thead {
+  background: #f5f7fa;
+  border-bottom: 2px solid #e0e6ed;
+}
+
+.doc-sp-table thead th {
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.doc-sp-table tbody tr {
+  border-bottom: 1px solid #f0f2f5;
+  transition: background-color 0.15s ease;
+}
+
+.doc-sp-table tbody tr:hover {
+  background-color: #f5f7fa;
+}
+
+.doc-sp-table tbody td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  font-size: 13px;
+}
+
+.doc-file-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #245ccc;
+}
+
+.doc-file-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  background: #e8f0fe;
+  color: #1f2937;
+}
+
+.doc-file-icon.docx { background: #4285f4; color: white; }
+.doc-file-icon.pdf { background: #ea4335; color: white; }
+.doc-file-icon.xlsx { background: #34a853; color: white; }
+.doc-file-icon.doc { background: #4285f4; color: white; }
+
+.doc-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.doc-status-badge.pending { background: #fff3cd; color: #856404; }
+.doc-status-badge.approved { background: #d4edda; color: #155724; }
+.doc-status-badge.rejected { background: #f8d7da; color: #721c24; }
+.doc-status-badge.draft { background: #e2e3e5; color: #383d41; }
+
+.doc-meta-text {
+  font-size: 12px;
+  color: #666;
+}
+
+.doc-permissions-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-permissions-modal.show {
+  display: flex;
+}
+
+.doc-permissions-panel {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.doc-permissions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e6ed;
+  padding-bottom: 12px;
+}
+
+.doc-permissions-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.doc-permissions-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.doc-permission-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.doc-permission-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.doc-permission-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 13px;
+}
+
+.doc-permission-email {
+  font-size: 12px;
+  color: #666;
+}
+
+.doc-permission-role {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: #e8f0fe;
+  color: #1f2937;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.doc-permission-role.admin { background: #fce8e6; color: #c5221f; }
+.doc-permission-role.editor { background: #e8f0fe; color: #1f2937; }
+.doc-permission-role.viewer { background: #f0f4f8; color: #374151; }
+
+.doc-permission-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.doc-add-permission-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e6ed;
+}
+
+.doc-add-permission-form input,
+.doc-add-permission-form select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.doc-add-permission-form button {
+  padding: 8px 16px;
+  background: #245ccc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.doc-add-permission-form button:hover {
+  background: #1e4aa0;
+}
