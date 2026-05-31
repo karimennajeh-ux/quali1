@@ -20,13 +20,29 @@ $documentNumber = trim((string) ($data['document_number'] ?? $data['reference_do
 $filePath = doc_relative_path($path);
 $uploadDate = date('Y-m-d H:i:s');
 $uploadedBy = trim((string) ($data['responsable_redacteur'] ?? $data['ownerName'] ?? ''));
+$status = trim((string) ($data['statut'] ?? $data['status'] ?? 'Brouillon')) ?: 'Brouillon';
+[$movedPath, $movedRelative, $processFolder, $typeFolder, $statusFolder, $cycle] = doc_relocate_document_file($pdo, [
+    'id' => 0,
+    'chemin_fichier' => $path,
+    'processus' => $processus,
+    'type_document' => $type,
+    'statut' => $status,
+], $processus, $type, $status);
+if ($movedPath && $movedRelative) {
+    $path = $movedPath;
+    $fileName = basename($path);
+    $relative = $movedRelative;
+    $filePath = $movedRelative;
+    $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+}
 
 $stmt = $pdo->prepare("
     INSERT INTO documents (
       reference_documentaire, document_number, titre_document, nom_fichier, extension, type_document, processus, version, statut,
       responsable_redacteur, verificateur, approbateur, diffuseur, chemin_fichier, chemin_relatif, file_path,
-      file_storage_type, sharepoint_url, upload_date, uploaded_by, taille_fichier, date_modification, stockage, observation
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Local', ?)
+      file_storage_type, sharepoint_url, upload_date, uploaded_by, taille_fichier, date_modification, stockage, observation,
+      cycle_documentaire, dossier_processus, dossier_type, dossier_statut
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Local', ?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
       titre_document = VALUES(titre_document),
       document_number = VALUES(document_number),
@@ -46,6 +62,10 @@ $stmt = $pdo->prepare("
       upload_date = VALUES(upload_date),
       uploaded_by = VALUES(uploaded_by),
       observation = VALUES(observation),
+      cycle_documentaire = VALUES(cycle_documentaire),
+      dossier_processus = VALUES(dossier_processus),
+      dossier_type = VALUES(dossier_type),
+      dossier_statut = VALUES(dossier_statut),
       updated_at = CURRENT_TIMESTAMP
 ");
 $stmt->execute([
@@ -57,7 +77,7 @@ $stmt->execute([
     $type,
     $processus,
     $data['version'] ?? $data['versionLabel'] ?? '1.0',
-    $data['statut'] ?? $data['status'] ?? 'Brouillon',
+    $status,
     $data['responsable_redacteur'] ?? $data['ownerName'] ?? '',
     $data['verificateur'] ?? $data['verifierName'] ?? '',
     $data['approbateur'] ?? $data['approverName'] ?? '',
@@ -72,6 +92,10 @@ $stmt->execute([
     filesize($path),
     date('Y-m-d H:i:s', filemtime($path)),
     $data['observation'] ?? $data['notes'] ?? '',
+    $cycle,
+    $processFolder,
+    $typeFolder,
+    $statusFolder,
 ]);
 $id = (int) $pdo->lastInsertId();
 if ($id <= 0) {

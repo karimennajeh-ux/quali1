@@ -8,6 +8,7 @@ $data = doc_input();
 $actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Systeme')) ?: 'Systeme';
 $root = doc_root();
 if (!is_dir($root)) doc_error("Dossier documentaire introuvable : {$root}", 404);
+doc_ensure_all_main_lifecycle_folders();
 
 $allowed = array_flip(QUALI_DOCUMENT_EXTENSIONS);
 $scanned = 0;
@@ -48,10 +49,12 @@ $docInsertStmt = $pdo->prepare("
     INSERT INTO documents (
       reference_documentaire, titre_document, nom_fichier, extension, type_document, processus, version, statut,
       responsable_redacteur, verificateur, approbateur, diffuseur, chemin_fichier, chemin_relatif,
-      taille_fichier, date_modification, stockage, observation
+      taille_fichier, date_modification, stockage, observation, cycle_documentaire, dossier_processus,
+      dossier_type, dossier_statut
     ) VALUES (
-      :ref, :title, :file, :ext, :type, :processus, '1.0', 'Brouillon',
-      '', '', '', '', :abs, :rel, :size, :modified, 'Local', :obs
+      :ref, :title, :file, :ext, :type, :processus, '1.0', :statut,
+      '', '', '', '', :abs, :rel, :size, :modified, 'Local', :obs, :cycle,
+      :dossier_processus, :dossier_type, :dossier_statut
     )
     ON DUPLICATE KEY UPDATE
       titre_document = VALUES(titre_document),
@@ -64,6 +67,10 @@ $docInsertStmt = $pdo->prepare("
       taille_fichier = VALUES(taille_fichier),
       date_modification = VALUES(date_modification),
       stockage = VALUES(stockage),
+      cycle_documentaire = VALUES(cycle_documentaire),
+      dossier_processus = VALUES(dossier_processus),
+      dossier_type = VALUES(dossier_type),
+      dossier_statut = VALUES(dossier_statut),
       updated_at = CURRENT_TIMESTAMP
 ");
 $docUpdateStmt = $pdo->prepare("
@@ -80,6 +87,10 @@ $docUpdateStmt = $pdo->prepare("
         date_modification = :modified,
         stockage = 'Local',
         observation = :obs,
+        cycle_documentaire = :cycle,
+        dossier_processus = :dossier_processus,
+        dossier_type = :dossier_type,
+        dossier_statut = :dossier_statut,
         updated_at = CURRENT_TIMESTAMP
     WHERE id = :id
 ");
@@ -113,6 +124,19 @@ foreach ($iterator as $item) {
 
     $scanned++;
     $seenPaths[strtolower(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path))] = true;
+    $relativeParts = preg_split('/[\\\\\\/]+/', $relative) ?: [];
+    $processFolder = $relativeParts[0] ?? doc_process_folder_name(doc_process_from_relative($relative));
+    $statusFolder = in_array(($relativeParts[1] ?? ''), doc_lifecycle_folders(), true) ? $relativeParts[1] : doc_lifecycle_folder_from_status('Brouillon');
+    $cycle = doc_cycle_from_lifecycle_folder($statusFolder);
+    $status = [
+        'Vérifier' => 'En vérification',
+        'Approuver' => 'En approbation',
+        'Diffuser' => 'Diffusé',
+        'Utiliser' => 'En vigueur',
+        'Réviser' => 'En révision',
+        'Archiver' => doc_archived_status(),
+        'Supprimer' => 'Exclu',
+    ][$statusFolder] ?? 'Brouillon';
     $payload = [
         ':ref' => doc_ref_from_file($relative),
         ':title' => pathinfo($fileName, PATHINFO_FILENAME),
@@ -120,11 +144,16 @@ foreach ($iterator as $item) {
         ':ext' => $extension,
         ':type' => doc_type_from_name($fileName, $extension),
         ':processus' => doc_process_from_relative($relative),
+        ':statut' => $status,
         ':abs' => $path,
         ':rel' => $relative,
         ':size' => $item->getSize(),
         ':modified' => date('Y-m-d H:i:s', $item->getMTime()),
         ':obs' => 'Document detecte automatiquement par scan local',
+        ':cycle' => $cycle,
+        ':dossier_processus' => $processFolder,
+        ':dossier_type' => doc_type_from_name($fileName, $extension),
+        ':dossier_statut' => $statusFolder,
     ];
 
     $docSelectStmt->execute([':abs' => $path, ':rel' => $relative]);

@@ -48,7 +48,7 @@ if ($title === '' || $ref === '' || $fileName === '' || ($dataUrl === '' && empt
 $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 if ($extension === '') doc_error('Extension de fichier manquante.', 422);
 
-$targetDir = doc_upload_document_folder($ref, $type);
+[$targetDir, $processFolder, $typeFolder, $statusFolder, $cycle] = doc_target_directory($process, $type, $status, true);
 $targetName = doc_upload_file_name($ref, $version, $extension);
 $targetPath = doc_unique_path($targetDir, $targetName);
 

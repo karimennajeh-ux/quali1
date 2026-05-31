@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <path fill="#e63200" d="M112 0h224l112 112v320a80 80 0 0 1-80 80H112a80 80 0 0 1-80-80V80a80 80 0 0 1 80-80z"/>
+  <path fill="#f07a55" d="M336 0v112h112z"/>
+  <text x="256" y="350" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="800" fill="#fff">PPT</text>
+</svg>

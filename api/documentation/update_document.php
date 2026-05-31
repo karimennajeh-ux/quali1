@@ -40,11 +40,21 @@ if (!$sets) doc_error('Aucune donnee a modifier.', 422);
 $nextProcess = trim((string) ($fields['processus'] ?? $old['processus'] ?? ''));
 $nextType = trim((string) ($fields['type_document'] ?? $old['type_document'] ?? ''));
 $nextStatusForCycle = trim((string) ($fields['statut'] ?? $old['statut'] ?? 'Brouillon'));
-[$processFolder, $typeFolder, $statusFolder, $cycle] = doc_target_parts($nextProcess, $nextType, $nextStatusForCycle);
+[$movedPath, $movedRelative, $processFolder, $typeFolder, $statusFolder, $cycle] = doc_relocate_document_file($pdo, $old, $nextProcess, $nextType, $nextStatusForCycle);
 $sets[] = 'cycle_documentaire = :cycle_documentaire';
 $sets[] = 'dossier_processus = :dossier_processus';
 $sets[] = 'dossier_type = :dossier_type';
 $sets[] = 'dossier_statut = :dossier_statut';
+if ($movedPath && $movedRelative) {
+    $sets[] = 'chemin_fichier = :chemin_fichier';
+    $sets[] = 'chemin_relatif = :chemin_relatif';
+    $sets[] = 'file_path = :file_path';
+    $sets[] = 'nom_fichier = :nom_fichier';
+    $params[':chemin_fichier'] = $movedPath;
+    $params[':chemin_relatif'] = $movedRelative;
+    $params[':file_path'] = $movedRelative;
+    $params[':nom_fichier'] = basename($movedPath);
+}
 $sets[] = "date_verification = CASE WHEN :date_status_verification IN ('En vérification','En verification') AND date_verification IS NULL THEN NOW() ELSE date_verification END";
 $sets[] = "date_approbation = CASE WHEN :date_status_approval IN ('Approuvé','Approuve','En vigueur') AND date_approbation IS NULL THEN NOW() ELSE date_approbation END";
 $sets[] = "date_diffusion = CASE WHEN :date_status_diffusion IN ('Diffusé','Diffuse','En vigueur') AND date_diffusion IS NULL THEN NOW() ELSE date_diffusion END";

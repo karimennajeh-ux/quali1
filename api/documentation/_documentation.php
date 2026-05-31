@@ -6,6 +6,7 @@ require_once __DIR__ . '/../db.php';
 const QUALI_DOCUMENT_ROOT = 'C:\\Users\\karim\\OneDrive\\Desktop\\projet fin d\'étude 2026\\Processus';
 const QUALI_UPLOAD_ROOT = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'DMS' . DIRECTORY_SEPARATOR . 'uploads';
 const QUALI_DOCUMENT_EXTENSIONS = ['doc', 'docx', 'xls', 'xlsx', 'pdf', 'png', 'jpg', 'jpeg'];
+const QUALI_LIFECYCLE_FOLDERS = ['Vérifier', 'Approuver', 'Diffuser', 'Utiliser', 'Réviser', 'Archiver', 'Supprimer'];
 
 function doc_upload_root(): string
 {
@@ -266,7 +267,7 @@ function doc_error(string $message, int $status = 500): void
 
 function doc_root(): string
 {
-    return rtrim(QUALI_DOCUMENT_ROOT, "\\/");
+    return doc_upload_root();
 }
 
 function doc_normalize_path(string $path): string
@@ -276,9 +277,12 @@ function doc_normalize_path(string $path): string
 
 function doc_relative_path(string $path): string
 {
-    $root = doc_root();
-    if (stripos($path, $root) === 0) {
-        return ltrim(substr($path, strlen($root)), "\\/");
+    $root = realpath(doc_root()) ?: doc_root();
+    $candidate = realpath($path) ?: $path;
+    $rootNorm = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $root), DIRECTORY_SEPARATOR);
+    $pathNorm = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $candidate);
+    if (stripos($pathNorm, $rootNorm) === 0) {
+        return ltrim(substr($pathNorm, strlen($rootNorm)), "\\/");
     }
     return basename($path);
 }
@@ -287,6 +291,66 @@ function doc_process_from_relative(string $relative): string
 {
     $parts = preg_split('/[\\\\\\/]+/', $relative);
     return $parts && $parts[0] !== '' ? $parts[0] : 'Processus';
+}
+
+function doc_lifecycle_folders(): array
+{
+    return QUALI_LIFECYCLE_FOLDERS;
+}
+
+function doc_lifecycle_folder_from_status(string $status): string
+{
+    $key = doc_key($status);
+    if (str_contains($key, 'supprim') || str_contains($key, 'exclu') || str_contains($key, 'introuvable')) return 'Supprimer';
+    if (str_contains($key, 'archiv') || str_contains($key, 'obsolete') || str_contains($key, 'remplace')) return 'Archiver';
+    if (str_contains($key, 'revision') || str_contains($key, 'reviser') || str_contains($key, 'correction') || str_contains($key, 'corriger')) return 'Réviser';
+    if (str_contains($key, 'vigueur') || str_contains($key, 'utilis') || $key === 'valide') return 'Utiliser';
+    if (str_contains($key, 'diffus')) return 'Diffuser';
+    if (str_contains($key, 'appro')) return 'Approuver';
+    return 'Vérifier';
+}
+
+function doc_cycle_from_lifecycle_folder(string $folder): string
+{
+    return in_array($folder, doc_lifecycle_folders(), true) ? $folder : 'Vérifier';
+}
+
+function doc_ensure_lifecycle_folders(string $mainFolder): void
+{
+    $rootReal = realpath(doc_root());
+    if (!$rootReal) doc_error('Dossier documentaire autorise introuvable.', 500);
+    $mainFolder = trim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $mainFolder), DIRECTORY_SEPARATOR);
+    if ($mainFolder === '' || str_contains($mainFolder, '..') || str_contains($mainFolder, "\0")) {
+        doc_error('Dossier documentaire refuse.', 403);
+    }
+    $base = $rootReal . DIRECTORY_SEPARATOR . $mainFolder;
+    if (!is_dir($base) && !mkdir($base, 0775, true) && !is_dir($base)) {
+        doc_error('Creation du dossier documentaire impossible.', 500);
+    }
+    $baseReal = realpath($base);
+    if (!$baseReal || !doc_path_is_inside_root($baseReal . DIRECTORY_SEPARATOR . 'check.tmp', $rootReal)) {
+        doc_error('Chemin de dossier documentaire refuse.', 403);
+    }
+    foreach (doc_lifecycle_folders() as $folder) {
+        $dir = $baseReal . DIRECTORY_SEPARATOR . $folder;
+        if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
+            doc_error('Creation du dossier cycle documentaire impossible : ' . $folder, 500);
+        }
+    }
+}
+
+function doc_ensure_all_main_lifecycle_folders(): void
+{
+    $rootReal = realpath(doc_root());
+    if (!$rootReal) doc_error('Dossier documentaire autorise introuvable.', 500);
+    $entries = scandir($rootReal) ?: [];
+    foreach ($entries as $entry) {
+        if ($entry === '.' || $entry === '..') continue;
+        $path = $rootReal . DIRECTORY_SEPARATOR . $entry;
+        if (is_dir($path) && !in_array($entry, doc_lifecycle_folders(), true)) {
+            doc_ensure_lifecycle_folders($entry);
+        }
+    }
 }
 
 function doc_key(string $value): string
@@ -298,53 +362,38 @@ function doc_key(string $value): string
 function doc_process_folder_name(string $processus): string
 {
     $key = doc_key($processus);
-    if (str_contains($key, 'general')) return '00_Documents_generaux';
-    if (str_contains($key, 'pilotage')) return '01_Processus_pilotage';
-    if (str_contains($key, 'operationnel')) return '02_Processus_operationnel';
-    if (str_contains($key, 'support')) return '03_Processus_support';
-    return '03_Processus_support';
+    if (str_contains($key, 'manuel')) return 'manuel qualité';
+    if (str_contains($key, 'politique')) return 'Politique qualité';
+    if (str_contains($key, 'pilotage')) return 'Procesus Pilotage';
+    if (str_contains($key, 'operationnel')) return 'Procesus Operationnel';
+    if (str_contains($key, 'support')) return 'Procesus support';
+    $clean = trim((string) preg_replace('/[<>:"\/\\\\|?*\x00-\x1F]+/', '_', $processus));
+    return $clean !== '' ? $clean : 'Procesus support';
 }
 
 function doc_type_folder_parts(string $type): array
 {
-    $key = doc_key($type);
-    if (str_contains($key, 'manuel')) return ['00_Documents_generaux', 'Manuel_qualite'];
-    if (str_contains($key, 'politique')) return ['00_Documents_generaux', 'Politique_qualite'];
-    if (str_contains($key, 'instruction')) return ['Instructions'];
-    if (str_contains($key, 'formulaire')) return ['Formulaires'];
-    if (str_contains($key, 'enregistrement')) return ['Enregistrements'];
-    return ['Procedures'];
+    return [trim($type) !== '' ? trim($type) : 'Document'];
 }
 
 function doc_status_folder_name(string $type, string $status): string
 {
-    $typeKey = doc_key($type);
-    $statusKey = doc_key($status);
-    if (str_contains($typeKey, 'modele') || str_contains($statusKey, 'modele')) return '01_Modeles';
-    if (in_array($statusKey, ['brouillon', 'en verification', 'en correction', 'en revision', 'en approbation', 'a corriger', 'en revue'], true)) return '02_En_cours';
-    if (in_array($statusKey, ['approuve', 'diffuse', 'en vigueur', 'valide'], true)) return '03_En_vigueur';
-    if (in_array($statusKey, ['archive', 'obsolete', 'remplace'], true)) return '04_Archives';
-    return '02_En_cours';
+    return doc_lifecycle_folder_from_status($status);
 }
 
 function doc_cycle_from_status_folder(string $folder): string
 {
-    return [
-        '01_Modeles' => 'Modèles',
-        '02_En_cours' => 'En cours',
-        '03_En_vigueur' => 'En vigueur',
-        '04_Archives' => 'Archives',
-    ][$folder] ?? 'En cours';
+    return doc_cycle_from_lifecycle_folder($folder);
 }
 
 function doc_target_parts(string $processus, string $type, string $status): array
 {
+    $processFolder = doc_process_folder_name($processus);
     $typeParts = doc_type_folder_parts($type);
     $statusFolder = doc_status_folder_name($type, $status);
-    if (($typeParts[0] ?? '') === '00_Documents_generaux') {
-        return [$typeParts[0], $typeParts[1], $statusFolder, doc_cycle_from_status_folder($statusFolder)];
-    }
-    return [doc_process_folder_name($processus), $typeParts[0], $statusFolder, doc_cycle_from_status_folder($statusFolder)];
+    if (str_contains(doc_key($type), 'manuel')) $processFolder = 'manuel qualité';
+    if (str_contains(doc_key($type), 'politique')) $processFolder = 'Politique qualité';
+    return [$processFolder, $typeParts[0], $statusFolder, doc_cycle_from_status_folder($statusFolder)];
 }
 
 function doc_target_directory(string $processus, string $type, string $status, bool $create = true): array
@@ -352,7 +401,8 @@ function doc_target_directory(string $processus, string $type, string $status, b
     [$processFolder, $typeFolder, $statusFolder, $cycle] = doc_target_parts($processus, $type, $status);
     $rootReal = realpath(doc_root());
     if (!$rootReal) doc_error('Dossier documentaire autorise introuvable.', 500);
-    $dir = $rootReal . DIRECTORY_SEPARATOR . $processFolder . DIRECTORY_SEPARATOR . $typeFolder . DIRECTORY_SEPARATOR . $statusFolder;
+    doc_ensure_lifecycle_folders($processFolder);
+    $dir = $rootReal . DIRECTORY_SEPARATOR . $processFolder . DIRECTORY_SEPARATOR . $statusFolder;
     if ($create && !is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
         doc_error('Creation du dossier documentaire impossible.', 500);
     }
@@ -375,6 +425,32 @@ function doc_unique_path(string $dir, string $fileName, string $currentReal = ''
         if ($currentReal !== '' && $candidateReal && strcasecmp($candidateReal, $currentReal) === 0) return $candidateReal;
     }
     doc_error('Impossible de trouver un nom de fichier disponible.', 500);
+}
+
+function doc_relocate_document_file(PDO $pdo, array $doc, string $processus, string $type, string $status): array
+{
+    $currentPath = (string) ($doc['chemin_fichier'] ?? '');
+    $currentReal = $currentPath !== '' ? realpath($currentPath) : false;
+    [$targetDir, $processFolder, $typeFolder, $statusFolder, $cycle] = doc_target_directory($processus, $type, $status, true);
+    if (!$currentReal || !is_file($currentReal)) {
+        return [null, null, $processFolder, $typeFolder, $statusFolder, $cycle];
+    }
+    $rootReal = realpath(doc_root());
+    if (!$rootReal || !doc_path_is_inside_root($currentReal, $rootReal)) {
+        doc_error('Deplacement refuse : fichier hors du dossier documentaire autorise.', 403);
+    }
+    $targetPath = doc_unique_path($targetDir, basename($currentReal), $currentReal);
+    $targetReal = realpath($targetPath);
+    if (!$targetReal || strcasecmp($targetReal, $currentReal) !== 0) {
+        if (!rename($currentReal, $targetPath)) {
+            doc_error('Deplacement du fichier vers le cycle documentaire impossible.', 500);
+        }
+        $targetReal = realpath($targetPath);
+    }
+    if (!$targetReal || !doc_path_is_inside_root($targetReal, $rootReal)) {
+        doc_error('Chemin de destination refuse.', 403);
+    }
+    return [$targetReal, doc_relative_path($targetReal), $processFolder, $typeFolder, $statusFolder, $cycle];
 }
 
 function doc_type_from_name(string $fileName, string $extension): string
@@ -443,13 +519,30 @@ function doc_update_lifecycle_status(PDO $pdo, array $doc, string $nextStatus, s
     $current = trim((string) ($doc['statut'] ?? ''));
     $storedPrevious = trim((string) ($doc['statut_precedent'] ?? ''));
     $previous = doc_previous_status_candidate($current) ?? ($storedPrevious !== '' ? $storedPrevious : null);
+    $processus = trim((string) ($doc['processus'] ?? 'Processus support'));
+    $type = trim((string) ($doc['type_document'] ?? 'Document'));
+    [$movedPath, $movedRelative, $processFolder, $typeFolder, $statusFolder, $cycle] = doc_relocate_document_file($pdo, $doc, $processus, $type, $nextStatus);
 
     if (doc_is_hidden_status($nextStatus)) {
-        $stmt = $pdo->prepare("UPDATE documents SET statut = ?, statut_precedent = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
-        $stmt->execute([$nextStatus, $previous, $id]);
+        $stmt = $pdo->prepare("
+            UPDATE documents
+            SET statut = ?, statut_precedent = ?, cycle_documentaire = ?, dossier_processus = ?,
+                dossier_type = ?, dossier_statut = ?,
+                chemin_fichier = COALESCE(?, chemin_fichier), chemin_relatif = COALESCE(?, chemin_relatif),
+                file_path = COALESCE(?, file_path), updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        ");
+        $stmt->execute([$nextStatus, $previous, $cycle, $processFolder, $typeFolder, $statusFolder, $movedPath, $movedRelative, $movedRelative, $id]);
     } else {
-        $stmt = $pdo->prepare("UPDATE documents SET statut = ?, statut_precedent = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
-        $stmt->execute([$nextStatus, $id]);
+        $stmt = $pdo->prepare("
+            UPDATE documents
+            SET statut = ?, statut_precedent = NULL, cycle_documentaire = ?, dossier_processus = ?,
+                dossier_type = ?, dossier_statut = ?,
+                chemin_fichier = COALESCE(?, chemin_fichier), chemin_relatif = COALESCE(?, chemin_relatif),
+                file_path = COALESCE(?, file_path), updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        ");
+        $stmt->execute([$nextStatus, $cycle, $processFolder, $typeFolder, $statusFolder, $movedPath, $movedRelative, $movedRelative, $id]);
     }
 
     doc_log($pdo, $id, $action, $detail ?: (($doc['reference_documentaire'] ?? '') . ' : ' . $current . ' -> ' . $nextStatus), $actor);

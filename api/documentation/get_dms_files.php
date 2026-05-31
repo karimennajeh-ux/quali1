@@ -13,6 +13,19 @@ if (!$dmsPath || !is_dir($dmsPath)) {
     exit;
 }
 
+$lifecycleFolders = ['Vérifier', 'Approuver', 'Diffuser', 'Utiliser', 'Réviser', 'Archiver', 'Supprimer'];
+foreach (scandir($dmsPath) ?: [] as $dir) {
+    if ($dir === '.' || $dir === '..') continue;
+    $fullPath = $dmsPath . DIRECTORY_SEPARATOR . $dir;
+    if (!is_dir($fullPath) || in_array($dir, $lifecycleFolders, true)) continue;
+    foreach ($lifecycleFolders as $cycleFolder) {
+        $cyclePath = $fullPath . DIRECTORY_SEPARATOR . $cycleFolder;
+        if (!is_dir($cyclePath)) {
+            mkdir($cyclePath, 0755, true);
+        }
+    }
+}
+
 function getFileInfo($filePath) {
     $info = [
         'name' => basename($filePath),
@@ -24,7 +37,7 @@ function getFileInfo($filePath) {
     return $info;
 }
 
-function scanFolder($folderPath, $parentName = '') {
+function scanFolder($folderPath, $parentName = '', &$folders = []) {
     $items = [];
     
     if (!is_dir($folderPath)) {
@@ -52,8 +65,17 @@ function scanFolder($folderPath, $parentName = '') {
             $info['relPath'] = str_replace('\\', '/', $rel);
             $items[] = $info;
         } elseif (is_dir($fullPath)) {
+            $folderName = $parentName === '' ? $file : $parentName . '/' . $file;
+            $folders[$folderName] = [
+                'name' => $file,
+                'path' => $fullPath,
+                'fileCount' => 0,
+                'files' => []
+            ];
             // Recursively scan subfolders
-            $subItems = scanFolder($fullPath, $parentName . '/' . $file);
+            $subItems = scanFolder($fullPath, $folderName, $folders);
+            $folders[$folderName]['fileCount'] = count($subItems);
+            $folders[$folderName]['files'] = $subItems;
             $items = array_merge($items, $subItems);
         }
     }
@@ -74,7 +96,7 @@ foreach ($mainDirs as $dir) {
     $fullPath = $dmsPath . DIRECTORY_SEPARATOR . $dir;
     
     if (is_dir($fullPath)) {
-        $folderFiles = scanFolder($fullPath, $dir);
+        $folderFiles = scanFolder($fullPath, $dir, $folders);
         
         $folders[$dir] = [
             'name' => $dir,
