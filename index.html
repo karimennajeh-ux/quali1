@@ -3609,6 +3609,14 @@
       overflow: hidden;
     }
 
+    .dms-master-table-card.dms-master-max {
+      grid-column: 1 / -1;
+    }
+
+    .dms-master-table-card.dms-master-min .tb {
+      display: none;
+    }
+
     .dms-master-table-head {
       display: flex;
       align-items: center;
@@ -3638,6 +3646,96 @@
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
+    }
+
+    .dms-master-window-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .dms-master-window-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px;
+      border: 1px solid #d8e4f8;
+      border-radius: 10px;
+      background: rgba(255,255,255,.78);
+    }
+
+    .dms-master-window-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid #c9d8ef;
+      border-radius: 8px;
+      background: #fff;
+      color: #294366;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .dms-master-window-btn:hover {
+      border-color: #2f67d8;
+      color: #145fd7;
+      box-shadow: 0 8px 18px rgba(47, 103, 216, .14);
+    }
+
+    .dms-master-hidden-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1px dashed #b9cff4;
+      border-radius: 10px;
+      background: #f8fbff;
+      color: #51627f;
+      font-weight: 700;
+    }
+
+    .dms-master-filter-row th {
+      padding: 8px 10px;
+      background: linear-gradient(180deg, #f9fbff, #eef5ff);
+      border-top: 1px solid #dbe6f5;
+    }
+
+    .dms-master-filter-control {
+      width: 100%;
+      min-height: 34px;
+      padding: 7px 9px;
+      border: 1px solid #bfd4f5;
+      border-radius: 8px;
+      background: #fff;
+      color: #1f2d4d;
+      font-size: 12px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .dms-master-filter-control:focus {
+      border-color: #2f67d8;
+      box-shadow: 0 0 0 3px rgba(47, 103, 216, .12);
+    }
+
+    .dms-master-filter-control::placeholder {
+      color: #7e8da8;
+      font-weight: 600;
+    }
+
+    .dms-master-filter-reset {
+      border: 0;
+      background: #eef4ff;
+      color: #245ccc;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .doc-cycle-badge {
@@ -9579,52 +9677,6 @@
                   src="assets/right arrow.png" alt="right arrow" class="arrow"></button></div>
           </div>
         </div>
-        <div class="bar card docs-filter-panel">
-          <input id="ds" placeholder="Recherche : référence, titre, processus, type, statut...">
-          <select id="dpf">
-            <option value="all">Tous les processus</option>
-            <option>Processus pilotage</option>
-            <option>Processus opérationnel</option>
-            <option>Processus support</option>
-          </select>
-          <select id="dtf">
-            <option value="all">Tous les types</option>
-            <option>Manuel qualité</option>
-            <option>Politique qualité</option>
-            <option>Procédure</option>
-            <option>Instruction</option>
-            <option>Formulaire</option>
-            <option>Enregistrement</option>
-          </select>
-          <select id="df">
-            <option value="all">Tous les statuts</option>
-            <option>Brouillon</option>
-            <option>En vérification</option>
-            <option>En correction</option>
-            <option>Approuvé</option>
-            <option>Diffusé</option>
-            <option>Archivé</option>
-            <option>Exclu</option>
-            <option>Fichier introuvable</option>
-          </select>
-          <input id="dvf" placeholder="Version">
-          <select id="dcf">
-            <option value="all">Tous les cycles</option>
-            <option>En cours</option>
-            <option>En vigueur</option>
-            <option>Archives</option>
-            <option>Modeles</option>
-          </select>
-          <select id="dff">
-            <option value="all">Tous les dossiers</option>
-          </select>
-          <label class="docs-filter-archives"><input id="darchives" type="checkbox"> Afficher archives</label>
-          <div class="docs-filter-actions">
-            <button class="btn" id="dsearch" type="button">Rechercher</button>
-            <button class="btn2 btn" id="drefresh" type="button">Actualiser</button>
-            <span class="mut" id="dc"></span>
-          </div>
-        </div>
         <div class="card h" id="wordCreatePanel">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px">
             <h3 style="margin:0">CrÃ©er un document Word</h3>
@@ -12166,6 +12218,8 @@
     let orgReqFilesMap = new Map(), orgReqPreviewUrl = "", activeOrgReqDoc = "", orgDocFilesMap = new Map();
     let docCentralState = { server: null, settings: null, folders: [], documents: [], events: [], counts: null, cleanupItems: [], cleanupFolders: [], cleanupVisible: false, libraryFilter: "", loading: false, ready: false, error: "", syncedAt: "", selectedFile: null, selectedMeta: null, lastImportedId: "", lastImportedItem: null, editingDocumentId: "", pilotEmail: "", streamConnected: false, streamStatus: "", streamLastEvent: null };
     let docMasterState = { documents: [], counts: null, events: [], statusOptions: [], loading: false, ready: false, error: "", syncedAt: "" };
+    let docMasterListFilters = {};
+    let docMasterWindowUi = {};
     const DOCORG_BLOCK_DEFAULTS = { top: "min", server: "open", hierarchy: "min", folders: "min", import: "min", library: "open", journal: "min", models: "min", circuit: "open", workflow: "min", table: "min" };
     const DOCORG_BLOCK_ORDER = ["top", "server", "hierarchy", "folders", "import", "library", "journal", "models", "circuit", "workflow", "table"];
     const DOCORG_BLOCK_LABELS = { top: "Documents de tete de la pyramide", server: "Serveur documentaire central", hierarchy: "Hierarchie documentaire", folders: "Creation des dossiers documentaires", import: "Importation vers la bibliotheque centrale", library: "Bibliotheque documentaire centralisee", journal: "Journal documentaire", models: "Bibliotheque des modeles", circuit: "Circuit documentaire interne", workflow: "Validation du flux de travail", table: "Tableau des documents" };
@@ -14130,16 +14184,35 @@
     function docExportHtml(arr, title = "Liste des documents") { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>${esc(title)}</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>${esc(title)}</h1><p><b>Date d'édition :</b> ${esc(now())}<br><b>Nombre de documents :</b> ${arr.length}</p><table><thead><tr><th>Référence</th><th>Titre</th><th>Processus</th><th>Type</th><th>Version</th><th>Cycle</th><th>Dernière mise à jour</th></tr></thead><tbody>${docExportRows(arr)}</tbody></table></body></html>` }
     function printDocsTable() { if (!requirePerm("Exporter")) return; const { arr } = filteredDocs(), html = docExportHtml(arr); const w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer la liste des documents"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Liste des documents prete a imprimer") }
     function downloadDocsTable() { if (!requirePerm("Exporter")) return; const { arr } = filteredDocs(); downloadText("liste_documents_" + stamp() + ".xls", docExportHtml(arr), "application/vnd.ms-excel;charset=utf-8"); sync("Liste des documents telechargee") }
-    function docMasterRowsByRoot(rootKey) { const { arr } = filteredDocs(); return arr.filter(x => dmsMasterNorm(x.rootKey || dmsMasterRoot(x.store || x.notes || "")[0]) === dmsMasterNorm(rootKey)) }
+    function docMasterRowsByRoot(rootKey) { const { arr } = filteredDocs(); return docMasterApplyListFilters(docMasterRootRows(arr, rootKey), rootKey) }
     function docMasterRootTitle(rootKey) { const item = DMS_MASTER_ROOTS.find(x => dmsMasterNorm(x[0]) === dmsMasterNorm(rootKey)); return item ? item[1] : rootKey || "Liste des documents" }
     function docSafeFileName(value) { return String(value || "liste_documents").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9_-]+/gi, "_").replace(/^_+|_+$/g, "") || "liste_documents" }
     function printDocsList(rootKey) { if (!requirePerm("Exporter")) return; const title = "Liste des documents - " + docMasterRootTitle(rootKey), html = docExportHtml(docMasterRowsByRoot(rootKey), title), w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer cette liste"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Liste prete a imprimer : " + docMasterRootTitle(rootKey)) }
     function downloadDocsList(rootKey) { if (!requirePerm("Exporter")) return; const title = docMasterRootTitle(rootKey), rows = docMasterRowsByRoot(rootKey); downloadText(docSafeFileName(title) + "_" + stamp() + ".xls", docExportHtml(rows, "Liste des documents - " + title), "application/vnd.ms-excel;charset=utf-8"); sync("Liste telechargee : " + title) }
+    function docMasterRootRows(rows, rootKey) { return rows.filter(x => dmsMasterNorm(x.rootKey || dmsMasterRoot(x.store || x.notes || "")[0]) === dmsMasterNorm(rootKey)) }
+    function docMasterFilterState(rootKey) { if (!docMasterListFilters[rootKey]) docMasterListFilters[rootKey] = {}; return docMasterListFilters[rootKey] }
+    function docMasterCellValue(x, field) { if (field === "ref") return x.ref || ""; if (field === "title") return [x.title, x.fileName].filter(Boolean).join(" "); if (field === "p") return x.p || ""; if (field === "type") return x.type || ""; if (field === "v") return x.v || ""; if (field === "cycle") return x.cycle || docCycleValue(x) || x.st || ""; if (field === "updatedAt") return String(x.updatedAt || x.review || "-").slice(0, 19); return "" }
+    function docMasterApplyListFilters(rows, rootKey) { const f = docMasterFilterState(rootKey); return rows.filter(x => Object.entries(f).every(([field, value]) => !String(value || "").trim() || dmsMasterNorm(docMasterCellValue(x, field)).includes(dmsMasterNorm(value)))) }
+    function docMasterFilterOptions(rows, field) { if (field === "cycle") return Object.keys(DMS_MASTER_STEP_STATUS); return [...new Set(rows.map(x => docMasterCellValue(x, field)).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), "fr")) }
+    function docMasterFilterControl(rootKey, field, rows, label, mode = "select") {
+      const value = docMasterFilterState(rootKey)[field] || "";
+      if (mode === "text") return `<input class="dms-master-filter-control" type="search" placeholder="${esc(label)}" value="${esc(value)}" data-dms-list-filter="${esc(field)}" data-dms-list-root="${esc(rootKey)}">`;
+      const opts = docMasterFilterOptions(rows, field);
+      return `<select class="dms-master-filter-control" data-dms-list-filter="${esc(field)}" data-dms-list-root="${esc(rootKey)}"><option value="">${esc(label)}</option>${opts.map(v => `<option value="${esc(v)}"${String(v) === String(value) ? " selected" : ""}>${esc(v)}</option>`).join("")}</select>`
+    }
+    function docMasterFilterRow(rootKey, rows) {
+      return `<tr class="dms-master-filter-row"><th></th><th></th><th>${docMasterFilterControl(rootKey, "p", rows, "Tous")}</th><th>${docMasterFilterControl(rootKey, "type", rows, "Tous")}</th><th>${docMasterFilterControl(rootKey, "v", rows, "Toutes")}</th><th>${docMasterFilterControl(rootKey, "cycle", rows, "Tous les cycles")}</th><th></th></tr>`
+    }
+    function docMasterUi(rootKey) { return docMasterWindowUi[rootKey] || { min: false, max: false, hidden: false } }
+    function setDocMasterUi(rootKey, patch) { docMasterWindowUi[rootKey] = { ...docMasterUi(rootKey), ...patch }; docs() }
+    function restoreDocMasterLists() { docMasterWindowUi = {}; docs(); sync("Toutes les listes documentaires sont affichees") }
     function docMasterRow(x) { return `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small>${esc(x.fileName || "")}</small></td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td>${docCycleBadge(x)}</td><td>${esc(String(x.updatedAt || x.review || "-").slice(0, 19))}</td></tr>` }
     function docMasterTable(title, rows, rootKey) {
-      return `<section class="dms-master-table-card"><div class="dms-master-table-head"><div class="dms-master-table-title"><h3>${esc(title)}</h3><span class="bl">${rows.length}</span></div><div class="dms-master-table-actions"><button class="btn2 btn" type="button" data-dlist-print="${esc(rootKey)}">Imprimer</button><button class="btn2 btn" type="button" data-dlist-download="${esc(rootKey)}">Télécharger</button></div></div><div class="tb"><table><thead><tr><th>Référence</th><th>Titre</th><th>Processus</th><th>Type</th><th>Version</th><th>Cycle</th><th>Dernière mise à jour</th></tr></thead><tbody>${rows.length ? rows.map(docMasterRow).join("") : `<tr><td colspan="7" class="e">Aucun document dans ce dossier.</td></tr>`}</tbody></table></div></section>`
+      const visibleRows = docMasterApplyListFilters(rows, rootKey), activeFilters = Object.values(docMasterFilterState(rootKey)).filter(v => String(v || "").trim()).length, countLabel = activeFilters ? `${visibleRows.length} / ${rows.length}` : String(rows.length), ui = docMasterUi(rootKey);
+      if (ui.hidden) return "";
+      return `<section class="dms-master-table-card${ui.min ? " dms-master-min" : ""}${ui.max ? " dms-master-max" : ""}"><div class="dms-master-table-head"><div class="dms-master-table-title"><h3>${esc(title)}</h3><span class="bl">${esc(countLabel)}</span>${activeFilters ? `<button class="dms-master-filter-reset" type="button" data-dlist-reset="${esc(rootKey)}">Réinitialiser</button>` : ""}</div><div class="dms-master-window-bar"><div class="dms-master-window-controls"><button class="dms-master-window-btn" type="button" title="Réduire" aria-label="Réduire" data-dlist-win="min" data-dlist-root="${esc(rootKey)}">_</button><button class="dms-master-window-btn" type="button" title="Agrandir ou restaurer" aria-label="Agrandir ou restaurer" data-dlist-win="max" data-dlist-root="${esc(rootKey)}">&#9633;</button><button class="dms-master-window-btn" type="button" title="Masquer" aria-label="Masquer" data-dlist-win="close" data-dlist-root="${esc(rootKey)}">&times;</button></div><div class="dms-master-table-actions"><button class="btn2 btn" type="button" data-dlist-print="${esc(rootKey)}">Imprimer</button><button class="btn2 btn" type="button" data-dlist-download="${esc(rootKey)}">Télécharger</button></div></div></div><div class="tb"><table><thead><tr><th>Référence</th><th>Titre</th><th>Processus</th><th>Type</th><th>Version</th><th>Cycle</th><th>Dernière mise à jour</th></tr>${docMasterFilterRow(rootKey, rows)}</thead><tbody>${visibleRows.length ? visibleRows.map(docMasterRow).join("") : `<tr><td colspan="7" class="e">Aucun document ne correspond aux filtres de cette liste.</td></tr>`}</tbody></table></div></section>`
     }
-    function docs() { const { all, arr } = filteredDocs(); if ($("#dc")) $("#dc").textContent = docMasterState.loading ? "Chargement..." : arr.length + " document" + (arr.length > 1 ? "s" : ""); const summary = $("#dSummary"); if (summary && !summary.classList.contains("h") && !summary.dataset.locked) summary.innerHTML = all.length ? docSummary(all) : `<div class="e">Aucun document.</div>`; const container = $("#dmsMasterTables"); if (container) { container.innerHTML = docMasterState.error ? `<div class="card e">${esc(docMasterState.error)}</div>` : DMS_MASTER_ROOTS.map(root => docMasterTable(root[1], arr.filter(x => dmsMasterNorm(x.rootKey || dmsMasterRoot(x.store || x.notes || "")[0]) === dmsMasterNorm(root[0])), root[0])).join("") } if ($("#dtab")) $("#dtab").innerHTML = arr.length ? arr.map(docMasterRow).join("") : `<tr><td colspan="7" class="e">${docMasterState.error ? esc(docMasterState.error) : "Aucun document."}</td></tr>` }
+    function docs() { const { all, arr } = filteredDocs(); if ($("#dc")) $("#dc").textContent = docMasterState.loading ? "Chargement..." : arr.length + " document" + (arr.length > 1 ? "s" : ""); const summary = $("#dSummary"); if (summary && !summary.classList.contains("h") && !summary.dataset.locked) summary.innerHTML = all.length ? docSummary(all) : `<div class="e">Aucun document.</div>`; const container = $("#dmsMasterTables"); if (container) { const hiddenCount = DMS_MASTER_ROOTS.filter(root => docMasterUi(root[0]).hidden).length, hiddenBar = hiddenCount ? `<div class="dms-master-hidden-bar"><span>${hiddenCount} liste${hiddenCount > 1 ? "s" : ""} masquée${hiddenCount > 1 ? "s" : ""}</span><button class="btn2 btn" type="button" data-dlist-restore="all">Afficher toutes les listes</button></div>` : ""; container.innerHTML = docMasterState.error ? `<div class="card e">${esc(docMasterState.error)}</div>` : hiddenBar + DMS_MASTER_ROOTS.map(root => docMasterTable(root[1], docMasterRootRows(arr, root[0]), root[0])).join("") } if ($("#dtab")) $("#dtab").innerHTML = arr.length ? arr.map(docMasterRow).join("") : `<tr><td colspan="7" class="e">${docMasterState.error ? esc(docMasterState.error) : "Aucun document."}</td></tr>` }
     function orgDocActions(x) { return `<div class="doc-row-actions"><button class="btn2 btn" data-odreview="${x.id}">Verification</button><button class="btn2 btn" data-odapprove="${x.id}">Approbation</button><button class="btn2 btn" data-oddiffuse="${x.id}">Diffuser</button><button class="btn2 btn" data-odcorrect="${x.id}">Correction</button><button class="btn2 btn" data-oddetail="${x.id}">Fiche</button><button class="btn2 btn" data-odread="${x.id}">Lire</button><button class="btn3 btn" data-odarchive="${x.id}">Archiver</button><button class="btn3 btn" data-odd="${x.id}">Supprimer</button></div>` }
     function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = ($("#ods")?.value || "").trim().toLowerCase(), pf = $("#odpf")?.value || "all", tf = $("#odtf")?.value || "all", cf = ($("#odcycle")?.value) || "all", f = $("#odf")?.value || "all", all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && docFilterMatch(x.p, pf) && docFilterMatch(x.type, tf) && docFilterMatch(x.st, f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.relPath, x.fileName, x.notes].join(" ").toLowerCase(), statusMatches = f === "all" || docFilterMatch(x.status, f) || (centralDocIsArchived(f) && centralDocIsArchived(x.status)); return hay.includes(q) && docFilterMatch(x.processName || x.relPath, pf) && docFilterMatch(x.docType, tf) && docFilterMatch(docCycleValue(x), cf) && statusMatches }); const foundCount = docCentralState.libraryFilter === "folderMissing" ? (docCentralState.folders || []).filter(x => x.status === "Dossier introuvable" || Number(x.active) === 0).length : centralDocs.length; $("#odc").textContent = foundCount + " document" + (foundCount > 1 ? "s" : "") + " trouvÃ©" + (foundCount > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralTableTitle")) $("#odCentralTableTitle").textContent = docCentralTableTitle(); if ($("#odCleanupPanel")) { $("#odCleanupPanel").classList.toggle("h", !docCentralState.cleanupVisible); $("#odCleanupPanel").innerHTML = docCentralCleanupHtml() } if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralImportResult")) $("#odCentralImportResult").innerHTML = docCentralImportResultHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
     function eqItem(x) { return { ...x, dom: x.dom || x.domain || x.domaine || "-", n: x.n || x.designation || "-", brand: x.brand || x.b || x.marque || "-", m: x.m || x.model || x.modele || "-", sn: x.sn || x.serial || x.serie || "-", code: x.code || x.id || "-", l: x.l || x.start || x.mise || "-", st: x.st || "Valide" } }
@@ -14995,7 +15068,8 @@
     function diagField(e) { const t = e.target; if (t.matches("[data-diag]")) saveDiag(t.dataset.diag, t.value); if (t.matches("[data-dnote]")) { saveDiagNote(t.dataset.dnote, t.value); render() } if (t.id === "diagPerson" || t.id === "diagDate") saveDiagMeta() }
     function act(e) { const da = e.target.closest("[data-da]"), doo = e.target.closest("[data-do]"), dd = e.target.closest("[data-dd]"), oda = e.target.closest("[data-oda]"), odo = e.target.closest("[data-odo]"), odd = e.target.closest("[data-odd]"), op = e.target.closest("[data-oproc]"), orgpick = e.target.closest("[data-orgpick]"), orgscan = e.target.closest("[data-orgscan]"), orgf = e.target.closest("[data-orgf]"), orgReqImport = e.target.closest("[data-orgreq-import]"), orgReqRead = e.target.closest("[data-orgreq-read]"), ee = e.target.closest("[data-ee]"), et = e.target.closest("[data-et]"), ed = e.target.closest("[data-ed]"), ne = e.target.closest("[data-ne]"), nt = e.target.closest("[data-nt]"), nd = e.target.closest("[data-nd]"), ae = e.target.closest("[data-ae]"), at = e.target.closest("[data-at]"), acreatenc = e.target.closest("[data-acreatenc]"), ad = e.target.closest("[data-ad]"), rt = e.target.closest("[data-rt]"), rd = e.target.closest("[data-rd]"), ud = e.target.closest("[data-ud]"), rf = e.target.closest("[data-rf]"); if ((da || oda) && !requirePerm("Valider")) return; if ((doo || odo || ee || et || ne || nt || ae || at || acreatenc || rt) && !requirePerm("Modifier")) return; if ((dd || odd || ed || nd || ad || rd || ud) && !requirePerm("Supprimer")) return; if (op) openProcessWindow(op.dataset.oproc); if (orgpick) { activeOrgType = orgpick.dataset.otype || activeOrgType; activeOrgStatus = orgpick.dataset.ost || activeOrgStatus; chooseOrgDir() } if (orgscan && activeOrgProc) { activeOrgType = orgscan.dataset.otype || activeOrgType; activeOrgStatus = orgscan.dataset.ost || activeOrgStatus; scanOrgProc(activeOrgProc) } if (orgf) openOrgFile(orgf.dataset.orgf); if (orgReqImport) pickReqDoc(orgReqImport.dataset.orgreqImport); if (orgReqRead) readReqDoc(orgReqRead.dataset.orgreqRead); if (da) { let x = s.docs.find(v => v.id == da.dataset.da); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Documents", x.ref + " valide"); save("Document valide"); render() } } if (doo) { let x = s.docs.find(v => v.id == doo.dataset.do); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Documents", x.ref + " obsolete"); save("Document obsolete"); render() } } if (dd) { let x = s.docs.find(v => v.id == dd.dataset.dd); if (x) { s.docs = s.docs.filter(v => v.id != dd.dataset.dd); log("Suppression", "Documents", x.ref + " supprime"); save("Document supprime"); render() } } if (oda) { let x = (s.orgDocs || []).find(v => v.id == oda.dataset.oda); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Document organisme", x.ref + " valide"); save("Document organisme valide"); render() } } if (odo) { let x = (s.orgDocs || []).find(v => v.id == odo.dataset.odo); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Document organisme", x.ref + " obsolete"); save("Document organisme obsolete"); render() } } if (odd) { let x = (s.orgDocs || []).find(v => v.id == odd.dataset.odd); if (x) { s.orgDocs = s.orgDocs.filter(v => v.id != odd.dataset.odd); log("Suppression", "Document organisme", x.ref + " supprime"); save("Document organisme supprime"); render() } } if (ee) editEq(ee.dataset.ee); if (et) { let x = s.eq.find(v => String((v.code || v.id)) == String(et.dataset.et)); if (x) { x.st = x.st === "Valide" ? "A etalonner" : x.st === "A etalonner" ? "Hors service" : "Valide"; markSaved(x); log("Mise a jour", "Equipements", (x.code || x.id) + " -> " + x.st); save("Equipement mis a jour"); render() } } if (ed) { let x = s.eq.find(v => String((v.code || v.id)) == String(ed.dataset.ed)); if (x) { s.eq = s.eq.filter(v => String((v.code || v.id)) != String(ed.dataset.ed)); if (editingEqId === String(ed.dataset.ed)) resetEqForm(); log("Suppression", "Equipements", (x.code || x.id) + " supprime"); save("Equipement supprime"); render() } } if (ne) editNc(ne.dataset.ne); if (nt) { let x = s.nc.find(v => v.ref == nt.dataset.nt); x.st = x.st === "Ouverte" ? "En cours" : "Cloturee"; markSaved(x); log("Mise a jour", "NC", x.ref + " -> " + x.st); save("NC mise a jour"); render() } if (nd) { let x = s.nc.find(v => v.ref == nd.dataset.nd); if (x) { s.nc = s.nc.filter(v => v.ref != nd.dataset.nd); log("Suppression", "NC", x.ref + " supprimee"); save("NC supprimee"); render() } } if (ae) editAud(ae.dataset.ae); if (acreatenc) { const nc = createNcFromAudit(acreatenc.dataset.acreatenc); if (nc) { page("nc"); sync("NC creee depuis audit : " + nc.ref); render() } } if (at) { let x = s.aud.find(v => v.ref == at.dataset.at); if (x) { x.st = x.st === "Planifie" ? "En cours" : x.st === "En cours" ? "Realise" : "Cloture"; if (x.st === "Realise") createNcFromAudit(x.ref); markSaved(x); log("Mise a jour", "Audits", x.ref + " -> " + x.st); save("Audit mis a jour"); render() } } if (ad) { let x = s.aud.find(v => v.ref == ad.dataset.ad); if (x) { s.aud = s.aud.filter(v => v.ref != ad.dataset.ad); log("Suppression", "Audits", x.ref + " supprime"); save("Audit supprime"); render() } } if (rt) { let x = (s.revc || []).find(v => v.ref == rt.dataset.rt); if (x) { x.st = x.st === "A revoir" ? "En attente client" : x.st === "En attente client" ? "Approuvee" : "Approuvee"; markSaved(x); log("Mise a jour", "Liste client", x.ref + " -> " + x.st); save("Liste client mise a jour"); render() } } if (rd) { let x = (s.revc || []).find(v => v.ref == rd.dataset.rd); if (x) { s.revc = s.revc.filter(v => v.ref != rd.dataset.rd); if (editingRevcId === x.ref) resetRevcForm(); log("Suppression", "Liste client", x.ref + " supprime"); save("Liste client supprime"); render() } } if (ud) { let x = (s.usr || []).map(normalizeUserAccount).find(v => v.email == ud.dataset.ud); if (x) { if (x.pilot) { sync("Le compte pilote principal ne peut pas etre supprime depuis ce module"); return } if (authNormEmail((s.u && s.u.email) || "") === authNormEmail(x.email)) { sync("Le compte connecte ne peut pas etre supprime pendant la session"); return } s.usr = s.usr.filter(v => authNormEmail(v.email) != authNormEmail(ud.dataset.ud)); log("Suppression", "Utilisateurs", x.email + " supprime"); save("Utilisateur supprime"); render() } } if (rf) openRepoFile(rf.dataset.rf) }
     async function updateMasterDocumentStatus(id, status) { if (!requirePerm("Modifier")) return; try { await documentationApi("update_document.php", { method: "POST", body: { id, statut: status, actorName: (s.u && s.u.name) || "Utilisateur" } }); await refreshMasterDocuments("Statut documentaire mis a jour : " + status); if (docCentralState.ready) await refreshDocumentationCentral() } catch (e) { console.error(e); sync(e.message || "Changement de statut impossible") } }
-    function docAct(e) { const ddetail = e.target.closest("[data-ddetail]"), dread = e.target.closest("[data-dread]"), dedit = e.target.closest("[data-dedit]"), dstatus = e.target.closest("[data-dstatus]"), listPrint = e.target.closest("[data-dlist-print]"), listDownload = e.target.closest("[data-dlist-download]"); if (!ddetail && !dread && !dedit && !dstatus && !listPrint && !listDownload) return; if (listPrint) { printDocsList(listPrint.dataset.dlistPrint); return } if (listDownload) { downloadDocsList(listDownload.dataset.dlistDownload); return } const docs = (docMasterState.documents || []).map(masterDocFromApi); if (dedit) editDoc(dedit.dataset.dedit); if (dstatus) updateMasterDocumentStatus(dstatus.dataset.dstatus, dstatus.dataset.dnext); if (ddetail) { const x = docs.find(v => String(v.id) === String(ddetail.dataset.ddetail)), summary = $("#dSummary"); if (x && summary) { summary.classList.remove("h"); summary.dataset.locked = "1"; summary.innerHTML = docDetail(x) } else if (x) sync("Fiche document disponible depuis le tableau principal") } if (dread) { if (!requirePerm("Telecharger")) return; const x = docs.find(v => String(v.id) === String(dread.dataset.dread)); if (x && x.url) window.open(x.url, "_blank"); else sync("Aucun lien fichier associe a ce document") } }
+    function docMasterListFilterEvent(e) { const el = e.target.closest("[data-dms-list-filter]"); if (!el) return; const root = el.dataset.dmsListRoot, field = el.dataset.dmsListFilter; if (!root || !field) return; const pos = typeof el.selectionStart === "number" ? el.selectionStart : null, state = docMasterFilterState(root), value = String(el.value || "").trim(); if (value) state[field] = value; else delete state[field]; docs(); setTimeout(() => { const next = $all("[data-dms-list-filter]").find(x => x.dataset.dmsListRoot === root && x.dataset.dmsListFilter === field); if (next) { next.focus(); if (pos !== null && next.setSelectionRange) { const p = Math.min(pos, String(next.value || "").length); next.setSelectionRange(p, p) } } }, 0) }
+    function docAct(e) { const ddetail = e.target.closest("[data-ddetail]"), dread = e.target.closest("[data-dread]"), dedit = e.target.closest("[data-dedit]"), dstatus = e.target.closest("[data-dstatus]"), listPrint = e.target.closest("[data-dlist-print]"), listDownload = e.target.closest("[data-dlist-download]"), listReset = e.target.closest("[data-dlist-reset]"), listWin = e.target.closest("[data-dlist-win]"), listRestore = e.target.closest("[data-dlist-restore]"); if (!ddetail && !dread && !dedit && !dstatus && !listPrint && !listDownload && !listReset && !listWin && !listRestore) return; if (listRestore) { restoreDocMasterLists(); return } if (listWin) { const root = listWin.dataset.dlistRoot, mode = listWin.dataset.dlistWin, ui = docMasterUi(root); if (mode === "min") setDocMasterUi(root, { min: !ui.min, max: false, hidden: false }); if (mode === "max") { const next = !ui.max; Object.keys(docMasterWindowUi).forEach(k => docMasterWindowUi[k] = { ...docMasterUi(k), max: false }); setDocMasterUi(root, { max: next, min: false, hidden: false }) } if (mode === "close") setDocMasterUi(root, { hidden: true, min: false, max: false }); return } if (listReset) { delete docMasterListFilters[listReset.dataset.dlistReset]; docs(); sync("Filtres de la liste reinitialises"); return } if (listPrint) { printDocsList(listPrint.dataset.dlistPrint); return } if (listDownload) { downloadDocsList(listDownload.dataset.dlistDownload); return } const docs = (docMasterState.documents || []).map(masterDocFromApi); if (dedit) editDoc(dedit.dataset.dedit); if (dstatus) updateMasterDocumentStatus(dstatus.dataset.dstatus, dstatus.dataset.dnext); if (ddetail) { const x = docs.find(v => String(v.id) === String(ddetail.dataset.ddetail)), summary = $("#dSummary"); if (x && summary) { summary.classList.remove("h"); summary.dataset.locked = "1"; summary.innerHTML = docDetail(x) } else if (x) sync("Fiche document disponible depuis le tableau principal") } if (dread) { if (!requirePerm("Telecharger")) return; const x = docs.find(v => String(v.id) === String(dread.dataset.dread)); if (x && x.url) window.open(x.url, "_blank"); else sync("Aucun lien fichier associe a ce document") } }
     function orgDocAct(e) { const review = e.target.closest("[data-odreview]"), approve = e.target.closest("[data-odapprove]"), diffuse = e.target.closest("[data-oddiffuse]"), correct = e.target.closest("[data-odcorrect]"), detail = e.target.closest("[data-oddetail]"), read = e.target.closest("[data-odread]"), archive = e.target.closest("[data-odarchive]"), tpl = e.target.closest("[data-odtemplate]"), edit = e.target.closest("[data-odedit]"), topPrepare = e.target.closest("[data-odtop-prepare]"), topUpload = e.target.closest("[data-odtop-upload]"), view = e.target.closest("[data-odview]"), cOpen = e.target.closest("[data-odcentral-open]"), cRead = e.target.closest("[data-odcentral-read]"), cDetail = e.target.closest("[data-odcentral-detail]"), cEdit = e.target.closest("[data-odcentral-edit]"), cArchive = e.target.closest("[data-odcentral-archive]"), cExclude = e.target.closest("[data-odcentral-exclude]"), cRestore = e.target.closest("[data-odcentral-restore]"), cDelete = e.target.closest("[data-odcentral-delete]"), cDeleteApp = e.target.closest("[data-odcentral-delete-app]"), cDeletePermanent = e.target.closest("[data-odcentral-delete-permanent]"), cNewVersion = e.target.closest("[data-odcentral-new-version]"), cLocation = e.target.closest("[data-odcentral-location]"), cStatus = e.target.closest("[data-odcentral-status]"), cleanupSelectAll = e.target.closest("[data-odcleanup-select-all]"), cleanupBulk = e.target.closest("[data-odcleanup-bulk]"), cleanupClose = e.target.closest("[data-odcleanup-close]"); if (!review && !approve && !diffuse && !correct && !detail && !read && !archive && !tpl && !edit && !topPrepare && !topUpload && !view && !cOpen && !cRead && !cDetail && !cEdit && !cArchive && !cExclude && !cRestore && !cDelete && !cDeleteApp && !cDeletePermanent && !cNewVersion && !cLocation && !cStatus && !cleanupSelectAll && !cleanupBulk && !cleanupClose) return; if (view) openDocTemplate(view.dataset.odview); if (edit) openDocTemplate(edit.dataset.odedit); if (topPrepare) prepareTopPyramidDocument(topPrepare.dataset.odtopPrepare, false); if (topUpload) prepareTopPyramidDocument(topUpload.dataset.odtopUpload, false); if (tpl) showWordCreator(tpl.dataset.odtemplate); if (review) setOrgDocStatus(review.dataset.odreview, "En revue", "Envoi pour verification"); if (approve) setOrgDocStatus(approve.dataset.odapprove, "Approuve", "Approbation"); if (diffuse) setOrgDocStatus(diffuse.dataset.oddiffuse, "Diffuse", "Diffusion"); if (correct) setOrgDocStatus(correct.dataset.odcorrect, "A corriger", "Demande de correction"); if (archive) setOrgDocStatus(archive.dataset.odarchive, "Archive", "Archivage"); if (detail) { const x = (s.orgDocs || []).find(v => v.id == detail.dataset.oddetail); if (x) setOrgSummaryContent(`<div class="card">${orgDocDetail(normDoc(x))}</div>`) } if (read) { if (!requirePerm("Telecharger")) return; const x = (s.orgDocs || []).find(v => v.id == read.dataset.odread); if (x) readOrgDocFile(x); else sync("Aucun document selectionne") } if (cOpen) openDocumentationCentralDocument(cOpen.dataset.odcentralOpen); if (cRead) readDocumentationCentralDocument(cRead.dataset.odcentralRead); if (cDetail) revealDocumentationCentralDocument(cDetail.dataset.odcentralDetail); if (cEdit) loadDocumentationCentralIntoForm(cEdit.dataset.odcentralEdit); if (cArchive) archiveDocumentationCentralFile(cArchive.dataset.odcentralArchive); if (cExclude) excludeDocumentationCentralFile(cExclude.dataset.odcentralExclude); if (cRestore) restoreDocumentationCentralFile(cRestore.dataset.odcentralRestore); if (cDelete || cDeleteApp) deleteDocumentationCentralDocument((cDeleteApp || cDelete).dataset.odcentralDeleteApp || (cDeleteApp || cDelete).dataset.odcentralDelete); if (cDeletePermanent) permanentlyDeleteDocumentationCentralDocument(cDeletePermanent.dataset.odcentralDeletePermanent); if (cNewVersion) createDocumentationCentralNewVersion(cNewVersion.dataset.odcentralNewVersion); if (cLocation) revealDocumentationCentralDocument(cLocation.dataset.odcentralLocation); if (cStatus) updateDocumentationCentralStatus(cStatus.dataset.odcentralStatus, cStatus.dataset.odcentralNext); if (cleanupSelectAll) setCleanupSelection(true); if (cleanupBulk) bulkCleanupDocumentation(cleanupBulk.dataset.odcleanupBulk); if (cleanupClose) { docCentralState.cleanupVisible = false; render() } }
     function exp() { const b = new Blob([JSON.stringify(s, null, 2)], { type: "application/json" }), u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = "QUALI-export.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); sync("Export genere") }
     function imp(f) { if (!f) return; const r = new FileReader(); r.onload = () => { try { s = { ...c(D), ...JSON.parse(r.result) }; log("Importation", "Systeme", "Importation JSON"); save("Importation terminee"); render() } catch (e) { sync("Importation echouee") } }; r.readAsText(f) }
@@ -15144,7 +15218,7 @@
       });
     })();
     bindClick("procClose", closeProcessWindow);
-    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), msg = e.target.closest('.hub-action-icon[aria-label="Messages"]'), modulesQuick = e.target.closest('.hub-action-icon[aria-label="Acces rapide modules"]'), refresh = e.target.closest('.hub-action-icon[aria-label="Actualiser"]'), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), notifItem = e.target.closest("[data-notif-key]"), discUser = e.target.closest("[data-disc-user]"), discOpen = e.target.closest("#discOpenBtn"), discSend = e.target.closest("#discSendBtn"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (msg) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("disc"); render(); return } if (modulesQuick) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("hub"); render(); sync("Acces rapide vers les modules"); return } if (refresh) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); render(); page(currentPage, true); sync("Page actualisee"); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (discUser) { e.preventDefault(); openDiscussionWith(discUser.dataset.discUser); return } if (discOpen) { e.preventDefault(); openDiscussionRecipient(); return } if (discSend) { e.preventDefault(); sendDiscussionMessage(); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
+    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("input", docMasterListFilterEvent); document.body.addEventListener("change", docMasterListFilterEvent); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), msg = e.target.closest('.hub-action-icon[aria-label="Messages"]'), modulesQuick = e.target.closest('.hub-action-icon[aria-label="Acces rapide modules"]'), refresh = e.target.closest('.hub-action-icon[aria-label="Actualiser"]'), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), notifItem = e.target.closest("[data-notif-key]"), discUser = e.target.closest("[data-disc-user]"), discOpen = e.target.closest("#discOpenBtn"), discSend = e.target.closest("#discSendBtn"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (msg) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("disc"); render(); return } if (modulesQuick) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("hub"); render(); sync("Acces rapide vers les modules"); return } if (refresh) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); render(); page(currentPage, true); sync("Page actualisee"); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (discUser) { e.preventDefault(); openDiscussionWith(discUser.dataset.discUser); return } if (discOpen) { e.preventDefault(); openDiscussionRecipient(); return } if (discSend) { e.preventDefault(); sendDiscussionMessage(); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
     async function restoreRepo() { const h = await idbGet("repoHandle"); if (!h) return; if (await verifyHandle(h, false)) { repoHandle = h; s.repo.folderName = h.name; s.repo.linked = true; s.repo.mode = "Dossier reconnecte"; await scanRepo(h) } else { s.repo.mode = "Reconnecter le dossier local"; repoView() } }
     async function restoreOrgDir() { const h = await idbGet("orgHandle"); if (!h) return; if (await verifyHandle(h, false)) { orgHandle = h; orgRootName = h.name || "QUALI_Organisme"; if (activeOrgProc) await scanOrgProc(activeOrgProc) } }
     ensurePilotAccount();
