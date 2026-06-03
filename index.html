@@ -3144,6 +3144,40 @@
         radial-gradient(circle at 92% 10%, rgba(35, 107, 216, .10), transparent 30%);
     }
 
+    .dashboard-report-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid rgba(216, 228, 248, .92);
+    }
+
+    .dashboard-report-card-head h3 {
+      margin: 0 0 8px;
+      color: #173b63;
+    }
+
+    .dashboard-report-card-head .mut {
+      margin: 0;
+      max-width: 620px;
+      line-height: 1.55;
+    }
+
+    .dashboard-report-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-left: auto;
+      min-width: 360px;
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+    }
+
     .dashboard-report-view {
       display: grid;
       gap: 16px;
@@ -3151,12 +3185,13 @@
 
     .dashboard-report-reader {
       border: 1px solid #d8e4f8;
-      border-radius: 18px;
+      border-radius: 12px;
       background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 250, 255, .96));
       box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 14px 34px rgba(40, 66, 113, .10);
-      max-height: 72vh;
+      min-height: 460px;
+      max-height: 78vh;
       overflow: auto;
-      padding: 14px;
+      padding: 16px;
       scroll-behavior: smooth;
     }
 
@@ -3304,6 +3339,16 @@
 
       .dashboard-report-kpis {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dashboard-report-card-head {
+        display: grid;
+      }
+
+      .dashboard-report-actions {
+        justify-content: flex-start;
+        min-width: 0;
+        position: static;
       }
     }
 
@@ -3496,6 +3541,158 @@
       border-radius: 8px;
       font-size: 13px;
       line-height: 1.2;
+    }
+
+    .dms-master-tables {
+      display: grid;
+      gap: 14px;
+    }
+
+    .docs-filter-panel {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.25fr) repeat(6, minmax(130px, auto)) auto;
+      align-items: start;
+      gap: 10px;
+      border-top: 3px solid #4c92ff;
+    }
+
+    .docs-filter-panel input,
+    .docs-filter-panel select {
+      min-height: 40px;
+    }
+
+    .docs-filter-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      grid-column: 1 / -1;
+    }
+
+    .docs-filter-archives {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 0 10px;
+      border: 1px solid #c9dcf8;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: #51627f;
+      font-weight: 700;
+    }
+
+    .docs-filter-archives input {
+      width: 20px;
+      height: 20px;
+      min-height: 20px;
+      margin: 0;
+      accent-color: #2a6bd6;
+    }
+
+    .docs-list-title-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 3px solid #4c92ff;
+    }
+
+    .docs-list-title-card h3 {
+      margin: 0;
+      color: #145fd7;
+    }
+
+    .dms-master-table-card {
+      border: 1px solid #c9dcf8;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .82);
+      overflow: hidden;
+    }
+
+    .dms-master-table-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-top: 3px solid #4c92ff;
+      border-bottom: 1px solid #dbe6f5;
+      background: #f7fbff;
+    }
+
+    .dms-master-table-head h3 {
+      margin: 0;
+      color: #145fd7;
+      font-size: 15px;
+    }
+
+    .dms-master-table-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .dms-master-table-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .doc-cycle-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 86px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      line-height: 1.15;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .doc-cycle-create {
+      background: #eef4ff;
+      color: #245ccc;
+      border-color: #cfe0ff;
+    }
+
+    .doc-cycle-check {
+      background: #fff6db;
+      color: #a16207;
+      border-color: #fde68a;
+    }
+
+    .doc-cycle-approve {
+      background: #e8fff2;
+      color: #15803d;
+      border-color: #bbf7d0;
+    }
+
+    .doc-cycle-revise {
+      background: #eef2ff;
+      color: #4f46e5;
+      border-color: #c7d2fe;
+    }
+
+    .doc-cycle-archive {
+      background: #f1f5f9;
+      color: #475569;
+      border-color: #cbd5e1;
+    }
+
+    .doc-cycle-delete {
+      background: #ffe9e9;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+
+    .dms-master-table-card .tb {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .document-row td {
@@ -8603,11 +8800,228 @@
         min-height: 44px;
       }
     }
+    .dms-current-path {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0 14px;
+      padding: 14px 18px;
+      border: 1px solid #c9dcf8;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .72);
+      color: #24436e;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8);
+    }
+
+    .dms-current-path span {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #5c779f;
+    }
+
+    .dms-current-path strong {
+      font-size: 14px;
+      color: #1f63d8;
+    }
+
+    .dms-tree {
+      display: block;
+      padding: 14px 16px;
+      border: 1px solid #9ec5ff;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .72);
+      font-size: 14px;
+    }
+
+    .dms-tree-node,
+    .dms-tree-children {
+      display: block;
+    }
+
+    .dms-tree-folder {
+      display: grid;
+      grid-template-columns: 18px 22px minmax(0, 1fr) auto;
+      align-items: center;
+      width: 100%;
+      min-height: 30px;
+      padding: 3px 8px;
+      padding-left: calc(4px + (var(--dms-folder-depth, 0) * 22px));
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      color: #1e2f4a;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .dms-tree-folder:hover,
+    .dms-tree-folder.is-selected {
+      border-color: #b8d4fb;
+      background: #eef6ff;
+    }
+
+    .dms-tree-caret {
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 24px;
+    }
+
+    .dms-tree-caret::before {
+      content: "›";
+      color: #4e6078;
+      font-size: 22px;
+      line-height: 1;
+      transform: translateY(-1px);
+    }
+
+    .dms-tree-folder.is-expanded .dms-tree-caret::before {
+      content: "⌄";
+      font-size: 18px;
+      transform: translateY(-2px);
+    }
+
+    .dms-tree-folder-icon img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .dms-tree-folder-text {
+      min-width: 0;
+    }
+
+    .dms-tree-folder-name {
+      display: block;
+      color: #1e2f4a;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dms-tree-folder-path {
+      display: none;
+    }
+
+    .dms-tree-folder-count {
+      display: inline-grid;
+      min-width: 22px;
+      height: 20px;
+      place-items: center;
+      border-radius: 999px;
+      background: #edf4ff;
+      color: #5274a8;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .dms-tree-file {
+      padding-left: calc(44px + (var(--dms-folder-depth, 0) * 22px));
+    }
+
+    .dms-tree-file-item {
+      display: grid;
+      grid-template-columns: 22px minmax(180px, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      padding: 3px 8px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      color: #1e2f4a;
+    }
+
+    .dms-tree-file-item:hover {
+      border-color: #b8d4fb;
+      background: #eef6ff;
+    }
+
+    .dms-file-icon {
+      display: inline-grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+    }
+
+    .dms-doc-icon-img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .dms-file-name {
+      font-weight: 400;
+      color: #1e2f4a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dms-file-meta {
+      display: none;
+    }
+
+    .dms-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity .12s ease;
+    }
+
+    .dms-tree-file-item:hover .dms-actions {
+      opacity: 1;
+    }
+
+    .btn-action {
+      display: inline-grid;
+      width: 26px;
+      height: 24px;
+      place-items: center;
+      border: 1px solid #c8dcfb;
+      border-radius: 4px;
+      background: #fff;
+      color: #1f63d8;
+      cursor: pointer;
+    }
+
+    .btn-action svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .dms-tree-empty {
+      margin-left: calc(44px + (var(--dms-folder-depth, 0) * 22px));
+      min-height: 28px;
+      padding: 5px 8px;
+      color: #70839f;
+      font-size: 13px;
+    }
+
+    @media (max-width: 780px) {
+      .dms-tree-file-item {
+        grid-template-columns: 22px minmax(0, 1fr);
+      }
+
+      .dms-actions {
+        grid-column: 2;
+        justify-content: flex-start;
+        opacity: 1;
+      }
+    }
   </style>
   <link rel="stylesheet" href="api/documentation/sharepoint_styles.css">
-  <link rel="stylesheet" href="api/documentation/dms_styles.css">
+  <link rel="stylesheet" href="api/documentation/dms_styles.css?v=20260603-dms-process-structure">
   <script defer src="api/documentation/sharepoint_interface.js"></script>
-  <script defer src="api/documentation/dms_interface.js"></script>
+  <script defer src="api/documentation/dms_interface.js?v=20260603-dms-process-structure"></script>
 </head>
 
 <body>
@@ -9015,15 +9429,19 @@
         <div class="row s4" id="stats"></div>
         <div class="row s2" id="dbReportCalendarRow">
           <div class="card" id="dashboardReportCard">
-            <h3>Champ de lecture du rapport detaille</h3>
-            <div class="mut" style="margin-bottom:12px">Le rapport reste lisible dans l'application. Utiliser l'export PDF seulement pour l'archiver ou l'imprimer.</div>
-            <div class="acts justify-start mb10">
-              <button class="btn" id="dashboardReport">Afficher / actualiser le rapport</button>
-              <button class="btn2 btn" id="dashboardReportPrint">Imprimer</button>
-              <button class="btn2 btn" id="dashboardReportDownload">Telecharger</button>
-              <button class="btn3 btn" id="dashboardReportHide">Masquer le rapport</button>
+            <div class="dashboard-report-card-head">
+              <div>
+                <h3>Champ de lecture du rapport détaillé</h3>
+                <p class="mut">Le rapport s'affiche directement dans l'application. Utiliser l'export seulement pour l'archiver, l'imprimer ou le partager.</p>
+              </div>
+              <div class="dashboard-report-actions">
+                <button class="btn" id="dashboardReport" type="button">Actualiser le rapport</button>
+                <button class="btn2 btn" id="dashboardReportPrint" type="button">Imprimer</button>
+                <button class="btn2 btn" id="dashboardReportDownload" type="button">Télécharger</button>
+                <button class="btn3 btn" id="dashboardReportHide" type="button">Masquer</button>
+              </div>
             </div>
-            <div class="dashboard-report-reader" id="dashboardReportReader" tabindex="0" role="document" aria-label="Lecture du rapport detaille du tableau de bord">
+            <div class="dashboard-report-reader" id="dashboardReportReader" tabindex="0" role="document" aria-label="Lecture du rapport détaillé du tableau de bord">
               <div id="dashboardReportPreview"></div>
             </div>
           </div>
@@ -9161,19 +9579,19 @@
                   src="assets/right arrow.png" alt="right arrow" class="arrow"></button></div>
           </div>
         </div>
-        <div class="bar card" style="grid-template-columns:1.3fr auto auto auto auto auto auto auto">
-          <input id="ds" placeholder="Recherche intelligente : reference, titre, processus, type, statut...">
+        <div class="bar card docs-filter-panel">
+          <input id="ds" placeholder="Recherche : référence, titre, processus, type, statut...">
           <select id="dpf">
             <option value="all">Tous les processus</option>
             <option>Processus pilotage</option>
-            <option>Processus operationnel</option>
+            <option>Processus opérationnel</option>
             <option>Processus support</option>
           </select>
           <select id="dtf">
             <option value="all">Tous les types</option>
-            <option>Manuel qualitÃ©</option>
-            <option>Politique QualitÃ©</option>
-            <option>Procedure</option>
+            <option>Manuel qualité</option>
+            <option>Politique qualité</option>
+            <option>Procédure</option>
             <option>Instruction</option>
             <option>Formulaire</option>
             <option>Enregistrement</option>
@@ -9181,11 +9599,11 @@
           <select id="df">
             <option value="all">Tous les statuts</option>
             <option>Brouillon</option>
-            <option>En vÃ©rification</option>
+            <option>En vérification</option>
             <option>En correction</option>
-            <option>ApprouvÃ©</option>
-            <option>DiffusÃ©</option>
-            <option>ArchivÃ©</option>
+            <option>Approuvé</option>
+            <option>Diffusé</option>
+            <option>Archivé</option>
             <option>Exclu</option>
             <option>Fichier introuvable</option>
           </select>
@@ -9200,10 +9618,12 @@
           <select id="dff">
             <option value="all">Tous les dossiers</option>
           </select>
-          <label class="mut" style="display:flex;align-items:center;gap:6px"><input id="darchives" type="checkbox"> Afficher archives</label>
-          <span class="mut" id="dc"></span>
-          <button class="btn" id="dsearch">Rechercher</button>
-          <button class="btn2 btn" id="drefresh" type="button">Actualiser</button>
+          <label class="docs-filter-archives"><input id="darchives" type="checkbox"> Afficher archives</label>
+          <div class="docs-filter-actions">
+            <button class="btn" id="dsearch" type="button">Rechercher</button>
+            <button class="btn2 btn" id="drefresh" type="button">Actualiser</button>
+            <span class="mut" id="dc"></span>
+          </div>
         </div>
         <div class="card h" id="wordCreatePanel">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px">
@@ -9285,28 +9705,13 @@
               placeholder="Lien cloud ou chemin fichier Word / Excel / PDF / Image"><button class="btn"
               id="dsv">Enregistrer</button></div>
         </div>
-        <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <h3 style="margin:0">Liste des documents</h3>
-          <div class="acts">
-            <button class="btn2 btn" id="dprint" type="button">Imprimer</button>
-            <button class="btn2 btn" id="ddownload" type="button">Telecharger</button>
-          </div>
+        <div class="card docs-list-title-card">
+          <h3>Liste des documents</h3>
+          <span class="mut">Listes classées par dossier principal</span>
         </div>
-        <div class="tb">
+        <div id="dmsMasterTables" class="dms-master-tables"></div>
+        <div class="tb h">
           <table>
-            <thead>
-              <tr>
-                <th>Reference</th>
-                <th>Titre</th>
-                <th>Processus</th>
-                <th>Type</th>
-                <th>Version</th>
-                <th>Statut</th>
-                <th>Cycle</th>
-                <th>Derniere mise a jour</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
             <tbody id="dtab"></tbody>
           </table>
         </div>
@@ -9346,18 +9751,41 @@
                 <h2>MaÃ®trise documentaire</h2>
                 <p class="mut">GÃ©rez les documents, les droits d'accÃ¨s et les statuts depuis un environnement moderne.</p>
               </div>
-              <input id="docSearchInput" placeholder="Rechercher un document..." aria-label="Rechercher un document">
             </div>
             <div class="doc-toolbar-right">
-              <select id="docFilterSelect" aria-label="Filtrer les documents">
+              <select id="docFilterSelect" aria-label="Filtrer par cycle de vie">
                 <option value="all">Tous les documents</option>
-                <option value="approved">ApprouvÃ©s / DiffusÃ©s</option>
-                <option value="pending">En approbation</option>
-                <option value="draft">Brouillons</option>
+                <option value="1-créer">Créer</option>
+                <option value="2-Vérifier">Vérifier</option>
+                <option value="3-Approuver">Approuver</option>
+                <option value="4-Réviser">Réviser</option>
+                <option value="5-Archiver">Archiver</option>
+                <option value="6-Supprimer">Supprimer</option>
               </select>
+              <select id="docRootFilterSelect" aria-label="Filtrer par dossier principal">
+                <option value="all">Tous les dossiers</option>
+                <option value="manuel qualité">Manuel qualité</option>
+                <option value="Politique qualité">Politique qualité</option>
+                <option value="Procesus Operationnel">Processus Opérationnel</option>
+                <option value="Procesus Pilotage">Processus Pilotage</option>
+                <option value="Procesus support">Processus support</option>
+              </select>
+              <select id="docTypeFilterSelect" aria-label="Filtrer par type documentaire">
+                <option value="all">Tous les types</option>
+                <option value="procedure">Procédure</option>
+                <option value="instruction">Instruction</option>
+                <option value="formulaire">Formulaire</option>
+                <option value="enregistrement">Enregistrement</option>
+              </select>
+              <button class="btn2 btn" id="docRefreshBtn" type="button">Mettre à jour</button>
               <button class="btn2 btn" id="docImportBtn" type="button">Importer un fichier</button>
-              <button class="btn2 btn" id="docNewBtn" type="button">New</button>
+              <button class="btn2 btn" id="docNewBtn" type="button">Nouveau</button>
             </div>
+          </div>
+
+          <div class="dms-current-path" id="docCurrentPath" aria-live="polite">
+            <span>Emplacement actuel</span>
+            <strong>DMS / uploads</strong>
           </div>
 
           <div id="docSharepointList"></div>
@@ -12587,13 +13015,14 @@
     function renderDashboardReportPreview() {
       const card = $("#dashboardReportCard"), box = $("#dashboardReportPreview"), reader = $("#dashboardReportReader");
       if (!card || !box) return;
-      if (s.dashboardReportVisible) {
+      if (s.dashboardReportVisible !== false) {
+        s.dashboardReportVisible = true;
         box.innerHTML = dashboardReportAppHtml();
         if (reader) reader.scrollTop = 0;
       } else {
-        box.innerHTML = `<div class="dashboard-report-panel" style="min-height:220px;display:grid;align-content:center;text-align:center">
-          <h3>Rapport non affiche</h3>
-          <p class="mut">Cliquer sur "Afficher / actualiser le rapport" pour lire la vue globale de l'organisme dans ce champ.</p>
+        box.innerHTML = `<div class="dashboard-report-panel" style="min-height:320px;display:grid;align-content:center;text-align:center">
+          <h3>Rapport masqué</h3>
+          <p class="mut">Cliquer sur "Actualiser le rapport" pour réafficher la vue globale de l'organisme dans ce champ.</p>
         </div>`;
       }
     }
@@ -13663,20 +14092,54 @@
     async function openOrgFile(id) { if (!id) return; let f = null; const src = orgFilesMap.get(id); try { if (src && src.kind === "file") f = await src.getFile(); else if (src instanceof File) f = src } catch (e) { } if (!f) { sync("Fichier introuvable dans le dossier D:"); return } const t = fileType(f.name); if (!s.orgReader) s.orgReader = { selected: "" }; s.orgReader.selected = id; if (orgPreviewUrl) try { URL.revokeObjectURL(orgPreviewUrl) } catch (e) { } orgPreviewUrl = await objectUrlForFile(f); renderOrgReaderList(orgFiles, activeOrgProc); $("#procReaderPreview").innerHTML = await buildFilePreview(f, orgPreviewUrl, t) }
     function openProcessWindow(proc) { activeOrgProc = proc; activeOrgType = ""; activeOrgStatus = ""; $("#procTitle").textContent = proc; $("#procStorage").innerHTML = processStorage(proc); $("#procFolders").innerHTML = orgFolders(proc); $("#procPanel").classList.remove("h"); $("#procReaderList").innerHTML = `<div class="it"><b>Documents stockes</b><p>Charge le contenu du dossier <code>${esc(processRootPath(proc))}</code> pour lire les fichiers dans l'application.</p></div>`; $("#procReaderPreview").innerHTML = orgPreviewDefault(); scanOrgProc(proc); $("#procPanel").scrollIntoView({ behavior: "smooth", block: "start" }) }
     function closeProcessWindow() { $("#procPanel").classList.add("h"); activeOrgProc = ""; activeOrgType = ""; activeOrgStatus = "" }
-    function masterDocFromApi(x) { return normDoc({ id: x.id, ref: x.ref || x.reference_documentaire || "-", title: x.title || x.titre_document || x.fileName || "-", p: x.processName || x.processus || "-", type: x.docType || x.type_document || "-", v: x.versionLabel || x.version || "1.0", st: x.status || x.statut || "Brouillon", o: x.ownerName || x.responsable_redacteur || "-", verif: x.verifierName || x.verificateur || "-", app: x.approverName || x.approbateur || "-", review: String(x.modifiedAt || x.updatedAt || x.createdAt || "").slice(0, 10) || "-", diff: x.diffuserName || x.diffuseur || "-", store: x.storage || x.relPath || "MySQL / dossier Windows", url: x.webUrl || "", notes: x.notes || x.observation || "", fileName: x.fileName || "", cycle: x.cycleDocumentaire || x.cycle_documentaire || docCycleValue(x), updatedAt: x.updatedAt || x.modifiedAt || x.createdAt || "" }) }
+    function masterDocFromApi(x) {
+      if (String(x && x.id || "").startsWith("dms:")) return normDoc({ ...x, p: x.p || "-", type: x.type || "-", store: x.store || x.notes || "-", url: x.url || "", rootKey: x.rootKey || dmsMasterRoot(x.store || x.notes || "")[0], rootTitle: x.rootTitle || dmsMasterRoot(x.store || x.notes || "")[1] });
+      return normDoc({ id: x.id, ref: x.ref || x.reference_documentaire || "-", title: x.title || x.titre_document || x.fileName || "-", p: x.processName || x.processus || "-", type: x.docType || x.type_document || "-", v: x.versionLabel || x.version || "1.0", st: x.status || x.statut || "Brouillon", o: x.ownerName || x.responsable_redacteur || "-", verif: x.verifierName || x.verificateur || "-", app: x.approverName || x.approbateur || "-", review: String(x.modifiedAt || x.updatedAt || x.createdAt || "").slice(0, 10) || "-", diff: x.diffuserName || x.diffuseur || "-", store: x.storage || x.relPath || "MySQL / dossier Windows", url: x.webUrl || "", notes: x.notes || x.observation || "", fileName: x.fileName || "", cycle: x.cycleDocumentaire || x.cycle_documentaire || docCycleValue(x), updatedAt: x.updatedAt || x.modifiedAt || x.createdAt || "" })
+    }
+    const DMS_MASTER_ROOTS = [
+      ["manuel qualité", "Manuel qualité"],
+      ["Politique qualité", "Politique qualité"],
+      ["Procesus Operationnel", "Processus Opérationnel"],
+      ["Procesus Pilotage", "Processus Pilotage"],
+      ["Procesus support", "Processus support"]
+    ];
+    const DMS_MASTER_STEP_STATUS = { "1-créer": "Brouillon", "2-Vérifier": "En vérification", "3-Approuver": "Approuvé", "4-Réviser": "En correction", "5-Archiver": "Archivé", "6-Supprimer": "Supprimer" };
+    function dmsMasterNorm(value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() }
+    function dmsMasterRel(file) { return String((file && (file.relPath || file.path)) || "").replace(/\\/g, "/").replace(/^.*?DMS\/uploads\//i, "").replace(/^DMS\/uploads\//i, "").replace(/^\/+/, "") }
+    function dmsMasterRoot(rel) { const parts = String(rel || "").split("/").filter(Boolean), root = parts[0] || ""; return DMS_MASTER_ROOTS.find(x => dmsMasterNorm(x[0]) === dmsMasterNorm(root)) || [root, root || "Autres documents"] }
+    function dmsMasterStep(rel) { const parts = String(rel || "").split("/").filter(Boolean); return parts.find(x => DMS_MASTER_STEP_STATUS[x]) || "" }
+    function dmsMasterType(rel, fileName = "") { const parts = String(rel || "").split("/").filter(Boolean), found = parts.find(x => ["Procédure", "Procedure", "Instruction", "Formulaire", "Enregistrement"].some(t => dmsMasterNorm(t) === dmsMasterNorm(x))); if (found) return found === "Procedure" ? "Procédure" : found; const text = dmsMasterNorm(rel + " " + fileName); if (text.includes("manuel")) return "Manuel qualité"; if (text.includes("politique")) return "Politique qualité"; if (text.includes("instruction")) return "Instruction"; if (text.includes("formulaire") || /\bfo|fop|fpil|fsup/.test(text)) return "Formulaire"; if (text.includes("enregistrement")) return "Enregistrement"; return "Procédure" }
+    function dmsMasterProcess(rootLabel) { if (rootLabel === "Processus Opérationnel") return "Processus opérationnel"; if (rootLabel === "Processus Pilotage") return "Processus pilotage"; if (rootLabel === "Processus support") return "Processus support"; return rootLabel }
+    function dmsMasterRef(fileName, rel) { const clean = String(fileName || "").replace(/\.[^.]+$/, ""); const m = clean.match(/\b([A-Z]{1,5}[a-z]?[A-Za-z]*[- ]?\d{1,4})\b/); if (m) return m[1].replace(/\s+/g, "-"); const base = dmsMasterType(rel, fileName).slice(0, 3).toUpperCase().replace(/[ÉÈ]/g, "E"); return `${base}-${Math.abs(hashCode(rel || fileName))}`.slice(0, 18) }
+    function hashCode(value) { return String(value || "").split("").reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0) }
+    function masterDocFromDmsFile(file) {
+      const rel = dmsMasterRel(file), root = dmsMasterRoot(rel), step = dmsMasterStep(rel), fileName = file.name || rel.split("/").pop() || "document", url = "DMS/uploads/" + rel.split("/").map(encodeURIComponent).join("/");
+      return normDoc({ id: "dms:" + rel, ref: dmsMasterRef(fileName, rel), title: fileName.replace(/\.[^.]+$/, ""), p: dmsMasterProcess(root[1]), rootKey: root[0], rootTitle: root[1], type: dmsMasterType(rel, fileName), v: "1.0", st: DMS_MASTER_STEP_STATUS[step] || "Brouillon", o: "DMS", review: file.modified ? new Date(Number(file.modified) * 1000).toISOString().slice(0, 10) : "-", store: rel.split("/").slice(0, -1).join("/"), url, notes: rel, fileName, cycle: step || "-", updatedAt: file.modified ? new Date(Number(file.modified) * 1000).toISOString().replace("T", " ").slice(0, 19) : "-" })
+    }
     function docMasterParams() { const p = new URLSearchParams(), q = ($(`#ds`) && $(`#ds`).value.trim()) || "", pf = ($(`#dpf`) && $(`#dpf`).value) || "all", tf = ($(`#dtf`) && $(`#dtf`).value) || "all", f = ($(`#df`) && $(`#df`).value) || "all", vf = ($(`#dvf`) && $(`#dvf`).value.trim()) || "", cf = ($(`#dcf`) && $(`#dcf`).value) || "all", folder = ($(`#dff`) && $(`#dff`).value) || "all", showArchives = !!($(`#darchives`) && $(`#darchives`).checked); if (q) p.set("q", q); if (pf !== "all") p.set("processus", pf); if (tf !== "all") p.set("type", tf); if (f !== "all") p.set("statut", f); if (vf) p.set("version", vf); if (cf !== "all") p.set("cycle_documentaire", cf); if (folder !== "all") p.set("dossier", folder); if (showArchives || f === "Archivé" || f === "Archive" || cf === "Archives") p.set("include_archives", "1"); return p.toString() }
     function fillDocMasterFilters() { const docs = (docMasterState.documents || []).map(masterDocFromApi), opt = (id, base, vals) => { const el = $(`#${id}`); if (!el) return; const cur = el.value || "all", all = [...new Set([...base, ...vals.filter(Boolean)])]; el.innerHTML = [`<option value="all">${id === "dpf" ? "Tous les processus" : id === "dtf" ? "Tous les types" : "Tous les statuts"}</option>`, ...all.map(v => `<option value="${esc(v)}">${esc(v)}</option>`)].join(""); el.value = all.includes(cur) ? cur : "all" }; opt("dpf", DOC_PROCS, docs.map(x => x.p)); opt("dtf", DOC_TYPES, docs.map(x => x.type)); opt("df", CENTRAL_STATUS_OPTIONS, [...(docMasterState.statusOptions || []), ...docs.map(x => x.st)]); const folder = $(`#dff`); if (folder) { const cur = folder.value || "all", folders = [...new Set(docs.map(x => x.store).filter(Boolean))].sort((a, b) => a.localeCompare(b)); folder.innerHTML = [`<option value="all">Tous les dossiers</option>`, ...folders.map(v => `<option value="${esc(v)}">${esc(v)}</option>`)].join(""); folder.value = folders.includes(cur) ? cur : "all" } }
     function showWordCreator(type = "") { if (currentPage !== "docs") page("docs"); const panel = $("#wordCreatePanel"); if (!panel) return; panel.classList.remove("h"); if (type && $("#wordType")) $("#wordType").value = type; if ($("#wordStatus")) $("#wordStatus").value = "Brouillon"; if ($("#wordVersion") && !$("#wordVersion").value.trim()) $("#wordVersion").value = "1.0"; if ($("#wordOwner") && !$("#wordOwner").value.trim()) $("#wordOwner").value = (s.u && s.u.name) || ""; $("#wordTitle").focus(); sync(type ? "Modele selectionne : " + type : "Creation Word prete") }
     function hideWordCreator() { const panel = $("#wordCreatePanel"); if (panel) panel.classList.add("h") }
     async function createWordDocumentFromForm() { if (!requirePerm("Ajouter")) return; const title = $("#wordTitle").value.trim(), ref = $("#wordRef").value.trim(); if (!title || !ref) { sync("Renseigne le titre et la reference documentaire"); return } sync("CrÃ©ation du document..."); try { const res = await documentationApi("create_word_document.php", { method: "POST", body: { titre_document: title, reference_documentaire: ref, processus: $("#wordProcess").value, type_document: $("#wordType").value, version: $("#wordVersion").value.trim() || "1.0", statut: $("#wordStatus").value || "Brouillon", responsable_redacteur: $("#wordOwner").value.trim(), verificateur: $("#wordVerifier").value.trim(), approbateur: $("#wordApprover").value.trim(), diffuseur: $("#wordDiffuser").value.trim(), objectif: $("#wordScope").value.trim(), contenu: $("#wordContent").value.trim(), diffusion: $("#wordBroadcast").value.trim(), observation: $("#wordObservation").value.trim(), actorName: (s.u && s.u.name) || "Utilisateur" } }); clearFields(["#wordTitle", "#wordRef", "#wordOwner", "#wordVerifier", "#wordApprover", "#wordDiffuser", "#wordScope", "#wordBroadcast", "#wordContent", "#wordObservation"]); if ($("#wordVersion")) $("#wordVersion").value = "1.0"; if ($("#wordStatus")) $("#wordStatus").value = "Brouillon"; await refreshMasterDocuments("Document Word crÃ©Ã© avec succÃ¨s"); await refreshDocumentationCentral(); if (res && res.item) editDoc(res.item.id) } catch (e) { console.error(e); sync("Erreur lors de la crÃ©ation du document") } }
-    async function refreshMasterDocuments(notice) { docMasterState.loading = true; docMasterState.error = ""; const summary = $("#dSummary"); if (summary) { summary.classList.add("h"); delete summary.dataset.locked } docs(); try { const res = await documentationApi("get_documents.php?" + docMasterParams()); docMasterState.documents = Array.isArray(res.items) ? res.items : []; docMasterState.counts = res.counts || null; docMasterState.events = Array.isArray(res.events) ? res.events : []; docMasterState.statusOptions = Array.isArray(res.statusOptions) ? res.statusOptions : []; docMasterState.ready = true; docMasterState.syncedAt = now(); s.docs = docMasterState.documents.map(masterDocFromApi); fillDocMasterFilters(); docs(); if (notice) sync(notice) } catch (e) { console.error(e); docMasterState.error = e.message || "Chargement documentaire impossible"; sync(docMasterState.error); docs() } finally { docMasterState.loading = false } }
-    function docActions(x) { return `<div class="doc-row-actions"><button class="btn2 btn" data-dread="${x.id}">Lire</button><a class="btn2 btn" href="${esc(x.url || "#")}" download="${esc(x.fileName || "document")}">Telecharger</a><button class="btn2 btn" data-ddetail="${x.id}">Historique</button></div>` }
-    function filteredDocs() { const q = ($(`#ds`) && $(`#ds`).value.trim().toLowerCase()) || "", pf = ($(`#dpf`) && $(`#dpf`).value) || "all", tf = ($(`#dtf`) && $(`#dtf`).value) || "all", f = ($(`#df`) && $(`#df`).value) || "all", vf = ($(`#dvf`) && $(`#dvf`).value.trim().toLowerCase()) || "", cf = ($(`#dcf`) && $(`#dcf`).value) || "all", folder = ($(`#dff`) && $(`#dff`).value) || "all", all = (docMasterState.documents || []).map(masterDocFromApi), arr = all.filter(x => [x.ref, x.title, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.notes, x.cycle].join(" ").toLowerCase().includes(q) && (pf === "all" || x.p === pf) && (tf === "all" || x.type === tf) && (f === "all" || x.st === f || (centralDocIsArchived(f) && centralDocIsArchived(x.st))) && (!vf || String(x.v || "").toLowerCase().includes(vf)) && (cf === "all" || docFilterMatch(x.cycle || docCycleValue(x), cf)) && (folder === "all" || String(x.store || "").startsWith(folder))); return { all, arr } }
-    function docExportRows(arr) { return arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.title)}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td>${esc(x.st)}</td><td>${esc(x.cycle || docCycleValue(x))}</td><td>${esc(String(x.updatedAt || x.review || "-").slice(0, 19))}</td></tr>`).join("") : `<tr><td colspan="8">Aucun document.</td></tr>` }
-    function docExportHtml(arr, title = "Liste des documents") { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>${esc(title)}</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>${esc(title)}</h1><p><b>Date d edition :</b> ${esc(now())}<br><b>Nombre de documents :</b> ${arr.length}</p><table><thead><tr><th>Reference</th><th>Titre</th><th>Processus</th><th>Type</th><th>Version</th><th>Statut</th><th>Cycle</th><th>Derniere mise a jour</th></tr></thead><tbody>${docExportRows(arr)}</tbody></table></body></html>` }
+    async function refreshMasterDocuments(notice) { docMasterState.loading = true; docMasterState.error = ""; const summary = $("#dSummary"); if (summary) { summary.classList.add("h"); delete summary.dataset.locked } docs(); try { const res = await fetch("api/documentation/get_dms_files.php?_=" + Date.now(), { headers: { Accept: "application/json" } }).then(r => r.json()); if (!res.success) throw new Error(res.error || "Chargement DMS impossible"); docMasterState.documents = (Array.isArray(res.allFiles) ? res.allFiles : []).map(masterDocFromDmsFile); docMasterState.counts = null; docMasterState.events = []; docMasterState.statusOptions = Object.values(DMS_MASTER_STEP_STATUS); docMasterState.ready = true; docMasterState.syncedAt = now(); s.docs = docMasterState.documents.map(masterDocFromApi); fillDocMasterFilters(); docs(); if (notice) sync(notice) } catch (e) { console.error(e); docMasterState.error = e.message || "Chargement documentaire impossible"; sync(docMasterState.error); docs() } finally { docMasterState.loading = false } }
+    function docActions(x) { return `<div class="doc-row-actions"><button class="btn2 btn" data-dread="${esc(x.id)}">Lire</button><a class="btn2 btn" href="${esc(x.url || "#")}" download="${esc(x.fileName || "document")}">Télécharger</a><button class="btn2 btn" data-ddetail="${esc(x.id)}">Historique</button></div>` }
+    function filteredDocs() { const q = dmsMasterNorm(($(`#ds`) && $(`#ds`).value.trim()) || ""), pf = ($(`#dpf`) && $(`#dpf`).value) || "all", tf = ($(`#dtf`) && $(`#dtf`).value) || "all", f = ($(`#df`) && $(`#df`).value) || "all", vf = dmsMasterNorm(($(`#dvf`) && $(`#dvf`).value.trim()) || ""), cf = ($(`#dcf`) && $(`#dcf`).value) || "all", folder = ($(`#dff`) && $(`#dff`).value) || "all", all = (docMasterState.documents || []).map(masterDocFromApi), arr = all.filter(x => dmsMasterNorm([x.ref, x.title, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.notes, x.cycle].join(" ")).includes(q) && (pf === "all" || docFilterMatch(x.p, pf) || dmsMasterNorm(x.p) === dmsMasterNorm(pf)) && (tf === "all" || docFilterMatch(x.type, tf) || dmsMasterNorm(x.type) === dmsMasterNorm(tf)) && (f === "all" || docFilterMatch(x.st, f) || (centralDocIsArchived(f) && centralDocIsArchived(x.st))) && (!vf || dmsMasterNorm(x.v).includes(vf)) && (cf === "all" || docFilterMatch(x.cycle || docCycleValue(x), cf)) && (folder === "all" || dmsMasterNorm(x.store).startsWith(dmsMasterNorm(folder)))); return { all, arr } }
+    function docCycleClass(value) { const n = dmsMasterNorm(value); if (n.includes("creer") || n.includes("brouillon")) return "doc-cycle-create"; if (n.includes("verifier") || n.includes("verification")) return "doc-cycle-check"; if (n.includes("approuver") || n.includes("approuve")) return "doc-cycle-approve"; if (n.includes("reviser") || n.includes("correction")) return "doc-cycle-revise"; if (n.includes("archiver") || n.includes("archive")) return "doc-cycle-archive"; if (n.includes("supprimer") || n.includes("exclu")) return "doc-cycle-delete"; return "doc-cycle-create" }
+    function docCycleBadge(x) { const cycle = x.cycle || docCycleValue(x) || x.st || "-"; return `<span class="doc-cycle-badge ${docCycleClass(cycle)}">${esc(cycle)}</span>` }
+    function docExportRows(arr) { return arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.title)}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td>${esc(x.cycle || docCycleValue(x) || x.st || "-")}</td><td>${esc(String(x.updatedAt || x.review || "-").slice(0, 19))}</td></tr>`).join("") : `<tr><td colspan="7">Aucun document.</td></tr>` }
+    function docExportHtml(arr, title = "Liste des documents") { return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>${esc(title)}</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>${esc(title)}</h1><p><b>Date d'édition :</b> ${esc(now())}<br><b>Nombre de documents :</b> ${arr.length}</p><table><thead><tr><th>Référence</th><th>Titre</th><th>Processus</th><th>Type</th><th>Version</th><th>Cycle</th><th>Dernière mise à jour</th></tr></thead><tbody>${docExportRows(arr)}</tbody></table></body></html>` }
     function printDocsTable() { if (!requirePerm("Exporter")) return; const { arr } = filteredDocs(), html = docExportHtml(arr); const w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer la liste des documents"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Liste des documents prete a imprimer") }
     function downloadDocsTable() { if (!requirePerm("Exporter")) return; const { arr } = filteredDocs(); downloadText("liste_documents_" + stamp() + ".xls", docExportHtml(arr), "application/vnd.ms-excel;charset=utf-8"); sync("Liste des documents telechargee") }
-    function docs() { const { all, arr } = filteredDocs(); if ($("#dc")) $("#dc").textContent = docMasterState.loading ? "Chargement..." : arr.length + " document" + (arr.length > 1 ? "s" : ""); const summary = $("#dSummary"); if (summary && !summary.classList.contains("h") && !summary.dataset.locked) summary.innerHTML = all.length ? docSummary(all) : `<div class="e">Aucun document.</div>`; if ($("#dtab")) $("#dtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small>${esc(x.fileName || "")}</small></td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.cycle || docCycleValue(x))}</td><td>${esc(String(x.updatedAt || x.review || "-").slice(0, 19))}</td><td>${docActions(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">${docMasterState.error ? esc(docMasterState.error) : "Aucun document."}</td></tr>` }
+    function docMasterRowsByRoot(rootKey) { const { arr } = filteredDocs(); return arr.filter(x => dmsMasterNorm(x.rootKey || dmsMasterRoot(x.store || x.notes || "")[0]) === dmsMasterNorm(rootKey)) }
+    function docMasterRootTitle(rootKey) { const item = DMS_MASTER_ROOTS.find(x => dmsMasterNorm(x[0]) === dmsMasterNorm(rootKey)); return item ? item[1] : rootKey || "Liste des documents" }
+    function docSafeFileName(value) { return String(value || "liste_documents").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9_-]+/gi, "_").replace(/^_+|_+$/g, "") || "liste_documents" }
+    function printDocsList(rootKey) { if (!requirePerm("Exporter")) return; const title = "Liste des documents - " + docMasterRootTitle(rootKey), html = docExportHtml(docMasterRowsByRoot(rootKey), title), w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer cette liste"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Liste prete a imprimer : " + docMasterRootTitle(rootKey)) }
+    function downloadDocsList(rootKey) { if (!requirePerm("Exporter")) return; const title = docMasterRootTitle(rootKey), rows = docMasterRowsByRoot(rootKey); downloadText(docSafeFileName(title) + "_" + stamp() + ".xls", docExportHtml(rows, "Liste des documents - " + title), "application/vnd.ms-excel;charset=utf-8"); sync("Liste telechargee : " + title) }
+    function docMasterRow(x) { return `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small>${esc(x.fileName || "")}</small></td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td>${docCycleBadge(x)}</td><td>${esc(String(x.updatedAt || x.review || "-").slice(0, 19))}</td></tr>` }
+    function docMasterTable(title, rows, rootKey) {
+      return `<section class="dms-master-table-card"><div class="dms-master-table-head"><div class="dms-master-table-title"><h3>${esc(title)}</h3><span class="bl">${rows.length}</span></div><div class="dms-master-table-actions"><button class="btn2 btn" type="button" data-dlist-print="${esc(rootKey)}">Imprimer</button><button class="btn2 btn" type="button" data-dlist-download="${esc(rootKey)}">Télécharger</button></div></div><div class="tb"><table><thead><tr><th>Référence</th><th>Titre</th><th>Processus</th><th>Type</th><th>Version</th><th>Cycle</th><th>Dernière mise à jour</th></tr></thead><tbody>${rows.length ? rows.map(docMasterRow).join("") : `<tr><td colspan="7" class="e">Aucun document dans ce dossier.</td></tr>`}</tbody></table></div></section>`
+    }
+    function docs() { const { all, arr } = filteredDocs(); if ($("#dc")) $("#dc").textContent = docMasterState.loading ? "Chargement..." : arr.length + " document" + (arr.length > 1 ? "s" : ""); const summary = $("#dSummary"); if (summary && !summary.classList.contains("h") && !summary.dataset.locked) summary.innerHTML = all.length ? docSummary(all) : `<div class="e">Aucun document.</div>`; const container = $("#dmsMasterTables"); if (container) { container.innerHTML = docMasterState.error ? `<div class="card e">${esc(docMasterState.error)}</div>` : DMS_MASTER_ROOTS.map(root => docMasterTable(root[1], arr.filter(x => dmsMasterNorm(x.rootKey || dmsMasterRoot(x.store || x.notes || "")[0]) === dmsMasterNorm(root[0])), root[0])).join("") } if ($("#dtab")) $("#dtab").innerHTML = arr.length ? arr.map(docMasterRow).join("") : `<tr><td colspan="7" class="e">${docMasterState.error ? esc(docMasterState.error) : "Aucun document."}</td></tr>` }
     function orgDocActions(x) { return `<div class="doc-row-actions"><button class="btn2 btn" data-odreview="${x.id}">Verification</button><button class="btn2 btn" data-odapprove="${x.id}">Approbation</button><button class="btn2 btn" data-oddiffuse="${x.id}">Diffuser</button><button class="btn2 btn" data-odcorrect="${x.id}">Correction</button><button class="btn2 btn" data-oddetail="${x.id}">Fiche</button><button class="btn2 btn" data-odread="${x.id}">Lire</button><button class="btn3 btn" data-odarchive="${x.id}">Archiver</button><button class="btn3 btn" data-odd="${x.id}">Supprimer</button></div>` }
     function orgDocsView() { s.orgDocs = (s.orgDocs || c(D.orgDocs)).map(normDoc); const q = ($("#ods")?.value || "").trim().toLowerCase(), pf = $("#odpf")?.value || "all", tf = $("#odtf")?.value || "all", cf = ($("#odcycle")?.value) || "all", f = $("#odf")?.value || "all", all = s.orgDocs, arr = all.filter(x => [x.ref, x.title, x.ie, x.p, x.type, x.o, x.store, x.url, x.verif, x.app, x.diff, x.body].join(" ").toLowerCase().includes(q) && docFilterMatch(x.p, pf) && docFilterMatch(x.type, tf) && docFilterMatch(x.st, f)); const centralDocs = (docCentralState.documents || []).filter(x => { const hay = [x.ref, x.title, x.relPath, x.fileName, x.notes].join(" ").toLowerCase(), statusMatches = f === "all" || docFilterMatch(x.status, f) || (centralDocIsArchived(f) && centralDocIsArchived(x.status)); return hay.includes(q) && docFilterMatch(x.processName || x.relPath, pf) && docFilterMatch(x.docType, tf) && docFilterMatch(docCycleValue(x), cf) && statusMatches }); const foundCount = docCentralState.libraryFilter === "folderMissing" ? (docCentralState.folders || []).filter(x => x.status === "Dossier introuvable" || Number(x.active) === 0).length : centralDocs.length; $("#odc").textContent = foundCount + " document" + (foundCount > 1 ? "s" : "") + " trouvÃ©" + (foundCount > 1 ? "s" : ""); $("#odTopDocs").innerHTML = topDocCards(); $("#odModels").innerHTML = templateCards(); $("#odFlow").innerHTML = orgWorkflowCards(all); $("#odImported").innerHTML = orgImportedList(all); const summary = $("#odSummary"); if (summary && !summary.innerHTML.trim()) clearOrgSummaryContent(); if ($("#odServerInfo")) $("#odServerInfo").innerHTML = docCentralServerHtml(); if ($("#odHierarchyPreview")) $("#odHierarchyPreview").innerHTML = docCentralProcessFolders().map((x, i) => `<div class="it"><b>Niveau ${i + 1}</b><p>${esc(x)}</p></div>`).join(""); if ($("#odCentralSummary")) $("#odCentralSummary").innerHTML = docCentralSummaryCards(centralDocs); if ($("#odCentralTableTitle")) $("#odCentralTableTitle").textContent = docCentralTableTitle(); if ($("#odCleanupPanel")) { $("#odCleanupPanel").classList.toggle("h", !docCentralState.cleanupVisible); $("#odCleanupPanel").innerHTML = docCentralCleanupHtml() } if ($("#odCentralRealtime")) $("#odCentralRealtime").innerHTML = docCentralRealtimeHtml(); if ($("#odCentralMatrix")) $("#odCentralMatrix").innerHTML = docCentralOrganizationMatrixHtml(centralDocs); if ($("#odCentralFolders")) $("#odCentralFolders").innerHTML = docCentralFolderCards(); if ($("#odCentralEvents")) $("#odCentralEvents").innerHTML = docCentralEventsHtml(); if ($("#odCentralFileMeta")) $("#odCentralFileMeta").innerHTML = docCentralFileMetaHtml(); if ($("#odCentralImportResult")) $("#odCentralImportResult").innerHTML = docCentralImportResultHtml(); if ($("#odCentralTable")) $("#odCentralTable").innerHTML = docCentralTableRows(); $("#odtab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.title)}</b><br><small></small>${orgDocActions(x)}</td><td>${esc(x.ie || "-")}</td><td>${esc(x.p)}</td><td>${esc(x.type)}</td><td>${esc(x.v)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.o || "-")}<br>${esc(x.verif || "-")}<br>${esc(x.app || "-")}</td><td>${storageCell(x)}</td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun document organisme.</td></tr>`; if (activeOrgProc && $("#procPanel") && !$("#procPanel").classList.contains("h")) openProcessWindow(activeOrgProc) }
     function eqItem(x) { return { ...x, dom: x.dom || x.domain || x.domaine || "-", n: x.n || x.designation || "-", brand: x.brand || x.b || x.marque || "-", m: x.m || x.model || x.modele || "-", sn: x.sn || x.serial || x.serie || "-", code: x.code || x.id || "-", l: x.l || x.start || x.mise || "-", st: x.st || "Valide" } }
@@ -14532,7 +14995,7 @@
     function diagField(e) { const t = e.target; if (t.matches("[data-diag]")) saveDiag(t.dataset.diag, t.value); if (t.matches("[data-dnote]")) { saveDiagNote(t.dataset.dnote, t.value); render() } if (t.id === "diagPerson" || t.id === "diagDate") saveDiagMeta() }
     function act(e) { const da = e.target.closest("[data-da]"), doo = e.target.closest("[data-do]"), dd = e.target.closest("[data-dd]"), oda = e.target.closest("[data-oda]"), odo = e.target.closest("[data-odo]"), odd = e.target.closest("[data-odd]"), op = e.target.closest("[data-oproc]"), orgpick = e.target.closest("[data-orgpick]"), orgscan = e.target.closest("[data-orgscan]"), orgf = e.target.closest("[data-orgf]"), orgReqImport = e.target.closest("[data-orgreq-import]"), orgReqRead = e.target.closest("[data-orgreq-read]"), ee = e.target.closest("[data-ee]"), et = e.target.closest("[data-et]"), ed = e.target.closest("[data-ed]"), ne = e.target.closest("[data-ne]"), nt = e.target.closest("[data-nt]"), nd = e.target.closest("[data-nd]"), ae = e.target.closest("[data-ae]"), at = e.target.closest("[data-at]"), acreatenc = e.target.closest("[data-acreatenc]"), ad = e.target.closest("[data-ad]"), rt = e.target.closest("[data-rt]"), rd = e.target.closest("[data-rd]"), ud = e.target.closest("[data-ud]"), rf = e.target.closest("[data-rf]"); if ((da || oda) && !requirePerm("Valider")) return; if ((doo || odo || ee || et || ne || nt || ae || at || acreatenc || rt) && !requirePerm("Modifier")) return; if ((dd || odd || ed || nd || ad || rd || ud) && !requirePerm("Supprimer")) return; if (op) openProcessWindow(op.dataset.oproc); if (orgpick) { activeOrgType = orgpick.dataset.otype || activeOrgType; activeOrgStatus = orgpick.dataset.ost || activeOrgStatus; chooseOrgDir() } if (orgscan && activeOrgProc) { activeOrgType = orgscan.dataset.otype || activeOrgType; activeOrgStatus = orgscan.dataset.ost || activeOrgStatus; scanOrgProc(activeOrgProc) } if (orgf) openOrgFile(orgf.dataset.orgf); if (orgReqImport) pickReqDoc(orgReqImport.dataset.orgreqImport); if (orgReqRead) readReqDoc(orgReqRead.dataset.orgreqRead); if (da) { let x = s.docs.find(v => v.id == da.dataset.da); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Documents", x.ref + " valide"); save("Document valide"); render() } } if (doo) { let x = s.docs.find(v => v.id == doo.dataset.do); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Documents", x.ref + " obsolete"); save("Document obsolete"); render() } } if (dd) { let x = s.docs.find(v => v.id == dd.dataset.dd); if (x) { s.docs = s.docs.filter(v => v.id != dd.dataset.dd); log("Suppression", "Documents", x.ref + " supprime"); save("Document supprime"); render() } } if (oda) { let x = (s.orgDocs || []).find(v => v.id == oda.dataset.oda); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Document organisme", x.ref + " valide"); save("Document organisme valide"); render() } } if (odo) { let x = (s.orgDocs || []).find(v => v.id == odo.dataset.odo); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Document organisme", x.ref + " obsolete"); save("Document organisme obsolete"); render() } } if (odd) { let x = (s.orgDocs || []).find(v => v.id == odd.dataset.odd); if (x) { s.orgDocs = s.orgDocs.filter(v => v.id != odd.dataset.odd); log("Suppression", "Document organisme", x.ref + " supprime"); save("Document organisme supprime"); render() } } if (ee) editEq(ee.dataset.ee); if (et) { let x = s.eq.find(v => String((v.code || v.id)) == String(et.dataset.et)); if (x) { x.st = x.st === "Valide" ? "A etalonner" : x.st === "A etalonner" ? "Hors service" : "Valide"; markSaved(x); log("Mise a jour", "Equipements", (x.code || x.id) + " -> " + x.st); save("Equipement mis a jour"); render() } } if (ed) { let x = s.eq.find(v => String((v.code || v.id)) == String(ed.dataset.ed)); if (x) { s.eq = s.eq.filter(v => String((v.code || v.id)) != String(ed.dataset.ed)); if (editingEqId === String(ed.dataset.ed)) resetEqForm(); log("Suppression", "Equipements", (x.code || x.id) + " supprime"); save("Equipement supprime"); render() } } if (ne) editNc(ne.dataset.ne); if (nt) { let x = s.nc.find(v => v.ref == nt.dataset.nt); x.st = x.st === "Ouverte" ? "En cours" : "Cloturee"; markSaved(x); log("Mise a jour", "NC", x.ref + " -> " + x.st); save("NC mise a jour"); render() } if (nd) { let x = s.nc.find(v => v.ref == nd.dataset.nd); if (x) { s.nc = s.nc.filter(v => v.ref != nd.dataset.nd); log("Suppression", "NC", x.ref + " supprimee"); save("NC supprimee"); render() } } if (ae) editAud(ae.dataset.ae); if (acreatenc) { const nc = createNcFromAudit(acreatenc.dataset.acreatenc); if (nc) { page("nc"); sync("NC creee depuis audit : " + nc.ref); render() } } if (at) { let x = s.aud.find(v => v.ref == at.dataset.at); if (x) { x.st = x.st === "Planifie" ? "En cours" : x.st === "En cours" ? "Realise" : "Cloture"; if (x.st === "Realise") createNcFromAudit(x.ref); markSaved(x); log("Mise a jour", "Audits", x.ref + " -> " + x.st); save("Audit mis a jour"); render() } } if (ad) { let x = s.aud.find(v => v.ref == ad.dataset.ad); if (x) { s.aud = s.aud.filter(v => v.ref != ad.dataset.ad); log("Suppression", "Audits", x.ref + " supprime"); save("Audit supprime"); render() } } if (rt) { let x = (s.revc || []).find(v => v.ref == rt.dataset.rt); if (x) { x.st = x.st === "A revoir" ? "En attente client" : x.st === "En attente client" ? "Approuvee" : "Approuvee"; markSaved(x); log("Mise a jour", "Liste client", x.ref + " -> " + x.st); save("Liste client mise a jour"); render() } } if (rd) { let x = (s.revc || []).find(v => v.ref == rd.dataset.rd); if (x) { s.revc = s.revc.filter(v => v.ref != rd.dataset.rd); if (editingRevcId === x.ref) resetRevcForm(); log("Suppression", "Liste client", x.ref + " supprime"); save("Liste client supprime"); render() } } if (ud) { let x = (s.usr || []).map(normalizeUserAccount).find(v => v.email == ud.dataset.ud); if (x) { if (x.pilot) { sync("Le compte pilote principal ne peut pas etre supprime depuis ce module"); return } if (authNormEmail((s.u && s.u.email) || "") === authNormEmail(x.email)) { sync("Le compte connecte ne peut pas etre supprime pendant la session"); return } s.usr = s.usr.filter(v => authNormEmail(v.email) != authNormEmail(ud.dataset.ud)); log("Suppression", "Utilisateurs", x.email + " supprime"); save("Utilisateur supprime"); render() } } if (rf) openRepoFile(rf.dataset.rf) }
     async function updateMasterDocumentStatus(id, status) { if (!requirePerm("Modifier")) return; try { await documentationApi("update_document.php", { method: "POST", body: { id, statut: status, actorName: (s.u && s.u.name) || "Utilisateur" } }); await refreshMasterDocuments("Statut documentaire mis a jour : " + status); if (docCentralState.ready) await refreshDocumentationCentral() } catch (e) { console.error(e); sync(e.message || "Changement de statut impossible") } }
-    function docAct(e) { const ddetail = e.target.closest("[data-ddetail]"), dread = e.target.closest("[data-dread]"), dedit = e.target.closest("[data-dedit]"), dstatus = e.target.closest("[data-dstatus]"); if (!ddetail && !dread && !dedit && !dstatus) return; if (dedit) editDoc(dedit.dataset.dedit); if (dstatus) updateMasterDocumentStatus(dstatus.dataset.dstatus, dstatus.dataset.dnext); if (ddetail) { const x = (docMasterState.documents || []).map(masterDocFromApi).find(v => String(v.id) === String(ddetail.dataset.ddetail)), summary = $("#dSummary"); if (x && summary) { summary.classList.remove("h"); summary.dataset.locked = "1"; summary.innerHTML = docDetail(x) } else if (x) sync("Fiche document disponible depuis le tableau principal") } if (dread) { if (!requirePerm("Telecharger")) return; const x = (docMasterState.documents || []).map(masterDocFromApi).find(v => String(v.id) === String(dread.dataset.dread)); if (x && x.url) window.open(x.url, "_blank"); else sync("Aucun lien fichier associe a ce document") } }
+    function docAct(e) { const ddetail = e.target.closest("[data-ddetail]"), dread = e.target.closest("[data-dread]"), dedit = e.target.closest("[data-dedit]"), dstatus = e.target.closest("[data-dstatus]"), listPrint = e.target.closest("[data-dlist-print]"), listDownload = e.target.closest("[data-dlist-download]"); if (!ddetail && !dread && !dedit && !dstatus && !listPrint && !listDownload) return; if (listPrint) { printDocsList(listPrint.dataset.dlistPrint); return } if (listDownload) { downloadDocsList(listDownload.dataset.dlistDownload); return } const docs = (docMasterState.documents || []).map(masterDocFromApi); if (dedit) editDoc(dedit.dataset.dedit); if (dstatus) updateMasterDocumentStatus(dstatus.dataset.dstatus, dstatus.dataset.dnext); if (ddetail) { const x = docs.find(v => String(v.id) === String(ddetail.dataset.ddetail)), summary = $("#dSummary"); if (x && summary) { summary.classList.remove("h"); summary.dataset.locked = "1"; summary.innerHTML = docDetail(x) } else if (x) sync("Fiche document disponible depuis le tableau principal") } if (dread) { if (!requirePerm("Telecharger")) return; const x = docs.find(v => String(v.id) === String(dread.dataset.dread)); if (x && x.url) window.open(x.url, "_blank"); else sync("Aucun lien fichier associe a ce document") } }
     function orgDocAct(e) { const review = e.target.closest("[data-odreview]"), approve = e.target.closest("[data-odapprove]"), diffuse = e.target.closest("[data-oddiffuse]"), correct = e.target.closest("[data-odcorrect]"), detail = e.target.closest("[data-oddetail]"), read = e.target.closest("[data-odread]"), archive = e.target.closest("[data-odarchive]"), tpl = e.target.closest("[data-odtemplate]"), edit = e.target.closest("[data-odedit]"), topPrepare = e.target.closest("[data-odtop-prepare]"), topUpload = e.target.closest("[data-odtop-upload]"), view = e.target.closest("[data-odview]"), cOpen = e.target.closest("[data-odcentral-open]"), cRead = e.target.closest("[data-odcentral-read]"), cDetail = e.target.closest("[data-odcentral-detail]"), cEdit = e.target.closest("[data-odcentral-edit]"), cArchive = e.target.closest("[data-odcentral-archive]"), cExclude = e.target.closest("[data-odcentral-exclude]"), cRestore = e.target.closest("[data-odcentral-restore]"), cDelete = e.target.closest("[data-odcentral-delete]"), cDeleteApp = e.target.closest("[data-odcentral-delete-app]"), cDeletePermanent = e.target.closest("[data-odcentral-delete-permanent]"), cNewVersion = e.target.closest("[data-odcentral-new-version]"), cLocation = e.target.closest("[data-odcentral-location]"), cStatus = e.target.closest("[data-odcentral-status]"), cleanupSelectAll = e.target.closest("[data-odcleanup-select-all]"), cleanupBulk = e.target.closest("[data-odcleanup-bulk]"), cleanupClose = e.target.closest("[data-odcleanup-close]"); if (!review && !approve && !diffuse && !correct && !detail && !read && !archive && !tpl && !edit && !topPrepare && !topUpload && !view && !cOpen && !cRead && !cDetail && !cEdit && !cArchive && !cExclude && !cRestore && !cDelete && !cDeleteApp && !cDeletePermanent && !cNewVersion && !cLocation && !cStatus && !cleanupSelectAll && !cleanupBulk && !cleanupClose) return; if (view) openDocTemplate(view.dataset.odview); if (edit) openDocTemplate(edit.dataset.odedit); if (topPrepare) prepareTopPyramidDocument(topPrepare.dataset.odtopPrepare, false); if (topUpload) prepareTopPyramidDocument(topUpload.dataset.odtopUpload, false); if (tpl) showWordCreator(tpl.dataset.odtemplate); if (review) setOrgDocStatus(review.dataset.odreview, "En revue", "Envoi pour verification"); if (approve) setOrgDocStatus(approve.dataset.odapprove, "Approuve", "Approbation"); if (diffuse) setOrgDocStatus(diffuse.dataset.oddiffuse, "Diffuse", "Diffusion"); if (correct) setOrgDocStatus(correct.dataset.odcorrect, "A corriger", "Demande de correction"); if (archive) setOrgDocStatus(archive.dataset.odarchive, "Archive", "Archivage"); if (detail) { const x = (s.orgDocs || []).find(v => v.id == detail.dataset.oddetail); if (x) setOrgSummaryContent(`<div class="card">${orgDocDetail(normDoc(x))}</div>`) } if (read) { if (!requirePerm("Telecharger")) return; const x = (s.orgDocs || []).find(v => v.id == read.dataset.odread); if (x) readOrgDocFile(x); else sync("Aucun document selectionne") } if (cOpen) openDocumentationCentralDocument(cOpen.dataset.odcentralOpen); if (cRead) readDocumentationCentralDocument(cRead.dataset.odcentralRead); if (cDetail) revealDocumentationCentralDocument(cDetail.dataset.odcentralDetail); if (cEdit) loadDocumentationCentralIntoForm(cEdit.dataset.odcentralEdit); if (cArchive) archiveDocumentationCentralFile(cArchive.dataset.odcentralArchive); if (cExclude) excludeDocumentationCentralFile(cExclude.dataset.odcentralExclude); if (cRestore) restoreDocumentationCentralFile(cRestore.dataset.odcentralRestore); if (cDelete || cDeleteApp) deleteDocumentationCentralDocument((cDeleteApp || cDelete).dataset.odcentralDeleteApp || (cDeleteApp || cDelete).dataset.odcentralDelete); if (cDeletePermanent) permanentlyDeleteDocumentationCentralDocument(cDeletePermanent.dataset.odcentralDeletePermanent); if (cNewVersion) createDocumentationCentralNewVersion(cNewVersion.dataset.odcentralNewVersion); if (cLocation) revealDocumentationCentralDocument(cLocation.dataset.odcentralLocation); if (cStatus) updateDocumentationCentralStatus(cStatus.dataset.odcentralStatus, cStatus.dataset.odcentralNext); if (cleanupSelectAll) setCleanupSelection(true); if (cleanupBulk) bulkCleanupDocumentation(cleanupBulk.dataset.odcleanupBulk); if (cleanupClose) { docCentralState.cleanupVisible = false; render() } }
     function exp() { const b = new Blob([JSON.stringify(s, null, 2)], { type: "application/json" }), u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = "QUALI-export.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); sync("Export genere") }
     function imp(f) { if (!f) return; const r = new FileReader(); r.onload = () => { try { s = { ...c(D), ...JSON.parse(r.result) }; log("Importation", "Systeme", "Importation JSON"); save("Importation terminee"); render() } catch (e) { sync("Importation echouee") } }; r.readAsText(f) }
@@ -14689,6 +15152,109 @@
     restoreRepo();
     restoreOrgDir();
 
+  </script>
+  <script>
+    (() => {
+      const exactText = new Map([
+        ["Maitrise documentaire", "Maîtrise documentaire"],
+        ["Parametres", "Paramètres"],
+        ["Reclamation client", "Réclamation client"],
+        ["Telecharger", "Télécharger"],
+        ["Telephone", "Téléphone"],
+        ["Reference", "Référence"],
+        ["New", "Nouveau"]
+      ]);
+
+      const replacements = [
+        [/Ã©/g, "é"], [/Ã¨/g, "è"], [/Ãª/g, "ê"], [/Ã«/g, "ë"],
+        [/Ã /g, "à"], [/Ã¢/g, "â"], [/Ã®/g, "î"], [/Ã´/g, "ô"],
+        [/Ã¹/g, "ù"], [/Ã»/g, "û"], [/Ã§/g, "ç"], [/Ã‰/g, "É"],
+        [/Â°/g, "°"], [/Â·/g, " - "], [/Â/g, ""],
+        [/â€™/g, "’"], [/â€œ/g, "“"], [/â€/g, "”"],
+        [/Maitrise/g, "Maîtrise"], [/Parametres/g, "Paramètres"],
+        [/Reclamation/g, "Réclamation"], [/reclamation/g, "réclamation"],
+        [/Telecharger/g, "Télécharger"], [/Telephone/g, "Téléphone"],
+        [/Reference/g, "Référence"], [/equipements/g, "équipements"],
+        [/Equipements/g, "Équipements"], [/non-conformites/g, "non-conformités"],
+        [/actualisee/g, "actualisée"], [/synchronisee/g, "synchronisée"],
+        [/selectionne/g, "sélectionné"], [/selectionnee/g, "sélectionnée"],
+        [/enregistree/g, "enregistrée"], [/enregistre/g, "enregistré"],
+        [/supprime/g, "supprimé"], [/CrÃ©er/g, "Créer"], [/Creer/g, "Créer"],
+        [/cree/g, "créé"], [/creer/g, "créer"], [/Approuve/g, "Approuvé"],
+        [/Diffuse/g, "Diffusé"], [/Archive/g, "Archivé"],
+        [/Procedure/g, "Procédure"], [/En verification/g, "En vérification"],
+        [/DerniÃ¨re/g, "Dernière"], [/Derniere/g, "Dernière"],
+        [/DÃ©pÃ´t/g, "Dépôt"], [/Depot/g, "Dépôt"],
+        [/Aucun element/g, "Aucun élément"], [/TÃ©lÃ©charger/g, "Télécharger"],
+        [/RÃ©initialiser/g, "Réinitialiser"], [/RÃ©fÃ©rence/g, "Référence"],
+        [/NumÃ©ro/g, "Numéro"], [/RÃ©dacteur/g, "Rédacteur"],
+        [/VÃ©rificateur/g, "Vérificateur"], [/rÃ©sumÃ©/g, "résumé"],
+        [/qualitÃ©/g, "qualité"], [/QualitÃ©/g, "Qualité"],
+        [/opÃ©rationnel/g, "opérationnel"], [/accÃ¨s/g, "accès"],
+        [/liÃ©/g, "lié"], [/gÃ©nÃ©rales/g, "générales"],
+        [/identifiÃ©/g, "identifié"], [/Ã‰valuation/g, "Évaluation"],
+        [/probabilitÃ©/g, "probabilité"], [/gravitÃ©/g, "gravité"],
+        [/frÃ©quence/g, "fréquence"], [/rÃ©sultats/g, "résultats"],
+        [/systÃ¨me/g, "système"], [/donnÃ©es/g, "données"],
+        [/opportunitÃ©s/g, "opportunités"], [/rÃ©aliser/g, "réaliser"],
+        [/Ãªtre/g, "être"], [/tÃ©lÃ©phone/g, "téléphone"],
+        [/oubliÃ©/g, "oublié"], [/DÃ©connexion/g, "Déconnexion"],
+        [/NÃ‚Â°/g, "N°"], [/NÂ°/g, "N°"]
+      ];
+
+      const menuIcons = { db: "TB", docs: "MD", eq: "EQ", nc: "NC", aud: "AU", usr: "US", set: "PA", diag: "DI", repo: "DP", docorg: "DO" };
+      const attrs = ["placeholder", "title", "aria-label", "value"];
+
+      function cleanText(value) {
+        if (!value || !/[ÃÂâ]|Maitrise|Parametres|Reclamation|Telecharger|Telephone|Reference|New/.test(value)) return value;
+        if (exactText.has(value.trim())) return value.replace(value.trim(), exactText.get(value.trim()));
+        return replacements.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), value);
+      }
+
+      function cleanInterface(root = document.body) {
+        Object.entries(menuIcons).forEach(([key, label]) => {
+          const icon = document.querySelector(`[data-p="${key}"] .menu-ico`);
+          if (icon) icon.textContent = label;
+        });
+
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+          acceptNode(node) {
+            const parent = node.parentElement;
+            return parent && !parent.closest("script,style,textarea") ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+          }
+        });
+
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(node => {
+          const next = cleanText(node.nodeValue);
+          if (next !== node.nodeValue) node.nodeValue = next;
+        });
+
+        root.querySelectorAll("*").forEach(el => {
+          attrs.forEach(attr => {
+            if (!el.hasAttribute(attr)) return;
+            const current = el.getAttribute(attr);
+            const next = cleanText(current);
+            if (next !== current) el.setAttribute(attr, next);
+          });
+        });
+      }
+
+      let scheduled = false;
+      function scheduleClean() {
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(() => {
+          scheduled = false;
+          cleanInterface();
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", scheduleClean);
+      window.addEventListener("load", scheduleClean);
+      new MutationObserver(scheduleClean).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+    })();
   </script>
 </body>
 

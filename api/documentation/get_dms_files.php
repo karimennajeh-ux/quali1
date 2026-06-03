@@ -13,19 +13,6 @@ if (!$dmsPath || !is_dir($dmsPath)) {
     exit;
 }
 
-$lifecycleFolders = ['Vérifier', 'Approuver', 'Diffuser', 'Utiliser', 'Réviser', 'Archiver', 'Supprimer'];
-foreach (scandir($dmsPath) ?: [] as $dir) {
-    if ($dir === '.' || $dir === '..') continue;
-    $fullPath = $dmsPath . DIRECTORY_SEPARATOR . $dir;
-    if (!is_dir($fullPath) || in_array($dir, $lifecycleFolders, true)) continue;
-    foreach ($lifecycleFolders as $cycleFolder) {
-        $cyclePath = $fullPath . DIRECTORY_SEPARATOR . $cycleFolder;
-        if (!is_dir($cyclePath)) {
-            mkdir($cyclePath, 0755, true);
-        }
-    }
-}
-
 function getFileInfo($filePath) {
     $info = [
         'name' => basename($filePath),
