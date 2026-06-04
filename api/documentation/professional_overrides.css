@@ -1,0 +1,512 @@
+/*
+ * QUALI professional palette overrides.
+ * ISO / quality / document-management theme applied globally without changing
+ * existing markup or behavior.
+ */
+
+:root {
+  --quali-primary: #2563EB;
+  --quali-primary-dark: #1E3A8A;
+  --quali-primary-soft: #EFF6FF;
+  --quali-success: #16A34A;
+  --quali-success-soft: #ECFDF5;
+  --quali-warning: #F59E0B;
+  --quali-warning-soft: #FFFBEB;
+  --quali-danger: #DC2626;
+  --quali-danger-soft: #FEF2F2;
+  --quali-page: #F8FAFC;
+  --quali-surface: #FFFFFF;
+  --quali-surface-muted: #F1F5F9;
+  --quali-border: #CBD5E1;
+  --quali-border-soft: #E2E8F0;
+  --quali-text: #334155;
+  --quali-muted: #64748B;
+  --quali-heading: #1E3A8A;
+  --quali-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+}
+
+html,
+body,
+.main,
+.module-content,
+.doc-sharepoint-container,
+.module-shell,
+#hub,
+section.row {
+  background: var(--quali-page) !important;
+  background-image: none !important;
+  color: var(--quali-text) !important;
+}
+
+/* Remove decorative premium layers while preserving layout. */
+#hub::before,
+#hub::after,
+#hub .hub-app-head::before,
+#hub .hub-app-head::after,
+.module-shell::before,
+.module-shell::after,
+.module-shell .hub-app-head::before,
+.module-shell .hub-app-head::after,
+.intro-stage::before,
+.intro-stage::after,
+.intro-card::before,
+.intro-card::after {
+  display: none !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+.module-page-title,
+#pt,
+.card h3,
+.doc-toolbar-left h2,
+.dms-master-toolbar-title h3,
+.dms-master-table-head h3,
+.doc-proc-head h3 {
+  color: var(--quali-heading) !important;
+}
+
+.mut,
+small,
+label {
+  color: var(--quali-muted) !important;
+}
+
+a {
+  color: var(--quali-primary) !important;
+}
+
+/* Surfaces */
+.top,
+.card,
+.authbox,
+.tb,
+.bar,
+.doc-toolbar,
+.doc-table-wrapper,
+.dms-table-wrapper,
+.dms-tree,
+.dms-master-toolbar,
+.dms-master-path-card,
+.dms-master-table-card,
+.doc-panel,
+.doc-block,
+.doc-central-card,
+.profile-menu,
+.notif-menu,
+.modal-card,
+.dms-modal-content,
+.doc-permissions-panel,
+.hub-app-head,
+#hub .hub-app-head,
+.module-shell .hub-app-head,
+.intro-card,
+.k-card,
+.dash-hero,
+.dash-card,
+.risk-card,
+.stat-card,
+.folder-item,
+.subfolder,
+.it {
+  background: var(--quali-surface) !important;
+  background-image: none !important;
+  border: 1px solid var(--quali-border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--quali-shadow) !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+.card,
+.tb,
+.bar,
+.doc-toolbar,
+.dms-master-toolbar,
+.dms-master-path-card,
+.dms-master-table-card {
+  padding: 14px !important;
+}
+
+.main,
+.row,
+.doc-sharepoint-container,
+.dms-master-tables {
+  gap: 14px !important;
+}
+
+/* Header, sidebar and navigation */
+.hub-app-head {
+  min-height: 62px !important;
+  padding: 10px 14px !important;
+  border-top: 3px solid var(--quali-primary-dark) !important;
+}
+
+.nav,
+#nav,
+.side,
+.module-rail,
+.hub-top-actions {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.nav button,
+#nav button,
+.module-rail button,
+.hub-action-icon,
+.back-btn {
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+.nav .on,
+#nav button.on,
+.module-rail button.on,
+.hub-action-icon:hover,
+.back-btn:hover {
+  background: var(--quali-primary-soft) !important;
+  border-color: #BFDBFE !important;
+  color: var(--quali-primary-dark) !important;
+}
+
+.logo-header,
+.brand-logo,
+.auth-logo {
+  filter: none !important;
+}
+
+/* Buttons */
+.btn,
+.btn2,
+.btn3,
+.lbtn,
+.btn-primary,
+.btn-secondary,
+.doc-action-btn,
+.dms-master-window-btn,
+.dms-master-filter-reset,
+.btn-action {
+  min-height: 34px;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease !important;
+}
+
+/* Primary action: search, edit and main workflow. */
+.btn,
+.btn2,
+.lbtn,
+.btn-primary {
+  background: var(--quali-primary) !important;
+  background-image: none !important;
+  border: 1px solid var(--quali-primary) !important;
+  color: #fff !important;
+}
+
+.btn:hover,
+.btn2:hover,
+.lbtn:hover,
+.btn-primary:hover {
+  background: var(--quali-primary-dark) !important;
+  border-color: var(--quali-primary-dark) !important;
+}
+
+/* Secondary/professional actions. */
+.btn-secondary,
+.dms-master-window-btn,
+.dms-master-filter-reset,
+.btn-action {
+  background: var(--quali-surface-muted) !important;
+  background-image: none !important;
+  border: 1px solid var(--quali-border) !important;
+  color: var(--quali-text) !important;
+}
+
+.btn-secondary:hover,
+.dms-master-window-btn:hover,
+.dms-master-filter-reset:hover,
+.btn-action:hover {
+  background: #E2E8F0 !important;
+  border-color: #94A3B8 !important;
+}
+
+/* Save/validation actions. */
+button[id$="sv"],
+button[id*="Save"],
+button[id*="Store"],
+#dSaveChangesBtn,
+#docSaveChangesBtn,
+#riskSave,
+#diagSave,
+#swotSave,
+#satSave,
+#recSave,
+#perSave,
+#statSave,
+.org-save {
+  background: var(--quali-success) !important;
+  border-color: var(--quali-success) !important;
+  color: #fff !important;
+}
+
+button[id$="sv"]:hover,
+button[id*="Save"]:hover,
+button[id*="Store"]:hover,
+#dSaveChangesBtn:hover,
+#docSaveChangesBtn:hover,
+.org-save:hover {
+  background: #15803D !important;
+  border-color: #15803D !important;
+}
+
+/* Print/download: dark professional blue. */
+button[id*="print"],
+button[id*="Print"],
+button[id*="download"],
+button[id*="Download"],
+button[data-dlist-print],
+button[data-dlist-download],
+button[data-na-print],
+button[data-na-download],
+button[data-dms-action="download"] {
+  background: var(--quali-primary-dark) !important;
+  border-color: var(--quali-primary-dark) !important;
+  color: #fff !important;
+}
+
+/* Delete/error actions. */
+.btn3,
+.btn-delete,
+button[id*="Delete"],
+button[id*="delete"],
+button[data-dms-action="delete"],
+button[data-odcentral-delete],
+button[data-odcentral-delete-app],
+button[data-odcentral-delete-permanent],
+button[data-ed],
+button[data-nd],
+button[data-ad],
+button[data-rd],
+button[data-ud],
+button[data-sat-del],
+button[data-rec-del],
+button[data-per-del],
+button[data-px-del],
+button[data-stat-del] {
+  background: var(--quali-danger-soft) !important;
+  border-color: #FECACA !important;
+  color: var(--quali-danger) !important;
+}
+
+.btn3:hover,
+.btn-delete:hover,
+button[id*="Delete"]:hover,
+button[id*="delete"]:hover,
+button[data-dms-action="delete"]:hover {
+  background: #FEE2E2 !important;
+  border-color: #FCA5A5 !important;
+  color: #B91C1C !important;
+}
+
+button:disabled,
+.btn:disabled,
+.btn2:disabled,
+.btn3:disabled {
+  opacity: .55 !important;
+  cursor: not-allowed !important;
+}
+
+/* Forms */
+input,
+select,
+textarea,
+.dms-text-input,
+.dms-file-input,
+.dms-master-filter-control {
+  background: #fff !important;
+  border: 1px solid var(--quali-border) !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  color: var(--quali-text) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.dms-text-input:focus,
+.dms-master-filter-control:focus {
+  border-color: var(--quali-primary) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, .12) !important;
+  outline: none !important;
+}
+
+/* Tables */
+table,
+.dms-files-table,
+.doc-sp-table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: #fff !important;
+}
+
+th,
+td,
+.dms-files-table thead th,
+.dms-files-table tbody td,
+.doc-sp-table thead th,
+.doc-sp-table tbody td {
+  border-bottom: 1px solid var(--quali-border-soft) !important;
+  padding: 9px 10px !important;
+}
+
+thead,
+.dms-files-table thead,
+.doc-sp-table thead {
+  background: var(--quali-surface-muted) !important;
+  background-image: none !important;
+}
+
+th,
+.dms-files-table thead th,
+.doc-sp-table thead th {
+  color: var(--quali-primary-dark) !important;
+  font-weight: 700 !important;
+}
+
+tbody tr:nth-child(even),
+.dms-files-table tbody tr:nth-child(even),
+.doc-sp-table tbody tr:nth-child(even) {
+  background: #FCFDFF !important;
+}
+
+tbody tr,
+.dms-files-table tbody tr,
+.doc-sp-table tbody tr,
+.dms-tree-file-item,
+.dms-tree-folder {
+  box-shadow: none !important;
+  transition: background-color .12s ease !important;
+}
+
+tbody tr:hover,
+.dms-files-table tbody tr:hover,
+.doc-sp-table tbody tr:hover,
+.dms-tree-file-item:hover,
+.dms-tree-folder:hover {
+  background: var(--quali-primary-soft) !important;
+}
+
+/* DMS tree, cards and status chips */
+.dms-tree-folder,
+.dms-tree-file-item,
+.dms-folder-button,
+.dms-doc-type-button,
+.dms-cycle-step {
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+.dms-tree-folder.is-selected,
+.dms-tree-folder.is-expanded,
+.dms-cycle-step.is-current {
+  background: var(--quali-primary-soft) !important;
+  border-color: #BFDBFE !important;
+  color: var(--quali-primary-dark) !important;
+}
+
+.tag,
+.bl,
+.ok,
+.er,
+.warn,
+.doc-cycle-badge,
+.dms-file-icon,
+.dms-folder-count,
+.dms-folder-child-count,
+.dms-save-status {
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+
+.ok,
+.tag.ok,
+.doc-cycle-approve,
+.doc-cycle-create,
+.dms-save-status[data-state="saved"],
+.risk-acceptable {
+  background: var(--quali-success-soft) !important;
+  border-color: #BBF7D0 !important;
+  color: var(--quali-success) !important;
+}
+
+.warn,
+.tag.warn,
+.risk-watch,
+.doc-cycle-check,
+.doc-cycle-revise,
+.dms-save-status[data-state="pending"],
+.dms-save-status[data-state="saving"] {
+  background: var(--quali-warning-soft) !important;
+  border-color: #FDE68A !important;
+  color: #B45309 !important;
+}
+
+.er,
+.tag.er,
+.risk-major,
+.doc-cycle-delete,
+.dms-save-status[data-state="error"] {
+  background: var(--quali-danger-soft) !important;
+  border-color: #FECACA !important;
+  color: var(--quali-danger) !important;
+}
+
+.k-card,
+.dash-hero,
+.dash-card,
+.risk-card,
+.stat-card,
+.folder-item,
+.subfolder,
+.it {
+  color: var(--quali-text) !important;
+}
+
+.k-card b,
+.k-card strong,
+.dash-card b,
+.stat-card b {
+  color: var(--quali-heading) !important;
+}
+
+/* Motion should feel utilitarian. */
+* {
+  text-shadow: none !important;
+}
+
+.module-live,
+.card:hover,
+.k-card:hover,
+.btn:hover,
+.btn2:hover,
+.btn3:hover {
+  transform: none !important;
+}
+
+@media (max-width: 900px) {
+  .card,
+  .tb,
+  .bar,
+  .doc-toolbar,
+  .dms-master-toolbar,
+  .dms-master-table-card {
+    border-radius: 6px !important;
+  }
+}
