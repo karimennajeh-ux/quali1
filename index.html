@@ -1453,6 +1453,231 @@
       margin-bottom: 4px
     }
 
+
+    .diag-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px
+    }
+
+    .diag-kpi {
+      border: 1px solid #cfe0fb;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fff, #eef6ff);
+      padding: 12px;
+      box-shadow: 0 10px 24px rgba(31, 102, 216, .08)
+    }
+
+    .diag-kpi span {
+      display: block;
+      color: #6b7e9f;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .2px
+    }
+
+    .diag-kpi strong {
+      display: block;
+      margin-top: 5px;
+      color: #0c3470;
+      font-size: 22px;
+      line-height: 1
+    }
+
+    .diag-progress {
+      width: 100%;
+      height: 8px;
+      margin-top: 10px;
+      border-radius: 999px;
+      background: #dbe8fb;
+      overflow: hidden
+    }
+
+    .diag-progress i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e)
+    }
+
+    .diag-question {
+      border-left: 5px solid #9db8df;
+      background: linear-gradient(135deg, #fff, #f4f8ff)
+    }
+
+    .diag-question.diag-ok {
+      border-left-color: #22c55e
+    }
+
+    .diag-question.diag-wa {
+      border-left-color: #f59e0b
+    }
+
+    .diag-question.diag-er {
+      border-left-color: #ef4444
+    }
+
+    .diag-question.diag-na {
+      border-left-color: #94a3b8
+    }
+
+    .diag-question-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 8px
+    }
+
+    .diag-state {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 112px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center
+    }
+
+    .diag-state.ok {
+      background: #dcfce7;
+      color: #15803d
+    }
+
+    .diag-state.wa {
+      background: #fef3c7;
+      color: #b45309
+    }
+
+    .diag-state.er {
+      background: #fee2e2;
+      color: #b91c1c
+    }
+
+    .diag-state.bl {
+      background: #e8f1ff;
+      color: #2f67d8
+    }
+
+    .diag-support {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px dashed #bcd2f5;
+      border-radius: 10px;
+      background: #f8fbff;
+      color: #526b91;
+      font-size: 12px
+    }
+
+    .diag-chapters {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px
+    }
+
+    .diag-chapters .mini {
+      min-height: 54px
+    }
+
+
+    .diag-toolbar {
+      display: grid;
+      grid-template-columns: 1.1fr .8fr .7fr auto auto auto;
+      gap: 10px;
+      align-items: center
+    }
+
+    .diag-toolbar .mut {
+      white-space: nowrap
+    }
+
+    .diag-status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin: 10px 0 12px
+    }
+
+    .diag-status-card {
+      border: 1px solid #d5e3f8;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff
+    }
+
+    .diag-status-card b {
+      display: block;
+      font-size: 20px;
+      line-height: 1;
+      margin-bottom: 5px
+    }
+
+    .diag-status-card span {
+      font-size: 11px;
+      font-weight: 800;
+      color: #587096
+    }
+
+    .diag-status-card.ok {
+      background: #eefdf3;
+      border-color: #a7f3c2;
+      color: #15803d
+    }
+
+    .diag-status-card.wa {
+      background: #fff8db;
+      border-color: #fde68a;
+      color: #b45309
+    }
+
+    .diag-status-card.er {
+      background: #fff0f0;
+      border-color: #fecaca;
+      color: #b91c1c
+    }
+
+    .diag-status-card.bl {
+      background: #eef5ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8
+    }
+
+    .diag-question-index {
+      display: inline-flex;
+      min-width: 34px;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: #e8f1ff;
+      color: #1f66d8;
+      font-size: 11px;
+      font-weight: 800;
+      margin-right: 8px
+    }
+
+    .diag-report-actions {
+      display: grid;
+      gap: 8px
+    }
+
+    .diag-report-actions .it {
+      border-left: 4px solid #f59e0b
+    }
+
+    @media (max-width: 980px) {
+      .diag-toolbar,
+      .diag-kpis,
+      .diag-status-strip,
+      .diag-chapters {
+        grid-template-columns: 1fr
+      }
+    }
+
     .radar-box {
       display: grid;
       place-items: center;
@@ -9320,13 +9545,32 @@
     (function () {
       function setText(sel, val) { var el = document.querySelector(sel); if (el) el.textContent = val }
       function showPage(id) {
-        ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"].forEach(function (x) {
+        var pages = ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"];
+        if (!pages.includes(id)) id = "hub";
+        pages.forEach(function (x) {
           var el = document.getElementById(x);
           if (el) el.classList.toggle("h", x !== id);
         });
+        var app = document.getElementById("app");
+        if (app) app.classList.toggle("hub-mode", id === "hub");
         document.querySelectorAll("#nav button[data-p]").forEach(function (b) {
           b.classList.toggle("on", b.getAttribute("data-p") === id);
         });
+        var meta = {
+          hub: "Modules", db: "Tableau de bord", docs: "Maitrise documentaire", docorg: "Documentation", eq: "Gestion des equipements", nc: "Non-conformites", aud: "Audits", revc: "Liste client", usr: "Utilisateurs", disc: "Discussion", set: "Parametres", diag: "Diagnostic ISO 17025", risk: "Analyse de risque", swot: "Analyse SWOT", sat: "Satisfaction client", recl: "Reclamation client", pers: "Personnel", prest: "Prestataire externe", aci: "Amelioration continue", plan: "Planning", stat: "Statistique", repo: "Dossier principal"
+        };
+        setText("#pt", meta[id] || "Modules");
+        setText("#ps", id === "hub" ? "Selectionnez un module" : "Module ouvert");
+      }
+      function navigateModule(id) {
+        if (!id) return;
+        try {
+          if (typeof page === "function") page(id);
+          else showPage(id);
+        } catch (err) {
+          console.error("Navigation module en mode securise", err);
+          showPage(id);
+        }
       }
       function fallbackRender(email) {
         var name = (email || "utilisateur").split("@")[0].replace(/[._-]/g, " ");
@@ -9395,13 +9639,16 @@
             }
           });
         }
-        var nav = document.getElementById("nav");
-        if (nav) {
-          nav.addEventListener("click", function (e) {
-            var b = e.target.closest("button[data-p]");
-            if (b && document.getElementById("app") && !document.getElementById("app").classList.contains("h")) showPage(b.getAttribute("data-p"));
-          });
-        }
+        document.addEventListener("click", function (e) {
+          var b = e.target.closest("[data-go], button[data-p]");
+          var app = document.getElementById("app");
+          if (!b || !app || app.classList.contains("h")) return;
+          var target = b.getAttribute("data-go") || b.getAttribute("data-p");
+          if (!target) return;
+          e.preventDefault();
+          e.stopPropagation();
+          navigateModule(target);
+        }, true);
       });
     })();
   </script>
@@ -10721,22 +10968,32 @@
         <div class="card">
           <h3>Informations de l'evaluation</h3>
           <div class="diag-meta">
-            <input id="diagPerson" placeholder="Nom de la personne qui fait l'evaluation">
+            <input id="diagPerson" placeholder="Evaluateur / responsable diagnostic">
             <input id="diagDate" type="date">
           </div>
         </div>
-        <div class="bar card">
-          <span class="mut" id="diagCount"></span>
+        <div class="bar card diag-toolbar">
+          <input id="diagSearch" placeholder="Rechercher : chapitre, exigence, preuve, note...">
           <select id="diagFilter">
             <option value="all">Tous les chapitres</option>
-            <option value="4">Chapitre 4</option>
-            <option value="5">Chapitre 5</option>
-            <option value="6">Chapitre 6</option>
-            <option value="7">Chapitre 7</option>
-            <option value="8">Chapitre 8</option>
+            <option value="4">Chapitre 4 - Exigences generales</option>
+            <option value="5">Chapitre 5 - Structure</option>
+            <option value="6">Chapitre 6 - Ressources</option>
+            <option value="7">Chapitre 7 - Processus</option>
+            <option value="8">Chapitre 8 - Systeme de management</option>
           </select>
-          <button class="btn2 btn" id="diagReset">Reinitialiser</button>
-          <button class="btn" id="diagExport">Exporter rapport PDF</button>
+          <select id="diagStatusFilter">
+            <option value="all">Tous les etats</option>
+            <option value="yes">Conforme</option>
+            <option value="partial">Partiel</option>
+            <option value="no">Non conforme</option>
+            <option value="na">Non applicable</option>
+            <option value="empty">Non evalue</option>
+          </select>
+          <span class="mut" id="diagCount"></span>
+          <button class="btn2 btn" id="diagSave" type="button">Enregistrer</button>
+          <button class="btn2 btn" id="diagReset" type="button">Reinitialiser</button>
+          <button class="btn" id="diagExport" type="button">Exporter rapport PDF</button>
         </div>
         <div class="row s2">
           <div class="card">
@@ -12163,33 +12420,868 @@
     const K = "QUALI_app_v2", S = "QUALI_session_v2", ACCK = "QUALI_pilot_accounts_v1", M = {}, RK = "QUALI_fs_v1";
     const REPO_DIRS = [["01_Gestion_documentaire", "Maitrise documentaire"], ["02_Gestion_des_equipements", "Gestion des equipements"], ["03_Non_conformites", "Non-conformites"], ["04_Audits", "Audits"], ["05_Liste_client", "Liste client"], ["06_Utilisateurs", "Utilisateurs"], ["07_Parametres_organisme", "Parametres organisme"], ["08_Imports", "Imports"], ["09_Exports", "Exports"], ["10_Prestateurs_externes", "Prestataires externes"], ["11_Images", "Images"], ["12_Archives", "Archives"]];
     const DIAG_ITEMS = [
-      { id: "d401", chapter: "4", clause: "4.1", title: "Impartialite", q: "Des dispositions existent-elles pour garantir l'impartialite du laboratoire et suivre les risques pouvant l'affecter ?" },
-      { id: "d402", chapter: "4", clause: "4.2", title: "Confidentialite", q: "La confidentialite des informations clients, resultats et donnees internes est-elle maitrisee et communiquee ?" },
-      { id: "d501", chapter: "5", clause: "5", title: "Organisation", q: "L'organisation, les responsabilites, les autorites et les relations fonctionnelles du laboratoire sont-elles formellement definies ?" },
-      { id: "d601", chapter: "6", clause: "6.2", title: "Personnel", q: "Les competences, habilitations, formations et enregistrements du personnel sont-ils definis et suivis ?" },
-      { id: "d602", chapter: "6", clause: "6.3", title: "Conditions ambiantes", q: "Les installations et conditions ambiantes ayant un impact sur la validite des resultats sont-elles identifiees, surveillees et documentees ?" },
-      { id: "d603", chapter: "6", clause: "6.4", title: "Equipements", q: "La gestion des equipements, leur statut, leur maintenance et les enregistrements associes sont-ils maitrises ?" },
-      { id: "d604", chapter: "6", clause: "6.5", title: "Tracabilite metrologique", q: "La tracabilite metrologique des mesures est-elle assuree par une chaine documentee et ininterrompue d'etalonnage ?" },
-      { id: "d605", chapter: "6", clause: "6.6", title: "Prestataires externes", q: "Les produits et services externes critiques sont-ils evalues, approuves et suivis selon des exigences definies ?" },
-      { id: "d701", chapter: "7", clause: "7.1", title: "Revue des demandes", q: "La revue des demandes, appels d'offres et contrats est-elle formalisee avec enregistrements des changements ?" },
-      { id: "d702", chapter: "7", clause: "7.2", title: "Methodes", q: "Les methodes de laboratoire sont-elles selectionnees, verifiees, validees et maitrisees avant mise en oeuvre ?" },
-      { id: "d703", chapter: "7", clause: "7.3", title: "Echantillonnage", q: "Les plans et methodes d'echantillonnage sont-ils documentes et les donnees d'echantillonnage conservees ?" },
-      { id: "d704", chapter: "7", clause: "7.4", title: "Manutention", q: "La manutention, l'identification, le stockage et la preservation des objets d'essai ou d'etalonnage sont-ils assures ?" },
-      { id: "d705", chapter: "7", clause: "7.5", title: "Enregistrements techniques", q: "Les enregistrements techniques permettent-ils de repeter l'activite et de tracer les modifications apportees ?" },
-      { id: "d706", chapter: "7", clause: "7.6", title: "Incertitude de mesure", q: "Les sources d'incertitude de mesure sont-elles identifiees et l'incertitude evaluee lorsque requis ?" },
-      { id: "d707", chapter: "7", clause: "7.7", title: "Validite des resultats", q: "La validite des resultats est-elle surveillee via controles qualite, tendances, comparaisons ou essais d'aptitude ?" },
-      { id: "d708", chapter: "7", clause: "7.8", title: "Rapports", q: "Les rapports sont-ils revus, approuves et, si besoin, accompagnÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©s de regles de decision et declarations de conformite ?" },
-      { id: "d709", chapter: "7", clause: "7.9", title: "Reclamations", q: "Le traitement des reclamations est-il documente, impartial et trace ?" },
-      { id: "d710", chapter: "7", clause: "7.10", title: "Travaux non conformes", q: "La gestion des travaux non conformes permet-elle d'identifier, maitriser, corriger et enregistrer toute situation ?" },
-      { id: "d711", chapter: "7", clause: "7.11", title: "Donnees et information", q: "Les donnees, calculs, transferts et systemes d'information sont-ils proteges, verifies et maitrises ?" },
-      { id: "d801", chapter: "8", clause: "8.2", title: "Documentation SMQ", q: "La documentation du systeme de management qualite est-elle structuree, disponible, referencee et tenue a jour ?" },
-      { id: "d802", chapter: "8", clause: "8.4", title: "Enregistrements SMQ", q: "Les enregistrements sont-ils identifies, stockes, proteges, sauvegardes, archives et elimines selon des regles definies ?" },
-      { id: "d803", chapter: "8", clause: "8.5", title: "Risques et opportunites", q: "Les risques et opportunites lies aux activites du laboratoire sont-ils identifies et traites ?" },
-      { id: "d804", chapter: "8", clause: "8.6", title: "Amelioration", q: "Les retours clients, opportunites et pistes d'amelioration sont-ils exploites de maniere planifiee ?" },
-      { id: "d805", chapter: "8", clause: "8.7", title: "Actions correctives", q: "Les non-conformites sont-elles analysees, corrigees et suivies jusqu'a verification de l'efficacite ?" },
-      { id: "d806", chapter: "8", clause: "8.8", title: "Audits internes", q: "Des audits internes couvrant le systeme de management et les activites sont-ils planifies et realises ?" },
-      { id: "d807", chapter: "8", clause: "8.9", title: "Revues de direction", q: "Les revues de direction sont-elles planifiees avec decisions, plans d'actions et suivi formel ?" }
-    ];
+      {
+            "id": "d4001",
+            "chapter": "4",
+            "clause": "4.1",
+            "title": "Impartialit\u00e9",
+            "q": "Existe-t-il des moyens visant \u00e0 assurer que l\u2019organisme exerce ses activit\u00e9s en toute impartialit\u00e9 et que les risques susceptibles de porter atteinte \u00e0 cette derni\u00e8re sont r\u00e9guli\u00e8rement identifi\u00e9s ?",
+            "defaultAnswer": "yes",
+            "support": "E41-10-Proc\u00e9dure d'impartialit\u00e9 / E41-11 Code de d\u00e9ontologie de CM2E / 821-13 Engagement de confidentialit\u00e9 et d\u2019impartialit\u00e9 E71-11 CGV : Conditions g\u00e9n\u00e9rales de vente",
+            "gap": ""
+      },
+      {
+            "id": "d4002",
+            "chapter": "4",
+            "clause": "4.2",
+            "title": "Confidentialit\u00e9",
+            "q": "Assurez-vous la confidentialit\u00e9 des informations g\u00e9n\u00e9r\u00e9es au cours de la r\u00e9alisation des activit\u00e9s de l\u2019organisme ou toutes autres informations obtenues ?",
+            "defaultAnswer": "yes",
+            "support": "E42-10-Proc\u00e9dure de confidentialit\u00e9 821-13 Engagement de confidentialit\u00e9 et d\u2019impartialit\u00e9",
+            "gap": ""
+      },
+      {
+            "id": "d4003",
+            "chapter": "4",
+            "clause": "4.2",
+            "title": "Confidentialit\u00e9",
+            "q": "Indiquez-vous au client, \u00e0 l\u2019avance, les informations que vous avez l\u2019intention de rendre publiques ?",
+            "defaultAnswer": "yes",
+            "support": "E71-11 conditions g\u00e9n\u00e9rales de vente",
+            "gap": ""
+      },
+      {
+            "id": "d5004",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "Les activit\u00e9s exerc\u00e9es par l\u2019organisme conform\u00e9ment au r\u00e9f\u00e9rentiel d\u2019accr\u00e9ditation (NF EN ISO/IEC 17025) sont-elles document\u00e9es ?",
+            "defaultAnswer": "yes",
+            "support": "4_45-11 D\u00e9scriptition d'activit\u00e9s CM2E V01( voir exigence norme ) Politique qualit\u00e9 CM2E-V04 82-17-Suivi Affaire Micro V01 851-30-Proc\u00e9dure de r\u00e9daction d'un rapport d'essai 851-20-Proc\u00e9dure de r\u00e9daction d'un rapport de m\u00e9trologie_V01 856-00-Prec\u00e9dure de modification des rapports",
+            "gap": ""
+      },
+      {
+            "id": "d5005",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "La place de l\u2019organisme et les relations entre les diff\u00e9rents services de l\u2019organisation sont-ils d\u00e9finis ?",
+            "defaultAnswer": "yes",
+            "support": "53-12-Organigrame CM2E _V10",
+            "gap": ""
+      },
+      {
+            "id": "d5006",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "L\u2019encadrement de l\u2019organisme ayant la responsabilit\u00e9 g\u00e9n\u00e9rale du laboratoire est-il identifi\u00e9 ?",
+            "defaultAnswer": "yes",
+            "support": "53-11-Fiche de poste-02",
+            "gap": ""
+      },
+      {
+            "id": "d5007",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "Les responsabilit\u00e9s et les relations entre les diff\u00e9rents collaborateurs sont-ils sp\u00e9cifi\u00e9s ?",
+            "defaultAnswer": "yes",
+            "support": "53-12-Organigrame CM2E _V10 53-11-Fiche de poste-02",
+            "gap": ""
+      },
+      {
+            "id": "d5008",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "L\u2019organisation est-elle bien d\u00e9finie ?",
+            "defaultAnswer": "yes",
+            "support": "53-12-Organigrame CM2E _V10",
+            "gap": ""
+      },
+      {
+            "id": "d5009",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "Avez-vous du personnel disposant de l\u2019autorit\u00e9 et des ressources pour accomplir les activit\u00e9s de l\u2019organisme y compris la mise en \u0153uvre, le maintien et l\u2019am\u00e9lioration du syst\u00e8me de management ?",
+            "defaultAnswer": "yes",
+            "support": "53-13-Grille de responsabilit\u00e9 et autorit\u00e9s-V10 01-Plan d etalonnage 02-instrument de mesure existant",
+            "gap": ""
+      },
+      {
+            "id": "d5010",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "Assurez-vous la communication interne relatives \u00e0 - l\u2019efficacit\u00e9 du syst\u00e8me de management ? - l\u2019importance de satisfaire aux exigences des clients et aux autres exigences ?",
+            "defaultAnswer": "yes",
+            "support": "74-10 Proc\u00e8dure de communication-V05",
+            "gap": ""
+      },
+      {
+            "id": "d5011",
+            "chapter": "5",
+            "clause": "5",
+            "title": "EXIGENCES STRUCTURELLES",
+            "q": "Assurez-vous le maintien de l\u2019int\u00e9grit\u00e9 du syst\u00e8me de management lors de changements ?",
+            "defaultAnswer": "yes",
+            "support": "53-11F_FP Responsable management qualit\u00e9",
+            "gap": ""
+      },
+      {
+            "id": "d6012",
+            "chapter": "6",
+            "clause": "6.2",
+            "title": "Personnel",
+            "q": "Existe-t-il des dispositions visant \u00e0 assurer que votre personnel interne ou externe travaille conform\u00e9ment \u00e0 votre syst\u00e8me de management ?",
+            "defaultAnswer": "yes",
+            "support": "Check List 74-12-liste de diffusion d'information-03",
+            "gap": ""
+      },
+      {
+            "id": "d6013",
+            "chapter": "6",
+            "clause": "6.2",
+            "title": "Personnel",
+            "q": "Avez-vous identifi\u00e9 les fonctions ayant une influence sur les r\u00e9sultats ?",
+            "defaultAnswer": "yes",
+            "support": "712-23- Check list recrut-V04",
+            "gap": ""
+      },
+      {
+            "id": "d6014",
+            "chapter": "6",
+            "clause": "6.2",
+            "title": "Personnel",
+            "q": "Avez-vous document\u00e9 les exigences de comp\u00e9tences (niveau d\u2019\u00e9tudes, qualification formation, connaissances techniques, aptitudes et exp\u00e9rience) requises pour ces fonctions ?",
+            "defaultAnswer": "yes",
+            "support": "712-311-Tableau des comp\u00e9tences et polyvalences V11",
+            "gap": ""
+      },
+      {
+            "id": "d6015",
+            "chapter": "6",
+            "clause": "6.2",
+            "title": "Personnel",
+            "q": "La direction du laboratoire communique-t-elle aux membres du personnel leurs t\u00e2ches, responsabilit\u00e9s et autorit\u00e9s ?",
+            "defaultAnswer": "yes",
+            "support": "53-11-Fiche de poste-02",
+            "gap": ""
+      },
+      {
+            "id": "d6016",
+            "chapter": "6",
+            "clause": "6.2",
+            "title": "Personnel",
+            "q": "Concernant le personnel, avez-vous une proc\u00e9dure et des enregistrements associ\u00e9s relatifs \u00e0 : - la d\u00e9termination des exigences de comp\u00e9tences ; - la s\u00e9lection ; - la formation ; - la supervision; - l'autorisation ; - le suivi des comp\u00e9tences",
+            "defaultAnswer": "yes",
+            "support": "712 Ressource humaine (test a froid a chaud formation,) 712-31-Planning annuel de formation_V04-2024 712-20-Proc\u00e9dure de Recrutement-V08 712-32-Plan d'integration V05 712-311-Tableau des comp\u00e9tences et polyvalences V11",
+            "gap": ""
+      },
+      {
+            "id": "d6017",
+            "chapter": "6",
+            "clause": "6.2",
+            "title": "Personnel",
+            "q": "Avez-vous des preuves d\u2019autorisation \u00e0 r\u00e9aliser des t\u00e2ches sp\u00e9cifiques y compris : - le d\u00e9veloppement, la modification, la v\u00e9rification et la validation des m\u00e9thodes ; - l\u2019analyse des r\u00e9sultats, incluant le cas \u00e9ch\u00e9ant les d\u00e9clarations de conformit\u00e9 ou les avis et interpr\u00e9tations ; - le compte rendu, l\u2019examen et l\u2019approbation des r\u00e9sultats.",
+            "defaultAnswer": "yes",
+            "support": "53-13-Grille de responsabilit\u00e9 et autorit\u00e9s-V10 712-311-Tableau des comp\u00e9tences et polyvalences V11 53-11-Fiche de poste-02",
+            "gap": ""
+      },
+      {
+            "id": "d6018",
+            "chapter": "6",
+            "clause": "6.3",
+            "title": "Installations et conditions ambiantes",
+            "q": "Les exigences relatives aux installations et aux conditions ambiantes o\u00f9 sont r\u00e9alis\u00e9es les activit\u00e9s de laboratoire, pouvant affecter la validit\u00e9 des r\u00e9sultats, sont-elles identifi\u00e9es et document\u00e9es ?",
+            "defaultAnswer": "yes",
+            "support": "714-10-Environnement de travail-V04",
+            "gap": ""
+      },
+      {
+            "id": "d6019",
+            "chapter": "6",
+            "clause": "6.3",
+            "title": "Installations et conditions ambiantes",
+            "q": "Les exigences relatives aux installations et aux conditions ambiantes o\u00f9 sont r\u00e9alis\u00e9es les activit\u00e9s sur site ou au sein d\u2019installations non maitris\u00e9es en permanence pouvant affecter la validit\u00e9 des r\u00e9sultats, sont-elles identifi\u00e9es et document\u00e9es ?",
+            "defaultAnswer": "yes",
+            "support": "714-11-Suivie conditions ambiantes -2024",
+            "gap": ""
+      },
+      {
+            "id": "d6020",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Disposez-vous des \u00e9quipements appropri\u00e9s en lien avec vos activit\u00e9s de laboratoire et ayant une influence sur vos r\u00e9sultats ?",
+            "defaultAnswer": "yes",
+            "support": "01-Plan d etalonnage 02-instrument de mesure existant",
+            "gap": ""
+      },
+      {
+            "id": "d6021",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Existe-t-il une proc\u00e9dure concernant la gestion des \u00e9quipements ?",
+            "defaultAnswer": "yes",
+            "support": "715-00-Processus GMM V07 7152-10-Proc\u00e9dure Gestion des equipements de mesure",
+            "gap": ""
+      },
+      {
+            "id": "d6022",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Assurez-vous le suivi m\u00e9trologique des \u00e9quipements \u00e0 l\u2019aide d\u2019un programme d\u00e9fini puis revu ?",
+            "defaultAnswer": "yes",
+            "support": "plan d'etalonnage (excel) Site de suivi GMM",
+            "gap": ""
+      },
+      {
+            "id": "d6023",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Ces \u00e9quipements r\u00e9pondent-ils aux sp\u00e9cifications d\u00e9finies afin d\u2019atteindre l\u2019exactitude et/ou l\u2019incertitude de mesure souhait\u00e9e ?",
+            "defaultAnswer": "yes",
+            "support": "7152-14-Constat de v\u00e9rification V07",
+            "gap": ""
+      },
+      {
+            "id": "d6024",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Les \u00e9quipements de mesure r\u00e9pondant aux crit\u00e8res d\u00e9finis au \u00a7 6.4.6 de la norme sont-ils \u00e9talonn\u00e9s ?",
+            "defaultAnswer": "yes",
+            "support": "7152-12-Fiche de Vie-02 (en tete priodicite incertitude) plan d'etalonnage",
+            "gap": ""
+      },
+      {
+            "id": "d6025",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Le statut de ces derniers est-il identifi\u00e9 et sans \u00e9quivoque pour l\u2019utilisateur ?",
+            "defaultAnswer": "yes",
+            "support": "pastille vert avec date proch d etalonnage",
+            "gap": ""
+      },
+      {
+            "id": "d6026",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Avez-vous pr\u00e9vu une gestion des \u00e9quipements d\u00e9fectueux ?",
+            "defaultAnswer": "yes",
+            "support": "7152-15 liste des intruments retir\u00e9s",
+            "gap": ""
+      },
+      {
+            "id": "d6027",
+            "chapter": "6",
+            "clause": "6.4",
+            "title": "Equipements",
+            "q": "Des enregistrements concernant les \u00e9quipements et leur utilisation sont-ils \u00e9tablis ? (fiches d\u2019identification, fiche de vie, version des logiciels et du firmware, etc.)",
+            "defaultAnswer": "yes",
+            "support": "7152-12-Fiche de Vie-02",
+            "gap": ""
+      },
+      {
+            "id": "d6028",
+            "chapter": "6",
+            "clause": "6.5",
+            "title": "Tra\u00e7abilit\u00e9 m\u00e9trologique",
+            "q": "La tra\u00e7abilit\u00e9 m\u00e9trologique des r\u00e9sultats de mesure au moyen d\u2019une chaine ininterrompue d\u2019\u00e9talonnage est-elle document\u00e9e et maintenue ?",
+            "defaultAnswer": "yes",
+            "support": "7152-12-Fiche de Vie-02 (resultat d etalonnage derive) plan d'etalonnage",
+            "gap": ""
+      },
+      {
+            "id": "d6029",
+            "chapter": "6",
+            "clause": "6.5",
+            "title": "Tra\u00e7abilit\u00e9 m\u00e9trologique",
+            "q": "La tra\u00e7abilit\u00e9 des instruments de mesure impactant les r\u00e9sultats est-elle assur\u00e9e ?",
+            "defaultAnswer": "yes",
+            "support": "plan d'etalonnage (excel) Site de suivi GMM",
+            "gap": ""
+      },
+      {
+            "id": "d6030",
+            "chapter": "6",
+            "clause": "6.6",
+            "title": "Produits et services fournis par des prestataires externes",
+            "q": "Assurez-vous que les produits et services ayant une influence sur vos activit\u00e9s ou contribuant au fonctionnement du laboratoire sont identifi\u00e9s et adapt\u00e9s ?",
+            "defaultAnswer": "yes",
+            "support": "821-20 procedure gestion d'archive des pieces",
+            "gap": ""
+      },
+      {
+            "id": "d6031",
+            "chapter": "6",
+            "clause": "6.6",
+            "title": "Produits et services fournis par des prestataires externes",
+            "q": "Disposez-vous d\u2019une proc\u00e9dure et conservez-vous les enregistrements relatifs aux \u00a7 6.6.2 de la norme ?",
+            "defaultAnswer": "yes",
+            "support": "84-20 procedure achat",
+            "gap": ""
+      },
+      {
+            "id": "d6032",
+            "chapter": "6",
+            "clause": "6.6",
+            "title": "Produits et services fournis par des prestataires externes",
+            "q": "Communiquez-vous \u00e0 vos prestataires externes les exigences d\u00e9finies au \u00a7 6.6.3 de la norme ?",
+            "defaultAnswer": "yes",
+            "support": "84-14 demande d achat fournisseur",
+            "gap": ""
+      },
+      {
+            "id": "d7033",
+            "chapter": "7",
+            "clause": "7.1",
+            "title": "Revue des demandes, appels d\u2019offres et contrats",
+            "q": "Disposez-vous d\u2019une proc\u00e9dure relative \u00e0 la revue des demandes, des appels d\u2019offres ou des contrats ?",
+            "defaultAnswer": "yes",
+            "support": "E71-10 proc\u00e9dure revue des demandes et appels d'offres et contrats",
+            "gap": ""
+      },
+      {
+            "id": "d7034",
+            "chapter": "7",
+            "clause": "7.1",
+            "title": "Revue des demandes, appels d\u2019offres et contrats",
+            "q": "Les enregistrements des revues, discussions avec le client, et de toutes les modifications significatives sont-ils conserv\u00e9s ?",
+            "defaultAnswer": "yes",
+            "support": "fiche DDT",
+            "gap": ""
+      },
+      {
+            "id": "d7035",
+            "chapter": "7",
+            "clause": "7.1",
+            "title": "Revue des demandes, appels d\u2019offres et contrats",
+            "q": "Lorsque vous faites appel \u00e0 des prestataires externes pour vos activit\u00e9s de laboratoire, obtenez-vous l\u2019approbation de vos clients ?",
+            "defaultAnswer": "na",
+            "support": "Non notre laboratoire n'externalise pas son activit\u00e9",
+            "gap": ""
+      },
+      {
+            "id": "d7036",
+            "chapter": "7",
+            "clause": "7.1",
+            "title": "Revue des demandes, appels d\u2019offres et contrats",
+            "q": "En cas d'\u00e9mission de d\u00e9clarations de conformit\u00e9, les r\u00e8gles de d\u00e9cision sont-elles d\u00e9finies et communiqu\u00e9es au client ?",
+            "defaultAnswer": "yes",
+            "support": "E786-10 procedure de declaration de conformite",
+            "gap": ""
+      },
+      {
+            "id": "d7037",
+            "chapter": "7",
+            "clause": "7.2",
+            "title": "S\u00e9lection, v\u00e9rification et validation des m\u00e9thodes",
+            "q": "Avez-vous document\u00e9 vos m\u00e9thodes et les mettez-vous \u00e0 disposition de votre personnel ?",
+            "defaultAnswer": "partial",
+            "support": "Methode exig\u00e9e par le client V0 716-12 Rapport de retour d'exp\u00e9rience_V02 716-15-Base des probl\u00e9mes envisageables- V02",
+            "gap": "Manque Procedure"
+      },
+      {
+            "id": "d7038",
+            "chapter": "7",
+            "clause": "7.2",
+            "title": "S\u00e9lection, v\u00e9rification et validation des m\u00e9thodes",
+            "q": "La m\u00e9thode est-elle valid\u00e9e et/ou confirm\u00e9e (ou v\u00e9rifi\u00e9e) avant de la mettre en \u0153uvre ?",
+            "defaultAnswer": "partial",
+            "support": "E722-10 procudere de verification et validation des methodes",
+            "gap": ""
+      },
+      {
+            "id": "d7039",
+            "chapter": "7",
+            "clause": "7.2",
+            "title": "S\u00e9lection, v\u00e9rification et validation des m\u00e9thodes",
+            "q": "Cette d\u00e9marche est-elle r\u00e9p\u00e9t\u00e9e \u00e0 chaque r\u00e9vision de la m\u00e9thode ?",
+            "defaultAnswer": "no",
+            "support": "75-10-Maitrise documentaire -V05 716-18-Suivi des rapports de retour d'exp\u00e9rience",
+            "gap": "Manque Fiche"
+      },
+      {
+            "id": "d7040",
+            "chapter": "7",
+            "clause": "7.2",
+            "title": "S\u00e9lection, v\u00e9rification et validation des m\u00e9thodes",
+            "q": "Lors d\u2019une validation/confirmation de m\u00e9thode, des enregistrements de preuves sont-ils conserv\u00e9s ?",
+            "defaultAnswer": "partial",
+            "support": "V0 716-12 Rapport de retour d'exp\u00e9rience_V02 Dossier INFO 3D sur base partage",
+            "gap": ""
+      },
+      {
+            "id": "d7041",
+            "chapter": "7",
+            "clause": "7.3",
+            "title": "Echantillonnage",
+            "q": "Un plan et une m\u00e9thode d\u2019\u00e9chantillonnage, tenant compte des facteurs qui ont un impact sur la validit\u00e9 des r\u00e9sultats ult\u00e9rieurs, sont-ils \u00e9tablis ?",
+            "defaultAnswer": "na",
+            "support": "On a une check list si qql chose NOK on indique si nn les pieces sont fournies pretes",
+            "gap": ""
+      },
+      {
+            "id": "d7042",
+            "chapter": "7",
+            "clause": "7.3",
+            "title": "Echantillonnage",
+            "q": "Le plan et la m\u00e9thode d\u2019\u00e9chantillonnage sont-ils disponibles sur le site d\u2019\u00e9chantillonnage ?",
+            "defaultAnswer": "na",
+            "support": "Le client fournit directement les pi\u00e8ces \u00e0 mesurer. Le laboratoire ne fait que mesurer des pi\u00e8ces d\u00e9j\u00e0 s\u00e9lectionn\u00e9es par le client.",
+            "gap": ""
+      },
+      {
+            "id": "d7043",
+            "chapter": "7",
+            "clause": "7.3",
+            "title": "Echantillonnage",
+            "q": "Conservez-vous les enregistrements des donn\u00e9es d\u2019\u00e9chantillonnage exig\u00e9es au \u00a7 7.3.3 de la norme ?",
+            "defaultAnswer": "na",
+            "support": "",
+            "gap": ""
+      },
+      {
+            "id": "d7044",
+            "chapter": "7",
+            "clause": "7.4",
+            "title": "Manutention des objets d\u2019essai ou d\u2019\u00e9talonnage",
+            "q": "Avez-vous \u00e9tabli une proc\u00e9dure relative \u00e0 la manutention des objets d\u2019essais et d\u2019\u00e9talonnage (y compris le stockage ou le conditionnement sp\u00e9cifique des objets)?",
+            "defaultAnswer": "yes",
+            "support": "E74-10 procedure de manutention des objets d etalonnage 821-20 procedure gestion d archive des pieces \u00e9tag\u00e8re d\u00e9di\u00e9e archive piece (carton+film)",
+            "gap": ""
+      },
+      {
+            "id": "d7045",
+            "chapter": "7",
+            "clause": "7.4",
+            "title": "Manutention des objets d\u2019essai ou d\u2019\u00e9talonnage",
+            "q": "Existe-t-il un syst\u00e8me d\u2019identification non ambig\u00fce des objets d\u2019essai ou d\u2019\u00e9talonnage ?",
+            "defaultAnswer": "yes",
+            "support": "851-11 Etiquette (N dossier/ date recept) /7.4 (on identif la piece on ecrit sur elle num emp/piece)",
+            "gap": ""
+      },
+      {
+            "id": "d7046",
+            "chapter": "7",
+            "clause": "7.5",
+            "title": "Enregistrements techniques",
+            "q": "Avez-vous pr\u00e9vu des enregistrements techniques (donn\u00e9es, calculs, observations, rapport, responsabilit\u00e9s, etc.) correspondant \u00e0 chaque activit\u00e9 de laboratoire et permettant de la r\u00e9p\u00e9ter dans des conditions aussi proches que possible de l'original ?",
+            "defaultAnswer": "yes",
+            "support": "85-00 precessus metrologie expertise et essai 851-21Rapport metrologie 852-31 rapport d essai",
+            "gap": ""
+      },
+      {
+            "id": "d7047",
+            "chapter": "7",
+            "clause": "7.5",
+            "title": "Enregistrements techniques",
+            "q": "Les modifications apport\u00e9es aux enregistrements techniques peuvent-elles \u00eatre trac\u00e9es en remontant aux donn\u00e9es et versions pr\u00e9c\u00e9dentes ou aux observations d'origine ?",
+            "defaultAnswer": "yes",
+            "support": "856-00 procedure de modification des rapports",
+            "gap": ""
+      },
+      {
+            "id": "d7048",
+            "chapter": "7",
+            "clause": "7.6",
+            "title": "\u00c9valuation de l\u2019incertitude de mesure",
+            "q": "Avez-vous identifi\u00e9 les sources d\u2019incertitude de mesure et \u00e9valu\u00e9 l\u2019incertitude de mesure en tenant compte de toutes des contributions importantes ?",
+            "defaultAnswer": "no",
+            "support": "",
+            "gap": ""
+      },
+      {
+            "id": "d7049",
+            "chapter": "7",
+            "clause": "7.7",
+            "title": "Assurer la validit\u00e9 des r\u00e9sultats",
+            "q": "Avez-vous pr\u00e9vu une proc\u00e9dure pour surveiller la validit\u00e9 de vos r\u00e9sultats ?",
+            "defaultAnswer": "yes",
+            "support": "7152-10 Procedure gestion des equipements de mesure 7152-14 Constat de verification",
+            "gap": "GMM"
+      },
+      {
+            "id": "d7050",
+            "chapter": "7",
+            "clause": "7.7",
+            "title": "Assurer la validit\u00e9 des r\u00e9sultats",
+            "q": "Cette surveillance est-elle planifi\u00e9e et revue ?",
+            "defaultAnswer": "yes",
+            "support": "7152-11-Plan annuel de v\u00e9rif. \u00c9quipements de mesure -V04 (D\u00e9rive) 85-1x rapport de verification",
+            "gap": ""
+      },
+      {
+            "id": "d7051",
+            "chapter": "7",
+            "clause": "7.7",
+            "title": "Assurer la validit\u00e9 des r\u00e9sultats",
+            "q": "Les donn\u00e9es r\u00e9sultantes sont-elles enregistr\u00e9es de sorte que les tendances soient d\u00e9tectables ?",
+            "defaultAnswer": "yes",
+            "support": "7152-11- carte de controle (plan d etalonnage) E77-11 Carte de controle",
+            "gap": ""
+      },
+      {
+            "id": "d7052",
+            "chapter": "7",
+            "clause": "7.7",
+            "title": "Assurer la validit\u00e9 des r\u00e9sultats",
+            "q": "Pour surveiller la performance du laboratoire, participez-vous \u00e0 des essais d\u2019aptitude ou des comparaisons interlaboratoires ?",
+            "defaultAnswer": "partial",
+            "support": "E77-10 procedure de verification intermediaire E77-12 procedure de verification intermediaire des cales etalons",
+            "gap": "Interlabo"
+      },
+      {
+            "id": "d7053",
+            "chapter": "7",
+            "clause": "7.7",
+            "title": "Assurer la validit\u00e9 des r\u00e9sultats",
+            "q": "Ces donn\u00e9es de surveillance sont-elles analys\u00e9es ?",
+            "defaultAnswer": "no",
+            "support": "pas de verif inter effectue",
+            "gap": ""
+      },
+      {
+            "id": "d7054",
+            "chapter": "7",
+            "clause": "7.8",
+            "title": "Rapport sur les r\u00e9sultats",
+            "q": "Avez-vous mis en \u0153uvre un dispositif de revue et d\u2019approbation de tous les rapports \u00e9mis?",
+            "defaultAnswer": "yes",
+            "support": "rapport avec page de garde signe par le responsable",
+            "gap": ""
+      },
+      {
+            "id": "d7055",
+            "chapter": "7",
+            "clause": "7.8",
+            "title": "Rapport sur les r\u00e9sultats",
+            "q": "Le rapport sur les r\u00e9sultats contient-il tous les \u00e9l\u00e9ments exig\u00e9s dans ce paragraphe ?",
+            "defaultAnswer": "yes",
+            "support": "check list a remplir au cour de realisation de projet tous exigence est dispo au rapport actuelle",
+            "gap": ""
+      },
+      {
+            "id": "d7056",
+            "chapter": "7",
+            "clause": "7.8",
+            "title": "Rapport sur les r\u00e9sultats",
+            "q": "Vous-\u00eates vous interrogez sur la possibilit\u00e9 d'\u00e9mettre des d\u00e9clarations de conformit\u00e9 sur les rapports et de documenter la r\u00e8gle de d\u00e9cision?",
+            "defaultAnswer": "yes",
+            "support": "E786-10 procedure de declaration de conformite",
+            "gap": ""
+      },
+      {
+            "id": "d7057",
+            "chapter": "7",
+            "clause": "7.8",
+            "title": "Rapport sur les r\u00e9sultats",
+            "q": "Vous-\u00eates vous interrogez sur la possibilit\u00e9 d'\u00e9mettre des avis et interpr\u00e9tations en documentant les bases sur lesquelles ils reposent?",
+            "defaultAnswer": "yes",
+            "support": "Feuille commentaire dans le rapport",
+            "gap": ""
+      },
+      {
+            "id": "d7058",
+            "chapter": "7",
+            "clause": "7.8",
+            "title": "Rapport sur les r\u00e9sultats",
+            "q": "Lorsqu\u2019un rapport \u00e9mis doit \u00eatre remplac\u00e9, amend\u00e9 ou r\u00e9\u00e9mis, avez-vous pr\u00e9vu de clairement identifier toute modification d\u2019informations et, si besoin, d\u2019ajouter l\u2019explication de cette modification au rapport ?",
+            "defaultAnswer": "yes",
+            "support": "historique des version (procedure de modification des rapports)",
+            "gap": ""
+      },
+      {
+            "id": "d7059",
+            "chapter": "7",
+            "clause": "7.8",
+            "title": "Rapport sur les r\u00e9sultats",
+            "q": "Lorsqu'il est n\u00e9cessaire d'\u00e9mettre un nouveau rapport complet, celui-ci comporte-t-il une identification unique et fait-il mention de l'original qu'il remplace ?",
+            "defaultAnswer": "yes",
+            "support": "M\u00eame rapport, mais nouveau num\u00e9ro avec historique conserv\u00e9",
+            "gap": ""
+      },
+      {
+            "id": "d7060",
+            "chapter": "7",
+            "clause": "7.9",
+            "title": "R\u00e9clamations",
+            "q": "Avez-vous document\u00e9 vos dispositions (comprenant les \u00e9l\u00e9ments demand\u00e9s au \u00a7 7.9.3) pour enregistrer, analyser et traiter les r\u00e9clamations ?",
+            "defaultAnswer": "yes",
+            "support": "912-02 shynthese satisfaction client 912-01 mesure satisfaction client questionnaire satisfaction et ecoute client-recap 10-01 rregistre de suivi des Rapports de resolution d un probleme 10-02 registre de reclamation-retour client 87-11 rapport de resolution d'un probleme",
+            "gap": ""
+      },
+      {
+            "id": "d7061",
+            "chapter": "7",
+            "clause": "7.9",
+            "title": "R\u00e9clamations",
+            "q": "Les conclusions sont- elles \u00e9tablies ou revues et approuv\u00e9es par une personne n\u2019ayant pas \u00e9t\u00e9 impliqu\u00e9e dans les activit\u00e9s de laboratoire remises en cause ?",
+            "defaultAnswer": "yes",
+            "support": "E79-10 Processus de traitement des reclamations clients",
+            "gap": ""
+      },
+      {
+            "id": "d7062",
+            "chapter": "7",
+            "clause": "7.10",
+            "title": "Travaux non conformes",
+            "q": "Disposez-vous d\u2019une proc\u00e9dure tenant compte des points a) \u00e0 f) du \u00a7 7.10.1 de la norme pour la gestion de vos travaux non conformes ?",
+            "defaultAnswer": "yes",
+            "support": "87-10-Proc\u00e9dure de maitrise des \u00e9l\u00e9ments de sortie non conformes et les actions correctives V03",
+            "gap": ""
+      },
+      {
+            "id": "d7063",
+            "chapter": "7",
+            "clause": "7.10",
+            "title": "Travaux non conformes",
+            "q": "Avez-vous pr\u00e9vu de conserver les enregistrements des travaux non conformes et de leurs traitements ?",
+            "defaultAnswer": "yes",
+            "support": "87-11 Rapport de resolution d'un probleme",
+            "gap": ""
+      },
+      {
+            "id": "d7064",
+            "chapter": "7",
+            "clause": "7.11",
+            "title": "Ma\u00eetrise des donn\u00e9es et gestion de l\u2019information",
+            "q": "Le ou les syst\u00e8mes de gestion de l\u2019information du laboratoire sont-ils-valid\u00e9s en termes de fonctionnalit\u00e9 avant mise en \u0153uvre ?",
+            "defaultAnswer": "yes",
+            "support": "85-10 Rapport de v\u00e9rification des machines de mesure 3D 7152-14-Constat de v\u00e9rification V07",
+            "gap": ""
+      },
+      {
+            "id": "d7065",
+            "chapter": "7",
+            "clause": "7.11",
+            "title": "Ma\u00eetrise des donn\u00e9es et gestion de l\u2019information",
+            "q": "Les modifications de ce syst\u00e8me sont-elles autoris\u00e9es, document\u00e9es et valid\u00e9es avant leur mise en \u0153uvre ?",
+            "defaultAnswer": "partial",
+            "support": "63-10-Proc\u00e9dure de la mise en oeuvre des modificationsV02 E42-11-fichier contr\u00f4le d'acc\u00e8s V03 63-12-Planning de suivi des modifications V00 enregistrement manuel chaque mois et cloturation chaque fin d'ann\u00e9es",
+            "gap": ""
+      },
+      {
+            "id": "d7066",
+            "chapter": "7",
+            "clause": "7.11",
+            "title": "Ma\u00eetrise des donn\u00e9es et gestion de l\u2019information",
+            "q": "La protection et l\u2019int\u00e9grit\u00e9 du ou des syst\u00e8mes de gestion de l\u2019information du laboratoire sont-elles assur\u00e9es ?",
+            "defaultAnswer": "partial",
+            "support": "E42-11-fichier contr\u00f4le d'acc\u00e8s V05 82-17-Suivi Affaire Micro V01",
+            "gap": ""
+      },
+      {
+            "id": "d7067",
+            "chapter": "7",
+            "clause": "7.11",
+            "title": "Ma\u00eetrise des donn\u00e9es et gestion de l\u2019information",
+            "q": "Les calculs et transferts de donn\u00e9es sont-ils v\u00e9rifi\u00e9s de fa\u00e7on appropri\u00e9e et syst\u00e9matique ?",
+            "defaultAnswer": "yes",
+            "support": "check list des affaires(application) 75-10-Maitrise documentaire -V05",
+            "gap": ""
+      },
+      {
+            "id": "d8068",
+            "chapter": "8",
+            "clause": "8.2",
+            "title": "Documentation du syst\u00e8me de management",
+            "q": "Avez-vous d\u00e9fini des politiques et des objectifs relatifs \u00e0 : - la comp\u00e9tence? - l\u2019impartialit\u00e9 ? - la coh\u00e9rence des activit\u00e9s ?",
+            "defaultAnswer": "yes",
+            "support": "43-20-Manuel qualit\u00e9-Etalonnage",
+            "gap": ""
+      },
+      {
+            "id": "d8069",
+            "chapter": "8",
+            "clause": "8.2",
+            "title": "Documentation du syst\u00e8me de management",
+            "q": "L\u2019ensemble de la documentation fait-elle l\u2019objet d\u2019un r\u00e9f\u00e9rencement ?",
+            "defaultAnswer": "yes",
+            "support": "75-10-Maitrise documentaire -V05 E42-11-fichier contr\u00f4le d'acc\u00e8s V05 753-11-Doc applicables 716-11-liste des connaissances-V02",
+            "gap": ""
+      },
+      {
+            "id": "d8070",
+            "chapter": "8",
+            "clause": "8.3",
+            "title": "Ma\u00eetrise de la documentation du syst\u00e8me de management",
+            "q": "Existe-t-il des dispositions visant \u00e0 assurer le respect des exigences relatives aux \u00e9l\u00e9ments exig\u00e9s du \u00a7 8.3.2 de la norme ?",
+            "defaultAnswer": "yes",
+            "support": "75-10-Maitrise documentaire -V05",
+            "gap": ""
+      },
+      {
+            "id": "d8071",
+            "chapter": "8",
+            "clause": "8.3",
+            "title": "Ma\u00eetrise de la documentation du syst\u00e8me de management",
+            "q": "Les documents applicables sont-ils disponibles aux utilisateurs ?",
+            "defaultAnswer": "yes",
+            "support": "E42-11-fichier cont\u00f4le d'acc\u00e9s",
+            "gap": ""
+      },
+      {
+            "id": "d8072",
+            "chapter": "8",
+            "clause": "8.4",
+            "title": "Maitrise des enregistrements",
+            "q": "Existe-t-il des dispositions relatives \u00e0 la gestion des enregistrements ? Si oui, pr\u00e9voient-elles des dispositions sur : - l\u2019identification, le stockage ? - l\u2019accessibilit\u00e9 ? - la protection, la sauvegarde ? - les dur\u00e9es de conservation et l\u2019\u00e9limination des enregistrements? - l\u2019archivage ?",
+            "defaultAnswer": "yes",
+            "support": "821-20-Proc\u00e9dure Gestion d'archive des pi\u00e9ces V00 821-11-Gestion archive-03",
+            "gap": ""
+      },
+      {
+            "id": "d8073",
+            "chapter": "8",
+            "clause": "8.5",
+            "title": "Actions \u00e0 mettre en \u0153uvre face aux risques et opportunit\u00e9s",
+            "q": "Avez-vous identifi\u00e9 les risques et opportunit\u00e9s li\u00e9s \u00e0 vos activit\u00e9s de laboratoire et \u00e0 vos objectifs ?",
+            "defaultAnswer": "yes",
+            "support": "61-05A MOP+ Maitrise des risques et opportunit\u00e9s 2024_V04",
+            "gap": ""
+      },
+      {
+            "id": "d8074",
+            "chapter": "8",
+            "clause": "8.5",
+            "title": "Actions \u00e0 mettre en \u0153uvre face aux risques et opportunit\u00e9s",
+            "q": "En lien avec ces risques et opportunit\u00e9s, avez-vous planifi\u00e9 : - les actions \u00e0 mettre en \u0153uvre ? - la v\u00e9rification de l\u2019efficacit\u00e9 de ces actions ?",
+            "defaultAnswer": "yes",
+            "support": "913-00-Fiche d'evaluation des planifications-2024",
+            "gap": ""
+      },
+      {
+            "id": "d8075",
+            "chapter": "8",
+            "clause": "8.6",
+            "title": "Am\u00e9lioration",
+            "q": "Des actions sont-elles mises en \u0153uvre afin de prendre en compte des opportunit\u00e9s d\u2019am\u00e9lioration ?",
+            "defaultAnswer": "yes",
+            "support": "61-05A MOP+ Maitrise des risques et opportunit\u00e9s 2024_V04",
+            "gap": ""
+      },
+      {
+            "id": "d8076",
+            "chapter": "8",
+            "clause": "8.6",
+            "title": "Am\u00e9lioration",
+            "q": "Exploitez-vous les retours d\u2019informations de la part de vos clients ?",
+            "defaultAnswer": "yes",
+            "support": "10-02- Registre de reclamation-retour client_V01",
+            "gap": ""
+      },
+      {
+            "id": "d8077",
+            "chapter": "8",
+            "clause": "8.7",
+            "title": "Actions correctives",
+            "q": "En cas de non-conformit\u00e9, assurez-vous sa correction et sa ma\u00eetrise?",
+            "defaultAnswer": "yes",
+            "support": "87-11_Rapport de r\u00e9solution d'un probleme_V06 --\u003e mise a jour risque opportunitte si necess 10-01 suivi des RRP_V01",
+            "gap": ""
+      },
+      {
+            "id": "d8078",
+            "chapter": "8",
+            "clause": "8.7",
+            "title": "Actions correctives",
+            "q": "Menez-vous des actions correctives appropri\u00e9es pour \u00e9liminer le ou les causes de la non-conformit\u00e9 ?",
+            "defaultAnswer": "yes",
+            "support": "87-11_Rapport de r\u00e9solution d'un probleme_V06 ( 5 \u0026 6- Actions correctives d\u00e9finitives)",
+            "gap": ""
+      },
+      {
+            "id": "d8079",
+            "chapter": "8",
+            "clause": "8.7",
+            "title": "Actions correctives",
+            "q": "V\u00e9rifiez-vous l\u2019efficacit\u00e9 de celles-ci ?",
+            "defaultAnswer": "yes",
+            "support": "87-11_Rapport de r\u00e9solution d'un probleme_V06 ( Indicateur efficacit\u00e9)",
+            "gap": ""
+      },
+      {
+            "id": "d8080",
+            "chapter": "8",
+            "clause": "8.7",
+            "title": "Actions correctives",
+            "q": "Conservez-vous des preuves : - de la nature et des causes des non conformit\u00e9s ? - des actions men\u00e9es ? - des r\u00e9sultats des actions correctives ?",
+            "defaultAnswer": "yes",
+            "support": "87-10-Proc\u00e9dure de maitrise des \u00e9l\u00e9ments de sortie non conformes et les actions correctives V03",
+            "gap": ""
+      },
+      {
+            "id": "d8081",
+            "chapter": "8",
+            "clause": "8.8",
+            "title": "Audits internes",
+            "q": "Le laboratoire r\u00e9alise-t-il des audits internes \u00e0 intervalle planifi\u00e9?",
+            "defaultAnswer": "yes",
+            "support": "62-11 Planification_SMQ 2024_V07 ( suivant planif audit ) 92-11- Planning annuel d'audit-V02",
+            "gap": ""
+      },
+      {
+            "id": "d8082",
+            "chapter": "8",
+            "clause": "8.8",
+            "title": "Audits internes",
+            "q": "Le p\u00e9rim\u00e8tre d\u2019audit interne couvre-t-il le syst\u00e8me de management et les activit\u00e9s du laboratoire ?",
+            "defaultAnswer": "yes",
+            "support": "9.2 audit interne",
+            "gap": ""
+      },
+      {
+            "id": "d8083",
+            "chapter": "8",
+            "clause": "8.8",
+            "title": "Audits internes",
+            "q": "Ce p\u00e9rim\u00e8tre tient-il compte de l\u2019importance des activit\u00e9s, des changements, et des r\u00e9sultats des audits pr\u00e9c\u00e9dents ?",
+            "defaultAnswer": "yes",
+            "support": "9.2 audit interne",
+            "gap": ""
+      },
+      {
+            "id": "d8084",
+            "chapter": "8",
+            "clause": "8.8",
+            "title": "Audits internes",
+            "q": "Des actions appropri\u00e9es sont-elles mises en place \u00e0 l\u2019issue de la r\u00e9alisation des audits internes ?",
+            "defaultAnswer": "yes",
+            "support": "92-13-Rapport d'audit sp\u00e9cifique 92-15-Liste des auditeurs qualit\u00e9 internes V03",
+            "gap": ""
+      },
+      {
+            "id": "d8085",
+            "chapter": "8",
+            "clause": "8.9",
+            "title": "Revues de direction",
+            "q": "Proc\u00e9dez-vous \u00e0 des revues de direction \u00e0 intervalle planifi\u00e9 ?",
+            "defaultAnswer": "yes",
+            "support": "62-11 Planification_SMQ 2024_V07 ( chaque fin d\u2019ann\u00e9)",
+            "gap": ""
+      },
+      {
+            "id": "d8086",
+            "chapter": "8",
+            "clause": "8.9",
+            "title": "Revues de direction",
+            "q": "Les \u00e9l\u00e9ments d\u2019entr\u00e9e, de sortie de la revue de direction ainsi que l\u2019ensemble des d\u00e9cisions ou actions sont-ils enregistr\u00e9s et suivis?",
+            "defaultAnswer": "yes",
+            "support": "9-3 Revue de direction",
+            "gap": ""
+      }
+];
+
     const RISK_DEFAULTS = [
       { id: "RISK-ISO-001", sheet: "ISO 17025", chapter: "4.1 - Impartialite", risk: "Influence commerciale ou relationnelle pouvant compromettre l'impartialite des decisions techniques.", p: 3, g: 5, action: "Identifier les conflits d'interets, signer les engagements d'impartialite et revoir les situations sensibles.", delay: "Mensuel", resp: "Direction / RMQ", follow: "en cours", rp: 1, rg: 5, criterion: "Aucun conflit non traite; declaration signee et revue.", eff: "A verifier" },
       { id: "RISK-ISO-002", sheet: "ISO 17025", chapter: "4.2 - Confidentialite", risk: "Divulgation non autorisee d'informations clients, resultats ou donnees techniques.", p: 2, g: 5, action: "Limiter les acces, sensibiliser le personnel et tracer les transmissions de donnees.", delay: "Trimestriel", resp: "RMQ / Informatique", follow: "en cours", rp: 1, rg: 4, criterion: "Acces maitrises et absence d'incident de confidentialite.", eff: "A verifier" },
@@ -12701,12 +13793,78 @@
     function previewDefault() { return `<div class="it"><b>Aucun fichier selectionne</b><p>Choisis un fichier dans la liste pour afficher ses informations et son apercu directement dans l'application.</p><p>QUALI prend en charge PDF, images, audio, video, HTML, CSV, fichiers texte, Word, Excel, PowerPoint, archives et autres formats avec tentative de lecture integree ou repli adapte.</p></div>` }
     function orgPreviewDefault() { return `<div class="it"><b>Lecture directe QUALI</b><p>Connecte le dossier exact <code>D:\\QUALI_Organisme</code>, puis choisis un fichier pour le lire directement dans ce module.</p><p>QUALI essaye maintenant de lire tous les types de fichiers dans l'application : affichage natif si possible, sinon apercu technique ou ouverture locale.</p></div>` }
     function importTarget() { return $("#fstarget") ? $("#fstarget").value : "07_Imports" }
-    function diagState() { if (!s.diag) s.diag = c(D.diag); if (!s.diag.answers) s.diag.answers = {}; if (!s.diag.notes) s.diag.notes = {}; return s.diag }
-    function diagValue(v) { return v === "yes" ? 100 : v === "partial" ? 50 : v === "no" ? 0 : null }
-    function diagLabel(v) { return v === "yes" ? "Conforme et prouve" : v === "partial" ? "Partiellement conforme" : v === "no" ? "Non conforme" : v === "na" ? "Non applicable" : "Non evalue" }
-    function diagLevel(score) { return score >= 85 ? "Niveau avance" : score >= 65 ? "Niveau intermediaire" : score >= 45 ? "Niveau initial" : "Niveau critique" }
-    function diagTheme(score) { return score >= 85 ? "ok" : score >= 65 ? "bl" : score >= 45 ? "wa" : "er" }
-    function diagMetrics() { const st = diagState(), chap = {};["4", "5", "6", "7", "8"].forEach(c => chap[c] = { chapter: c, total: 0, app: 0, answered: 0, sum: 0 }); DIAG_ITEMS.forEach(it => { const a = st.answers[it.id] || ""; const v = diagValue(a), c = chap[it.chapter]; c.total++; if (a) c.answered++; if (v !== null && a) { c.app++; c.sum += v } }); Object.values(chap).forEach(c => { c.score = c.app ? Math.round(c.sum / c.app) : 0; c.completion = c.total ? Math.round((c.answered / c.total) * 100) : 0 }); const all = Object.values(chap), sum = all.reduce((n, c) => n + c.sum, 0), app = all.reduce((n, c) => n + c.app, 0), answered = DIAG_ITEMS.filter(it => st.answers[it.id]).length; return { chapters: all, score: app ? Math.round(sum / app) : 0, completion: Math.round((answered / DIAG_ITEMS.length) * 100), answered, app } }
+    function diagState() {
+      if (!s.diag) s.diag = c(D.diag);
+      if (!s.diag.answers) s.diag.answers = {};
+      if (!s.diag.notes) s.diag.notes = {};
+      return s.diag;
+    }
+
+    function diagAnswer(it) {
+      const st = diagState();
+      return Object.prototype.hasOwnProperty.call(st.answers, it.id) ? (st.answers[it.id] || "") : (it.defaultAnswer || "");
+    }
+
+    function diagNote(it) {
+      const st = diagState();
+      return Object.prototype.hasOwnProperty.call(st.notes, it.id) ? (st.notes[it.id] || "") : (it.support || "");
+    }
+
+    function diagValue(v) {
+      if (v === "yes") return 100;
+      if (v === "partial") return 50;
+      if (v === "no") return 0;
+      return null;
+    }
+
+    function diagLabel(v) {
+      return v === "yes" ? "Conforme avec preuve" : v === "partial" ? "Partiellement conforme" : v === "no" ? "Non conforme" : v === "na" ? "Non applicable" : "Non evalue";
+    }
+
+    function diagLevel(score) {
+      return score >= 85 ? "Niveau maitrise" : score >= 65 ? "Niveau acceptable" : score >= 45 ? "Niveau a consolider" : "Niveau critique";
+    }
+
+    function diagTheme(score) {
+      return score >= 75 ? "ok" : score >= 50 ? "wa" : "er";
+    }
+
+    function diagStateClass(v) {
+      return v === "yes" ? "ok" : v === "partial" ? "wa" : v === "no" ? "er" : "bl";
+    }
+
+    function diagQuestionClass(v) {
+      return v === "yes" ? "diag-ok" : v === "partial" ? "diag-wa" : v === "no" ? "diag-er" : v === "na" ? "diag-na" : "";
+    }
+
+    function diagStatusCards(m) {
+      return '<div class="diag-status-strip">'
+        + '<div class="diag-status-card ok"><b>' + (m.counts.yes || 0) + '</b><span>Conformes avec preuve</span></div>'
+        + '<div class="diag-status-card wa"><b>' + (m.counts.partial || 0) + '</b><span>Partiels / en cours</span></div>'
+        + '<div class="diag-status-card er"><b>' + (m.counts.no || 0) + '</b><span>Non conformes</span></div>'
+        + '<div class="diag-status-card bl"><b>' + (m.counts.na || 0) + '</b><span>Non applicables</span></div>'
+        + '</div>';
+    }
+
+    function diagMatchesFilter(it, query, chapter, status) {
+      const answer = diagAnswer(it) || 'empty';
+      if (chapter !== 'all' && it.chapter !== chapter) return false;
+      if (status !== 'all' && answer !== status) return false;
+      if (!query) return true;
+      return [it.chapter, it.clause, it.title, it.q, it.support, it.gap, diagNote(it), diagLabel(answer)].join(' ').toLowerCase().includes(query);
+    }
+
+    function diagMetrics() {
+      const chapters = ["4", "5", "6", "7", "8"].map(ch => {
+        const its = DIAG_ITEMS.filter(x => x.chapter === ch);
+        const vals = its.map(it => diagValue(diagAnswer(it))).filter(v => v !== null);
+        return { chapter: ch, total: its.length, answered: vals.length, score: vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0, completion: its.length ? Math.round(vals.length / its.length * 100) : 0 };
+      });
+      const vals = DIAG_ITEMS.map(it => diagValue(diagAnswer(it))).filter(v => v !== null);
+      const counts = DIAG_ITEMS.reduce((acc, it) => { const a = diagAnswer(it) || "empty"; acc[a] = (acc[a] || 0) + 1; return acc; }, {});
+      return { score: vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0, answered: vals.length, total: DIAG_ITEMS.length, completion: DIAG_ITEMS.length ? Math.round(vals.length / DIAG_ITEMS.length * 100) : 0, chapters, counts };
+    }
+
     function radarSvg(chapters, size = 220) { const cx = size / 2, cy = size / 2, r = size * 0.31, levels = [20, 40, 60, 80, 100], count = chapters.length || 5, angle = i => -Math.PI / 2 + (i * (Math.PI * 2 / count)), pt = (val, i) => { const rr = r * (val / 100), a = angle(i); return [cx + Math.cos(a) * rr, cy + Math.sin(a) * rr] }, grid = levels.map(l => { const p = chapters.map((_, i) => pt(l, i).join(",")).join(" "); return `<polygon points="${p}" fill="none" stroke="#f1c9c9" stroke-width="1"/>` }).join(""), axes = chapters.map((c, i) => { const p = pt(100, i); return `<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#f1c9c9" stroke-width="1"/>` }).join(""), poly = chapters.map((c, i) => pt(c.score, i).join(",")).join(" "), dots = chapters.map((c, i) => { const p = pt(c.score, i); return `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#d44747"/>` }).join(""), labels = chapters.map((c, i) => { const p = pt(112, i); return `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" font-size="10" fill="#7b4b4b">Ch ${c.chapter}</text>` }).join(""); return `<svg viewBox="0 0 ${size} ${size}" aria-label="Radar diagnostic ISO 17025">${grid}${axes}<polygon points="${poly}" fill="rgba(212,71,71,.18)" stroke="#d44747" stroke-width="2"/>${dots}<circle cx="${cx}" cy="${cy}" r="3" fill="#d44747"/>${labels}</svg>` }
     function idbOpen() { return new Promise((ok, ko) => { if (!window.indexedDB) return ko(new Error("IndexedDB indisponible")); const r = indexedDB.open(RK, 1); r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains("handles")) r.result.createObjectStore("handles") }; r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error) }) }
     async function idbSet(k, v) { try { const db = await idbOpen(); await new Promise((ok, ko) => { const tx = db.transaction("handles", "readwrite"); tx.objectStore("handles").put(v, k); tx.oncomplete = () => ok(); tx.onerror = () => ko(tx.error) }); db.close() } catch (e) { } }
@@ -14504,140 +15662,48 @@
     function orgSummarySections(o) { return [{ title: "Coordonnees", rows: [["Nom", o.name], ["Contact", o.manager], ["Telephone", o.phone], ["Fax", o.fax], ["Email", o.mail], ["Site web", o.website], ["Ville", o.city], ["Pays", o.country], ["Code postal", o.postalCode], ["Identifiant fiscal", o.fiscal], ["Numéro d'enregistrement", o.regNumber], ["Forme juridique", o.legalForm], ["Adresse", o.address], ["Description", o.description]] }, { title: "Accreditation", rows: [["Statut", o.acc], ["Reference accreditation", o.accRef], ["Norme", o.accStd || "ISO/IEC 17025:2017"], ["Organisme d'accreditation", o.accBody], ["Date d'accreditation", o.accDate], ["Date de validite", o.validDate], ["Portee", o.accScope]] }, { title: "Suivi l'accreditation", rows: [["Responsable suivi", o.accResp], ["Prochain audit", o.accNext], ["Decision suivi", o.accDecision], ["Echeance action", o.accActionDate], ["Actions suivi", o.accActions]] }] }
     function orgSummaryBlock(o) { return orgSummarySections(o).map(sec => `<div class="it"><b>${esc(sec.title)}</b>${sec.rows.map(x => `<p>${esc(x[0])} : ${esc(x[1] || "-")}</p>`).join("")}</div>`).join("") }
     function settings() { const o = s.org || c(D.org), set = (id, v) => { const el = $("#" + id); if (el) el.value = v || "" }; set("oname", o.name); set("oacc", o.acc || "Accredite"); set("oad", o.accDate); set("ovd", o.validDate); set("omgr", o.manager); set("otel", o.phone); set("ofax", o.fax); set("omail", o.mail); set("oweb", o.website); set("ofiscal", o.fiscal); set("oregnumber", o.regNumber); set("olegal", o.legalForm); set("oaddr", o.address); set("odesc", o.description); set("ocity", o.city); set("ocountry", o.country); set("ozip", o.postalCode); set("oaref", o.accRef); set("oastd", o.accStd || "ISO/IEC 17025:2017"); set("oabody", o.accBody); set("oascope", o.accScope); set("oaresp", o.accResp); set("oanext", o.accNext); set("oadec", o.accDecision || "Maintien"); set("oaactiondate", o.accActionDate); set("oaactions", o.accActions); switchOrgTab(); const docs = orgRequiredDocs(o), cr = $("#ocreated"), act = $("#oactivity"); if (cr) cr.textContent = "Modifier le : " + (o.updatedAt || "-"); if (act) act.textContent = o.lastAction || "- - -"; $("#orgsum").innerHTML = orgSummaryBlock(o); $("#orgdocs").innerHTML = orgConfigReqRow(o) + (docs.length ? docs.map(reqDocRow).join("") : `<div class="e">Aucun document renseigne.</div>`); if ($("#orgReqPreview") && !$("#orgReqPreview").innerHTML.trim()) $("#orgReqPreview").innerHTML = `<div class="it"><b>Lecture directe</b><p>Importe un document necessaire puis clique sur Lire dans l'application.</p></div>` }
-    function diagView() { const st = diagState(), m = diagMetrics(), f = $("#diagFilter").value, arr = DIAG_ITEMS.filter(it => f === "all" || it.chapter === f); $("#diagPerson").value = st.person || ""; $("#diagDate").value = st.date || ""; $("#diagCount").textContent = `${m.answered}/${DIAG_ITEMS.length} exigences evaluees - Score global ${m.score}%`; $("#diagList").innerHTML = arr.map(it => `<div class="it"><b>${it.clause} - ${it.title}</b><p>${it.q}</p><div class="f mt8"><label>Evaluation</label><select data-diag="${it.id}"><option value="">Choisir</option><option value="yes"${(st.answers[it.id] || "") === "yes" ? " selected" : ""}>Oui et je peux le prouver</option><option value="partial"${(st.answers[it.id] || "") === "partial" ? " selected" : ""}>Partiellement ou en cours</option><option value="no"${(st.answers[it.id] || "") === "no" ? " selected" : ""}>Non</option><option value="na"${(st.answers[it.id] || "") === "na" ? " selected" : ""}>Non applicable</option></select></div><div class="f mt8"><label>Preuves / commentaires</label><textarea data-dnote="${it.id}" placeholder="Procedure, enregistrement, preuve, action a lancer...">${esc(st.notes[it.id] || "")}</textarea></div></div>`).join("") || `<div class="e">Aucune exigence pour ce filtre.</div>`; const low = m.chapters.filter(x => x.score < 70).sort((a, b) => a.score - b.score); const actions = DIAG_ITEMS.filter(it => ["partial", "no"].includes(st.answers[it.id] || "")).slice(0, 6); $("#diagReport").innerHTML = `<div class="it"><div class="diag-score">${m.score}%</div><p>Taux de completion : ${m.completion}%</p><p>Evaluateur : ${st.person || "-"}</p><p>Date d'evaluation : ${st.date || "-"}</p><span class="diag-badge">${diagLevel(m.score)}</span><p>Ce diagnostic s'appuie sur les chapitres 4 a 8 de la norme NF EN ISO/IEC 17025:2017 et sur la logique de ton outil d'auto-evaluation.</p></div><div class="radar-box">${radarSvg(m.chapters, 220)}</div><div class="list">${m.chapters.map(c => `<div class="mini"><strong>Chapitre ${c.chapter}</strong><span class="${diagTheme(c.score)}">${c.score}%</span></div>`).join("")}</div><div class="it"><b>Conclusion generale</b><p>${m.score >= 85 ? "Le systeme de management parait mature et proche d'un bon niveau de conformite ISO 17025. Les actions doivent surtout consolider les preuves et la robustesse documentaire." : m.score >= 65 ? "Le systeme est en progression mais plusieurs exigences restent a consolider avant de viser sereinement une evaluation selon l'ISO 17025." : m.score >= 45 ? "Le systeme presente des bases utiles mais l'ecart reste important. Une feuille de route priorisee est necessaire avant toute demarche d'accreditation." : "Le niveau de maitrise est encore insuffisant. Il faut structurer rapidement le systeme documentaire, les processus et les preuves de mise en oeuvre."}</p></div><div class="it"><b>Priorites par chapitre</b><p>${low.length ? low.map(c => `Chapitre ${c.chapter} (${c.score}%)`).join(" ; ") : "Aucun chapitre critique detecte."}</p></div><div class="diag-actions">${actions.length ? actions.map(it => `<div class="it"><b>${it.clause} - ${it.title}</b><p>${diagLabel(st.answers[it.id])}</p><p>${st.notes[it.id] ? esc(st.notes[it.id]) : "Action recommande : formaliser la preuve, definir un responsable et une echeance."}</p></div>`).join("") : `<div class="it"><b>Plan d'actions</b><p>Aucune action prioritaire n'est detectee pour le moment. Continue de renseigner les preuves pour fiabiliser le rapport final.</p></div>`}</div><div class="it"><b>Decision de preparation</b><p>${m.score >= 75 && m.completion >= 70 ? "Le laboratoire peut envisager une preparation avancee a l'evaluation, sous reserve de verification des preuves documentaires et des enregistrements." : "Le laboratoire doit d'abord renforcer les exigences insuffisamment couvertes, en priorisant les chapitres et questions notes comme non conformes ou partiellement conformes."}</p><p>Derniere mise a jour : ${st.updated || "-"}</p></div>` }
-    function riskScore(x) { return Number(x.p || 0) * Number(x.g || 0) }
-    function riskReScore(x) { return Number(x.rp || 0) * Number(x.rg || 0) }
-    function riskClass(v) { return v >= 15 ? "risk-major" : v >= 6 ? "risk-watch" : "risk-acceptable" }
-    function riskLevelLabel(v) { return v >= 15 ? "Risque majeur" : v >= 6 ? "Risque à surveiller" : "Risque acceptable" }
-    function riskProbLabel(v) { return ({ 5: "Frequent", 4: "Probable", 3: "Peu probable", 2: "Rare", 1: "Extremement rare" })[Number(v) || 0] || "-" }
-    function riskGravLabel(v) { return ({ 1: "Mineur", 2: "Significative", 3: "Severe", 4: "Critique", 5: "Catastrophique" })[Number(v) || 0] || "-" }
-    const RISK_PROB_NOTES = [
-      { v: 1, label: "Extrêmement rare", desc: "Situation exceptionnelle, presque jamais observée.", badge: "Très faible" },
-      { v: 2, label: "Rare", desc: "Peut arriver, mais seulement dans des conditions inhabituelles.", badge: "Faible" },
-      { v: 3, label: "Peu probable", desc: "Possible ponctuellement si les contrôles diminuent.", badge: "Modérée" },
-      { v: 4, label: "Probable", desc: "Peut survenir dans le fonctionnement courant.", badge: "Élevée" },
-      { v: 5, label: "Fréquent", desc: "Susceptible de se produire régulièrement.", badge: "Très élevée" }
-    ];
-    const RISK_GRAV_NOTES = [
-      { v: 1, label: "Mineur", desc: "Impact limité, sans effet significatif sur le résultat.", badge: "Faible" },
-      { v: 2, label: "Significatif", desc: "Impact maîtrisable avec correction simple.", badge: "Modéré" },
-      { v: 3, label: "Sévère", desc: "Impact notable sur la qualité ou l’organisation.", badge: "Important" },
-      { v: 4, label: "Critique", desc: "Impact fort sur la conformité ou la validité des résultats.", badge: "Élevé" },
-      { v: 5, label: "Catastrophique", desc: "Impact majeur sur le laboratoire, le client ou l’accréditation.", badge: "Majeur" }
-    ];
-    function riskNoteData(kind, value) { const arr = kind === "g" ? RISK_GRAV_NOTES : RISK_PROB_NOTES; return arr.find(x => x.v === Number(value)) || null }
-    function riskNoteCardsHtml(kind, value) {
-      const arr = kind === "g" ? RISK_GRAV_NOTES : RISK_PROB_NOTES, selected = Number(value || 0);
-      return arr.map(x => `<button class="risk-note-card${x.v === selected ? " on" : ""}" type="button" data-risk-note="${kind}" data-risk-note-value="${x.v}" aria-pressed="${x.v === selected ? "true" : "false"}"><span class="risk-note-top"><span class="risk-note-num">${x.v}</span><span class="risk-note-badge">${esc(x.badge)}</span></span><span class="risk-note-label">${esc(x.label)}</span><span class="risk-note-desc">${esc(x.desc)}</span><span class="risk-note-selected">${x.v === selected ? "Sélectionné" : ""}</span></button>`).join("")
+    function diagView() {
+      const st = diagState();
+      const m = diagMetrics();
+      const chapter = $("#diagFilter").value;
+      const status = $("#diagStatusFilter") ? $("#diagStatusFilter").value : "all";
+      const query = (($("#diagSearch") && $("#diagSearch").value) || "").trim().toLowerCase();
+      const arr = DIAG_ITEMS.filter(it => diagMatchesFilter(it, query, chapter, status));
+      const critical = DIAG_ITEMS.filter(it => ["partial", "no"].includes(diagAnswer(it))).length;
+      $("#diagPerson").value = st.person || "";
+      $("#diagDate").value = st.date || "";
+      $("#diagCount").textContent = arr.length + "/" + DIAG_ITEMS.length + " exigences affichees";
+      const kpis = '<div class="diag-kpis">'
+        + '<div class="diag-kpi"><span>Score global</span><strong>' + m.score + '%</strong><div class="diag-progress"><i style="width:' + m.score + '%"></i></div></div>'
+        + '<div class="diag-kpi"><span>Completion</span><strong>' + m.completion + '%</strong><div class="diag-progress"><i style="width:' + m.completion + '%"></i></div></div>'
+        + '<div class="diag-kpi"><span>Questionnaire support</span><strong>' + DIAG_ITEMS.length + '</strong></div>'
+        + '<div class="diag-kpi"><span>Actions prioritaires</span><strong>' + critical + '</strong></div>'
+        + '</div>' + diagStatusCards(m);
+      const list = arr.map((it, index) => {
+        const answer = diagAnswer(it);
+        const note = diagNote(it);
+        const support = it.support ? '<div class="diag-support"><b>Preuves / notes du support :</b> ' + esc(it.support) + '</div>' : '';
+        const gap = it.gap ? '<div class="diag-support"><b>Ecart / action attendue :</b> ' + esc(it.gap) + '</div>' : '';
+        return '<div class="it diag-question ' + diagQuestionClass(answer) + '">'
+          + '<div class="diag-question-head"><div><b><span class="diag-question-index">' + (index + 1) + '</span>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p>' + esc(it.q) + '</p></div><span class="diag-state ' + diagStateClass(answer) + '">' + diagLabel(answer) + '</span></div>'
+          + '<div class="f mt8"><label>Diagnostic</label><select data-diag="' + esc(it.id) + '"><option value="">Choisir</option><option value="yes"' + (answer === "yes" ? " selected" : "") + '>Oui et je peux le prouver</option><option value="partial"' + (answer === "partial" ? " selected" : "") + '>Partiellement ou en cours</option><option value="no"' + (answer === "no" ? " selected" : "") + '>Non</option><option value="na"' + (answer === "na" ? " selected" : "") + '>Non applicable</option></select></div>'
+          + '<div class="f mt8"><label>Notes, preuves et commentaire evaluateur</label><textarea data-dnote="' + esc(it.id) + '" placeholder="Preuve disponible, document, responsable, action corrective, echeance...">' + esc(note) + '</textarea></div>'
+          + support + gap
+          + '</div>';
+      }).join("");
+      $("#diagList").innerHTML = kpis + (list || '<div class="e">Aucune exigence pour ce filtre.</div>');
+      const low = m.chapters.filter(x => x.score < 70).sort((a, b) => a.score - b.score);
+      const actions = DIAG_ITEMS.filter(it => ["partial", "no"].includes(diagAnswer(it))).slice(0, 10);
+      const conclusion = m.score >= 85 ? "Le systeme de management qualite est mature. Les preuves sont majoritairement disponibles ; maintenir la surveillance et verrouiller les traces." : m.score >= 65 ? "Le systeme est globalement structure, avec des exigences a renforcer avant une evaluation ISO 17025." : m.score >= 45 ? "Le systeme dispose de bases utiles, mais les ecarts demandent un plan d'actions priorise." : "Le niveau de maitrise est insuffisant. Les processus, preuves et enregistrements doivent etre structures rapidement.";
+      $("#diagReport").innerHTML = '<div class="it"><div class="diag-score">' + m.score + '%</div><p>Taux de completion : ' + m.completion + '%</p><p>Evaluateur : ' + esc(st.person || "-") + '</p><p>Date d\'evaluation : ' + esc(st.date || "-") + '</p><span class="diag-badge">' + diagLevel(m.score) + '</span><p>Diagnostic realise a partir du support d\'auto-evaluation ISO/IEC 17025:2017 fourni.</p></div>'
+        + '<div class="radar-box">' + radarSvg(m.chapters, 220) + '</div>'
+        + '<div class="diag-chapters">' + m.chapters.map(c => '<div class="mini"><strong>Chapitre ' + c.chapter + '</strong><span class="' + diagTheme(c.score) + '">' + c.score + '%</span><small>' + c.answered + '/' + c.total + '</small></div>').join("") + '</div>'
+        + '<div class="it"><b>Conclusion generale</b><p>' + conclusion + '</p></div>'
+        + '<div class="it"><b>Chapitres a prioriser</b><p>' + (low.length ? low.map(c => 'Chapitre ' + c.chapter + ' (' + c.score + '%)').join(' ; ') : 'Aucun chapitre critique detecte.') + '</p></div>'
+        + '<div class="diag-report-actions">' + (actions.length ? actions.map(it => '<div class="it"><b>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p><span class="diag-state ' + diagStateClass(diagAnswer(it)) + '">' + diagLabel(diagAnswer(it)) + '</span></p><p>' + esc(diagNote(it) || it.gap || 'Action recommandee : formaliser la preuve, definir un responsable et une echeance.') + '</p></div>').join("") : '<div class="it"><b>Plan d\'actions</b><p>Aucune action prioritaire n\'est detectee pour le moment.</p></div>') + '</div>'
+        + '<div class="it"><b>Decision de preparation</b><p>' + (m.score >= 75 && m.completion >= 70 ? 'Le laboratoire peut envisager une preparation avancee, sous reserve de verification des preuves.' : 'Le laboratoire doit renforcer les exigences non conformes ou partiellement conformes avant la preparation finale.') + '</p><p>Derniere mise a jour : ' + esc(st.updated || "-") + '</p></div>';
     }
-    function renderRiskNoteCards() {
-      const p = ($("#riskP") && $("#riskP").value) || "", g = ($("#riskG") && $("#riskG").value) || "";
-      const pBox = $("#riskPCardGroup"), gBox = $("#riskGCardGroup");
-      if (pBox) pBox.innerHTML = riskNoteCardsHtml("p", p);
-      if (gBox) gBox.innerHTML = riskNoteCardsHtml("g", g)
-    }
-    function selectRiskNote(kind, value) {
-      const field = kind === "g" ? $("#riskG") : $("#riskP");
-      if (!field) return;
-      field.value = String(value || "");
-      updateRiskComputedScores();
-      renderRiskNoteCards();
-      scheduleRiskAutosave()
-    }
-    function riskMatrixRows() { return [{ value: 5, label: "Frequent" }, { value: 4, label: "Probable" }, { value: 3, label: "Peu probable" }, { value: 2, label: "Rare" }, { value: 1, label: "Extremement rare" }] }
-    function riskMatrixHtml() {
-      return riskMatrixRows().map(row => `<tr><th>${row.value} - ${row.label}</th>${[1, 2, 3, 4, 5].map(col => { const score = row.value * col, cls = riskClass(score), title = `${riskProbLabel(row.value)} x ${riskGravLabel(col)} = ${score} (${riskLevelLabel(score)})`; return `<td class="risk-score ${cls}" title="${esc(title)}">${score}</td>` }).join("")}</tr>`).join("")
-    }
-    function updateRiskComputedScores() {
-      const p = Number(($("#riskP") && $("#riskP").value) || 0), g = Number(($("#riskG") && $("#riskG").value) || 0), rp = Number(($("#riskRp") && $("#riskRp").value) || 0), rg = Number(($("#riskRg") && $("#riskRg").value) || 0);
-      const initial = p * g, residual = rp * rg, initialField = $("#riskInitialScore"), residualField = $("#riskResidualScore");
-      if (initialField) {
-        initialField.value = initial ? `${initial} - ${riskLevelLabel(initial)}` : "";
-        initialField.className = `risk-score-output ${initial ? riskClass(initial) : ""}`.trim()
-      }
-      const pn = riskNoteData("p", p), gn = riskNoteData("g", g), sp = $("#riskSelectedP"), sg = $("#riskSelectedG"), sc = $("#riskSelectedC"), sl = $("#riskSelectedLevel");
-      if (sp) sp.textContent = pn ? `${pn.v} - ${pn.label}` : "-";
-      if (sg) sg.textContent = gn ? `${gn.v} - ${gn.label}` : "-";
-      if (sc) sc.textContent = initial ? `${initial} = ${p} x ${g}` : "-";
-      if (sl) sl.textContent = initial ? riskLevelLabel(initial) : "-";
-      if (residualField) {
-        residualField.value = residual ? `${residual} - ${riskLevelLabel(residual)}` : "";
-        residualField.className = `risk-score-output ${residual ? riskClass(residual) : ""}`.trim()
-      }
-    }
-    function normalizeRiskStore() {
-      const previous = Array.isArray(s.risk) ? s.risk : [];
-      const defaultIds = new Set(RISK_DEFAULTS.map(x => x.id));
-      const cleaned = previous.filter(x => x && !defaultIds.has(x.id));
-      if (!Array.isArray(s.risk) || cleaned.length !== previous.length) {
-        s.risk = cleaned;
-        if (!cleaned.length) s.riskUpdatedAt = "";
-        return true
-      }
-      return false
-    }
-    function riskEndpoint(file) { return new URL(file, location.href).href }
-    async function riskApi(file, body) {
-      const cfg = { method: body ? "POST" : "GET", headers: { "Accept": "application/json" } };
-      if (body) {
-        cfg.headers["Content-Type"] = "application/json";
-        cfg.body = JSON.stringify(body)
-      }
-      const res = await fetch(riskEndpoint(file), cfg);
-      let data = null;
-      try { data = await res.json() } catch (e) { data = null }
-      if (!res.ok || !data || data.success === false) throw new Error((data && data.message) || "Erreur API risques");
-      return data
-    }
-    function riskFromDb(row) {
-      if (!row) return null;
-      return markSaved({
-        id: String(row.id),
-        sheet: "-",
-        chapter: row.chapitre || "",
-        risk: row.risque || "",
-        p: Number(row.probabilite_initiale || 0),
-        g: Number(row.gravite_initiale || 0),
-        action: row.actions || "-",
-        delay: row.delai || "-",
-        resp: row.responsable || "-",
-        follow: row.suivi || "en cours",
-        rp: Number(row.probabilite_residuelle || 0),
-        rg: Number(row.gravite_residuelle || 0),
-        criterion: row.critere_evaluation || "-",
-        eff: row.efficacite || "A verifier",
-        finalStatus: row.statut || "A evaluer",
-        createdAt: row.created_at || "",
-        updatedAt: row.updated_at || ""
-      })
-    }
-    function riskPayload(x) {
-      const p = Number(x.p || 0), g = Number(x.g || 0), rp = Number(x.rp || 0), rg = Number(x.rg || 0);
-      return {
-        id: /^\d+$/.test(String(x.id || "")) ? Number(x.id) : undefined,
-        chapitre: x.chapter || "",
-        risque: x.risk || "",
-        probabilite_initiale: p,
-        gravite_initiale: g,
-        criticite_initiale: p * g,
-        actions: x.action || "",
-        delai: x.delay || "",
-        responsable: x.resp || "",
-        suivi: x.follow || "",
-        probabilite_residuelle: rp,
-        gravite_residuelle: rg,
-        criticite_residuelle: rp * rg,
-        critere_evaluation: x.criterion || "",
-        efficacite: x.eff || "",
-        statut: x.finalStatus || "A evaluer"
-      }
-    }
-    function setRiskSaveStatus(text, cls = "saved") {
-      const el = $("#riskSaveStatus");
-      if (!el) return;
-      el.textContent = text;
-      el.className = `risk-save-status ${cls}`.trim()
-    }
+
     function riskItems() { normalizeRiskStore(); if (!riskMysqlLoaded && !riskLoadingFromMysql) loadRisksFromMysql(); return riskMysqlLoaded ? s.risk : [] }
     async function loadRisksFromMysql() {
       if (riskLoadingFromMysql) return;
@@ -15128,7 +16194,21 @@
     function saveDiagNote(id, val) { const st = diagState(); st.notes[id] = val; st.updated = now(); log("Mise a jour", "Diagnostic", id + " commentaire enregistre"); save("Commentaires diagnostic mis a jour"); render() }
     function saveDiagMeta() { const st = diagState(); st.person = $("#diagPerson").value.trim(); st.date = $("#diagDate").value; st.updated = now(); log("Mise a jour", "Diagnostic", "Informations d evaluation enregistrees"); save("Informations evaluation enregistrees"); render() }
     function resetDiag() { s.diag = c(D.diag); log("Reinitialisation", "Diagnostic", "Diagnostic ISO 17025 reinitialise"); save("Diagnostic reinitialise"); render() }
-    function exportDiag() { const st = diagState(), m = diagMetrics(), org = s.org || {}, rows = m.chapters.map(c => `<tr><td style="padding:8px;border:1px solid #dbe6f5">Chapitre ${c.chapter}</td><td style="padding:8px;border:1px solid #dbe6f5">${c.score}%</td><td style="padding:8px;border:1px solid #dbe6f5">${c.completion}%</td></tr>`).join(""), acts = DIAG_ITEMS.filter(it => ["partial", "no"].includes(st.answers[it.id] || "")).map(it => `<li><b>${it.clause} - ${it.title}</b> : ${diagLabel(st.answers[it.id])} ${st.notes[it.id] ? "- " + esc(st.notes[it.id]) : ""}</li>`).join("") || "<li>Aucune action prioritaire relevee.</li>", radar = radarSvg(m.chapters, 260), html = `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Rapport diagnostic ISO 17025</title><style>body{font:14px Segoe UI,Arial,sans-serif;color:#24324a;padding:28px}h1,h2{color:#b53030}table{border-collapse:collapse;width:100%}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left}.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#fdeeee;color:#b53030;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}.box{border:1px solid #f0d3d3;border-radius:14px;padding:14px;background:#fffafa}.score{font-size:32px;font-weight:800;color:#d44747}</style><body><h1>Rapport final de diagnostic ISO 17025</h1><p><b>Organisme :</b> ${esc(org.name || "-")}<br><b>Evaluateur :</b> ${esc(st.person || "-")}<br><b>Date d'evaluation :</b> ${esc(st.date || "-")}<br><b>Date d'edition :</b> ${esc(now())}</p><div class="grid"><div class="box"><div class="score">${m.score}%</div><p><span class="badge">${diagLevel(m.score)}</span></p><p>Taux de completion : ${m.completion}%</p><p>Le diagnostic se base sur les exigences principales des chapitres 4 a 8 de la norme NF EN ISO/IEC 17025:2017.</p></div><div class="box">${radar}</div></div><h2>Synthese par chapitre</h2><table><tr><th>Chapitre</th><th>Score</th><th>Completion</th></tr>${rows}</table><h2>Conclusion</h2><p>${m.score >= 85 ? "Le systeme de management qualite est globalement mature et proche d'un niveau satisfaisant de conformite ISO 17025." : m.score >= 65 ? "Le systeme est partiellement mature et doit consolider plusieurs exigences avant une evaluation." : m.score >= 45 ? "Le systeme est en construction et demande un plan d'actions prioritaire avant toute demarche d'accreditation." : "Le systeme n'est pas encore assez maitrise pour viser l'ISO 17025 sans actions structurantes importantes."}</p><h2>Actions prioritaires</h2><ul>${acts}</ul></body></html>`; const w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour generer le PDF"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Rapport PDF pret a imprimer ou enregistrer en PDF") }
+    function exportDiag() {
+      const st = diagState(), m = diagMetrics(), org = s.org || {};
+      const rows = m.chapters.map(c => '<tr><td style="padding:8px;border:1px solid #dbe6f5">Chapitre ' + c.chapter + '</td><td style="padding:8px;border:1px solid #dbe6f5">' + c.score + '%</td><td style="padding:8px;border:1px solid #dbe6f5">' + c.completion + '%</td></tr>').join("");
+      const acts = DIAG_ITEMS.filter(it => ["partial", "no"].includes(diagAnswer(it))).map(it => '<li><b>' + esc(it.clause) + ' - ' + esc(it.title) + '</b> : ' + diagLabel(diagAnswer(it)) + (diagNote(it) ? ' - ' + esc(diagNote(it)) : '') + '</li>').join("") || '<li>Aucune action prioritaire relevee.</li>';
+      const radar = radarSvg(m.chapters, 260);
+      const conclusion = m.score >= 85 ? "Le systeme de management qualite est globalement mature et proche d'un niveau satisfaisant de conformite ISO 17025." : m.score >= 65 ? "Le systeme est partiellement mature et doit consolider plusieurs exigences avant une evaluation." : m.score >= 45 ? "Le systeme est en construction et demande un plan d'actions prioritaire avant toute demarche d'accreditation." : "Le systeme n'est pas encore assez maitrise pour viser l'ISO 17025 sans actions structurantes importantes.";
+      const html = '<!doctype html><html lang="fr"><meta charset="utf-8"><title>Rapport diagnostic ISO 17025</title><style>body{font:14px Segoe UI,Arial,sans-serif;color:#24324a;padding:28px}h1,h2{color:#1f66d8}table{border-collapse:collapse;width:100%}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left}.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#edf3ff;color:#1f66d8;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}.box{border:1px solid #cfe0fb;border-radius:14px;padding:14px;background:#fff}.score{font-size:32px;font-weight:800;color:#1f66d8}</style><body><h1>Rapport final de diagnostic ISO 17025</h1><p><b>Organisme :</b> ' + esc(org.name || "-") + '<br><b>Evaluateur :</b> ' + esc(st.person || "-") + '<br><b>Date d\'evaluation :</b> ' + esc(st.date || "-") + '<br><b>Date d\'edition :</b> ' + esc(now()) + '</p><div class="grid"><div class="box"><div class="score">' + m.score + '%</div><p><span class="badge">' + diagLevel(m.score) + '</span></p><p>Taux de completion : ' + m.completion + '%</p><p>Le diagnostic se base sur les exigences principales des chapitres 4 a 8 de la norme NF EN ISO/IEC 17025:2017.</p></div><div class="box">' + radar + '</div></div><h2>Synthese par chapitre</h2><table><tr><th>Chapitre</th><th>Score</th><th>Completion</th></tr>' + rows + '</table><h2>Conclusion</h2><p>' + conclusion + '</p><h2>Actions prioritaires</h2><ul>' + acts + '</ul></body></html>';
+      const w = window.open("", "_blank", "width=1100,height=900");
+      if (!w) { sync("Autorise les fenetres popup pour generer le PDF"); return; }
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      w.onload = () => setTimeout(() => w.print(), 250);
+      sync("Rapport PDF pret a imprimer ou enregistrer en PDF");
+    }
     function diagField(e) { const t = e.target; if (t.matches("[data-diag]")) saveDiag(t.dataset.diag, t.value); if (t.matches("[data-dnote]")) { saveDiagNote(t.dataset.dnote, t.value); render() } if (t.id === "diagPerson" || t.id === "diagDate") saveDiagMeta() }
     function act(e) { const da = e.target.closest("[data-da]"), doo = e.target.closest("[data-do]"), dd = e.target.closest("[data-dd]"), oda = e.target.closest("[data-oda]"), odo = e.target.closest("[data-odo]"), odd = e.target.closest("[data-odd]"), op = e.target.closest("[data-oproc]"), orgpick = e.target.closest("[data-orgpick]"), orgscan = e.target.closest("[data-orgscan]"), orgf = e.target.closest("[data-orgf]"), orgReqImport = e.target.closest("[data-orgreq-import]"), orgReqRead = e.target.closest("[data-orgreq-read]"), ee = e.target.closest("[data-ee]"), et = e.target.closest("[data-et]"), ed = e.target.closest("[data-ed]"), ne = e.target.closest("[data-ne]"), nt = e.target.closest("[data-nt]"), nd = e.target.closest("[data-nd]"), ae = e.target.closest("[data-ae]"), at = e.target.closest("[data-at]"), acreatenc = e.target.closest("[data-acreatenc]"), ad = e.target.closest("[data-ad]"), rt = e.target.closest("[data-rt]"), rd = e.target.closest("[data-rd]"), ud = e.target.closest("[data-ud]"), rf = e.target.closest("[data-rf]"); if ((da || oda) && !requirePerm("Valider")) return; if ((doo || odo || ee || et || ne || nt || ae || at || acreatenc || rt) && !requirePerm("Modifier")) return; if ((dd || odd || ed || nd || ad || rd || ud) && !requirePerm("Supprimer")) return; if (op) openProcessWindow(op.dataset.oproc); if (orgpick) { activeOrgType = orgpick.dataset.otype || activeOrgType; activeOrgStatus = orgpick.dataset.ost || activeOrgStatus; chooseOrgDir() } if (orgscan && activeOrgProc) { activeOrgType = orgscan.dataset.otype || activeOrgType; activeOrgStatus = orgscan.dataset.ost || activeOrgStatus; scanOrgProc(activeOrgProc) } if (orgf) openOrgFile(orgf.dataset.orgf); if (orgReqImport) pickReqDoc(orgReqImport.dataset.orgreqImport); if (orgReqRead) readReqDoc(orgReqRead.dataset.orgreqRead); if (da) { let x = s.docs.find(v => v.id == da.dataset.da); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Documents", x.ref + " valide"); save("Document valide"); render() } } if (doo) { let x = s.docs.find(v => v.id == doo.dataset.do); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Documents", x.ref + " obsolete"); save("Document obsolete"); render() } } if (dd) { let x = s.docs.find(v => v.id == dd.dataset.dd); if (x) { s.docs = s.docs.filter(v => v.id != dd.dataset.dd); log("Suppression", "Documents", x.ref + " supprime"); save("Document supprime"); render() } } if (oda) { let x = (s.orgDocs || []).find(v => v.id == oda.dataset.oda); if (x) { x.st = "Valide"; markSaved(x); log("Validation", "Document organisme", x.ref + " valide"); save("Document organisme valide"); render() } } if (odo) { let x = (s.orgDocs || []).find(v => v.id == odo.dataset.odo); if (x) { x.st = "Obsolete"; markSaved(x); log("Mise a jour", "Document organisme", x.ref + " obsolete"); save("Document organisme obsolete"); render() } } if (odd) { let x = (s.orgDocs || []).find(v => v.id == odd.dataset.odd); if (x) { s.orgDocs = s.orgDocs.filter(v => v.id != odd.dataset.odd); log("Suppression", "Document organisme", x.ref + " supprime"); save("Document organisme supprime"); render() } } if (ee) editEq(ee.dataset.ee); if (et) { let x = s.eq.find(v => String((v.code || v.id)) === String(et.dataset.et)); if (x) { x.st = x.st === "Valide" ? "A etalonner" : x.st === "A etalonner" ? "Hors service" : "Valide"; markSaved(x); log("Mise a jour", "Equipements", (x.code || x.id) + " -> " + x.st); save("Equipement mis a jour"); saveEquipmentToMysql(x).catch(e => { console.error(e); sync("Statut modifie localement, MySQL localhost indisponible") }); eq(); sync("Statut equipement mis a jour dans le tableau et MySQL localhost") } } if (ed) { let x = s.eq.find(v => String((v.code || v.id)) === String(ed.dataset.ed)); if (x) { s.eq = s.eq.filter(v => String((v.code || v.id)) !== String(ed.dataset.ed)); if (String(editingEqId) === String(ed.dataset.ed)) resetEqForm(); log("Suppression", "Equipements", (x.code || x.id) + " supprime"); save("Equipement supprime"); deleteEquipmentFromMysql(x.code || x.id).catch(e => { console.error(e); sync("Equipement supprime localement, MySQL localhost indisponible") }); eq(); sync("Equipement supprime du tableau et de MySQL localhost") } } if (ne) editNc(ne.dataset.ne); if (nt) { let x = s.nc.find(v => v.ref == nt.dataset.nt); x.st = x.st === "Ouverte" ? "En cours" : "Cloturee"; markSaved(x); log("Mise a jour", "NC", x.ref + " -> " + x.st); save("NC mise a jour"); render() } if (nd) { let x = s.nc.find(v => v.ref == nd.dataset.nd); if (x) { s.nc = s.nc.filter(v => v.ref != nd.dataset.nd); log("Suppression", "NC", x.ref + " supprimee"); save("NC supprimee"); render() } } if (ae) editAud(ae.dataset.ae); if (acreatenc) { const nc = createNcFromAudit(acreatenc.dataset.acreatenc); if (nc) { page("nc"); sync("NC creee depuis audit : " + nc.ref); render() } } if (at) { let x = s.aud.find(v => v.ref == at.dataset.at); if (x) { x.st = x.st === "Planifie" ? "En cours" : x.st === "En cours" ? "Realise" : "Cloture"; if (x.st === "Realise") createNcFromAudit(x.ref); markSaved(x); log("Mise a jour", "Audits", x.ref + " -> " + x.st); save("Audit mis a jour"); render() } } if (ad) { let x = s.aud.find(v => v.ref == ad.dataset.ad); if (x) { s.aud = s.aud.filter(v => v.ref != ad.dataset.ad); log("Suppression", "Audits", x.ref + " supprime"); save("Audit supprime"); render() } } if (rt) { let x = (s.revc || []).find(v => v.ref == rt.dataset.rt); if (x) { x.st = x.st === "A revoir" ? "En attente client" : x.st === "En attente client" ? "Approuvee" : "Approuvee"; markSaved(x); log("Mise a jour", "Liste client", x.ref + " -> " + x.st); save("Liste client mise a jour"); render() } } if (rd) { let x = (s.revc || []).find(v => String(v.ref) === String(rd.dataset.rd)); if (x) { s.revc = s.revc.filter(v => String(v.ref) !== String(rd.dataset.rd)); if (String(editingRevcId) === String(x.ref)) resetRevcForm(); log("Suppression", "Liste client", x.ref + " supprime"); save("Liste client supprime"); deleteClientFromMysql(x.ref).catch(e => { console.error(e); sync("Client supprime localement, MySQL localhost indisponible") }); revc(); sync("Client supprime du tableau et de MySQL localhost") } } if (ud) { let x = (s.usr || []).map(normalizeUserAccount).find(v => v.email == ud.dataset.ud); if (x) { if (x.pilot) { sync("Le compte pilote principal ne peut pas etre supprime depuis ce module"); return } if (authNormEmail((s.u && s.u.email) || "") === authNormEmail(x.email)) { sync("Le compte connecte ne peut pas etre supprime pendant la session"); return } s.usr = s.usr.filter(v => authNormEmail(v.email) != authNormEmail(ud.dataset.ud)); log("Suppression", "Utilisateurs", x.email + " supprime"); save("Utilisateur supprime"); render() } } if (rf) openRepoFile(rf.dataset.rf) }
     async function updateMasterDocumentStatus(id, status) { if (!requirePerm("Modifier")) return; try { await documentationApi("update_document.php", { method: "POST", body: { id, statut: status, actorName: (s.u && s.u.name) || "Utilisateur" } }); await refreshMasterDocuments("Statut documentaire mis a jour : " + status); if (docCentralState.ready) await refreshDocumentationCentral() } catch (e) { console.error(e); sync(e.message || "Changement de statut impossible") } }
@@ -15199,7 +16279,7 @@
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
     bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); bindClick("ocreate", createOrg); bindClick("odel", deleteOrg); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", showDashboardReport); bindClick("dashboardReportPrint", printDashboardReport); bindClick("dashboardReportDownload", downloadDashboardReport); bindClick("dashboardReportHide", hideDashboardReport); syncPilotManageButtons(); registerPwa();
     ["#cpManageLookupEmail", "#cpEmail", "#cpEmail2"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPilotManageButtons); el.addEventListener("change", syncPilotManageButtons) } });
-    ["#ds", "#dpf", "#dtf", "#df", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
+    ["#ds", "#dpf", "#dtf", "#df", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#diagStatusFilter", "#diagSearch", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     const scheduleDocSearch = (() => { let t = 0; return () => { clearTimeout(t); t = setTimeout(() => { docCentralState.libraryFilter = ""; refreshDocumentationCentral() }, 260) } })();
     ["#ods", "#odpf", "#odtf", "#odcycle", "#odf", "#oddossier", "#odsort", "#odversion", "#odowner"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", scheduleDocSearch); el.addEventListener("change", scheduleDocSearch) } });
     ["#naStart", "#naEnd"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", updateAuditDuration); el.addEventListener("change", updateAuditDuration) } });
@@ -15226,7 +16306,7 @@
     ["ds", "dvf"].forEach(id => { const el = $("#" + id); if (el) el.addEventListener("input", () => docs()) });
     ["edomf", "ef"].forEach(id => { const el = $("#" + id); if (el) el.addEventListener("change", () => eq()) });
     bindClick("planCalAddLab", addPlanCalLab); bindClick("planCalDeleteLab", deletePlanCalLab); bindClick("planCalCreate", savePlanCalInstrument); bindClick("planCalUpdate", updatePlanCalInstrument); bindClick("planCalDelete", deletePlanCalInstrument);
-    bindClick("dsearch", () => refreshMasterDocuments("Recherche documentaire actualisee")); bindClick("drefresh", () => refreshMasterDocuments("Maitrise documentaire synchronisee avec MySQL")); bindClick("dsv", addDoc); bindClick("dprint", printDocsTable); bindClick("ddownload", downloadDocsTable); bindClick("odCleanupBtn", () => loadDocumentationCleanupLibrary(true)); bindClick("odServerRefresh", () => refreshDocumentationCentral("Depot documentaire central actualise")); bindClick("odServerScan", scanDocumentationCentralRepository); bindClick("odServerBootstrap", async () => { const pilotEmail = pilotEmailForApi(); if (!pilotEmail) return; try { await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/bootstrap", { method: "POST", body: { actorName: (s.u && s.u.name) || "Pilote" } }); await refreshDocumentationCentral("Depot documentaire initialise") } catch (e) { console.error(e); sync(e.message || "Initialisation documentaire impossible") } }); bindClick("odHierarchySave", saveDocumentationHierarchy); bindClick("odCreateFolderBtn", createDocumentationCentralFolder); bindClick("odCentralPickBtn", pickDocumentationCentralFile); bindClick("odCentralImportBtn", importDocumentationCentralFile); ["odadd", "odsv"].forEach(id => bindClick(id, addOrgDoc)); bindClick("odImportBtn", () => { $("#odImportFile").value = ""; $("#odImportFile").click() }); const odFileInput = $("#odImportFile"); if (odFileInput) odFileInput.addEventListener("change", e => { if (e.target.files && e.target.files.length) importOrgDocs(e.target.files) }); const odCentralFileInput = $("#odCentralFile"); if (odCentralFileInput) odCentralFileInput.addEventListener("change", e => { if (e.target.files && e.target.files[0]) handleDocumentationCentralFile(e.target.files[0]) }); bindClick("eadd", () => { eq(); sync("Recherche equipements actualisee") }); bindClick("esv", addEq); bindClick("eprint", printEq); bindClick("edownload", downloadEq); bindClick("nadd", () => { nc(); sync("Recherche non-conformites actualisee") }); bindClick("nsv", addNc); bindClick("naSave", addNcAudit); bindClick("naSaveInline", addNcAudit); bindClick("aadd", () => { aud(); sync("Recherche audits actualisee") }); bindClick("asv", addAud); bindClick("radd", () => { revc(); sync("Recherche clients actualisee") }); bindClick("rsv", addRevc); bindClick("rprint", printRevc); bindClick("rdownload", downloadRevc); bindClick("pxadd", () => { prestView(); sync("Recherche prestataires actualisee") }); bindClick("pxsv", addPrest); bindClick("pxprint", printPrest); bindClick("pxdownload", downloadPrestPdf); bindClick("planAuditCreate", createPlanAudit); bindClick("planAuditSave", savePlanAudit); bindClick("planAuditDelete", deletePlanAudit); bindClick("planInterCreate", createPlanInter); bindClick("planInterSave", savePlanInter); bindClick("planInterDelete", deletePlanInter); const planInterSelect = $("#planInterEditRow"); if (planInterSelect) { planInterSelect.addEventListener("input", loadPlanInterForEdit); planInterSelect.addEventListener("change", loadPlanInterForEdit) } bindClick("planSave", savePlanning); bindClick("planPrint", printPlanning); bindClick("planDownload", downloadPlanning); bindClick("planSearchBtn", () => { planningView(); sync("Recherche planning actualisee") }); bindClick("uApplyProfile", () => applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Lecture seule"))); bindClick("usv", addUsr); bindClick("riskSave", addRisk); bindClick("riskCancel", () => { resetRiskForm(false); sync("Formulaire de risque vide") }); bindClick("riskCreateBtn", openRiskCreateForm); bindClick("riskEditSelectedBtn", editSelectedRisk); bindClick("riskPrint", printRiskRegister); bindClick("riskDownload", downloadRiskExcel); bindClick("riskSearchBtn", () => { riskView(); sync("Recherche risques actualisee") }); bindClick("swotSave", addSwot); bindClick("swotPrint", printSwotRegister); bindClick("swotDownload", downloadSwotExcel); bindClick("swotSearchBtn", () => { swotView(); sync("Recherche SWOT actualisee") }); bindClick("satSave", saveSat); bindClick("satSearchBtn", () => { satView(); sync("Recherche satisfaction actualisee") }); bindClick("satPrint", printSatList); bindClick("satDownload", downloadSatList); bindClick("recSave", saveReclamation); bindClick("recSearchBtn", () => { reclamationView(); sync("Recherche reclamations actualisee") }); bindClick("recPrint", printReclamations); bindClick("recDownload", downloadReclamations); bindClick("recStatsPrint", printReclamationStats); bindClick("recStatsDownload", downloadReclamationStats); bindClick("perSave", addPersonnel); bindClick("perSearchBtn", () => { personnelView(); sync("Recherche personnel actualisee") }); bindClick("perPrint", printPersonnel); bindClick("perDownload", downloadPersonnel); bindClick("perHabSave", addPersonnelHab); bindClick("perHabPrint", () => printPersonnelGrid("hab")); bindClick("perHabDownload", () => downloadPersonnelGrid("hab")); bindClick("perQualSave", addPersonnelQual); bindClick("perQualPrint", () => printPersonnelGrid("qual")); bindClick("perQualDownload", () => downloadPersonnelGrid("qual")); bindClick("aciRequesterSave", () => saveAciDraftSection("requester")); bindClick("aciRequestSave", () => saveAciDraftSection("request")); bindClick("aciTreatmentSave", () => saveAciDraftSection("treatment")); bindClick("aciCurrentDownload", downloadAciCurrentReport); bindClick("aciSave", saveAci); bindClick("aciSearchBtn", () => { ameliorationView(); sync("Recherche amelioration continue actualisee") }); bindClick("aciPrint", printAci); bindClick("aciDownload", downloadAci); bindClick("statSave", saveStat); bindClick("statSearchBtn", () => { statView(); sync("Recherche statistique actualisee") }); bindClick("statPrint", printStat); bindClick("statDownload", downloadStat); bindClick("fsearch", () => { repoView(); sync("Recherche fichiers actualisee") });
+    bindClick("dsearch", () => refreshMasterDocuments("Recherche documentaire actualisee")); bindClick("drefresh", () => refreshMasterDocuments("Maitrise documentaire synchronisee avec MySQL")); bindClick("dsv", addDoc); bindClick("dprint", printDocsTable); bindClick("ddownload", downloadDocsTable); bindClick("odCleanupBtn", () => loadDocumentationCleanupLibrary(true)); bindClick("odServerRefresh", () => refreshDocumentationCentral("Depot documentaire central actualise")); bindClick("odServerScan", scanDocumentationCentralRepository); bindClick("odServerBootstrap", async () => { const pilotEmail = pilotEmailForApi(); if (!pilotEmail) return; try { await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/bootstrap", { method: "POST", body: { actorName: (s.u && s.u.name) || "Pilote" } }); await refreshDocumentationCentral("Depot documentaire initialise") } catch (e) { console.error(e); sync(e.message || "Initialisation documentaire impossible") } }); bindClick("odHierarchySave", saveDocumentationHierarchy); bindClick("odCreateFolderBtn", createDocumentationCentralFolder); bindClick("odCentralPickBtn", pickDocumentationCentralFile); bindClick("odCentralImportBtn", importDocumentationCentralFile); ["odadd", "odsv"].forEach(id => bindClick(id, addOrgDoc)); bindClick("odImportBtn", () => { $("#odImportFile").value = ""; $("#odImportFile").click() }); const odFileInput = $("#odImportFile"); if (odFileInput) odFileInput.addEventListener("change", e => { if (e.target.files && e.target.files.length) importOrgDocs(e.target.files) }); const odCentralFileInput = $("#odCentralFile"); if (odCentralFileInput) odCentralFileInput.addEventListener("change", e => { if (e.target.files && e.target.files[0]) handleDocumentationCentralFile(e.target.files[0]) }); bindClick("eadd", () => { eq(); sync("Recherche equipements actualisee") }); bindClick("esv", addEq); bindClick("eprint", printEq); bindClick("edownload", downloadEq); bindClick("nadd", () => { nc(); sync("Recherche non-conformites actualisee") }); bindClick("nsv", addNc); bindClick("naSave", addNcAudit); bindClick("naSaveInline", addNcAudit); bindClick("aadd", () => { aud(); sync("Recherche audits actualisee") }); bindClick("asv", addAud); bindClick("radd", () => { revc(); sync("Recherche clients actualisee") }); bindClick("rsv", addRevc); bindClick("rprint", printRevc); bindClick("rdownload", downloadRevc); bindClick("pxadd", () => { prestView(); sync("Recherche prestataires actualisee") }); bindClick("pxsv", addPrest); bindClick("pxprint", printPrest); bindClick("pxdownload", downloadPrestPdf); bindClick("planAuditCreate", createPlanAudit); bindClick("planAuditSave", savePlanAudit); bindClick("planAuditDelete", deletePlanAudit); bindClick("planInterCreate", createPlanInter); bindClick("planInterSave", savePlanInter); bindClick("planInterDelete", deletePlanInter); const planInterSelect = $("#planInterEditRow"); if (planInterSelect) { planInterSelect.addEventListener("input", loadPlanInterForEdit); planInterSelect.addEventListener("change", loadPlanInterForEdit) } bindClick("planSave", savePlanning); bindClick("planPrint", printPlanning); bindClick("planDownload", downloadPlanning); bindClick("planSearchBtn", () => { planningView(); sync("Recherche planning actualisee") }); bindClick("uApplyProfile", () => applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Lecture seule"))); bindClick("usv", addUsr); bindClick("diagSave", () => { const st = diagState(); st.updated = now(); save("Diagnostic ISO 17025 enregistre"); render() }); bindClick("riskSave", addRisk); bindClick("riskCancel", () => { resetRiskForm(false); sync("Formulaire de risque vide") }); bindClick("riskCreateBtn", openRiskCreateForm); bindClick("riskEditSelectedBtn", editSelectedRisk); bindClick("riskPrint", printRiskRegister); bindClick("riskDownload", downloadRiskExcel); bindClick("riskSearchBtn", () => { riskView(); sync("Recherche risques actualisee") }); bindClick("swotSave", addSwot); bindClick("swotPrint", printSwotRegister); bindClick("swotDownload", downloadSwotExcel); bindClick("swotSearchBtn", () => { swotView(); sync("Recherche SWOT actualisee") }); bindClick("satSave", saveSat); bindClick("satSearchBtn", () => { satView(); sync("Recherche satisfaction actualisee") }); bindClick("satPrint", printSatList); bindClick("satDownload", downloadSatList); bindClick("recSave", saveReclamation); bindClick("recSearchBtn", () => { reclamationView(); sync("Recherche reclamations actualisee") }); bindClick("recPrint", printReclamations); bindClick("recDownload", downloadReclamations); bindClick("recStatsPrint", printReclamationStats); bindClick("recStatsDownload", downloadReclamationStats); bindClick("perSave", addPersonnel); bindClick("perSearchBtn", () => { personnelView(); sync("Recherche personnel actualisee") }); bindClick("perPrint", printPersonnel); bindClick("perDownload", downloadPersonnel); bindClick("perHabSave", addPersonnelHab); bindClick("perHabPrint", () => printPersonnelGrid("hab")); bindClick("perHabDownload", () => downloadPersonnelGrid("hab")); bindClick("perQualSave", addPersonnelQual); bindClick("perQualPrint", () => printPersonnelGrid("qual")); bindClick("perQualDownload", () => downloadPersonnelGrid("qual")); bindClick("aciRequesterSave", () => saveAciDraftSection("requester")); bindClick("aciRequestSave", () => saveAciDraftSection("request")); bindClick("aciTreatmentSave", () => saveAciDraftSection("treatment")); bindClick("aciCurrentDownload", downloadAciCurrentReport); bindClick("aciSave", saveAci); bindClick("aciSearchBtn", () => { ameliorationView(); sync("Recherche amelioration continue actualisee") }); bindClick("aciPrint", printAci); bindClick("aciDownload", downloadAci); bindClick("statSave", saveStat); bindClick("statSearchBtn", () => { statView(); sync("Recherche statistique actualisee") }); bindClick("statPrint", printStat); bindClick("statDownload", downloadStat); bindClick("fsearch", () => { repoView(); sync("Recherche fichiers actualisee") });
     bindClick("dwordOpen", () => showWordCreator()); bindClick("wordCreateClose", hideWordCreator); bindClick("wordCreateBtn", createWordDocumentFromForm); bindClick("odWordOpen", () => showWordCreator());
     bindClick("odResetFilters", resetDocumentationCentralCounterFilter);
     bindClick("odInitStructureBtn", initDocumentationStructure); bindClick("odPreviewOrganizationBtn", () => organizeDocumentationDocuments(false)); bindClick("odRunOrganizationBtn", () => organizeDocumentationDocuments(true)); bindClick("odScanAfterOrganizationBtn", scanDocumentationCentralRepository);
