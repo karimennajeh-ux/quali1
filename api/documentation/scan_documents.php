@@ -9,6 +9,9 @@ $actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Systeme')) ?: 
 $root = doc_root();
 if (!is_dir($root)) doc_error("Dossier documentaire introuvable : {$root}", 404);
 doc_ensure_all_main_lifecycle_folders();
+if (!$pdo->inTransaction()) {
+    $pdo->beginTransaction();
+}
 
 $allowed = array_flip(QUALI_DOCUMENT_EXTENSIONS);
 $scanned = 0;
@@ -220,6 +223,9 @@ foreach ($allDocs as $doc) {
 }
 
 doc_log($pdo, null, 'scan', "Scan local termine : {$scanned} fichier(s), {$added} ajoute(s), {$updated} mis a jour, {$missing} fichier(s) introuvable(s), {$missingFolders} dossier(s) introuvable(s).", $actor);
+if ($pdo->inTransaction()) {
+    $pdo->commit();
+}
 doc_json([
     'summary' => [
         'scannedCount' => $scanned,

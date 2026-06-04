@@ -13,7 +13,11 @@ const dmsState = {
   sortBy: 'modified_desc',
   selectedFolder: '',
   pendingDocumentType: null,
-  expandedFolders: new Set()
+  expandedFolders: new Set(),
+  hasPendingChanges: false,
+  isSaving: false,
+  lastSaveError: '',
+  lastSaveMessage: 'Toutes les modifications sont enregistrées'
 };
 
 const DMS_ROOT_ORDER = [
@@ -111,13 +115,124 @@ async function initDmsFileDisplay() {
     await loadDmsFiles();
     ensureDmsFolderVisible(getDmsCurrentFolder());
     
+    ensureDmsSaveControls();
+
     // Setup event listeners
     setupDmsEventListeners();
     
     // Render the table
     renderDmsFilesTable();
+    updateDmsSaveControls();
   } catch (error) {
     console.error("Erreur lors de l'initialisation de l'affichage DMS:", error);
+  }
+}
+
+function ensureDmsSaveControls() {
+  if (document.getElementById('docSaveChangesBtn')) {
+    updateDmsSaveControls();
+    return;
+  }
+
+  const toolbar = document.querySelector('.doc-toolbar-right');
+  if (!toolbar) return;
+
+  const status = document.createElement('span');
+  status.id = 'docUnsavedIndicator';
+  status.className = 'dms-save-status';
+  status.setAttribute('aria-live', 'polite');
+  status.textContent = dmsState.lastSaveMessage;
+
+  const button = document.createElement('button');
+  button.id = 'docSaveChangesBtn';
+  button.className = 'btn2 btn dms-save-button';
+  button.type = 'button';
+  button.textContent = 'Enregistrer';
+  button.disabled = true;
+  button.addEventListener('click', () => saveDmsChanges({ manual: true }));
+
+  toolbar.appendChild(status);
+  toolbar.appendChild(button);
+  updateDmsSaveControls();
+}
+
+function updateDmsSaveControls() {
+  const button = document.getElementById('docSaveChangesBtn');
+  const status = document.getElementById('docUnsavedIndicator');
+  if (button) {
+    button.disabled = dmsState.isSaving || !dmsState.hasPendingChanges;
+    button.textContent = dmsState.isSaving ? 'Enregistrement...' : 'Enregistrer';
+    button.classList.toggle('is-saving', dmsState.isSaving);
+  }
+  if (status) {
+    status.textContent = dmsState.isSaving
+      ? 'Enregistrement en cours...'
+      : dmsState.hasPendingChanges
+        ? (dmsState.lastSaveError || 'Modifications non enregistrées')
+        : dmsState.lastSaveMessage;
+    status.dataset.state = dmsState.isSaving ? 'saving' : dmsState.hasPendingChanges ? 'pending' : 'saved';
+    if (dmsState.lastSaveError) status.dataset.state = 'error';
+  }
+}
+
+function markDmsPendingChanges(message = 'Modifications non enregistrées') {
+  dmsState.hasPendingChanges = true;
+  dmsState.lastSaveError = '';
+  dmsState.lastSaveMessage = message;
+  updateDmsSaveControls();
+}
+
+async function saveDmsChanges(options = {}) {
+  if (dmsState.isSaving) return false;
+  if (!dmsState.hasPendingChanges && !options.force && !options.manual) {
+    updateDmsSaveControls();
+    return true;
+  }
+
+  dmsState.isSaving = true;
+  dmsState.lastSaveError = '';
+  updateDmsSaveControls();
+
+  try {
+    const response = await fetch('api/documentation/save_dms_changes.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ actorName: getDmsActorName(), reason: options.reason || 'dms-ui-save' })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Echec de la sauvegarde DMS');
+    }
+
+    dmsState.hasPendingChanges = false;
+    dmsState.lastSaveMessage = 'Modifications enregistrées avec succès';
+    await loadDmsFiles();
+    ensureDmsFolderVisible(getDmsCurrentFolder());
+    renderDmsFilesTable();
+    updateDmsSaveControls();
+    showDmsInfoModal('Sauvegarde DMS', 'Modifications enregistrées avec succès');
+    return true;
+  } catch (error) {
+    console.error('Erreur sauvegarde DMS:', error);
+    dmsState.hasPendingChanges = true;
+    dmsState.lastSaveError = error.message || 'Erreur lors de l’enregistrement des modifications';
+    updateDmsSaveControls();
+    if (options.manual) {
+      showDmsInfoModal('Erreur de sauvegarde', dmsState.lastSaveError);
+    }
+    return false;
+  } finally {
+    dmsState.isSaving = false;
+    updateDmsSaveControls();
+  }
+}
+
+function getDmsActorName() {
+  try {
+    const user = window.s && window.s.u;
+    return (user && (user.name || user.email)) || 'Utilisateur';
+  } catch (e) {
+    return 'Utilisateur';
   }
 }
 
@@ -150,6 +265,20 @@ async function loadDmsFiles() {
  * Setup event listeners for DMS controls
  */
 function setupDmsEventListeners() {
+  const bindDmsControl = (element, eventName, handler) => {
+    if (!element) return;
+    const key = `dms${eventName[0].toUpperCase()}${eventName.slice(1)}Bound`;
+    if (!element.dataset) {
+      if (element[key] === '1') return;
+      element[key] = '1';
+      element.addEventListener(eventName, handler);
+      return;
+    }
+    if (element.dataset[key] === '1') return;
+    element.dataset[key] = '1';
+    element.addEventListener(eventName, handler);
+  };
+
   // Search input
   const searchInput = document.getElementById('docSearchInput');
   if (searchInput) {
@@ -159,8 +288,8 @@ function setupDmsEventListeners() {
       searchTimer = setTimeout(() => applyDmsSearch(), 250);
     };
 
-    searchInput.addEventListener('input', scheduleSearch);
-    searchInput.addEventListener('keydown', (e) => {
+    bindDmsControl(searchInput, 'input', scheduleSearch);
+    bindDmsControl(searchInput, 'keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         clearTimeout(searchTimer);
@@ -170,62 +299,54 @@ function setupDmsEventListeners() {
   }
 
   const searchBtn = document.getElementById('docSearchBtn');
-  if (searchBtn) {
-    searchBtn.addEventListener('click', applyDmsSearch);
-  }
+  bindDmsControl(searchBtn, 'click', applyDmsSearch);
   
   // Filter dropdown
   const filterSelect = document.getElementById('docFilterSelect');
-  if (filterSelect) {
-    filterSelect.addEventListener('change', (e) => {
-      dmsState.currentFilter = e.target.value;
-      ensureDmsFilterSelectionVisible();
-      renderDmsFilesTable();
-    });
-  }
+  bindDmsControl(filterSelect, 'change', (e) => {
+    dmsState.currentFilter = e.target.value;
+    ensureDmsFilterSelectionVisible();
+    renderDmsFilesTable();
+  });
 
   const rootFilterSelect = document.getElementById('docRootFilterSelect');
-  if (rootFilterSelect) {
-    rootFilterSelect.addEventListener('change', (e) => {
-      dmsState.rootFilter = e.target.value;
-      ensureDmsFilterSelectionVisible();
-      renderDmsFilesTable();
-    });
-  }
+  bindDmsControl(rootFilterSelect, 'change', (e) => {
+    dmsState.rootFilter = e.target.value;
+    ensureDmsFilterSelectionVisible();
+    renderDmsFilesTable();
+  });
 
   const typeFilterSelect = document.getElementById('docTypeFilterSelect');
-  if (typeFilterSelect) {
-    typeFilterSelect.addEventListener('change', (e) => {
-      dmsState.typeFilter = e.target.value;
-      ensureDmsFilterSelectionVisible();
-      renderDmsFilesTable();
-    });
-  }
+  bindDmsControl(typeFilterSelect, 'change', (e) => {
+    dmsState.typeFilter = e.target.value;
+    ensureDmsFilterSelectionVisible();
+    renderDmsFilesTable();
+  });
   
   // Import button
   const importBtn = document.getElementById('docImportBtn');
-  if (importBtn) {
-    importBtn.addEventListener('click', openFileImportDialog);
-  }
+  bindDmsControl(importBtn, 'click', openFileImportDialog);
 
   // Refresh button: synchronize the app tree with the physical DMS/uploads folder.
   const refreshBtn = document.getElementById('docRefreshBtn');
-  if (refreshBtn) {
-    refreshBtn.addEventListener('click', refreshDmsFromPhysicalFolder);
-  }
+  bindDmsControl(refreshBtn, 'click', refreshDmsFromPhysicalFolder);
   
   // New document button
   const newBtn = document.getElementById('docNewBtn');
   if (newBtn) {
     newBtn.textContent = 'Nouveau';
-    newBtn.addEventListener('click', createNewDocument);
   }
+  bindDmsControl(newBtn, 'click', createNewDocument);
   
   // Reset filters button
   const resetBtn = document.getElementById('docResetFiltersBtn');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', resetDmsFilters);
-  }
+  bindDmsControl(resetBtn, 'click', resetDmsFilters);
+
+  bindDmsControl(window, 'beforeunload', (event) => {
+    if (!dmsState.hasPendingChanges) return;
+    event.preventDefault();
+    event.returnValue = 'Des modifications DMS ne sont pas enregistrées.';
+  });
 }
 
 /**
@@ -369,6 +490,7 @@ async function refreshDmsFromPhysicalFolder() {
   dmsState.selectedFolder = folderStillExists ? previousFolder : (roots[0] || '');
   ensureDmsFolderVisible(dmsState.selectedFolder);
   renderDmsFilesTable();
+  updateDmsSaveControls();
 }
 
 function normalizeDmsFolderPath(path) {
@@ -1007,6 +1129,15 @@ function renderDmsFileItem(file) {
         <button class="btn-action btn-cycle" type="button" data-dms-action="cycle" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}" title="Modifier le cycle de vie">
           <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.96-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm-6.76.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6 0-1.01.25-1.96.7-2.8L5.24 4.74z"/></svg>
         </button>
+        <button class="btn-action btn-rename" type="button" data-dms-action="rename" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}" title="Renommer">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </button>
+        <button class="btn-action btn-move" type="button" data-dms-action="move" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}" title="Déplacer">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM13 9V3.5L18.5 9H13zm-1 9l-4-4h3V11h2v3h3l-4 4z"/></svg>
+        </button>
+        <button class="btn-action btn-metadata" type="button" data-dms-action="metadata" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}" title="Métadonnées">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4h16v4H4V4zm0 6h16v10H4V10zm3 3v2h10v-2H7zm0 4v1h7v-1H7z"/></svg>
+        </button>
         <button class="btn-action btn-delete" type="button" data-dms-action="delete" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}" title="Supprimer">
           <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/></svg>
         </button>
@@ -1015,43 +1146,63 @@ function renderDmsFileItem(file) {
   `;
 }
 
-function setupDmsTreeListeners(container) {
-  container.querySelectorAll('[data-folder-toggle]').forEach(button => {
-    button.addEventListener('click', () => {
-      const folderPath = button.dataset.folderToggle;
-      if (dmsState.expandedFolders.has(folderPath)) {
-        dmsState.expandedFolders.delete(folderPath);
-      } else {
-        dmsState.expandedFolders.add(folderPath);
-      }
+function handleDmsDelegatedButtonClick(event) {
+  const folderButton = event.target.closest('[data-folder-toggle]');
+  if (folderButton) {
+    event.preventDefault();
+    const folderPath = folderButton.dataset.folderToggle;
+    console.log('[QUALI button click]', { label: folderButton.textContent.trim() || 'Dossier DMS', page: 'DMS', action: 'folder-toggle', filePath: folderPath });
+    if (dmsState.expandedFolders.has(folderPath)) {
+      dmsState.expandedFolders.delete(folderPath);
+    } else {
+      dmsState.expandedFolders.add(folderPath);
+    }
 
-      dmsState.selectedFolder = folderPath;
-      renderDmsFilesTable();
-    });
-  });
+    dmsState.selectedFolder = folderPath;
+    renderDmsFilesTable();
+    return;
+  }
 
-  container.querySelectorAll('[data-dms-action]').forEach(button => {
-    button.addEventListener('click', (event) => {
-      event.stopPropagation();
-      const action = button.dataset.dmsAction;
-      const filePath = button.dataset.filePath;
-      const fileName = button.dataset.fileName;
+  const actionButton = event.target.closest('[data-dms-action]');
+  if (!actionButton) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const action = actionButton.dataset.dmsAction;
+  const filePath = actionButton.dataset.filePath;
+  const fileName = actionButton.dataset.fileName;
+  console.log('[QUALI button click]', { label: actionButton.title || action || 'Action DMS', page: 'DMS', action, filePath, fileName });
 
-      if (action === 'download') {
-        downloadDmsFile(filePath, fileName);
-      } else if (action === 'open') {
-        openDmsFile(filePath, fileName);
-      } else if (action === 'share') {
-        shareDmsFile(filePath, fileName);
-      } else if (action === 'cycle') {
-        showDmsLifecycleModal(filePath, fileName);
-      } else if (action === 'delete') {
-        deleteDmsFile(filePath, fileName);
-      }
-    });
-  });
+  if (action === 'download') {
+    downloadDmsFile(filePath, fileName);
+  } else if (action === 'open') {
+    openDmsFile(filePath, fileName);
+  } else if (action === 'share') {
+    shareDmsFile(filePath, fileName);
+  } else if (action === 'cycle') {
+    showDmsLifecycleModal(filePath, fileName);
+  } else if (action === 'rename') {
+    renameDmsItem(filePath, fileName);
+  } else if (action === 'move') {
+    moveDmsItem(filePath, fileName);
+  } else if (action === 'metadata') {
+    editDmsMetadata(filePath, fileName);
+  } else if (action === 'delete') {
+    deleteDmsFile(filePath, fileName);
+  }
 }
 
+function initDmsButtons(root = document) {
+  const container = root.querySelector && root.querySelector('.dms-files-table');
+  if (container) setupDmsTreeListeners(container);
+}
+
+window.initDmsButtons = initDmsButtons;
+
+function setupDmsTreeListeners(container) {
+  if (!container || container.dataset.dmsDelegated === '1') return;
+  container.dataset.dmsDelegated = '1';
+  container.addEventListener('click', handleDmsDelegatedButtonClick);
+}
 /**
  * Render a single file row
  */
@@ -1281,8 +1432,9 @@ async function moveDmsFileLifecycle(relativePath, fileName, targetStep) {
     closeFolderSelectionModal();
     dmsState.selectedFolder = normalizeDmsDisplayFolderPath(result.folder || '');
     ensureDmsFolderVisible(dmsState.selectedFolder);
-    await refreshDmsFromPhysicalFolder();
-    alert(`"${fileName}" déplacé vers "${targetStep}".`);
+    markDmsPendingChanges(`"${fileName}" déplacé vers "${targetStep}".`);
+    await saveDmsChanges({ reason: 'move-lifecycle' });
+    showDmsInfoModal('Document déplacé', `"${fileName}" déplacé vers "${targetStep}".`);
   } catch (error) {
     console.error('Erreur lors du changement de cycle:', error);
     alert('Erreur lors du changement de cycle de vie');
@@ -1521,14 +1673,73 @@ async function deleteDmsFile(filePath, fileName) {
       return;
     }
 
-    await loadDmsFiles();
-    ensureDmsFolderVisible(getDmsCurrentFolder());
-    renderDmsFilesTable();
-    alert(`Fichier "${fileName}" supprimé avec succès.`);
+    markDmsPendingChanges(`Fichier "${fileName}" supprimé.`);
+    await saveDmsChanges({ reason: 'delete-file' });
+    showDmsInfoModal('Fichier supprimé', `Fichier "${fileName}" supprimé avec succès.`);
   } catch (error) {
     console.error('Erreur lors de la suppression du fichier:', error);
     alert('Erreur lors de la suppression du fichier');
   }
+}
+
+async function runDmsItemAction(action, payload, successMessage) {
+  try {
+    const response = await fetch('api/documentation/dms_item_action.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ action, ...payload })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Action DMS impossible');
+    }
+
+    markDmsPendingChanges(successMessage || 'Modification DMS effectuée.');
+    await saveDmsChanges({ reason: action });
+    showDmsInfoModal('Modification DMS', successMessage || 'Modifications enregistrées avec succès');
+    return result;
+  } catch (error) {
+    console.error('Erreur action DMS:', error);
+    markDmsPendingChanges('Modification DMS non enregistrée');
+    dmsState.lastSaveError = error.message || 'Erreur DMS';
+    updateDmsSaveControls();
+    showDmsInfoModal('Erreur DMS', dmsState.lastSaveError);
+    return null;
+  }
+}
+
+async function renameDmsItem(filePath, fileName) {
+  const newName = prompt('Nouveau nom du fichier:', fileName);
+  if (!newName || newName.trim() === fileName) return;
+  await runDmsItemAction('rename', {
+    path: getDmsRelativeFilePath(filePath),
+    newName: newName.trim()
+  }, `Fichier "${fileName}" renommé en "${newName.trim()}".`);
+}
+
+async function moveDmsItem(filePath, fileName) {
+  const currentFolder = getDmsCurrentFolder();
+  const targetFolder = prompt('Dossier de destination dans DMS/uploads:', currentFolder);
+  if (!targetFolder || !targetFolder.trim()) return;
+  await runDmsItemAction('move', {
+    path: getDmsRelativeFilePath(filePath),
+    targetFolder: targetFolder.trim()
+  }, `Fichier "${fileName}" déplacé vers "${targetFolder.trim()}".`);
+}
+
+async function editDmsMetadata(filePath, fileName) {
+  const title = prompt('Titre du document:', fileName.replace(/\.[^.]+$/, ''));
+  if (title === null) return;
+  const reference = prompt('Référence documentaire:', '');
+  if (reference === null) return;
+  await runDmsItemAction('metadata', {
+    path: getDmsRelativeFilePath(filePath),
+    metadata: {
+      titre_document: title.trim() || fileName.replace(/\.[^.]+$/, ''),
+      reference_documentaire: reference.trim() || fileName.replace(/\.[^.]+$/, ''),
+      observation: `Métadonnées modifiées depuis DMS le ${new Date().toLocaleString('fr-FR')}`
+    }
+  }, `Métadonnées de "${fileName}" enregistrées.`);
 }
 
 /**
@@ -1752,8 +1963,13 @@ function handleImportWithFolder(folder) {
     // Refresh the file list
     dmsState.pendingDocumentType = null;
     dmsState.selectedFolder = folder;
-    await refreshDmsFromPhysicalFolder();
-    alert(`${successCount} fichier(s) importé(s) avec succès dans "${folder}"`);
+    if (successCount > 0) {
+      markDmsPendingChanges(`${successCount} fichier(s) importé(s).`);
+      await saveDmsChanges({ reason: 'import-files' });
+      showDmsInfoModal('Import terminé', `${successCount} fichier(s) importé(s) avec succès dans "${folder}".`);
+    } else {
+      showDmsInfoModal('Import terminé', 'Aucun fichier n’a pu être importé.');
+    }
   });
   
   input.click();
@@ -1785,8 +2001,9 @@ async function handleNewFolderWithParent(parentFolder) {
     dmsState.pendingDocumentType = null;
     dmsState.expandedFolders.add(parentFolder);
     dmsState.selectedFolder = normalizeDmsFolderPath(result.folder || `${parentFolder}/${folderName}`);
-    await refreshDmsFromPhysicalFolder();
-    alert(`Dossier "${folderName}" créé avec succès dans "${parentFolder}"`);
+    markDmsPendingChanges(`Dossier "${folderName}" créé.`);
+    await saveDmsChanges({ reason: 'create-folder' });
+    showDmsInfoModal('Dossier créé', `Dossier "${folderName}" créé avec succès dans "${parentFolder}".`);
   } catch (error) {
     console.error('Erreur lors de la création du dossier:', error);
     alert('Erreur lors de la création du dossier');
@@ -2052,7 +2269,8 @@ async function createNewDocumentFile(fileName, content, folder, documentType, id
     }
     // Refresh the file list
     dmsState.selectedFolder = folder;
-    await refreshDmsFromPhysicalFolder();
+    markDmsPendingChanges(`Document "${fileName}" créé.`);
+    await saveDmsChanges({ reason: 'create-document' });
     showDmsInfoModal('Document créé', `Document "${fileName}" créé avec succès dans "${folder}".`);
   } catch (error) {
     console.error('Erreur lors de la création du document:', error);
@@ -2123,6 +2341,10 @@ function resetDmsFilters() {
 
 // Initialize when document is ready
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initDmsFileDisplay, 300);
+  setTimeout(() => {
+    initDmsFileDisplay();
+    initDmsButtons();
+    if (typeof window.initButtons === 'function') window.initButtons();
+  }, 300);
 });
 

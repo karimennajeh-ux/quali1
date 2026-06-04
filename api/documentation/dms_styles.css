@@ -74,6 +74,30 @@
   flex-wrap: wrap;
 }
 
+.dms-save-status {
+  color: #51627f;
+  font-size: 12px;
+  font-weight: 600;
+  min-height: 18px;
+}
+
+.dms-save-status[data-state="pending"] {
+  color: #9a5b00;
+}
+
+.dms-save-status[data-state="saving"] {
+  color: #1260d6;
+}
+
+.dms-save-status[data-state="error"] {
+  color: #b42318;
+}
+
+.dms-save-button.is-saving {
+  cursor: progress;
+  opacity: .82;
+}
+
 .doc-toolbar-right select {
   min-width: 170px;
   padding: 8px 12px;
