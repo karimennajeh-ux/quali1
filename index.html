@@ -1669,12 +1669,194 @@
       border-left: 4px solid #f59e0b
     }
 
+    .diag-guided-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, .8fr) minmax(420px, 1.55fr) minmax(280px, .95fr);
+      gap: 14px;
+      align-items: start
+    }
+
+    .diag-side-panel,
+    .diag-report-panel {
+      position: sticky;
+      top: 12px
+    }
+
+    .diag-chapter-nav {
+      display: grid;
+      gap: 8px
+    }
+
+    .diag-chapter-btn {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      color: #334155;
+      text-align: left;
+      cursor: pointer
+    }
+
+    .diag-chapter-btn.on {
+      border-color: #2563eb;
+      background: #eff6ff
+    }
+
+    .diag-chapter-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 800;
+      color: #1e3a8a
+    }
+
+    .diag-chapter-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 7px;
+      font-size: 11px;
+      color: #64748b
+    }
+
+    .diag-chapter-bar {
+      flex: 1;
+      height: 7px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      overflow: hidden
+    }
+
+    .diag-chapter-bar i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #2563eb
+    }
+
+    .diag-guide-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px
+    }
+
+    .diag-guide-head h4 {
+      margin: 5px 0 6px;
+      color: #1e3a8a;
+      font-size: 18px
+    }
+
+    .diag-current-card {
+      border-left-width: 5px
+    }
+
+    .diag-guide-progress {
+      margin: 10px 0 14px
+    }
+
+    .diag-question-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px
+    }
+
+    .diag-question-nav .btn,
+    .diag-question-nav .btn2 {
+      min-width: 120px
+    }
+
+    .diag-question-jump {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 12px
+    }
+
+    .diag-dot {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #cbd5e1;
+      border-radius: 999px;
+      background: #fff;
+      color: #334155;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer
+    }
+
+    .diag-dot.on {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px #dbeafe
+    }
+
+    .diag-dot.diag-ok {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #15803d
+    }
+
+    .diag-dot.diag-wa {
+      background: #fef3c7;
+      border-color: #fde68a;
+      color: #b45309
+    }
+
+    .diag-dot.diag-er {
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #b91c1c
+    }
+
+    .diag-dot.diag-na {
+      background: #e8f1ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8
+    }
+
+    .diag-risk-card {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      background: #f8fafc
+    }
+
+    .diag-risk-card.ok {
+      border-color: #86efac;
+      background: #f0fdf4
+    }
+
+    .diag-risk-card.wa {
+      border-color: #fde68a;
+      background: #fffbeb
+    }
+
+    .diag-risk-card.er {
+      border-color: #fecaca;
+      background: #fef2f2
+    }
+
+    .diag-autosave {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700
+    }
     @media (max-width: 980px) {
       .diag-toolbar,
       .diag-kpis,
       .diag-status-strip,
-      .diag-chapters {
+      .diag-chapters,
+      .diag-guided-grid {
         grid-template-columns: 1fr
+      }
+
+      .diag-side-panel,
+      .diag-report-panel {
+        position: static
       }
     }
 
@@ -11072,17 +11254,20 @@
           <button class="btn2 btn" id="diagReset" type="button">Reinitialiser</button>
           <button class="btn" id="diagExport" type="button">Exporter rapport PDF</button>
         </div>
-        <div class="row s2">
-          <div class="card">
-            <h3>Questionnaire d'auto-evaluation</h3>
-            <div class="mut mb10">Reponds a chaque exigence avec la meme logique que l'outil d'auto-evaluation : prouve,
-              partiellement, non ou non applicable.</div>
+        <div class="diag-guided-grid">
+          <aside class="card diag-side-panel">
+            <h3>Chapitres ISO 17025</h3>
+            <div class="mut mb10">Navigation rapide par chapitre et niveau d'avancement.</div>
+            <div id="diagChapterNav" class="diag-chapter-nav"></div>
+          </aside>
+          <div class="card diag-main-panel">
+            <h3>Questionnaire guide</h3>
             <div id="diagList" class="list"></div>
           </div>
-          <div class="card">
-            <h3>Rapport final ISO 17025</h3>
+          <aside class="card diag-report-panel">
+            <h3>Rapport visuel</h3>
             <div id="diagReport" class="list"></div>
-          </div>
+          </aside>
         </div>
       </section>
 
@@ -15908,48 +16093,152 @@
     function orgSummarySections(o) { return [{ title: "Coordonnees", rows: [["Nom", o.name], ["Contact", o.manager], ["Telephone", o.phone], ["Fax", o.fax], ["Email", o.mail], ["Site web", o.website], ["Ville", o.city], ["Pays", o.country], ["Code postal", o.postalCode], ["Identifiant fiscal", o.fiscal], ["Numéro d'enregistrement", o.regNumber], ["Forme juridique", o.legalForm], ["Adresse", o.address], ["Description", o.description]] }, { title: "Accreditation", rows: [["Statut", o.acc], ["Reference accreditation", o.accRef], ["Norme", o.accStd || "ISO/IEC 17025:2017"], ["Organisme d'accreditation", o.accBody], ["Date d'accreditation", o.accDate], ["Date de validite", o.validDate], ["Portee", o.accScope]] }, { title: "Suivi l'accreditation", rows: [["Responsable suivi", o.accResp], ["Prochain audit", o.accNext], ["Decision suivi", o.accDecision], ["Echeance action", o.accActionDate], ["Actions suivi", o.accActions]] }] }
     function orgSummaryBlock(o) { return orgSummarySections(o).map(sec => `<div class="it"><b>${esc(sec.title)}</b>${sec.rows.map(x => `<p>${esc(x[0])} : ${esc(x[1] || "-")}</p>`).join("")}</div>`).join("") }
     function settings() { const o = s.org || c(D.org), set = (id, v) => { const el = $("#" + id); if (el) el.value = v || "" }; set("oname", o.name); set("oacc", o.acc || "Accredite"); set("oad", o.accDate); set("ovd", o.validDate); set("omgr", o.manager); set("otel", o.phone); set("ofax", o.fax); set("omail", o.mail); set("oweb", o.website); set("ofiscal", o.fiscal); set("oregnumber", o.regNumber); set("olegal", o.legalForm); set("oaddr", o.address); set("odesc", o.description); set("ocity", o.city); set("ocountry", o.country); set("ozip", o.postalCode); set("oaref", o.accRef); set("oastd", o.accStd || "ISO/IEC 17025:2017"); set("oabody", o.accBody); set("oascope", o.accScope); set("oaresp", o.accResp); set("oanext", o.accNext); set("oadec", o.accDecision || "Maintien"); set("oaactiondate", o.accActionDate); set("oaactions", o.accActions); switchOrgTab(); const docs = orgRequiredDocs(o), cr = $("#ocreated"), act = $("#oactivity"); if (cr) cr.textContent = "Modifier le : " + (o.updatedAt || "-"); if (act) act.textContent = o.lastAction || "- - -"; $("#orgsum").innerHTML = orgSummaryBlock(o); $("#orgdocs").innerHTML = orgConfigReqRow(o) + (docs.length ? docs.map(reqDocRow).join("") : `<div class="e">Aucun document renseigne.</div>`); if ($("#orgReqPreview") && !$("#orgReqPreview").innerHTML.trim()) $("#orgReqPreview").innerHTML = `<div class="it"><b>Lecture directe</b><p>Importe un document necessaire puis clique sur Lire dans l'application.</p></div>` }
-    function diagView() {
-      const st = diagState();
-      const m = diagMetrics();
+    function diagStatusIcon(v) {
+      return v === "yes" ? "&#10003;" : v === "partial" ? "&#9888;" : v === "no" ? "&#10005;" : "&mdash;";
+    }
+
+    function diagStatusShort(v) {
+      return v === "yes" ? "Conforme" : v === "partial" ? "Partiel" : v === "no" ? "Non conforme" : v === "na" ? "N/A" : "A evaluer";
+    }
+
+    function diagFilteredItems() {
       const chapter = $("#diagFilter").value;
       const status = $("#diagStatusFilter") ? $("#diagStatusFilter").value : "all";
       const query = (($("#diagSearch") && $("#diagSearch").value) || "").trim().toLowerCase();
-      const arr = DIAG_ITEMS.filter(it => diagMatchesFilter(it, query, chapter, status));
-      const critical = DIAG_ITEMS.filter(it => ["partial", "no"].includes(diagAnswer(it))).length;
-      $("#diagPerson").value = st.person || "";
-      $("#diagDate").value = st.date || "";
-      $("#diagCount").textContent = arr.length + "/" + DIAG_ITEMS.length + " exigences affichees";
-      const kpis = '<div class="diag-kpis">'
-        + '<div class="diag-kpi"><span>Score global</span><strong>' + m.score + '%</strong><div class="diag-progress"><i style="width:' + m.score + '%"></i></div></div>'
-        + '<div class="diag-kpi"><span>Completion</span><strong>' + m.completion + '%</strong><div class="diag-progress"><i style="width:' + m.completion + '%"></i></div></div>'
-        + '<div class="diag-kpi"><span>Questionnaire support</span><strong>' + DIAG_ITEMS.length + '</strong></div>'
-        + '<div class="diag-kpi"><span>Actions prioritaires</span><strong>' + critical + '</strong></div>'
-        + '</div>' + diagStatusCards(m);
-      const list = arr.map((it, index) => {
-        const answer = diagAnswer(it);
-        const note = diagNote(it);
-        const support = it.support ? '<div class="diag-support"><b>Preuves / notes du support :</b> ' + esc(it.support) + '</div>' : '';
-        const gap = it.gap ? '<div class="diag-support"><b>Ecart / action attendue :</b> ' + esc(it.gap) + '</div>' : '';
-        return '<div class="it diag-question ' + diagQuestionClass(answer) + '">'
-          + '<div class="diag-question-head"><div><b><span class="diag-question-index">' + (index + 1) + '</span>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p>' + esc(it.q) + '</p></div><span class="diag-state ' + diagStateClass(answer) + '">' + diagLabel(answer) + '</span></div>'
-          + '<div class="f mt8"><label>Diagnostic</label><select data-diag="' + esc(it.id) + '"><option value="">Choisir</option><option value="yes"' + (answer === "yes" ? " selected" : "") + '>Oui et je peux le prouver</option><option value="partial"' + (answer === "partial" ? " selected" : "") + '>Partiellement ou en cours</option><option value="no"' + (answer === "no" ? " selected" : "") + '>Non</option><option value="na"' + (answer === "na" ? " selected" : "") + '>Non applicable</option></select></div>'
-          + '<div class="f mt8"><label>Notes, preuves et commentaire evaluateur</label><textarea data-dnote="' + esc(it.id) + '" placeholder="Preuve disponible, document, responsable, action corrective, echeance...">' + esc(note) + '</textarea></div>'
-          + support + gap
-          + '</div>';
-      }).join("");
-      $("#diagList").innerHTML = kpis + (list || '<div class="e">Aucune exigence pour ce filtre.</div>');
-      const low = m.chapters.filter(x => x.score < 70).sort((a, b) => a.score - b.score);
-      const actions = DIAG_ITEMS.filter(it => ["partial", "no"].includes(diagAnswer(it))).slice(0, 10);
-      const conclusion = m.score >= 85 ? "Le systeme de management qualite est mature. Les preuves sont majoritairement disponibles ; maintenir la surveillance et verrouiller les traces." : m.score >= 65 ? "Le systeme est globalement structure, avec des exigences a renforcer avant une evaluation ISO 17025." : m.score >= 45 ? "Le systeme dispose de bases utiles, mais les ecarts demandent un plan d'actions priorise." : "Le niveau de maitrise est insuffisant. Les processus, preuves et enregistrements doivent etre structures rapidement.";
-      $("#diagReport").innerHTML = '<div class="it"><div class="diag-score">' + m.score + '%</div><p>Taux de completion : ' + m.completion + '%</p><p>Evaluateur : ' + esc(st.person || "-") + '</p><p>Date d\'evaluation : ' + esc(st.date || "-") + '</p><span class="diag-badge">' + diagLevel(m.score) + '</span><p>Diagnostic realise a partir du support d\'auto-evaluation ISO/IEC 17025:2017 fourni.</p></div>'
-        + '<div class="radar-box">' + radarSvg(m.chapters, 220) + '</div>'
-        + '<div class="diag-chapters">' + m.chapters.map(c => '<div class="mini"><strong>Chapitre ' + c.chapter + '</strong><span class="' + diagTheme(c.score) + '">' + c.score + '%</span><small>' + c.answered + '/' + c.total + '</small></div>').join("") + '</div>'
-        + '<div class="it"><b>Conclusion generale</b><p>' + conclusion + '</p></div>'
-        + '<div class="it"><b>Chapitres a prioriser</b><p>' + (low.length ? low.map(c => 'Chapitre ' + c.chapter + ' (' + c.score + '%)').join(' ; ') : 'Aucun chapitre critique detecte.') + '</p></div>'
-        + '<div class="diag-report-actions">' + (actions.length ? actions.map(it => '<div class="it"><b>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p><span class="diag-state ' + diagStateClass(diagAnswer(it)) + '">' + diagLabel(diagAnswer(it)) + '</span></p><p>' + esc(diagNote(it) || it.gap || 'Action recommandee : formaliser la preuve, definir un responsable et une echeance.') + '</p></div>').join("") : '<div class="it"><b>Plan d\'actions</b><p>Aucune action prioritaire n\'est detectee pour le moment.</p></div>') + '</div>'
-        + '<div class="it"><b>Decision de preparation</b><p>' + (m.score >= 75 && m.completion >= 70 ? 'Le laboratoire peut envisager une preparation avancee, sous reserve de verification des preuves.' : 'Le laboratoire doit renforcer les exigences non conformes ou partiellement conformes avant la preparation finale.') + '</p><p>Derniere mise a jour : ' + esc(st.updated || "-") + '</p></div>';
+      return DIAG_ITEMS.filter(it => diagMatchesFilter(it, query, chapter, status));
     }
 
+    function diagEnsureCurrent(items = diagFilteredItems()) {
+      const st = diagState();
+      if (!items.length) return null;
+      if (!st.currentId || !items.some(it => it.id === st.currentId)) st.currentId = items[0].id;
+      return items.find(it => it.id === st.currentId) || items[0];
+    }
+
+    function diagSetCurrent(id, notice = "") {
+      const st = diagState();
+      if (id) st.currentId = id;
+      persistLocalState();
+      if (notice) sync(notice);
+      render();
+    }
+
+    function diagChapterName(ch) {
+      return ch === "4" ? "Exigences generales" : ch === "5" ? "Structure" : ch === "6" ? "Ressources" : ch === "7" ? "Processus" : "Systeme de management";
+    }
+
+    function diagRiskInfo(score) {
+      if (score >= 75) return { cls: "ok", label: "Risque faible", text: "La preparation ISO est globalement maitrisee." };
+      if (score >= 50) return { cls: "wa", label: "Risque moyen", text: "Des preuves et actions restent a consolider." };
+      return { cls: "er", label: "Risque eleve", text: "Un plan d'actions prioritaire est necessaire." };
+    }
+
+    function persistDiagCurrentForm(message = "Diagnostic ISO 17025 enregistre automatiquement") {
+      const st = diagState();
+      const it = DIAG_ITEMS.find(x => x.id === st.currentId);
+      if (!it) return;
+      const answer = $("#diagCurrentAnswer"), note = $("#diagCurrentNote"), person = $("#diagPerson"), date = $("#diagDate");
+      if (answer) st.answers[it.id] = answer.value;
+      if (note) st.notes[it.id] = note.value;
+      if (person) st.person = person.value.trim();
+      if (date) st.date = date.value;
+      st.updated = now();
+      log("Sauvegarde", "Diagnostic ISO 17025", it.id + " enregistre");
+      save(message);
+    }
+
+    function moveDiagQuestion(step) {
+      const items = diagFilteredItems();
+      const current = diagEnsureCurrent(items);
+      if (!current) return;
+      persistDiagCurrentForm(step > 0 ? "Reponse enregistree, passage a la question suivante" : "Reponse enregistree, retour a la question precedente");
+      const i = items.findIndex(it => it.id === current.id);
+      const next = items[Math.max(0, Math.min(items.length - 1, i + step))];
+      if (next) diagState().currentId = next.id;
+      render();
+    }
+
+    function diagGuideClick(e) {
+      const chapter = e.target.closest("[data-diag-chapter]"), jump = e.target.closest("[data-diag-jump]"), prev = e.target.closest("#diagPrev"), next = e.target.closest("#diagNext"), saveNext = e.target.closest("#diagSaveNext");
+      if (chapter) {
+        e.preventDefault();
+        persistDiagCurrentForm("Diagnostic ISO 17025 enregistre automatiquement");
+        const ch = chapter.dataset.diagChapter;
+        const filter = $("#diagFilter");
+        if (filter) filter.value = ch;
+        const first = DIAG_ITEMS.find(it => it.chapter === ch);
+        if (first) diagState().currentId = first.id;
+        sync("Chapitre " + ch + " affiche");
+        render();
+      }
+      if (jump) {
+        e.preventDefault();
+        persistDiagCurrentForm("Diagnostic ISO 17025 enregistre automatiquement");
+        diagSetCurrent(jump.dataset.diagJump, "Question chargee");
+      }
+      if (prev) { e.preventDefault(); moveDiagQuestion(-1) }
+      if (next) { e.preventDefault(); moveDiagQuestion(1) }
+      if (saveNext) { e.preventDefault(); moveDiagQuestion(1) }
+    }
+
+    function diagView() {
+      const st = diagState();
+      const m = diagMetrics();
+      const arr = diagFilteredItems();
+      const current = diagEnsureCurrent(arr);
+      const currentIndex = current ? arr.findIndex(it => it.id === current.id) : -1;
+      const globalIndex = current ? DIAG_ITEMS.findIndex(it => it.id === current.id) : -1;
+      const critical = DIAG_ITEMS.filter(it => ["partial", "no"].includes(diagAnswer(it))).length;
+      const low = m.chapters.filter(x => x.score < 70).sort((a, b) => a.score - b.score);
+      const actions = DIAG_ITEMS.filter(it => ["partial", "no"].includes(diagAnswer(it))).slice(0, 5);
+      const risk = diagRiskInfo(m.score);
+      $("#diagPerson").value = st.person || "";
+      $("#diagDate").value = st.date || "";
+      $("#diagCount").textContent = current ? "Question " + (globalIndex + 1) + " / " + DIAG_ITEMS.length : "0 / " + DIAG_ITEMS.length + " exigence";
+      const chapterNav = m.chapters.map(c => {
+        const first = DIAG_ITEMS.find(it => it.chapter === c.chapter);
+        const active = current && current.chapter === c.chapter ? " on" : "";
+        return '<button class="diag-chapter-btn' + active + '" type="button" data-diag-chapter="' + esc(c.chapter) + '"><span class="diag-chapter-line"><span>Chapitre ' + esc(c.chapter) + '</span><span class="' + diagTheme(c.score) + '">' + c.score + '%</span></span><span class="diag-chapter-meta"><span class="diag-chapter-bar"><i style="width:' + c.completion + '%"></i></span><span>' + c.answered + '/' + c.total + '</span></span><small>' + esc(diagChapterName(c.chapter)) + '</small></button>';
+      }).join("");
+      if ($("#diagChapterNav")) $("#diagChapterNav").innerHTML = chapterNav;
+      if (!current) {
+        $("#diagList").innerHTML = '<div class="e">Aucune exigence pour ce filtre. Modifie la recherche ou le statut.</div>';
+      } else {
+        const answer = diagAnswer(current);
+        const note = diagNote(current);
+        const support = current.support ? '<div class="diag-support"><b>Preuves / notes du support :</b> ' + esc(current.support) + '</div>' : '';
+        const gap = current.gap ? '<div class="diag-support"><b>Ecart / action attendue :</b> ' + esc(current.gap) + '</div>' : '';
+        const chapterItems = DIAG_ITEMS.filter(it => it.chapter === current.chapter);
+        const chapterJump = chapterItems.map((it, i) => '<button class="diag-dot ' + diagQuestionClass(diagAnswer(it)) + (it.id === current.id ? ' on' : '') + '" type="button" data-diag-jump="' + esc(it.id) + '" title="' + esc(it.clause) + '">' + (i + 1) + '</button>').join("");
+        const prevDisabled = currentIndex <= 0 ? ' disabled' : '';
+        const nextDisabled = currentIndex >= arr.length - 1 ? ' disabled' : '';
+        $("#diagList").innerHTML = '<div class="diag-kpis">'
+          + '<div class="diag-kpi"><span>Score global</span><strong>' + m.score + '%</strong><div class="diag-progress"><i style="width:' + m.score + '%"></i></div></div>'
+          + '<div class="diag-kpi"><span>Completion</span><strong>' + m.completion + '%</strong><div class="diag-progress"><i style="width:' + m.completion + '%"></i></div></div>'
+          + '<div class="diag-kpi"><span>Question actuelle</span><strong>' + (globalIndex + 1) + '/' + DIAG_ITEMS.length + '</strong></div>'
+          + '<div class="diag-kpi"><span>Actions prioritaires</span><strong>' + critical + '</strong></div>'
+          + '</div>'
+          + '<div class="diag-guide-progress"><div class="diag-progress"><i style="width:' + m.completion + '%"></i></div><div class="diag-autosave">Derniere sauvegarde automatique : ' + esc(st.updated || '-') + '</div></div>'
+          + '<div class="it diag-question diag-current-card ' + diagQuestionClass(answer) + '">'
+          + '<div class="diag-guide-head"><div><span class="diag-question-index">' + (globalIndex + 1) + '</span><span class="mut">Chapitre ' + esc(current.chapter) + ' - ' + esc(current.clause) + '</span><h4>' + esc(current.title) + '</h4><p>' + esc(current.q) + '</p></div><span class="diag-state ' + diagStateClass(answer) + '">' + diagStatusIcon(answer) + ' ' + diagStatusShort(answer) + '</span></div>'
+          + '<div class="f mt8"><label>Diagnostic</label><select id="diagCurrentAnswer" data-diag="' + esc(current.id) + '"><option value="">Choisir</option><option value="yes"' + (answer === "yes" ? " selected" : "") + '>Oui et je peux le prouver</option><option value="partial"' + (answer === "partial" ? " selected" : "") + '>Partiellement ou en cours</option><option value="no"' + (answer === "no" ? " selected" : "") + '>Non</option><option value="na"' + (answer === "na" ? " selected" : "") + '>Non applicable</option></select></div>'
+          + '<div class="f mt8"><label>Notes, preuves et commentaire evaluateur</label><textarea id="diagCurrentNote" data-dnote="' + esc(current.id) + '" placeholder="Preuve disponible, document, responsable, action corrective, echeance...">' + esc(note) + '</textarea></div>'
+          + support + gap
+          + '<div class="diag-question-nav"><button class="btn2 btn" id="diagPrev" type="button"' + prevDisabled + '>Precedent</button><button class="btn2 btn" id="diagNext" type="button"' + nextDisabled + '>Suivant</button><button class="btn" id="diagSaveNext" type="button"' + nextDisabled + '>Enregistrer et continuer</button></div>'
+          + '<div class="diag-question-jump">' + chapterJump + '</div>'
+          + '</div>';
+      }
+      const conclusion = m.score >= 85 ? "Le systeme de management qualite est mature. Les preuves sont majoritairement disponibles ; maintenir la surveillance et verrouiller les traces." : m.score >= 65 ? "Le systeme est globalement structure, avec des exigences a renforcer avant une evaluation ISO 17025." : m.score >= 45 ? "Le systeme dispose de bases utiles, mais les ecarts demandent un plan d'actions priorise." : "Le niveau de maitrise est insuffisant. Les processus, preuves et enregistrements doivent etre structures rapidement.";
+      $("#diagReport").innerHTML = '<div class="it"><div class="diag-score">' + m.score + '%</div><p>Taux de completion : ' + m.completion + '%</p><p>Evaluateur : ' + esc(st.person || "-") + '</p><p>Date d\'evaluation : ' + esc(st.date || "-") + '</p><span class="diag-badge">' + diagLevel(m.score) + '</span></div>'
+        + '<div class="diag-risk-card ' + risk.cls + '"><b>' + risk.label + '</b><p>' + risk.text + '</p></div>'
+        + '<div class="radar-box">' + radarSvg(m.chapters, 220) + '</div>'
+        + diagStatusCards(m)
+        + '<div class="diag-chapters">' + m.chapters.map(c => '<div class="mini"><strong>Chapitre ' + c.chapter + '</strong><span class="' + diagTheme(c.score) + '">' + c.score + '%</span><small>' + c.answered + '/' + c.total + '</small></div>').join("") + '</div>'
+        + '<div class="it"><b>Conformites / non-conformites</b><p>Conformes : ' + (m.counts.yes || 0) + ' - Non conformes : ' + (m.counts.no || 0) + ' - Partiels : ' + (m.counts.partial || 0) + '</p></div>'
+        + '<div class="it"><b>Chapitres a prioriser</b><p>' + (low.length ? low.map(c => 'Chapitre ' + c.chapter + ' (' + c.score + '%)').join(' ; ') : 'Aucun chapitre critique detecte.') + '</p></div>'
+        + '<div class="it"><b>Conclusion generale</b><p>' + conclusion + '</p></div>'
+        + '<div class="diag-report-actions">' + (actions.length ? actions.map(it => '<div class="it"><b>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p><span class="diag-state ' + diagStateClass(diagAnswer(it)) + '">' + diagStatusIcon(diagAnswer(it)) + ' ' + diagLabel(diagAnswer(it)) + '</span></p><p>' + esc(diagNote(it) || it.gap || 'Action recommandee : formaliser la preuve, definir un responsable et une echeance.') + '</p></div>').join("") : '<div class="it"><b>Plan d\'actions</b><p>Aucune action prioritaire n\'est detectee pour le moment.</p></div>') + '</div>';
+    }
     function riskItems() { normalizeRiskStore(); if (!riskMysqlLoaded && !riskLoadingFromMysql) loadRisksFromMysql(); return riskMysqlLoaded ? s.risk : [] }
     async function loadRisksFromMysql() {
       if (riskLoadingFromMysql) return;
@@ -16642,7 +16931,7 @@
       });
     })();
     bindClick("procClose", closeProcessWindow);
-    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("input", docMasterListFilterEvent); document.body.addEventListener("change", docMasterListFilterEvent); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), msg = e.target.closest('.hub-action-icon[aria-label="Messages"]'), modulesQuick = e.target.closest('.hub-action-icon[aria-label="Retour aux modules"], .hub-action-icon[aria-label="Acces rapide modules"]'), refresh = e.target.closest('.hub-action-icon[aria-label="Actualiser"]'), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), headerNav = e.target.closest(".hub-app-head .back-nav .back-btn"), notifItem = e.target.closest("[data-notif-key]"), discUser = e.target.closest("[data-disc-user]"), discOpen = e.target.closest("#discOpenBtn"), discSend = e.target.closest("#discSendBtn"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (headerNav) { e.preventDefault(); e.stopPropagation(); handleHubHeaderNavigation(headerNav); return } if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (msg) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("disc"); render(); return } if (modulesQuick) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("hub"); render(); sync("Retour a la page des modules"); return } if (refresh) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); render(); page(currentPage, true); sync("Page actualisee"); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (discUser) { e.preventDefault(); openDiscussionWith(discUser.dataset.discUser); return } if (discOpen) { e.preventDefault(); openDiscussionRecipient(); return } if (discSend) { e.preventDefault(); sendDiscussionMessage(); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
+    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("input", docMasterListFilterEvent); document.body.addEventListener("change", docMasterListFilterEvent); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", diagGuideClick); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), msg = e.target.closest('.hub-action-icon[aria-label="Messages"]'), modulesQuick = e.target.closest('.hub-action-icon[aria-label="Retour aux modules"], .hub-action-icon[aria-label="Acces rapide modules"]'), refresh = e.target.closest('.hub-action-icon[aria-label="Actualiser"]'), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), headerNav = e.target.closest(".hub-app-head .back-nav .back-btn"), notifItem = e.target.closest("[data-notif-key]"), discUser = e.target.closest("[data-disc-user]"), discOpen = e.target.closest("#discOpenBtn"), discSend = e.target.closest("#discSendBtn"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (headerNav) { e.preventDefault(); e.stopPropagation(); handleHubHeaderNavigation(headerNav); return } if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (msg) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("disc"); render(); return } if (modulesQuick) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("hub"); render(); sync("Retour a la page des modules"); return } if (refresh) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); render(); page(currentPage, true); sync("Page actualisee"); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (discUser) { e.preventDefault(); openDiscussionWith(discUser.dataset.discUser); return } if (discOpen) { e.preventDefault(); openDiscussionRecipient(); return } if (discSend) { e.preventDefault(); sendDiscussionMessage(); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
     async function restoreRepo() { const h = await idbGet("repoHandle"); if (!h) return; if (await verifyHandle(h, false)) { repoHandle = h; s.repo.folderName = h.name; s.repo.linked = true; s.repo.mode = "Dossier reconnecte"; await scanRepo(h) } else { s.repo.mode = "Reconnecter le dossier local"; repoView() } }
     async function restoreOrgDir() { const h = await idbGet("orgHandle"); if (!h) return; if (await verifyHandle(h, false)) { orgHandle = h; orgRootName = h.name || "QUALI_Organisme"; if (activeOrgProc) await scanOrgProc(activeOrgProc) } }
     ensurePilotAccount();
