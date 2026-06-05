@@ -1671,7 +1671,7 @@
 
     .diag-guided-grid {
       display: grid;
-      grid-template-columns: minmax(220px, .8fr) minmax(420px, 1.55fr) minmax(280px, .95fr);
+      grid-template-columns: minmax(230px, .62fr) minmax(560px, 1.8fr);
       gap: 14px;
       align-items: start
     }
@@ -1845,17 +1845,89 @@
       font-size: 12px;
       font-weight: 700
     }
+    .diag-report-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch
+    }
+
+    .diag-report-card {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      padding: 13px;
+      min-height: 86px
+    }
+
+    .diag-report-card span {
+      display: block;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase
+    }
+
+    .diag-report-card strong {
+      display: block;
+      margin-top: 7px;
+      color: #1e3a8a;
+      font-size: 24px;
+      line-height: 1
+    }
+
+    .diag-report-card p {
+      margin: 8px 0 0
+    }
+
+    .diag-report-card.diag-radar-card {
+      grid-column: span 2;
+      grid-row: span 2;
+      min-height: 330px
+    }
+
+    .diag-report-card.diag-radar-card .radar-box {
+      min-height: 300px
+    }
+
+    .diag-report-card.ok {
+      border-color: #86efac;
+      background: #f0fdf4
+    }
+
+    .diag-report-card.wa {
+      border-color: #fde68a;
+      background: #fffbeb
+    }
+
+    .diag-report-card.er {
+      border-color: #fecaca;
+      background: #fef2f2
+    }
+
+    .diag-report-card.bl {
+      border-color: #bfdbfe;
+      background: #eff6ff
+    }
+
+    .diag-report-wide {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px
+    }
     @media (max-width: 980px) {
       .diag-toolbar,
       .diag-kpis,
       .diag-status-strip,
       .diag-chapters,
-      .diag-guided-grid {
+      .diag-guided-grid,
+      .diag-report-grid,
+      .diag-report-wide {
         grid-template-columns: 1fr
       }
 
-      .diag-side-panel,
-      .diag-report-panel {
+      .diag-side-panel {
         position: static
       }
     }
@@ -11264,11 +11336,11 @@
             <h3>Questionnaire guide</h3>
             <div id="diagList" class="list"></div>
           </div>
-          <aside class="card diag-report-panel">
-            <h3>Rapport visuel</h3>
-            <div id="diagReport" class="list"></div>
-          </aside>
         </div>
+        <section class="card diag-report-panel">
+          <h3>Rapport visuel</h3>
+          <div id="diagReport" class="list"></div>
+        </section>
       </section>
 
       <section id="risk" class="row h">
@@ -16229,51 +16301,22 @@
           + '</div>';
       }
       const conclusion = m.score >= 85 ? "Le systeme de management qualite est mature. Les preuves sont majoritairement disponibles ; maintenir la surveillance et verrouiller les traces." : m.score >= 65 ? "Le systeme est globalement structure, avec des exigences a renforcer avant une evaluation ISO 17025." : m.score >= 45 ? "Le systeme dispose de bases utiles, mais les ecarts demandent un plan d'actions priorise." : "Le niveau de maitrise est insuffisant. Les processus, preuves et enregistrements doivent etre structures rapidement.";
-      $("#diagReport").innerHTML = '<div class="it"><div class="diag-score">' + m.score + '%</div><p>Taux de completion : ' + m.completion + '%</p><p>Evaluateur : ' + esc(st.person || "-") + '</p><p>Date d\'evaluation : ' + esc(st.date || "-") + '</p><span class="diag-badge">' + diagLevel(m.score) + '</span></div>'
-        + '<div class="diag-risk-card ' + risk.cls + '"><b>' + risk.label + '</b><p>' + risk.text + '</p></div>'
-        + '<div class="radar-box">' + radarSvg(m.chapters, 220) + '</div>'
-        + diagStatusCards(m)
-        + '<div class="diag-chapters">' + m.chapters.map(c => '<div class="mini"><strong>Chapitre ' + c.chapter + '</strong><span class="' + diagTheme(c.score) + '">' + c.score + '%</span><small>' + c.answered + '/' + c.total + '</small></div>').join("") + '</div>'
-        + '<div class="it"><b>Conformites / non-conformites</b><p>Conformes : ' + (m.counts.yes || 0) + ' - Non conformes : ' + (m.counts.no || 0) + ' - Partiels : ' + (m.counts.partial || 0) + '</p></div>'
-        + '<div class="it"><b>Chapitres a prioriser</b><p>' + (low.length ? low.map(c => 'Chapitre ' + c.chapter + ' (' + c.score + '%)').join(' ; ') : 'Aucun chapitre critique detecte.') + '</p></div>'
-        + '<div class="it"><b>Conclusion generale</b><p>' + conclusion + '</p></div>'
-        + '<div class="diag-report-actions">' + (actions.length ? actions.map(it => '<div class="it"><b>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p><span class="diag-state ' + diagStateClass(diagAnswer(it)) + '">' + diagStatusIcon(diagAnswer(it)) + ' ' + diagLabel(diagAnswer(it)) + '</span></p><p>' + esc(diagNote(it) || it.gap || 'Action recommandee : formaliser la preuve, definir un responsable et une echeance.') + '</p></div>').join("") : '<div class="it"><b>Plan d\'actions</b><p>Aucune action prioritaire n\'est detectee pour le moment.</p></div>') + '</div>';
-    }
-    function riskItems() { normalizeRiskStore(); if (!riskMysqlLoaded && !riskLoadingFromMysql) loadRisksFromMysql(); return riskMysqlLoaded ? s.risk : [] }
-    async function loadRisksFromMysql() {
-      if (riskLoadingFromMysql) return;
-      riskLoadingFromMysql = true;
-      try {
-        const data = await riskApi("get_risques.php");
-        s.risk = (data.risques || []).map(riskFromDb).filter(Boolean);
-        s.riskUpdatedAt = s.risk.length ? now() : "";
-        riskMysqlLoaded = true;
-        persistLocalState();
-        riskView()
-      } catch (e) {
-        console.error(e);
-        setRiskSaveStatus("Erreur de chargement MySQL", "error");
-        sync("Erreur de chargement des risques depuis MySQL")
-      } finally {
-        riskLoadingFromMysql = false
-      }
-    }
-    function touchRiskRegister() { s.riskUpdatedAt = now(); return s.riskUpdatedAt }
-    function riskSummaryHtml(items) {
-      const total = items.length, major = items.filter(x => riskScore(x) >= 15).length, watch = items.filter(x => riskScore(x) >= 6 && riskScore(x) < 15).length, ok = items.filter(x => riskScore(x) < 6).length, residualMajor = items.filter(x => riskReScore(x) >= 15).length;
-      return [
-        ["Total risques", total, "bl", "Registre affiche dans le tableau"],
-        ["Risques majeurs", major, "er", "Criticite initiale C >= 15"],
-        ["A surveiller", watch, "wa", "Criticite initiale 6 a 14"],
-        ["Residuel majeur", residualMajor, residualMajor ? "er" : "ok", "Apres actions"]
-      ].map(x => `<div class="mini"><strong>${esc(x[0])}</strong><span class="${x[2]}">${esc(String(x[1]))}</span><p class="mut">${esc(x[3])}</p></div>`).join("")
-    }
-    function ensureRiskSheetOptions() {
-      const sel = $("#riskSheet");
-      if (!sel) return;
-      const current = sel.value || "all", sheets = [...new Set(riskItems().map(x => x.sheet).filter(x => x && x !== "-"))].sort();
-      sel.innerHTML = `<option value="all">Toutes les feuilles</option>` + sheets.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("");
-      sel.value = sheets.includes(current) ? current : "all";
+      $("#diagReport").innerHTML = '<div class="diag-report-grid">'
+        + '<div class="diag-report-card"><span>Score global</span><strong>' + m.score + '%</strong><p><span class="diag-badge">' + diagLevel(m.score) + '</span></p></div>'
+        + '<div class="diag-report-card"><span>Taux de completion</span><strong>' + m.completion + '%</strong><div class="diag-progress"><i style="width:' + m.completion + '%"></i></div></div>'
+        + '<div class="diag-report-card"><span>Niveau de maitrise</span><strong>' + diagLevel(m.score) + '</strong><p>Evaluateur : ' + esc(st.person || "-") + '</p></div>'
+        + '<div class="diag-report-card ' + risk.cls + '"><span>Risque</span><strong>' + risk.label + '</strong><p>' + risk.text + '</p></div>'
+        + '<div class="diag-report-card diag-radar-card"><span>Radar ISO 17025</span><div class="radar-box">' + radarSvg(m.chapters, 310) + '</div></div>'
+        + '<div class="diag-report-card ok"><span>Conformes</span><strong>' + (m.counts.yes || 0) + '</strong><p>Avec preuve</p></div>'
+        + '<div class="diag-report-card wa"><span>Partiels</span><strong>' + (m.counts.partial || 0) + '</strong><p>En cours ou incomplet</p></div>'
+        + '<div class="diag-report-card er"><span>Non conformes</span><strong>' + (m.counts.no || 0) + '</strong><p>Action prioritaire</p></div>'
+        + '<div class="diag-report-card bl"><span>Non applicables</span><strong>' + (m.counts.na || 0) + '</strong><p>Hors perimetre</p></div>'
+        + '</div>'
+        + '<div class="diag-report-wide">'
+        + '<div class="it"><b>Chapitres a prioriser</b><p>' + (low.length ? low.map(c => 'Chapitre ' + c.chapter + ' (' + c.score + '%)').join(' ; ') : 'Aucun chapitre critique detecte.') + '</p><div class="diag-chapters">' + m.chapters.map(c => '<div class="mini"><strong>Chapitre ' + c.chapter + '</strong><span class="' + diagTheme(c.score) + '">' + c.score + '%</span><small>' + c.answered + '/' + c.total + '</small></div>').join("") + '</div></div>'
+        + '<div class="it"><b>Conclusion generale</b><p>' + conclusion + '</p><p>Derniere sauvegarde automatique : ' + esc(st.updated || '-') + '</p></div>'
+        + '</div>'
+        + '<div class="diag-report-actions mt12">' + (actions.length ? actions.map(it => '<div class="it"><b>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p><span class="diag-state ' + diagStateClass(diagAnswer(it)) + '">' + diagStatusIcon(diagAnswer(it)) + ' ' + diagLabel(diagAnswer(it)) + '</span></p><p>' + esc(diagNote(it) || it.gap || 'Action recommandee : formaliser la preuve, definir un responsable et une echeance.') + '</p></div>').join("") : '<div class="it"><b>Plan d\'actions</b><p>Aucune action prioritaire n\'est detectee pour le moment.</p></div>') + '</div>';
     }
     function riskView() { const tab = $("#riskTab"); if (!tab) return; ensureRiskSheetOptions(); const q = ($("#riskSearch").value || "").toLowerCase(), sheet = $("#riskSheet").value, items = riskItems().filter(x => (sheet === "all" || x.sheet === sheet) && [x.sheet, x.chapter, x.risk, x.action, x.resp, x.follow, x.criterion, x.eff, x.finalStatus].join(" ").toLowerCase().includes(q)); if (selectedRiskId && !items.some(x => x.id === selectedRiskId)) selectedRiskId = ""; $("#riskCount").textContent = `${items.length} risque${items.length > 1 ? "s" : ""}`; $("#riskUpdated").textContent = "Derniere mise a jour : " + (s.riskUpdatedAt || "-"); $("#riskSave").textContent = "Enregistrer le risque"; const title = $("#riskFormTitle"); if (title) title.textContent = editingRiskId ? "Modifier un risque" : "Créer un risque"; const editBtn = $("#riskEditSelectedBtn"); if (editBtn) editBtn.disabled = !selectedRiskId; const status = $("#riskRegisterStatus"); if (status) status.textContent = `${items.length} ligne${items.length > 1 ? "s" : ""} affichee${items.length > 1 ? "s" : ""}`; const summary = $("#riskSummary"); if (summary) summary.innerHTML = riskSummaryHtml(items); const matrix = $("#riskMatrixBody"); if (matrix) matrix.innerHTML = riskMatrixHtml(); renderRiskNoteCards(); updateRiskComputedScores(); tab.innerHTML = items.map(x => { const c0 = riskScore(x), c1 = riskReScore(x), cl0 = riskClass(c0), cl1 = riskClass(c1), checked = x.id === selectedRiskId ? " checked" : "", rowCls = x.id === selectedRiskId ? " class=\"risk-row-selected\"" : ""; return `<tr${rowCls} data-risk-row="${esc(x.id)}"><td class="risk-select-cell"><input type="radio" name="riskSelectedRow" data-risk-select="${esc(x.id)}" aria-label="Selectionner ce risque"${checked}></td><td>${esc(x.chapter)}</td><td>${esc(x.risk)}</td><td class="risk-score ${cl0}" title="${esc(riskProbLabel(x.p))}">${esc(x.p)}</td><td class="risk-score ${cl0}" title="${esc(riskGravLabel(x.g))}">${esc(x.g)}</td><td class="risk-score ${cl0}">${c0}</td><td>${esc(x.action)}</td><td>${esc(x.delay)}</td><td>${esc(x.resp)}</td><td>${esc(x.follow)}</td><td class="risk-score ${cl1}" title="${esc(riskProbLabel(x.rp))}">${esc(x.rp)}</td><td class="risk-score ${cl1}" title="${esc(riskGravLabel(x.rg))}">${esc(x.rg)}</td><td class="risk-score ${cl1}">${c1}</td><td>${esc(x.criterion)}</td><td>${esc(x.eff)}</td></tr>` }).join("") || `<tr class="risk-empty-row"><td colspan="15">Aucun risque enregistré pour le moment.</td></tr>` }
     function setRiskFormVisible(visible) { const panel = $("#riskFormPanel"); if (panel) panel.classList.toggle("h", !visible) }
