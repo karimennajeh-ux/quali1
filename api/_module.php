@@ -17,6 +17,12 @@ const QUALI_MODULES = [
     'satisfaction' => ['table' => 'satisfaction_client', 'public' => 'satisfaction_ref', 'relations' => ['client_ref']],
     'reclamations' => ['table' => 'reclamations_client', 'public' => 'reclamation_ref', 'relations' => ['client_ref']],
     'personnel' => ['table' => 'personnel', 'public' => 'personnel_ref', 'relations' => ['user_email']],
+    'prestataires' => ['table' => 'prestataires_externes', 'public' => 'prestataire_ref'],
+    'amelioration_continue' => ['table' => 'amelioration_continue', 'public' => 'aci_ref'],
+    'planning' => ['table' => 'planning', 'public' => 'planning_ref'],
+    'statistiques' => ['table' => 'statistiques', 'public' => 'stat_ref'],
+    'personnel_habilitations' => ['table' => 'personnel_habilitations', 'public' => 'habilitation_ref', 'relations' => ['personnel_ref']],
+    'personnel_qualifications' => ['table' => 'personnel_qualifications', 'public' => 'qualification_ref', 'relations' => ['personnel_ref']],
 ];
 
 function quali_module_config(string $module): array
