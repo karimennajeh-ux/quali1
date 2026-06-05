@@ -7670,15 +7670,21 @@
 
     .notif-menu {
       position: fixed;
-      z-index: 9999;
-      width: min(420px, calc(100vw - 20px));
-      max-height: min(70vh, 560px);
-      overflow: auto;
+      top: 90px;
+      right: 24px;
+      left: auto;
+      z-index: 20000;
+      width: 360px;
+      max-width: calc(100vw - 48px);
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      overflow-x: hidden;
       padding: 12px;
       border: 1px solid #dbe6f5;
       border-radius: 18px;
       background: #fff;
       box-shadow: 0 18px 42px rgba(34, 55, 99, .18);
+      overscroll-behavior: contain;
     }
 
     .notif-menu.h {
@@ -7740,6 +7746,33 @@
     .notif-menu .btn {
       width: 100%;
       margin-top: 10px;
+    }
+
+    @media (min-width: 1100px) {
+      body.notification-panel-open .app:not(.hub-mode) .main {
+        padding-right: 400px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .notif-menu {
+        top: 76px;
+        right: 14px;
+        width: min(360px, calc(100vw - 28px));
+        max-height: calc(100vh - 96px);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .notif-menu {
+        top: 64px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-width: none;
+        max-height: calc(100vh - 82px);
+        border-radius: 14px;
+      }
     }
 
     .hub-action-icon[data-notif-count]:not([data-notif-count="0"])::after {
@@ -16120,9 +16153,9 @@
       return out.sort((a, b) => { const pa = a.state === "overdue" ? 0 : 1, pb = b.state === "overdue" ? 0 : 1; return pa - pb || ((a.due && b.due) ? a.due - b.due : 0) }).slice(0, 25)
     }
     function notificationMenu() { let m = $("#notificationMenu"); if (!m) { m = document.createElement("div"); m.id = "notificationMenu"; m.className = "notif-menu h"; document.body.appendChild(m) } return m }
-    function closeNotificationMenu() { const m = $("#notificationMenu"); if (m) m.classList.add("h") }
+    function closeNotificationMenu() { const m = $("#notificationMenu"); if (m) m.classList.add("h"); document.body.classList.remove("notification-panel-open") }
     function renderNotificationMenu() { const items = planningNotifications(), m = notificationMenu(); m.innerHTML = `<div class="notif-head"><b>Rappels Planning</b><span class="${items.some(x => x.state === "overdue") ? "er" : "bl"}">${items.length} notification${items.length > 1 ? "s" : ""}</span></div><div class="notif-list">${items.length ? items.map(x => `<div class="notif-item ${x.state}" data-notif-key="${esc(x.key)}" data-go="${esc(x.page)}"><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div>`).join("") : `<div class="e">Aucune date proche ou depassee dans les plannings.</div>`}</div><button type="button" class="btn" data-go="plan">Ouvrir le module Planning</button>` }
-    function toggleNotificationMenu(btn) { const m = notificationMenu(); if (!m.classList.contains("h")) { m.classList.add("h"); return } renderNotificationMenu(); const r = btn.getBoundingClientRect(); m.style.top = Math.min(window.innerHeight - 580, r.bottom + 10) + "px"; m.style.left = Math.max(10, Math.min(window.innerWidth - Math.min(420, window.innerWidth - 20), r.right - 380)) + "px"; m.classList.remove("h") }
+    function toggleNotificationMenu(btn) { const m = notificationMenu(); if (!m.classList.contains("h")) { closeNotificationMenu(); return } renderNotificationMenu(); m.style.removeProperty("top"); m.style.removeProperty("left"); m.classList.remove("h"); document.body.classList.add("notification-panel-open") }
     function updateNotificationBadges() { const count = planningNotifications().length; document.querySelectorAll('.hub-action-icon[aria-label^="Notifications"]').forEach(btn => { btn.dataset.notifCount = String(count); btn.title = count ? `Notifications (${count})` : "Notifications"; btn.setAttribute("aria-label", count ? `Notifications (${count})` : "Notifications") }) }
     function openPlanningNotification(key) { if (!key) return; planNotifStore()[key] = now(); save("Notification planning traitee"); closeNotificationMenu(); page("plan"); render() }
     function discussionItems() { if (!Array.isArray(s.disc)) s.disc = []; return s.disc }
