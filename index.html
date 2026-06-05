@@ -1932,6 +1932,32 @@
       }
     }
 
+    .global-data-state {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 18px;
+      margin: 14px 0;
+      min-height: 140px;
+      display: grid;
+      align-content: center;
+      gap: 10px
+    }
+
+    .global-data-state.error {
+      border-color: #fecaca;
+      background: #fef2f2
+    }
+
+    .global-data-state p {
+      margin: 0;
+      color: #475569;
+      font-weight: 600
+    }
+
+    .module-content.data-waiting > :not(.hub-app-head):not(.global-data-state) {
+      display: none !important
+    }
     .radar-box {
       display: grid;
       place-items: center;
@@ -13772,7 +13798,8 @@
       { key: "stat", endpoint: "statistiques", save: "save_statistique.php", get: "get_statistiques.php", del: "delete_statistique.php", id: x => x.ref || x.id, publicField: "stat_ref", rel: x => ({}) }
     ];
     const QUALI_STATE_PARAM_REF = "APP_STATE";
-    let mysqlSyncTimer = 0, mysqlSyncRunning = false, mysqlHydrated = false;
+    let mysqlSyncTimer = 0, mysqlSyncRunning = false, mysqlHydrated = false, mysqlHydrationLoading = false, mysqlHydrationError = "";
+    let diagMysqlLoaded = false, diagMysqlLoading = false, diagMysqlError = "";
     function mysqlModuleUrl(mod, file) { return localApiUrl(`api/${mod.endpoint}/${file}`) }
     async function mysqlModuleRequest(mod, file, body) {
       const cfg = { method: body ? "POST" : "GET", headers: { "Accept": "application/json" } };
@@ -13837,8 +13864,11 @@
         mysqlSyncRunning = false
       }
     }
-    async function loadAllModulesFromMysql() {
-      if (mysqlHydrated) return;
+    async function loadAllModulesFromMysql(force = false) {
+      if (mysqlHydrated && !force) return true;
+      mysqlHydrationLoading = true;
+      mysqlHydrationError = "";
+      applyModuleDataState(currentPage);
       try {
         const params = await mysqlModuleRequest({ endpoint: "parametres" }, "get_parametres.php").catch(() => null);
         const rows = Array.isArray(params && params.items) ? params.items : [];
@@ -13860,11 +13890,58 @@
           if (!appState && orgRow && orgRow.data) s.org = orgRow.data || s.org
         }
         mysqlHydrated = true;
+        mysqlHydrationError = "";
+        diagMysqlLoaded = true;
+        diagMysqlLoading = false;
+        diagMysqlError = "";
         persistLocalState();
         render()
       } catch (e) {
         console.error(e);
-        sync(e.message || "Erreur de connexion au serveur local")
+        mysqlHydrated = false;
+        mysqlHydrationError = e.message || "Erreur de connexion au serveur local";
+        diagMysqlLoading = false;
+        diagMysqlError = mysqlHydrationError;
+        sync(mysqlHydrationError);
+        render()
+      } finally {
+        mysqlHydrationLoading = false;
+        applyModuleDataState(currentPage)
+      }
+    }
+    function diagnosticMysqlModule() { return MYSQL_MODULES.find(m => m.key === "diag") }
+    function normalizeDiagnosticState(input) {
+      const base = c(D.diag || { person: "", date: "", answers: {}, notes: {}, updated: "" });
+      const raw = input && typeof input === "object" && !Array.isArray(input) ? input : {};
+      const out = { ...base, ...raw };
+      out.answers = out.answers && typeof out.answers === "object" && !Array.isArray(out.answers) ? out.answers : {};
+      out.notes = out.notes && typeof out.notes === "object" && !Array.isArray(out.notes) ? out.notes : {};
+      if (out.currentId && !DIAG_ITEMS.some(it => it.id === out.currentId)) out.currentId = "";
+      return out
+    }
+    async function loadDiagnosticFromMysql(force = false) {
+      const mod = diagnosticMysqlModule();
+      if (!mod || diagMysqlLoading || (diagMysqlLoaded && !force)) return !!diagMysqlLoaded;
+      diagMysqlLoading = true;
+      diagMysqlError = "";
+      if (currentPage === "diag") diagView();
+      try {
+        const data = await mysqlModuleRequest(mod, mod.get);
+        const rows = Array.isArray(data && data.items) ? data.items : [];
+        const row = rows.find(x => String(x[mod.publicField] || "") === "DIAG-ISO-17025") || rows[0];
+        s.diag = normalizeDiagnosticState(row && row.data ? row.data : s.diag);
+        diagMysqlLoaded = true;
+        diagMysqlError = "";
+        persistLocalState();
+        return true
+      } catch (e) {
+        console.error(e);
+        diagMysqlLoaded = false;
+        diagMysqlError = e.message || "Erreur de connexion au serveur local";
+        return false
+      } finally {
+        diagMysqlLoading = false;
+        if (currentPage === "diag") render()
       }
     }
     function clientMysqlModule() { return MYSQL_MODULES.find(m => m.key === "revc") }
@@ -14200,12 +14277,10 @@
     function orgPreviewDefault() { return `<div class="it"><b>Lecture directe QUALI</b><p>Connecte le dossier exact <code>D:\\QUALI_Organisme</code>, puis choisis un fichier pour le lire directement dans ce module.</p><p>QUALI essaye maintenant de lire tous les types de fichiers dans l'application : affichage natif si possible, sinon apercu technique ou ouverture locale.</p></div>` }
     function importTarget() { return $("#fstarget") ? $("#fstarget").value : "07_Imports" }
     function diagState() {
-      if (!s.diag) s.diag = c(D.diag);
-      if (!s.diag.answers) s.diag.answers = {};
-      if (!s.diag.notes) s.diag.notes = {};
+      s.diag = normalizeDiagnosticState(s.diag);
+      if (!s.diag.currentId && Array.isArray(DIAG_ITEMS) && DIAG_ITEMS[0]) s.diag.currentId = DIAG_ITEMS[0].id;
       return s.diag;
     }
-
     function diagAnswer(it) {
       const st = diagState();
       return Object.prototype.hasOwnProperty.call(st.answers, it.id) ? (st.answers[it.id] || "") : (it.defaultAnswer || "");
@@ -14278,7 +14353,7 @@
     async function verifyHandle(h, w) { if (!h) return false; const o = { mode: w ? "readwrite" : "read" }; if ((await h.queryPermission(o)) === "granted") return true; return (await h.requestPermission(o)) === "granted" }
     function tag(v) { return ["Valide", "Approuve", "Approuvé", "Diffuse", "Diffusé", "Cloture", "Cloturee"].includes(v) ? "ok" : ["Brouillon", "En revue", "En vérification", "A corriger", "En correction", "A valider", "A etalonner", "En cours", "Planifie", "Majeure"].includes(v) ? "wa" : ["Obsolete", "Archive", "Archivé", "Exclu", "Fichier introuvable", "Dossier introuvable", "Hors service", "Ouverte", "Critique"].includes(v) ? "er" : "bl" }
     function log(a, m, x) { ensureTrailWeek(); const u = s.u || {}; s.trail.unshift({ t: now(), u: u.name || "Utilisateur", email: u.email || "", role: u.role || "", a, m, x }); s.trail = s.trail.slice(0, 500) }
-    function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { render(); loadAllModulesFromMysql(); page(canViewModule("hub") ? "hub" : "db", true); connectPilotRealtimeStream(pilotEmailForApi()); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
+    function openApp() { if ($("#intro")) $("#intro").classList.add("h"); $("#auth").classList.add("h"); $("#app").classList.remove("h"); s.u = normalizeUserAccount(s.u || {}); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; pageHistory = []; nextPageHistory = []; currentPage = "hub"; try { loadAllModulesFromMysql(); render(); page(canViewModule("hub") ? "hub" : "db", true); connectPilotRealtimeStream(pilotEmailForApi()); $("#lmsg").textContent = "Connexion locale prete." } catch (e) { console.error(e); sync("Ouverture partielle de l'application"); $("#auth").classList.add("h"); $("#app").classList.remove("h") } updateBackButton() }
     function pilotAccounts() { return [] }
     function ensureMainPilotRegistry() { return pilotAccounts() }
     function savePilotAccounts(arr) { /* Database-only: no localStorage */ }
@@ -14520,8 +14595,47 @@
     function ensureRefreshButtons() { document.querySelectorAll(".hub-top-actions").forEach(actions => { if (actions.querySelector('.hub-action-icon[aria-label="Actualiser"]')) return; const msg = actions.querySelector('.hub-action-icon[aria-label="Messages"]'); const btn = document.createElement("button"); btn.className = "hub-action-icon"; btn.type = "button"; btn.title = "Actualiser"; btn.setAttribute("aria-label", "Actualiser"); btn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"></path><path d="M20 4v6h-6"></path></svg>`; if (msg && msg.nextSibling) actions.insertBefore(btn, msg.nextSibling); else actions.insertBefore(btn, actions.firstChild) }) }
     function enhanceModulePanels() { Object.keys(moduleRailMeta).forEach(id => { const section = $("#" + id); if (!section || section.dataset.railReady === "1") return; section.dataset.railReady = "1"; section.classList.add("module-shell", moduleRailMeta[id].cls); const body = document.createElement("div"); body.className = "module-content"; while (section.firstChild) body.appendChild(section.firstChild); section.appendChild(buildModuleRail(id)); section.appendChild(body) }) }
     function triggerModulePremiumMotion(id) { Object.keys(moduleRailMeta).forEach(key => { const section = $("#" + key); if (section) section.classList.remove("module-live") }); if (!id || id === "hub") return; const active = $("#" + id); if (!active || active.classList.contains("h")) return; void active.offsetWidth; active.classList.add("module-live") }
+    const SERVER_DATA_MODULES = new Set(["docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"]);
+    function moduleDataPanelHtml(kind) {
+      const loading = kind === "loading";
+      const message = loading ? "Chargement des donnees depuis localhost..." : "Erreur de connexion au serveur local";
+      const detail = loading ? "Les donnees du module sont en cours de synchronisation avec le serveur local." : "Le serveur local ne repond pas. Verifie Apache/MySQL puis relance le chargement.";
+      const action = loading ? "" : '<button class="btn" type="button" data-global-retry="1">Reessayer</button>';
+      return '<div class="global-data-state ' + kind + '"><span class="diag-state ' + (loading ? "bl" : "er") + '">' + esc(message) + '</span><p>' + esc(detail) + '</p>' + action + '</div>'
+    }
+    function removeModuleDataState(section) {
+      if (!section) return;
+      const content = section.querySelector(".module-content") || section;
+      content.classList.remove("data-waiting");
+      const panel = content.querySelector(".global-data-state");
+      if (panel) panel.remove()
+    }
+    function applyModuleDataState(id = currentPage) {
+      if (!id || !SERVER_DATA_MODULES.has(id)) return;
+      const section = $("#" + id);
+      if (!section) return;
+      const content = section.querySelector(".module-content") || section;
+      let panel = content.querySelector(".global-data-state");
+      const showLoading = mysqlHydrationLoading && !mysqlHydrated;
+      const showError = !!mysqlHydrationError && !mysqlHydrated && !mysqlHydrationLoading;
+      if (!showLoading && !showError) { removeModuleDataState(section); return }
+      if (!panel) {
+        panel = document.createElement("div");
+        panel.className = "global-data-state";
+        const head = content.querySelector(".hub-app-head");
+        if (head && head.nextSibling) content.insertBefore(panel, head.nextSibling); else content.appendChild(panel)
+      }
+      panel.outerHTML = moduleDataPanelHtml(showLoading ? "loading" : "error");
+      content.classList.add("data-waiting")
+    }
+    function retryLocalhostDataLoad() {
+      mysqlHydrated = false;
+      mysqlHydrationError = "";
+      diagMysqlLoaded = false;
+      loadAllModulesFromMysql(true)
+    }
     function accessDeniedPage(target = "hub") { const fallback = canViewModule(target) ? target : (MODULE_ACCESS_CONFIG.find(mod => canViewModule(mod.id)) || { id: "hub" }).id; if (fallback !== currentPage) { currentPage = fallback; ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== fallback)) } return fallback }
-    function page(id, skipHistory) { const m = { hub: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], db: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], docs: ["Maitrise documentaire", ""], docorg: ["Documentation", ""], eq: ["Gestion des equipements", ""], nc: ["Non-conformites", ""], aud: ["Audits", ""], revc: ["Liste client", ""], usr: ["Utilisateurs", ""], disc: ["Discussion", ""], set: ["Parametres", ""], diag: ["Diagnostic ISO 17025", ""], risk: ["Analyse de risque", ""], swot: ["Analyse SWOT", ""], sat: ["Satisfaction client", ""], recl: ["Reclamation client", ""], pers: ["Personnel", ""], prest: ["Prestataire externe", ""], aci: ["Amelioration continue", ""], plan: ["Planning", ""], stat: ["Statistique", ""], repo: ["Dossier principal", ""] }; if (!canViewModule(id)) { sync("Acces limite : module non autorise pour ce compte."); id = accessDeniedPage("hub") } if (!skipHistory && currentPage && currentPage !== id) { pageHistory.push(currentPage); nextPageHistory = [] } currentPage = id; ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== id)); $("#app").classList.toggle("hub-mode", id === "hub"); $all("#nav button").forEach(b => b.classList.toggle("on", b.dataset.p === id)); $("#pt").textContent = m[id][0]; $("#ps").textContent = m[id][1]; placeBackButton(); updateBackButton(); triggerModulePremiumMotion(id); if (id === "usr") syncUsersFromApi(); if (id === "docs") refreshMasterDocuments(); if (id === "docorg") refreshDocumentationCentral(); if (id === "revc") loadClientsFromMysql(); if (id === "eq") loadEquipmentsFromMysql(); scheduleInitButtons() }
+    function page(id, skipHistory) { const m = { hub: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], db: [`Bienvenue, ${s.u && s.u.name ? s.u.name : "Utilisateur"}`, ""], docs: ["Maitrise documentaire", ""], docorg: ["Documentation", ""], eq: ["Gestion des equipements", ""], nc: ["Non-conformites", ""], aud: ["Audits", ""], revc: ["Liste client", ""], usr: ["Utilisateurs", ""], disc: ["Discussion", ""], set: ["Parametres", ""], diag: ["Diagnostic ISO 17025", ""], risk: ["Analyse de risque", ""], swot: ["Analyse SWOT", ""], sat: ["Satisfaction client", ""], recl: ["Reclamation client", ""], pers: ["Personnel", ""], prest: ["Prestataire externe", ""], aci: ["Amelioration continue", ""], plan: ["Planning", ""], stat: ["Statistique", ""], repo: ["Dossier principal", ""] }; if (!canViewModule(id)) { sync("Acces limite : module non autorise pour ce compte."); id = accessDeniedPage("hub") } if (!skipHistory && currentPage && currentPage !== id) { pageHistory.push(currentPage); nextPageHistory = [] } currentPage = id; ["hub", "db", "docs", "docorg", "eq", "nc", "aud", "revc", "usr", "disc", "set", "diag", "risk", "swot", "sat", "recl", "pers", "prest", "aci", "plan", "stat", "repo"].forEach(x => $("#" + x).classList.toggle("h", x !== id)); $("#app").classList.toggle("hub-mode", id === "hub"); $all("#nav button").forEach(b => b.classList.toggle("on", b.dataset.p === id)); $("#pt").textContent = m[id][0]; $("#ps").textContent = m[id][1]; placeBackButton(); updateBackButton(); triggerModulePremiumMotion(id); if (id === "usr") syncUsersFromApi(); if (id === "docs") refreshMasterDocuments(); if (id === "docorg") refreshDocumentationCentral(); if (id === "revc") loadClientsFromMysql(); if (id === "eq") loadEquipmentsFromMysql(); if (id === "diag") loadDiagnosticFromMysql(); scheduleInitButtons(); applyModuleDataState(currentPage) }
     function goBackPage() { if (pageHistory.length) { nextPageHistory.push(currentPage); page(pageHistory.pop(), true); return } if (sessionActive() && currentPage === "hub") { logout(); return } if (sessionActive()) { nextPageHistory.push(currentPage); page("hub", true) } }
     function goNextPage() { if (!sessionActive() || !nextPageHistory.length) return; page(nextPageHistory.pop(), true) }
     function handleHubHeaderNavigation(btn) {
@@ -14542,7 +14656,7 @@
       }
     }
     function applyAccessUi() { const visible = new Set(["hub", ...MODULE_ACCESS_CONFIG.filter(mod => canViewModule(mod.id)).map(mod => mod.id)]); $all("#nav button[data-p]").forEach(btn => btn.classList.toggle("is-hidden", !visible.has(btn.dataset.p))); $all("[data-go]").forEach(btn => btn.classList.toggle("is-hidden", !visible.has(btn.dataset.go))); }
-    function render() { s.usr = (s.usr || []).map(normalizeUserAccount); s.u = normalizeUserAccount(s.u || {}); dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); discussionView(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); statView(); repoView(); applyDbPanelUi(); applyAccessUi(); enhanceDocumentationLayout(); updateModuleHeadTitles(); updateModuleRails(); ensureModulesShortcutButtons(); ensureRefreshButtons(); updateNotificationBadges(); updateMessageBadges(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; scheduleInitButtons() }
+    function render() { s.usr = (s.usr || []).map(normalizeUserAccount); s.u = normalizeUserAccount(s.u || {}); dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); discussionView(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); statView(); repoView(); applyDbPanelUi(); applyAccessUi(); enhanceDocumentationLayout(); updateModuleHeadTitles(); updateModuleRails(); ensureModulesShortcutButtons(); ensureRefreshButtons(); updateNotificationBadges(); updateMessageBadges(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; scheduleInitButtons(); applyModuleDataState(currentPage) }
     function dashboardBarCard(title, value, max, color, note = "") { const pct = max > 0 ? Math.max(8, Math.min(100, Math.round((value / max) * 100))) : 0; return `<div class="mini" style="padding:14px 16px"><strong>${esc(title)}</strong><span class="bl">${esc(String(value))}</span><div style="margin-top:10px;height:10px;border-radius:999px;background:#edf3ff;overflow:hidden"><div style="width:${pct}%;height:100%;background:${color};border-radius:999px"></div></div>${note ? `<p class="mut" style="margin:8px 0 0">${esc(note)}</p>` : ""}</div>` }
     function dashboardSparkline(values, color = "#3f6fd8", width = 280, height = 110) { const list = (values || []).map(v => Number(v) || 0), max = Math.max(...list, 1), min = Math.min(...list, 0), pad = 12, usableW = width - pad * 2, usableH = height - pad * 2, step = list.length > 1 ? usableW / (list.length - 1) : usableW, norm = v => { const ratio = max === min ? 0.5 : (v - min) / (max - min); return height - pad - (ratio * usableH) }, pts = list.map((v, i) => `${pad + i * step},${norm(v)}`), area = [`${pad},${height - pad}`, ...pts, `${pad + usableW},${height - pad}`].join(" "), line = pts.join(" "); return `<svg viewBox="0 0 ${width} ${height}" aria-label="Courbe de suivi"><defs><linearGradient id="dashFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".28"></stop><stop offset="100%" stop-color="${color}" stop-opacity=".04"></stop></linearGradient></defs><polyline points="${area}" fill="url(#dashFill)" stroke="none"></polyline><polyline points="${line}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>${pts.map(p => { const [x, y] = p.split(","); return `<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"></circle>` }).join("")}</svg>` }
     function dashboardDonut(values, colors, size = 150) { const total = Math.max(values.reduce((n, v) => n + (Number(v) || 0), 0), 1), r = size * 0.34, c = size / 2, stroke = size * 0.16; let offset = 0; const segs = values.map((v, i) => { const value = Number(v) || 0, len = (value / total) * (Math.PI * 2 * r), dash = `${len} ${Math.PI * 2 * r - len}`, part = `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${colors[i] || "#3f6fd8"}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${c} ${c})"></circle>`; offset += len; return part }).join(""); return `<svg viewBox="0 0 ${size} ${size}" aria-label="Diagramme circulaire"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef3ff" stroke-width="${stroke}"></circle>${segs}<text x="${c}" y="${c - 2}" text-anchor="middle" font-size="26" font-weight="800" fill="#1f2d4d">${values.reduce((n, v) => n + (Number(v) || 0), 0)}</text><text x="${c}" y="${c + 20}" text-anchor="middle" font-size="11" fill="#6c7a96">elements</text></svg>` }
@@ -16165,6 +16279,19 @@
     function orgSummarySections(o) { return [{ title: "Coordonnees", rows: [["Nom", o.name], ["Contact", o.manager], ["Telephone", o.phone], ["Fax", o.fax], ["Email", o.mail], ["Site web", o.website], ["Ville", o.city], ["Pays", o.country], ["Code postal", o.postalCode], ["Identifiant fiscal", o.fiscal], ["Numéro d'enregistrement", o.regNumber], ["Forme juridique", o.legalForm], ["Adresse", o.address], ["Description", o.description]] }, { title: "Accreditation", rows: [["Statut", o.acc], ["Reference accreditation", o.accRef], ["Norme", o.accStd || "ISO/IEC 17025:2017"], ["Organisme d'accreditation", o.accBody], ["Date d'accreditation", o.accDate], ["Date de validite", o.validDate], ["Portee", o.accScope]] }, { title: "Suivi l'accreditation", rows: [["Responsable suivi", o.accResp], ["Prochain audit", o.accNext], ["Decision suivi", o.accDecision], ["Echeance action", o.accActionDate], ["Actions suivi", o.accActions]] }] }
     function orgSummaryBlock(o) { return orgSummarySections(o).map(sec => `<div class="it"><b>${esc(sec.title)}</b>${sec.rows.map(x => `<p>${esc(x[0])} : ${esc(x[1] || "-")}</p>`).join("")}</div>`).join("") }
     function settings() { const o = s.org || c(D.org), set = (id, v) => { const el = $("#" + id); if (el) el.value = v || "" }; set("oname", o.name); set("oacc", o.acc || "Accredite"); set("oad", o.accDate); set("ovd", o.validDate); set("omgr", o.manager); set("otel", o.phone); set("ofax", o.fax); set("omail", o.mail); set("oweb", o.website); set("ofiscal", o.fiscal); set("oregnumber", o.regNumber); set("olegal", o.legalForm); set("oaddr", o.address); set("odesc", o.description); set("ocity", o.city); set("ocountry", o.country); set("ozip", o.postalCode); set("oaref", o.accRef); set("oastd", o.accStd || "ISO/IEC 17025:2017"); set("oabody", o.accBody); set("oascope", o.accScope); set("oaresp", o.accResp); set("oanext", o.accNext); set("oadec", o.accDecision || "Maintien"); set("oaactiondate", o.accActionDate); set("oaactions", o.accActions); switchOrgTab(); const docs = orgRequiredDocs(o), cr = $("#ocreated"), act = $("#oactivity"); if (cr) cr.textContent = "Modifier le : " + (o.updatedAt || "-"); if (act) act.textContent = o.lastAction || "- - -"; $("#orgsum").innerHTML = orgSummaryBlock(o); $("#orgdocs").innerHTML = orgConfigReqRow(o) + (docs.length ? docs.map(reqDocRow).join("") : `<div class="e">Aucun document renseigne.</div>`); if ($("#orgReqPreview") && !$("#orgReqPreview").innerHTML.trim()) $("#orgReqPreview").innerHTML = `<div class="it"><b>Lecture directe</b><p>Importe un document necessaire puis clique sur Lire dans l'application.</p></div>` }
+    function diagStatePanel(kind, message) {
+      const isError = kind === "error";
+      const cls = isError ? "er" : "bl";
+      const action = isError ? '<button class="btn" id="diagRetry" type="button">Reessayer</button>' : '';
+      return '<div class="it diag-state-panel"><span class="diag-state ' + cls + '">' + esc(message) + '</span>' + (action ? '<div class="mt12">' + action + '</div>' : '') + '</div>';
+    }
+
+    function showDiagnosticState(kind, message) {
+      const html = diagStatePanel(kind, message);
+      if ($("#diagChapterNav")) $("#diagChapterNav").innerHTML = html;
+      if ($("#diagList")) $("#diagList").innerHTML = html;
+      if ($("#diagReport")) $("#diagReport").innerHTML = html;
+    }
     function diagStatusIcon(v) {
       return v === "yes" ? "&#10003;" : v === "partial" ? "&#9888;" : v === "no" ? "&#10005;" : "&mdash;";
     }
@@ -16231,7 +16358,8 @@
     }
 
     function diagGuideClick(e) {
-      const chapter = e.target.closest("[data-diag-chapter]"), jump = e.target.closest("[data-diag-jump]"), prev = e.target.closest("#diagPrev"), next = e.target.closest("#diagNext"), saveNext = e.target.closest("#diagSaveNext");
+      const retry = e.target.closest("#diagRetry"), chapter = e.target.closest("[data-diag-chapter]"), jump = e.target.closest("[data-diag-jump]"), prev = e.target.closest("#diagPrev"), next = e.target.closest("#diagNext"), saveNext = e.target.closest("#diagSaveNext");
+      if (retry) { e.preventDefault(); loadDiagnosticFromMysql(true); return }
       if (chapter) {
         e.preventDefault();
         persistDiagCurrentForm("Diagnostic ISO 17025 enregistre automatiquement");
@@ -16254,6 +16382,9 @@
     }
 
     function diagView() {
+      if (!Array.isArray(DIAG_ITEMS) || !DIAG_ITEMS.length) return showDiagnosticState("loading", "Chargement du diagnostic ISO 17025...");
+      if (diagMysqlLoading && !diagMysqlLoaded) return showDiagnosticState("loading", "Chargement du diagnostic ISO 17025...");
+      if (diagMysqlError && !diagMysqlLoaded) return showDiagnosticState("error", "Erreur de connexion au serveur local");
       const st = diagState();
       const m = diagMetrics();
       const arr = diagFilteredItems();
@@ -16317,6 +16448,42 @@
         + '<div class="it"><b>Conclusion generale</b><p>' + conclusion + '</p><p>Derniere sauvegarde automatique : ' + esc(st.updated || '-') + '</p></div>'
         + '</div>'
         + '<div class="diag-report-actions mt12">' + (actions.length ? actions.map(it => '<div class="it"><b>' + esc(it.clause) + ' - ' + esc(it.title) + '</b><p><span class="diag-state ' + diagStateClass(diagAnswer(it)) + '">' + diagStatusIcon(diagAnswer(it)) + ' ' + diagLabel(diagAnswer(it)) + '</span></p><p>' + esc(diagNote(it) || it.gap || 'Action recommandee : formaliser la preuve, definir un responsable et une echeance.') + '</p></div>').join("") : '<div class="it"><b>Plan d\'actions</b><p>Aucune action prioritaire n\'est detectee pour le moment.</p></div>') + '</div>';
+    }
+    function riskItems() { normalizeRiskStore(); if (!riskMysqlLoaded && !riskLoadingFromMysql) loadRisksFromMysql(); return riskMysqlLoaded ? s.risk : [] }
+    async function loadRisksFromMysql() {
+      if (riskLoadingFromMysql) return;
+      riskLoadingFromMysql = true;
+      try {
+        const data = await riskApi("get_risques.php");
+        s.risk = (data.risques || []).map(riskFromDb).filter(Boolean);
+        s.riskUpdatedAt = s.risk.length ? now() : "";
+        riskMysqlLoaded = true;
+        persistLocalState();
+        riskView()
+      } catch (e) {
+        console.error(e);
+        setRiskSaveStatus("Erreur de chargement MySQL", "error");
+        sync("Erreur de chargement des risques depuis MySQL")
+      } finally {
+        riskLoadingFromMysql = false
+      }
+    }
+    function touchRiskRegister() { s.riskUpdatedAt = now(); return s.riskUpdatedAt }
+    function riskSummaryHtml(items) {
+      const total = items.length, major = items.filter(x => riskScore(x) >= 15).length, watch = items.filter(x => riskScore(x) >= 6 && riskScore(x) < 15).length, ok = items.filter(x => riskScore(x) < 6).length, residualMajor = items.filter(x => riskReScore(x) >= 15).length;
+      return [
+        ["Total risques", total, "bl", "Registre affiche dans le tableau"],
+        ["Risques majeurs", major, "er", "Criticite initiale C >= 15"],
+        ["A surveiller", watch, "wa", "Criticite initiale 6 a 14"],
+        ["Residuel majeur", residualMajor, residualMajor ? "er" : "ok", "Apres actions"]
+      ].map(x => `<div class="mini"><strong>${esc(x[0])}</strong><span class="${x[2]}">${esc(String(x[1]))}</span><p class="mut">${esc(x[3])}</p></div>`).join("")
+    }
+    function ensureRiskSheetOptions() {
+      const sel = $("#riskSheet");
+      if (!sel) return;
+      const current = sel.value || "all", sheets = [...new Set(riskItems().map(x => x.sheet).filter(x => x && x !== "-"))].sort();
+      sel.innerHTML = `<option value="all">Toutes les feuilles</option>` + sheets.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("");
+      sel.value = sheets.includes(current) ? current : "all";
     }
     function riskView() { const tab = $("#riskTab"); if (!tab) return; ensureRiskSheetOptions(); const q = ($("#riskSearch").value || "").toLowerCase(), sheet = $("#riskSheet").value, items = riskItems().filter(x => (sheet === "all" || x.sheet === sheet) && [x.sheet, x.chapter, x.risk, x.action, x.resp, x.follow, x.criterion, x.eff, x.finalStatus].join(" ").toLowerCase().includes(q)); if (selectedRiskId && !items.some(x => x.id === selectedRiskId)) selectedRiskId = ""; $("#riskCount").textContent = `${items.length} risque${items.length > 1 ? "s" : ""}`; $("#riskUpdated").textContent = "Derniere mise a jour : " + (s.riskUpdatedAt || "-"); $("#riskSave").textContent = "Enregistrer le risque"; const title = $("#riskFormTitle"); if (title) title.textContent = editingRiskId ? "Modifier un risque" : "Créer un risque"; const editBtn = $("#riskEditSelectedBtn"); if (editBtn) editBtn.disabled = !selectedRiskId; const status = $("#riskRegisterStatus"); if (status) status.textContent = `${items.length} ligne${items.length > 1 ? "s" : ""} affichee${items.length > 1 ? "s" : ""}`; const summary = $("#riskSummary"); if (summary) summary.innerHTML = riskSummaryHtml(items); const matrix = $("#riskMatrixBody"); if (matrix) matrix.innerHTML = riskMatrixHtml(); renderRiskNoteCards(); updateRiskComputedScores(); tab.innerHTML = items.map(x => { const c0 = riskScore(x), c1 = riskReScore(x), cl0 = riskClass(c0), cl1 = riskClass(c1), checked = x.id === selectedRiskId ? " checked" : "", rowCls = x.id === selectedRiskId ? " class=\"risk-row-selected\"" : ""; return `<tr${rowCls} data-risk-row="${esc(x.id)}"><td class="risk-select-cell"><input type="radio" name="riskSelectedRow" data-risk-select="${esc(x.id)}" aria-label="Selectionner ce risque"${checked}></td><td>${esc(x.chapter)}</td><td>${esc(x.risk)}</td><td class="risk-score ${cl0}" title="${esc(riskProbLabel(x.p))}">${esc(x.p)}</td><td class="risk-score ${cl0}" title="${esc(riskGravLabel(x.g))}">${esc(x.g)}</td><td class="risk-score ${cl0}">${c0}</td><td>${esc(x.action)}</td><td>${esc(x.delay)}</td><td>${esc(x.resp)}</td><td>${esc(x.follow)}</td><td class="risk-score ${cl1}" title="${esc(riskProbLabel(x.rp))}">${esc(x.rp)}</td><td class="risk-score ${cl1}" title="${esc(riskGravLabel(x.rg))}">${esc(x.rg)}</td><td class="risk-score ${cl1}">${c1}</td><td>${esc(x.criterion)}</td><td>${esc(x.eff)}</td></tr>` }).join("") || `<tr class="risk-empty-row"><td colspan="15">Aucun risque enregistré pour le moment.</td></tr>` }
     function setRiskFormVisible(visible) { const panel = $("#riskFormPanel"); if (panel) panel.classList.toggle("h", !visible) }
@@ -16974,7 +17141,7 @@
       });
     })();
     bindClick("procClose", closeProcessWindow);
-    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("input", docMasterListFilterEvent); document.body.addEventListener("change", docMasterListFilterEvent); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", diagGuideClick); document.body.addEventListener("click", e => { const prof = e.target.closest(".hub-action-icon.profile"), msg = e.target.closest('.hub-action-icon[aria-label="Messages"]'), modulesQuick = e.target.closest('.hub-action-icon[aria-label="Retour aux modules"], .hub-action-icon[aria-label="Acces rapide modules"]'), refresh = e.target.closest('.hub-action-icon[aria-label="Actualiser"]'), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), headerNav = e.target.closest(".hub-app-head .back-nav .back-btn"), notifItem = e.target.closest("[data-notif-key]"), discUser = e.target.closest("[data-disc-user]"), discOpen = e.target.closest("#discOpenBtn"), discSend = e.target.closest("#discSendBtn"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (headerNav) { e.preventDefault(); e.stopPropagation(); handleHubHeaderNavigation(headerNav); return } if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (msg) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("disc"); render(); return } if (modulesQuick) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("hub"); render(); sync("Retour a la page des modules"); return } if (refresh) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); render(); page(currentPage, true); sync("Page actualisee"); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (discUser) { e.preventDefault(); openDiscussionWith(discUser.dataset.discUser); return } if (discOpen) { e.preventDefault(); openDiscussionRecipient(); return } if (discSend) { e.preventDefault(); sendDiscussionMessage(); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
+    $("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-p]"); if (b) page(b.dataset.p) }); document.body.addEventListener("click", act); document.body.addEventListener("click", docAct); document.body.addEventListener("input", docMasterListFilterEvent); document.body.addEventListener("change", docMasterListFilterEvent); document.body.addEventListener("click", orgDocAct); document.body.addEventListener("change", diagField); document.body.addEventListener("click", diagGuideClick); document.body.addEventListener("click", e => { const globalRetry = e.target.closest("[data-global-retry]"); if (globalRetry) { e.preventDefault(); retryLocalhostDataLoad(); return } const prof = e.target.closest(".hub-action-icon.profile"), msg = e.target.closest('.hub-action-icon[aria-label="Messages"]'), modulesQuick = e.target.closest('.hub-action-icon[aria-label="Retour aux modules"], .hub-action-icon[aria-label="Acces rapide modules"]'), refresh = e.target.closest('.hub-action-icon[aria-label="Actualiser"]'), notif = e.target.closest('.hub-action-icon[aria-label^="Notifications"]'), headerNav = e.target.closest(".hub-app-head .back-nav .back-btn"), notifItem = e.target.closest("[data-notif-key]"), discUser = e.target.closest("[data-disc-user]"), discOpen = e.target.closest("#discOpenBtn"), discSend = e.target.closest("#discSendBtn"), calDay = e.target.closest("[data-cal-day]"), calNav = e.target.closest("[data-cal-nav]"), calSave = e.target.closest("#dbCalendarSaveBtn"), calDelete = e.target.closest("#dbCalendarDeleteBtn"), pa = e.target.closest("[data-profile-action]"), b = e.target.closest("[data-go]"), ot = e.target.closest("[data-orgtab]"); if (headerNav) { e.preventDefault(); e.stopPropagation(); handleHubHeaderNavigation(headerNav); return } if (prof) { e.preventDefault(); e.stopPropagation(); toggleProfileMenu(prof); return } if (msg) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("disc"); render(); return } if (modulesQuick) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); page("hub"); render(); sync("Retour a la page des modules"); return } if (refresh) { e.preventDefault(); e.stopPropagation(); closeNotificationMenu(); closeProfileMenu(); render(); page(currentPage, true); sync("Page actualisee"); return } if (notif) { e.preventDefault(); e.stopPropagation(); closeProfileMenu(); toggleNotificationMenu(notif); return } if (notifItem) { e.preventDefault(); e.stopPropagation(); openPlanningNotification(notifItem.dataset.notifKey); return } if (discUser) { e.preventDefault(); openDiscussionWith(discUser.dataset.discUser); return } if (discOpen) { e.preventDefault(); openDiscussionRecipient(); return } if (discSend) { e.preventDefault(); sendDiscussionMessage(); return } if (calDay) { e.preventDefault(); e.stopPropagation(); selectDashboardCalendarDay(calDay.dataset.calDay); return } if (calNav) { e.preventDefault(); e.stopPropagation(); moveDashboardCalendar(Number(calNav.dataset.calNav || 0)); return } if (calSave) { e.preventDefault(); e.stopPropagation(); persistDashboardCalendarNote(); return } if (calDelete) { e.preventDefault(); e.stopPropagation(); deleteDashboardCalendarNote(); return } if (pa) { e.preventDefault(); handleProfileAction(pa.dataset.profileAction); return } if (!e.target.closest("#profileMenu")) closeProfileMenu(); if (!e.target.closest("#notificationMenu")) closeNotificationMenu(); if (b) page(b.dataset.go); if (ot) switchOrgTab(ot.dataset.orgtab) });
     async function restoreRepo() { const h = await idbGet("repoHandle"); if (!h) return; if (await verifyHandle(h, false)) { repoHandle = h; s.repo.folderName = h.name; s.repo.linked = true; s.repo.mode = "Dossier reconnecte"; await scanRepo(h) } else { s.repo.mode = "Reconnecter le dossier local"; repoView() } }
     async function restoreOrgDir() { const h = await idbGet("orgHandle"); if (!h) return; if (await verifyHandle(h, false)) { orgHandle = h; orgRootName = h.name || "QUALI_Organisme"; if (activeOrgProc) await scanOrgProc(activeOrgProc) } }
     ensurePilotAccount();
