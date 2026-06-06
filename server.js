@@ -10,6 +10,26 @@ const app = express();
 const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
+
+function loadEnvFile(filePath) {
+  if (!fs.existsSync(filePath)) return;
+  const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) return;
+    const index = trimmed.indexOf("=");
+    if (index <= 0) return;
+    const key = trimmed.slice(0, index).trim();
+    let value = trimmed.slice(index + 1).trim();
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+    if (!process.env[key]) process.env[key] = value;
+  });
+}
+
+loadEnvFile(path.join(ROOT, ".env"));
+
 const PRIMARY_DB_DIR = process.env.QUALILAB_DATA_DIR || path.join(__dirname, "database");
 const PRIMARY_DB_PATH = path.join(PRIMARY_DB_DIR, "qualilab.sqlite");
 const FALLBACK_DB_DIR = process.env.QUALILAB_DATA_FALLBACK_DIR || path.join(os.tmpdir(), "QualiByEnnajeh", "data");
@@ -112,6 +132,38 @@ function verifyPassword(password, stored) {
   const actual = crypto.scryptSync(String(password || ""), salt, 64);
   const expectedBuffer = Buffer.from(expected, "hex");
   return expectedBuffer.length === actual.length && crypto.timingSafeEqual(expectedBuffer, actual);
+}
+
+function isPilotActiveStatus(status) {
+  return ["active", "actif"].includes(String(status || "").trim().toLowerCase());
+}
+
+const OTP_TTL_MS = 5 * 60 * 1000;
+const pilotOtpCodes = new Map();
+
+function createSixDigitCode() {
+  return String(crypto.randomInt(100000, 1000000));
+}
+
+function otpKey(email, purpose) {
+  return `${normEmail(email)}:${purpose === "reset" ? "reset" : "validation"}`;
+}
+
+function hashOtpCode(email, code, purpose) {
+  return crypto.createHash("sha256").update(`${otpKey(email, purpose)}:${String(code || "").trim()}`).digest("hex");
+}
+
+function sameHexHash(a, b) {
+  const left = Buffer.from(String(a || ""), "hex");
+  const right = Buffer.from(String(b || ""), "hex");
+  return left.length === right.length && crypto.timingSafeEqual(left, right);
+}
+
+function cleanupPilotOtpCodes() {
+  const t = Date.now();
+  for (const [key, entry] of pilotOtpCodes.entries()) {
+    if (!entry || entry.expiresAt <= t || entry.used) pilotOtpCodes.delete(key);
+  }
 }
 
 function ensureDir(dir) {
@@ -1932,7 +1984,10 @@ app.post("/api/auth/login", (req, res) => {
   }
 
   const pilot = getPilotByEmail(email);
-  if (pilot && verifyPassword(password, pilot.passwordHash) && pilot.status === "Actif") {
+  if (pilot && verifyPassword(password, pilot.passwordHash) && !isPilotActiveStatus(pilot.status)) {
+    return res.status(403).json({ ok: false, message: "Compte pilote en attente de validation" });
+  }
+  if (pilot && verifyPassword(password, pilot.passwordHash) && isPilotActiveStatus(pilot.status)) {
     if (!isPasswordHash(pilot.passwordHash)) {
       updatePilotAccountByEmailStmt().run(
         hashPassword(password),
@@ -1995,13 +2050,73 @@ app.get("/api/pilots/:pilotEmail", (req, res) => {
 
 app.post("/api/pilots/register", (req, res) => {
   try {
-    const pilot = upsertPilotAccount(req.body || {});
+    const email = normEmail(req.body && req.body.email);
+    if (!email) return res.status(400).json({ ok: false, message: "Adresse e-mail pilote obligatoire" });
+    if (getPilotByEmail(email)) return res.status(409).json({ ok: false, message: "Ce compte pilote existe deja" });
+    const pilot = upsertPilotAccount({ ...(req.body || {}), email, status: (req.body && req.body.status) || "Actif" });
     res.status(201).json({
       ok: true,
       pilot: publicPilotAccount(pilot)
     });
   } catch (error) {
     res.status(error.status || 500).json({ ok: false, message: error.message || "Creation pilote impossible" });
+  }
+});
+
+app.post("/api/otp/send", (req, res) => {
+  try {
+    cleanupPilotOtpCodes();
+    const email = normEmail(req.body && req.body.email);
+    const purpose = String((req.body && req.body.purpose) || "validation") === "reset" ? "reset" : "validation";
+    if (!email) return res.status(400).json({ ok: false, message: "Adresse e-mail obligatoire" });
+    if (purpose === "reset" && !getPilotByEmail(email)) {
+      return res.status(404).json({ ok: false, message: "Aucun compte pilote ne correspond a cette adresse." });
+    }
+    const code = createSixDigitCode();
+    pilotOtpCodes.set(otpKey(email, purpose), {
+      codeHash: hashOtpCode(email, code, purpose),
+      expiresAt: Date.now() + OTP_TTL_MS,
+      attempts: 0,
+      used: false
+    });
+    res.json({
+      ok: true,
+      sent: false,
+      smtpConfigured: false,
+      message: "Code de reinitialisation genere en local. Il expire dans 5 minutes.",
+      ...(String(process.env.NODE_ENV || "development").toLowerCase() === "development" ? { code } : {})
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Envoi du code impossible" });
+  }
+});
+
+app.post("/api/otp/verify", (req, res) => {
+  try {
+    cleanupPilotOtpCodes();
+    const email = normEmail(req.body && req.body.email);
+    const code = String((req.body && req.body.code) || "").trim();
+    const purpose = String((req.body && req.body.purpose) || "validation") === "reset" ? "reset" : "validation";
+    if (!email || !code) return res.status(400).json({ ok: false, message: "Code de validation obligatoire." });
+    const key = otpKey(email, purpose);
+    const entry = pilotOtpCodes.get(key);
+    if (!entry || entry.expiresAt <= Date.now() || entry.used) {
+      pilotOtpCodes.delete(key);
+      return res.status(404).json({ ok: false, message: "Aucun code actif. Demandez un nouveau code." });
+    }
+    if (entry.attempts >= 5) {
+      pilotOtpCodes.delete(key);
+      return res.status(429).json({ ok: false, message: "Nombre maximal de tentatives atteint. Demandez un nouveau code." });
+    }
+    if (!sameHexHash(entry.codeHash, hashOtpCode(email, code, purpose))) {
+      entry.attempts += 1;
+      return res.status(422).json({ ok: false, message: "Code invalide." });
+    }
+    entry.used = true;
+    pilotOtpCodes.delete(key);
+    res.json({ ok: true, verified: true, message: "Code valide." });
+  } catch (error) {
+    res.status(error.status || 500).json({ ok: false, message: error.message || "Verification du code impossible" });
   }
 });
 

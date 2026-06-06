@@ -9829,13 +9829,12 @@
                 <div class="auth-stepper" id="cpStepper">
                   <div class="auth-step-pill on" data-cp-step="1"><strong>Etape 1</strong><span>Identite du pilote</span></div>
                   <div class="auth-step-pill" data-cp-step="2"><strong>Etape 2</strong><span>Connexion du compte</span></div>
-                  <div class="auth-step-pill" data-cp-step="3"><strong>Etape 3</strong><span>Validation finale</span></div>
                 </div>
                 <div id="cpStep1" class="auth-step-view">
                   <div class="auth-panel-grid">
                     <div class="f"><label>Nom <span class="req-star">*</span></label><input id="cpLastName" type="text" placeholder="Nom"></div>
                     <div class="f"><label>Prenom <span class="req-star">*</span></label><input id="cpFirstName" type="text" placeholder="Prenom"></div>
-                    <div class="f"><label>Poste <span class="req-star">*</span></label><input id="cpFunc" type="text" placeholder="Poste / fonction"></div>
+                    <div class="f"><label>Fonction <span class="req-star">*</span></label><input id="cpFunc" type="text" placeholder="Fonction du pilote"></div>
                     <div class="f"><label>Identifiant unique <span class="req-star">*</span></label><input id="cpUid" type="text" placeholder="PILOT-002"></div>
                     <div class="f" style="grid-column:1/-1"><label>Nom de l'organisme <span class="req-star">*</span></label><input id="cpOrgName" type="text" placeholder="Nom de la societe / organisme"></div>
                   </div>
@@ -9855,17 +9854,8 @@
                     <div class="f"><label>Confirmer le mot de passe <span class="req-star">*</span></label><input id="cpPwd2" type="password" placeholder="Confirmer le mot de passe"></div>
                   </div>
                   <div class="auth-step-nav">
-                    <button id="cpNextStep2Btn" class="btn" type="button">Continuer a l'etape de validation</button>
+                    <button id="cpNextStep2Btn" class="btn" type="button">Creer le compte pilote</button>
                     <button id="cpBackStep1Btn" class="auth-link-btn" type="button">Retour a l'etape 1</button>
-                  </div>
-                </div>
-                <div id="cpStep3" class="auth-step-view h">
-                  <div id="cpCodeField" class="f"><label>Code de validation <span class="req-star">*</span></label><input id="cpCode" type="text" placeholder="Code recu par e-mail"></div>
-                  <p id="cpEditNote" class="auth-step-note h"><strong>Modification du compte pilote</strong><br>Les donnees chargees peuvent etre mises a jour ici sans renvoyer un nouveau code de validation.</p>
-                  <div class="auth-panel-actions">
-                    <button id="cpSendCodeBtn" class="btn" type="button">Envoyer le code</button>
-                    <button id="cpBtn" class="btn" type="button">Valider le compte pilote</button>
-                    <button id="cpBackStep2Btn" class="auth-link-btn" type="button">Retour a l'etape 2</button>
                   </div>
                 </div>
               </div>
@@ -14399,46 +14389,45 @@
     function pilotManageTargetEmail() { return authNormEmail(($("#cpManageLookupEmail") && $("#cpManageLookupEmail").value) || ($("#cpEmail") && $("#cpEmail").value) || "") }
     function pilotManageAllowed(email = editingPilotEmail || pilotManageTargetEmail()) { return !!email && authNormEmail(email) !== MAIN_PILOT_EMAIL }
     function pilotPanelMessage(msg, manage = false) { const el = $(manage ? "#cpManageMsg" : "#cpMsg"); if (el) el.textContent = msg }
-    function setPilotCreateStep(step = 1) {
-      pilotCreateStep = Math.max(1, Math.min(3, Number(step) || 1));
-      ["cpStep1", "cpStep2", "cpStep3"].forEach((id, idx) => {
+    function pilotStepMessage(step = pilotCreateStep) {
+      if (Number(step) === 1) return "Compl\u00e9tez les informations d'identit\u00e9 du pilote.";
+      return "Compl\u00e9tez les informations de connexion.";
+    }
+    function setPilotCreateStep(step = 1, updateMessage = false) {
+      pilotCreateStep = Math.max(1, Math.min(2, Number(step) || 1));
+      ["cpStep1", "cpStep2"].forEach((id, idx) => {
         const el = $("#" + id);
         if (el) el.classList.toggle("h", idx + 1 !== pilotCreateStep);
       });
       $all("#cpStepper [data-cp-step]").forEach(node => node.classList.toggle("on", Number(node.dataset.cpStep || 0) === pilotCreateStep));
+      if (updateMessage) pilotPanelMessage(pilotStepMessage(pilotCreateStep));
     }
     function syncPilotManageButtons() {
       const editing = !!editingPilotEmail, manageable = pilotManageAllowed(), hasLookup = !!pilotManageTargetEmail();
       if ($("#cpEmail")) $("#cpEmail").readOnly = editing;
       if ($("#cpEmail2")) $("#cpEmail2").readOnly = editing;
-      if ($("#cpSendCodeBtn")) {
-        $("#cpSendCodeBtn").disabled = editing;
-        $("#cpSendCodeBtn").classList.toggle("h", editing);
-      }
-      if ($("#cpCodeField")) $("#cpCodeField").classList.toggle("h", editing);
-      if ($("#cpEditNote")) $("#cpEditNote").classList.toggle("h", !editing);
-      if ($("#cpBtn")) $("#cpBtn").textContent = editing ? "Valider la modification du compte pilote" : "Valider le compte pilote";
+      if ($("#cpNextStep2Btn")) $("#cpNextStep2Btn").textContent = editing ? "Valider la modification du compte pilote" : "Creer le compte pilote";
       if ($("#cpUpdateBtn")) $("#cpUpdateBtn").disabled = !hasLookup || !manageable;
       if ($("#cpDeleteBtn")) $("#cpDeleteBtn").disabled = !hasLookup || !manageable;
       if ($("#cpLoadBtn")) $("#cpLoadBtn").disabled = !hasLookup;
     }
-    function openPilotCreateWizard(step = 1, msg = "Renseigne tous les champs obligatoires avant de passer a l'etape suivante.") {
+    function openPilotCreateWizard(step = 1, msg = "") {
       authPanel("authCreatePanel");
       setPilotCreateStep(step);
       syncPilotManageButtons();
-      pilotPanelMessage(msg);
+      pilotPanelMessage(msg || pilotStepMessage(step));
     }
     function openPilotManageWizard(msg = "Charge un compte pilote existant pour preparer sa modification ou sa suppression.") {
       authPanel("authPilotManagePanel");
       syncPilotManageButtons();
       pilotPanelMessage(msg, true);
     }
-    function resetPilotManageForm(msg = "Renseigne tous les champs obligatoires avant de passer a l'etape suivante.") {
+    function resetPilotManageForm(msg = "") {
       editingPilotEmail = "";
-      clearFields(["#cpFirstName", "#cpLastName", "#cpFunc", "#cpUid", "#cpOrgName", "#cpEmail", "#cpEmail2", "#cpPwd", "#cpPwd2", "#cpCode", "#cpManageLookupEmail"]);
+      clearFields(["#cpFirstName", "#cpLastName", "#cpFunc", "#cpUid", "#cpOrgName", "#cpEmail", "#cpEmail2", "#cpPwd", "#cpPwd2", "#cpManageLookupEmail"]);
       setPilotCreateStep(1);
       syncPilotManageButtons();
-      pilotPanelMessage(msg);
+      pilotPanelMessage(msg || pilotStepMessage(1));
       pilotPanelMessage("Charge un compte pilote existant pour preparer sa modification ou sa suppression.", true);
     }
     function loadPilotManageForm(account) {
@@ -14452,8 +14441,7 @@
       $("#cpEmail").value = account.email || "";
       $("#cpEmail2").value = account.email || "";
       $("#cpPwd").value = "";
-      $("#cpPwd2").value = "";
-      $("#cpCode").value = "";
+      $("#cpPwd2").value = "";
       if ($("#cpManageLookupEmail")) $("#cpManageLookupEmail").value = account.email || "";
       setPilotCreateStep(1);
       syncPilotManageButtons()
@@ -14467,11 +14455,10 @@
     function isPilotLogin(e, p) { const acc = findPilotAccount(e); return !!(acc && String(acc.password || "") === String(p || "")) }
     function sessionInfo() { try { const raw = sg(S); if (!raw) return null; const parsed = JSON.parse(raw); return parsed && typeof parsed === "object" ? parsed : null } catch (e) { return null } }
     function authPanel(id) { ["authLoginPanel", "authCreatePanel", "authPilotManagePanel", "authResetPanel"].forEach(x => { const el = $("#" + x); if (el) el.classList.toggle("h", x !== id) }) }
-    function sixCode() { return String(Math.floor(100000 + Math.random() * 900000)) }
-    async function sendPilotMailCode(email, code, purpose = "validation") {
+    async function sendPilotOtpCode(email, purpose = "reset") {
       return apiRequest("/otp/send", { method: "POST", body: { email, purpose } })
     }
-    async function verifyPilotMailCode(email, code, purpose = "validation") {
+    async function verifyPilotMailCode(email, code, purpose = "reset") {
       return apiRequest("/otp/verify", { method: "POST", body: { email, code, purpose } })
     }
     function createDraftPayload() { const firstName = $("#cpFirstName").value.trim(), lastName = $("#cpLastName").value.trim(), func = $("#cpFunc").value.trim(), uid = $("#cpUid").value.trim(), orgName = $("#cpOrgName").value.trim(), email = $("#cpEmail").value.trim(), email2 = $("#cpEmail2").value.trim(), pw = $("#cpPwd").value, pw2 = $("#cpPwd2").value; return { firstName, lastName, func, uid, orgName, email, email2, pw, pw2, name: [firstName, lastName].filter(Boolean).join(" ").trim() } }
@@ -14517,56 +14504,41 @@
     }
     function openPilotStep2() {
       if (!validatePilotIdentityStep()) return;
-      setPilotCreateStep(2);
-      pilotPanelMessage("Etape 2 prete. Complete maintenant les informations de connexion du compte pilote.");
-    }
-    function openPilotStep3() {
-      if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
-      setPilotCreateStep(3);
-      syncPilotManageButtons();
-      pilotPanelMessage(editingPilotEmail ? "Verifie les donnees puis valide la modification du compte pilote." : "Envoie le code de validation, puis valide le compte pilote.");
-    }
-    async function sendCreatePilotCode() {
-      if (editingPilotEmail) {
-        pilotPanelMessage("La modification d'un compte pilote existant ne demande pas de nouveau code.");
-        return;
-      }
-      if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
-      const draft = createDraftPayload();
-      try {
-        if (!await apiHealth(true)) { pilotPanelMessage("XAMPP/PHP/MySQL indisponible.", true); return }
-        await sendPilotMailCode(draft.email, "", "validation");
-        ss("QUALI_pending_pilot_signup", JSON.stringify({ ...draft, createdAt: now() }));
-        pilotPanelMessage("Code envoye par e-mail. Il expire dans 5 minutes.");
-      } catch (error) {
-        console.error(error);
-        pilotPanelMessage(error && error.message ? error.message : "Envoi du code impossible. Verifie la configuration SMTP.", true);
-      }
+      setPilotCreateStep(2, true);
     }
     async function createPilotAccount() {
       if (!validatePilotIdentityStep() || !validatePilotAccountStep()) return;
-      const msg = $("#cpMsg"), raw = sg("QUALI_pending_pilot_signup"), entered = ($("#cpCode").value || "").trim();
-      if (!raw) { msg.textContent = "Commence par envoyer le code de validation."; return }
-      let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null }
-      if (!pending) { msg.textContent = "Le brouillon du compte pilote est invalide. Renvoie un nouveau code."; return }
-      if (!entered) { msg.textContent = "Saisis le code de validation recu par e-mail."; return }
-      const account = { name: pending.name, firstName: pending.firstName, lastName: pending.lastName, email: pending.email, password: pending.pw, role: "Administrateur", dept: "Pilotage application", func: pending.func, matricule: pending.uid, orgName: pending.orgName, pilot: true, status: "Actif" };
+      const msg = $("#cpMsg"), draft = createDraftPayload();
+      const account = {
+        name: draft.name,
+        firstName: draft.firstName,
+        lastName: draft.lastName,
+        email: draft.email,
+        password: draft.pw,
+        role: "Administrateur",
+        dept: "Pilotage application",
+        func: draft.func,
+        matricule: draft.uid,
+        orgName: draft.orgName,
+        pilot: true,
+        status: "Actif"
+      };
       try {
-        if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible : demarre Apache et MySQL puis recommence."; return }
-        const existing = await apiGetPilot(pending.email).catch(() => null);
-        if (existing) { msg.textContent = "Ce compte pilote existe deja."; return }
-        account.verificationCode = entered;
-        await apiUpsertPilot(account);
+        if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible."; return }
+        const existing = await apiGetPilot(draft.email).catch(error => error && error.status === 404 ? null : Promise.reject(error));
+        if (existing && !editingPilotEmail) { msg.textContent = "Ce compte pilote existe deja."; return }
+        const created = await apiUpsertPilot(account);
+        const successMessage = "Compte pilote cr\u00e9\u00e9 avec succ\u00e8s";
+        msg.textContent = successMessage;
+        $("#lemail").value = created && created.email ? created.email : draft.email;
+        $("#lpwd").value = "";
+        resetPilotManageForm(successMessage + ". Tu peux maintenant retourner a la connexion.");
+        authPanel("authLoginPanel");
+        $("#lmsg").textContent = successMessage + ". Connecte-toi avec ton e-mail et ton mot de passe.";
       } catch (error) {
         console.error('Error:', error);
         msg.textContent = error && error.message ? error.message : "Erreur de connexion au serveur.";
-        return;
       }
-      const accounts = ensureMainPilotRegistry();
-      accounts.unshift(account); savePilotAccounts(accounts); let serverNote = "";
-      sr("QUALI_pending_pilot_signup");
-      msg.textContent = "Compte pilote valide. Retour a la connexion pour ouvrir l'application avec ce compte." + serverNote;
-      $("#lemail").value = account.email; $("#lpwd").value = ""; resetPilotManageForm("Compte pilote cree. Tu peux maintenant retourner a la connexion."); authPanel("authLoginPanel"); $("#lmsg").textContent = "Compte pilote cree. Connecte-toi avec ton e-mail et ton mot de passe.";
     }
     async function submitPilotWizard() {
       if (editingPilotEmail) return updatePilotManageAccount();
@@ -14582,7 +14554,7 @@
         loadPilotManageForm(account);
         const baseMsg = email === MAIN_PILOT_EMAIL ? "Compte pilote principal charge. Sa suppression et sa modification sont bloquees dans cet ecran." : "Compte pilote charge. Tu peux maintenant le modifier ou le supprimer.";
         pilotPanelMessage(baseMsg, true);
-        if (openEditor) openPilotCreateWizard(1, email === MAIN_PILOT_EMAIL ? "Le compte pilote principal ne se modifie pas dans cet ecran." : "Compte pilote charge. Modifie les champs puis poursuis les etapes pour valider la modification.");
+        if (openEditor) openPilotCreateWizard(1, email === MAIN_PILOT_EMAIL ? "Le compte pilote principal ne se modifie pas dans cet ecran." : "Compte pilote charge. Modifie les champs puis valide la modification.");
       } catch (error) {
         console.error(error);
         pilotPanelMessage("Erreur lors du chargement du compte pilote.", true);
@@ -14620,7 +14592,7 @@
         pilotPanelMessage(error && error.message ? error.message : "Erreur lors de la suppression.", true);
       }
     }
-    async function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } try { if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible."; return } const acc = await apiGetPilot(email); if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } await sendPilotMailCode(acc.email, "", "reset"); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, createdAt: now() })); msg.textContent = "Code de reinitialisation envoye. Il expire dans 5 minutes."; } catch (error) { console.error(error); msg.textContent = error && error.message ? error.message : "Erreur lors de l'envoi du code."; } }
+    async function sendResetPilotCode() { const email = $("#rpEmail").value.trim(), msg = $("#rpMsg"); if (!email) { msg.textContent = "Renseigne l'adresse e-mail du compte pilote."; return } try { if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible."; return } const acc = await apiGetPilot(email); if (!acc) { msg.textContent = "Aucun compte pilote ne correspond a cette adresse."; return } await sendPilotOtpCode(acc.email, "reset"); ss("QUALI_pending_pilot_reset", JSON.stringify({ email: acc.email, createdAt: now() })); msg.textContent = "Code de reinitialisation envoye. Il expire dans 5 minutes."; } catch (error) { console.error(error); msg.textContent = error && error.message ? error.message : "Erreur lors de l'envoi du code."; } }
     async function resetPilotPassword() { const email = $("#rpEmail").value.trim(), code = ($("#rpCode").value || "").trim(), pw = $("#rpPwd").value, pw2 = $("#rpPwd2").value, msg = $("#rpMsg"), raw = sg("QUALI_pending_pilot_reset"); if (!raw) { msg.textContent = "Commence par demander un code de reinitialisation."; return } let pending = null; try { pending = JSON.parse(raw) } catch (e) { pending = null } if (!pending || authNormEmail(pending.email) !== authNormEmail(email)) { msg.textContent = "Le code ne correspond pas a ce compte pilote."; return } if (!code) { msg.textContent = "Saisis le code recu par e-mail."; return } if (!validPassword(pw)) { msg.textContent = "Mot de passe invalide : saisir au minimum 4 chiffres."; return } if (pw !== pw2) { msg.textContent = "La confirmation du mot de passe est incorrecte."; return } try { if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible."; return } await verifyPilotMailCode(email, code, "reset"); const acc = await apiGetPilot(email); await apiUpdatePilot(email, { ...acc, password: pw }); sr("QUALI_pending_pilot_reset"); clearFields(["#rpCode", "#rpPwd", "#rpPwd2"]); authPanel("authLoginPanel"); $("#lemail").value = email; $("#lpwd").value = ""; $("#lmsg").textContent = "Mot de passe modifie. Connecte-toi avec le nouveau mot de passe."; msg.textContent = "Mot de passe pilote modifie."; } catch (error) { console.error(error); msg.textContent = error && error.message ? error.message : "Erreur lors de la mise a jour du mot de passe."; } }
     async function login() { const e = $("#lemail").value.trim(), p = $("#lpwd").value, msg = $("#lmsg"); try { if (!await apiHealth(true)) { msg.textContent = "XAMPP/PHP/MySQL indisponible : demarre Apache et MySQL puis recommence."; return } const remote = await apiLogin(e, p); if (!remote || !remote.ok || !remote.pilot || !remote.user) throw new Error("Reponse d'authentification invalide"); switchPilotStore(remote.pilot.email); await loadPilotStateFromApi(remote.pilot.email); await syncUsersFromApi(); if (remote.type === "pilot") { s.u = normalizeUserAccount({ ...remote.user, pilot: true }); ss(S, JSON.stringify({ email: remote.user.email, pilotEmail: remote.pilot.email, type: "pilot" })) } else { s.usr = (s.usr || []).map(normalizeUserAccount); const current = s.usr.find(x => authNormEmail(x.email) === authNormEmail(remote.user.email)); s.u = normalizeUserAccount(current || remote.user); ss(S, JSON.stringify({ email: s.u.email, pilotEmail: remote.pilot.email, type: "user" })) } log("Connexion", "Session", e); save("Session ouverte"); openApp(); return } catch (err) { console.error(err); msg.textContent = err && err.message ? err.message : "Acces refuse : e-mail ou mot de passe incorrect."; sr(S); $("#app").classList.add("h"); $("#auth").classList.remove("h") } }
     function logout() { log("Deconnexion", "Session", s.u.email); save("Session fermee"); disconnectPilotRealtimeStream(); disconnectDocumentationCentralStream(); sr(S); pageHistory = []; nextPageHistory = []; currentPage = "hub"; showAuthScreen("authLoginPanel") }
@@ -17093,7 +17065,7 @@
     window.addEventListener("beforeunload", flushPilotStateBeforeUnload);
     buildModuleAccessMatrix();
     applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Administrateur"));
-    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", openPilotStep3); bindClick("cpBackStep2Btn", () => openPilotCreateWizard(2)); bindClick("cpSendCodeBtn", sendCreatePilotCode); bindClick("cpBtn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); bindClick("ocreate", createOrg); bindClick("odel", deleteOrg); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", showDashboardReport); bindClick("dashboardReportPrint", printDashboardReport); bindClick("dashboardReportDownload", downloadDashboardReport); bindClick("dashboardReportHide", hideDashboardReport); syncPilotManageButtons(); registerPwa();
+    bindClick("introContinueBtn", () => showAuthScreen("authLoginPanel")); bindClick("lbtn", login); bindClick("openCreatePanel", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("openPilotManagePanel", () => { resetPilotManageForm(); openPilotManageWizard() }); bindClick("openPilotManageFromCreate", () => openPilotManageWizard()); bindClick("openForgotPanel", () => authPanel("authResetPanel")); bindClick("backToLoginFromCreate", () => authPanel("authLoginPanel")); bindClick("backToLoginFromManage", () => authPanel("authLoginPanel")); bindClick("backToLoginFromReset", () => authPanel("authLoginPanel")); bindClick("cpNextStep1Btn", openPilotStep2); bindClick("cpBackStep1Btn", () => openPilotCreateWizard(1)); bindClick("cpNextStep2Btn", submitPilotWizard); bindClick("cpLoadBtn", async () => await loadPilotAccountForManage(false)); bindClick("cpUpdateBtn", async () => await loadPilotAccountForManage(true)); bindClick("cpDeleteBtn", deletePilotManageAccount); bindClick("cpResetBtn", () => { resetPilotManageForm(); openPilotCreateWizard(1) }); bindClick("rpSendCodeBtn", async () => await sendResetPilotCode()); bindClick("rpBtn", resetPilotPassword); bindClick("pwaInstallBtn", installPwa); $("#lpwd").addEventListener("keydown", e => { if (e.key === "Enter") login() }); bindClick("togglePwd", () => { const p = $("#lpwd"), b = $("#togglePwd"), shown = p.type === "text"; p.type = shown ? "password" : "text"; b.textContent = shown ? "Afficher" : "Masquer"; b.setAttribute("aria-label", shown ? "Afficher le mot de passe" : "Masquer le mot de passe"); b.setAttribute("aria-pressed", String(!shown)) }); bindClick("out", logout); bindClick("ocreate", createOrg); bindClick("odel", deleteOrg); $("#file").onchange = e => imp(e.target.files[0]); $("#docFile").onchange = e => handleDocumentImport(e.target.files); $("#odImportFile").onchange = e => importOrgDocs(e.target.files); $("#orgReqFile").onchange = e => importReqDoc(e.target.files[0]); bindClick("weeklyReport", downloadWeeklyReport); bindClick("dashboardReport", showDashboardReport); bindClick("dashboardReportPrint", printDashboardReport); bindClick("dashboardReportDownload", downloadDashboardReport); bindClick("dashboardReportHide", hideDashboardReport); syncPilotManageButtons(); registerPwa();
     ["#cpManageLookupEmail", "#cpEmail", "#cpEmail2"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", syncPilotManageButtons); el.addEventListener("change", syncPilotManageButtons) } });
     ["#ds", "#dpf", "#dtf", "#df", "#es", "#ef", "#ns", "#nf", "#nAudit", "#nAuditNew", "#as", "#af", "#rs", "#rf", "#pxs", "#pxf", "#planSearch", "#planFilter", "#planHabSheet", "#planCalLab", "#fsq", "#diagFilter", "#diagStatusFilter", "#diagSearch", "#riskSearch", "#riskSheet", "#swotSearch", "#swotType", "#satSearch", "#recSearch", "#perSearch", "#aciSearch", "#aciStatus", "#statSearch", "#statRegionFilter", "#statFamilyFilter", "#statYearFilter"].forEach(id => { const el = $(id); if (el) { el.addEventListener("input", render); el.addEventListener("change", render) } });
     const scheduleDocSearch = (() => { let t = 0; return () => { clearTimeout(t); t = setTimeout(() => { docCentralState.libraryFilter = ""; refreshDocumentationCentral() }, 260) } })();

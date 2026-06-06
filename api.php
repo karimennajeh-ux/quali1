@@ -220,11 +220,13 @@ try {
 
     if ($method === 'POST' && $parts === ['pilots', 'register']) {
         $data = body_json();
-        if (!get_pilot($conn, (string) ($data['email'] ?? ''))) {
-            verify_code($conn, (string) ($data['email'] ?? ''), (string) ($data['verificationCode'] ?? ''), 'validation');
-        }
+        $email = norm_email($data['email'] ?? '');
+        if ($email === '') respond(['ok' => false, 'message' => 'Adresse e-mail pilote obligatoire'], 400);
+        if (get_pilot($conn, $email)) respond(['ok' => false, 'message' => 'Ce compte pilote existe deja.'], 409);
+        $data['email'] = $email;
+        $data['status'] = trim((string) ($data['status'] ?? 'Actif')) ?: 'Actif';
         unset($data['verificationCode']);
-        respond(['ok' => true, 'pilot' => pilot_public(upsert_pilot($conn, $data))]);
+        respond(['ok' => true, 'pilot' => pilot_public(upsert_pilot($conn, $data))], 201);
     }
 
     if ($method === 'POST' && $parts === ['otp', 'send']) {
