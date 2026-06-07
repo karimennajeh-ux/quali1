@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 
 <head>
@@ -4049,6 +4049,11 @@
       margin-top: 10px
     }
 
+    .doc-reset-actions {
+      margin: 12px 0 0;
+      padding: 0;
+    }
+
     .doc-row-actions {
       display: flex;
       flex-wrap: nowrap;
@@ -7655,7 +7660,7 @@
       align-items: flex-start;
       flex-wrap: wrap;
       gap:14px;
-      
+
     }
     @media(max-width:700px) {
       .auth-create-grid,
@@ -9749,7 +9754,6 @@
       color: #70839f;
       font-size: 13px;
     }
-
     @media (max-width: 780px) {
       .dms-tree-file-item {
         grid-template-columns: 22px minmax(0, 1fr);
@@ -9761,6 +9765,7 @@
         opacity: 1;
       }
     }
+
   </style>
   <link rel="stylesheet" href="api/documentation/sharepoint_styles.css">
   <link rel="stylesheet" href="api/documentation/dms_styles.css?v=20260603-dms-process-structure">
@@ -10148,13 +10153,13 @@
                   src="boutan/statistiques.png" alt=""></span><b>Statistique</b><small></small>
               </button>
 
-              
+
               <button class="hub-node hub-orange orbit-1" data-go="docs"><span class="hub-img"><img
                     src="boutan/gestion-de-donnees.png" alt=""></span><b>Maitrise
                   documentaire</b><small></small>
               </button>
           </div>
-          
+
         </div>
       </section>
 
@@ -10520,10 +10525,8 @@
 
           <div id="docSharepointList"></div>
 
-          <div class="card" style="padding: 16px;">
-            <div class="reader-actions">
-              <button class="btn2 btn" id="docResetFiltersBtn" type="button">RÃ©initialiser les filtres</button>
-            </div>
+          <div class="reader-actions doc-reset-actions">
+            <button class="btn2 btn" id="docResetFiltersBtn" type="button">RÃ©initialiser les filtres</button>
           </div>
         </div>
 
@@ -10854,8 +10857,11 @@
         </div>
         <div class="tb">
           <div class="card" style="display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-bottom:12px">
+            <input id="rImportFile" type="file" accept=".xlsx,.xls,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" class="h">
+            <button class="btn2 btn" id="rimport" type="button">Importer Excel</button>
             <button class="btn2 btn" id="rprint" type="button">Imprimer</button>
             <button class="btn2 btn" id="rdownload" type="button">Telecharger</button>
+            <span class="mut" id="rImportStatus"></span>
           </div>
           <table>
             <thead>
@@ -11707,7 +11713,7 @@
               </div>
             </div>
           </div>
-          
+
         </div>
       </section>
 
@@ -13727,7 +13733,40 @@
     const ACI_DEFAULTS = [
       { id: "ACI-001", no: "AC-2026-001", date: "2026-04-20", requester: "Responsable qualite", dept: "Qualite", contact: "qualite@qualilab.tn", docTitle: "Procedure maitrise documentaire", docRef: "PRO-DOC-001", version: "2.0", versionDate: "2026-03-01", type: "Mise a jour", desc: "Ajout des exigences de tracabilite des demandes de modification.", part: "Chapitre 6 et annexe historique", reason: "Amelioration", goal: "Renforcer la conformite ISO 9001 et ISO 17025.", impactProcess: "Pilotage documentaire", impactService: "Aucun impact direct sur le service client", impactPeople: "Brief de sensibilisation", impactEquip: "Aucun", criticality: "Moyenne", qualityManager: "Responsable qualite", processOwner: "Pilote documentaire", decision: "Acceptee", validationDate: "2026-04-22", implOwner: "Assistant qualite", plannedDate: "2026-04-25", revisedVersion: "2.1", effectiveDate: "2026-04-28", verification: "Verification en revue documentaire", traceAction: "AC-2026-014", traceAudit: "AI-2026-001", traceComplaint: "-", archive: "Archive documentaire / version precedente" }
     ];
-    const D = { u: { name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, org: { name: "QUALI by ENNAJEH", fiscal: "MF-2026-001", acc: "Accredite", accDate: "2026-01-15", validDate: "2027-01-15", manager: "John Doe", phone: "+216 71 000 000", fax: "+216 71 000 001", mail: "contact@QUALI.tn", address: "Zone industrielle, Tunis, Tunisie", docs: "Manuel qualite\nCertificat d'accreditation\nAnnexe technique\nPolitique qualite de l'organisme" }, diag: { person: "", date: "", answers: {}, notes: {}, updated: "" }, repo: { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }, docs: [{ id: 1, ref: "PRO-LAB-001", title: "Programme d'etalonnage", p: "Processus support", type: "Procedure", v: "2.1", st: "A valider", o: "Resp. qualite", d: "2026-04-01" }, { id: 2, ref: "INS-LAB-004", title: "Utilisation balance analytique", p: "Processus operationnel", type: "Instruction", v: "1.3", st: "Valide", o: "Technicien senior", d: "2026-03-18" }], orgDocs: [{ id: 101, ref: "PRO-PIL-001", title: "Audit client", ie: "IE-01", p: "Processus pilotage", type: "Procedure", page: "1/3", v: "1.0", st: "Valide", o: "Direction", d: "2026-03-12" }, { id: 102, ref: "INS-OPE-002", title: "Reception et traitement des echantillons", ie: "IE-02", p: "Processus operationnel", type: "Instruction", page: "1/2", v: "2.0", st: "A valider", o: "Chef laboratoire", d: "2026-04-02" }, { id: 103, ref: "FOR-SUP-003", title: "Demande d'achat de consommables", ie: "IE-03", p: "Processus support", type: "Formulaire", page: "1/1", v: "1.4", st: "Valide", o: "Service achats", d: "2026-02-20" }, { id: 104, ref: "ENR-SUP-004", title: "Fiche de maintenance preventive", ie: "IE-04", p: "Processus support", type: "Enregistrement", page: "1/1", v: "3.1", st: "Valide", o: "Metrologie", d: "2026-03-25" }], eq: [{ id: "EQ-001", n: "Balance analytique", m: "Mettler XS-205", sn: "SN-1234", l: "2026-01-10", nx: "2026-04-10", st: "A etalonner", ciq: "Quotidien", u: "+/- 0.1 mg" }, { id: "EQ-002", n: "pH-metre", m: "Metrohm 914", sn: "SN-5678", l: "2026-02-01", nx: "2026-08-01", st: "Valide", ciq: "Avant usage", u: "+/- 0.01 pH" }], nc: [{ ref: "NC-2026-001", desc: "Certificat manquant", g: "Critique", act: "Bloquer l'equipement", st: "Ouverte", o: "Resp. qualite", due: "2026-04-10" }, { ref: "NC-2026-002", desc: "Rapport incomplet", g: "Majeure", act: "Corriger modele", st: "En cours", o: "Technicien", due: "2026-04-15" }], aud: [{ ref: "AI-2026-001", ty: "Audit interne", sc: "Equipements et tracabilite", o: "A. Bensalem", d: "2026-04-20", st: "Planifie", f: "-" }, { ref: "AC-2026-001", ty: "Audit externe (client)", sc: "Systeme complet", o: "Direction", d: "2026-05-05", st: "En cours", f: "2 actions" }], revc: [{ ref: "1", client: "arco sonia sarl", address: "Z.I Enfidha", city: "SOUSSE", phone: "36 381 720", fax: "-", mail: "khassan@valvulasarco.com", st: "Actif" }, { ref: "2", client: "STE DE NUTRITION ANIMALE SA (SNA)", address: "SIDI EL HENI", city: "SOUSSE", phone: "73 280 400", fax: "73 240 409", mail: "achat_seh2@snasidielheni.com", st: "Actif" }, { ref: "3", client: "Ste LA TRINGLE", address: "WG7M+HPV Akouda Sousse", city: "AKOUDA", phone: "73342077", fax: "-", mail: "mariem.latringle@gnet.tn", st: "Actif" }, { ref: "4", client: "AMC", address: "ROUTE DE MSAKEN KM 147 ZAOUIET", city: "SOUSSE", phone: "73 386 040", fax: "-", mail: "achat@amctunisie.com", st: "Actif" }, { ref: "5", client: "VIVIER MARITIME DE TUNISIE (VMT)", address: "Port de peche Hergla", city: "SOUSSE", phone: "73 251 799", fax: "-", mail: "safrjb@gmail.com", st: "Actif" }, { ref: "6", client: "SOCIETE SAMELEC", address: "Rue Maarouf Roussafi, ZI", city: "ZAGHOUAN", phone: "72680122", fax: "72680090", mail: "amel.bensassi@apem.com", st: "Actif" }], prest: [{ id: "PREST-2026-001", ref: "PREST-2026-001", name: "Lab Expert Services", service: "Maintenance et qualification", contact: "Sami Trabelsi", mail: "contact@labexpert.tn", phone: "+216 71 123 456", scope: "Maintenance preventive des equipements critiques", d: "2026-04-08", st: "Actif", obs: "Intervention sous 48h" }, { id: "PREST-2026-002", ref: "PREST-2026-002", name: "Metrology Support", service: "Etalonnage externe", contact: "Nadia Ben Amor", mail: "support@metrology.tn", phone: "+216 70 555 222", scope: "Etalonnage balance, pipettes et sondes", d: "2026-04-15", st: "A evaluer", obs: "Dossier fournisseur a completer" }], aci: [{ id: "ACI-001", no: "AC-2026-001", date: "2026-04-20", requester: "Responsable qualite", dept: "Qualite", contact: "qualite@qualilab.tn", docTitle: "Procedure maitrise documentaire", docRef: "PRO-DOC-001", version: "2.0", versionDate: "2026-03-01", type: "Mise a jour", desc: "Ajout des exigences de tracabilite des demandes de modification.", part: "Chapitre 6 et annexe historique", reason: "Amelioration", goal: "Renforcer la conformite ISO 9001 et ISO 17025.", impactProcess: "Pilotage documentaire", impactService: "Aucun impact direct sur le service client", impactPeople: "Brief de sensibilisation", impactEquip: "Aucun", criticality: "Moyenne", qualityManager: "Responsable qualite", processOwner: "Pilote documentaire", decision: "Acceptee", validationDate: "2026-04-22", implOwner: "Assistant qualite", plannedDate: "2026-04-25", revisedVersion: "2.1", effectiveDate: "2026-04-28", verification: "Verification en revue documentaire", traceAction: "AC-2026-014", traceAudit: "AI-2026-001", traceComplaint: "-", archive: "Archive documentaire / version precedente" }], plan: [{ id: "PLAN-IC-001", type: "Inter-comparaison", ref: "PIC-2026-001", lab: "Laboratoire chimie", scope: "Programme inter-comparaison eau potable et solutions etalon", resp: "Responsable technique", start: "2026-05-10", end: "2026-05-20", freq: "Annuel", status: "Planifie", notes: "Coordination avec organisme externe et preparation des echantillons" }, { id: "PLAN-AUD-001", type: "Audit interne", ref: "PAI-2026-001", lab: "Systeme management qualite", scope: "Audit interne de tous les processus du laboratoire", resp: "Responsable qualite", start: "2026-06-01", end: "2026-06-05", freq: "Semestriel", status: "Planifie", notes: "Couvrir documentation, equipements, competences et reclamations" }, { id: "PLAN-HAB-001", type: "Maintien habilitation personnel", ref: "PHAB-2026-001", lab: "Personnel technique", scope: "Suivi des habilitations, observations terrain et reevaluations", resp: "Chef laboratoire", start: "2026-05-02", end: "2026-05-30", freq: "Trimestriel", status: "En cours", notes: "Verifier les techniciens actifs sur chaque methode" }, { id: "PLAN-RD-001", type: "Revue de direction", ref: "PRD-2026-001", lab: "Direction", scope: "Preparation des indicateurs, actions, risques et satisfaction client", resp: "Direction generale", start: "2026-07-10", end: "2026-07-15", freq: "Annuel", status: "Planifie", notes: "Inclure bilan objectifs qualite et besoins en ressources" }, { id: "PLAN-ETA-001", type: "Etalonnage laboratoire", ref: "PETA-2026-001", lab: "Laboratoire metrologie", scope: "Balance analytique, pipettes, thermometres, masses et verrerie", resp: "Metrologue interne", start: "2026-05-12", end: "2026-05-28", freq: "Mensuel", status: "Planifie", notes: "Plan par instrument avec echeances et priorites critiques" }], stat: [{ id: "STAT-001", ref: "AFF-2026-001", region: "Sousse", country: "Tunisie", month: "Janvier", year: "2026", prestations: 12, note: "Prestations du debut d'annee" }, { id: "STAT-002", ref: "AFF-2025-014", region: "Tunis", country: "Tunisie", month: "Mars", year: "2025", prestations: 8, note: "Activite client secteur industriel" }], disc: [], usr: [{ name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, { name: "Amina El Idrissi", email: "amina@ener.tn", role: "Responsable qualite", dept: "Qualite", ini: "AE" }], trailWeek: "", trailArchive: [], trail: [{ t: "2026-04-07 09:30", u: "John Doe", a: "Connexion", m: "Session", x: "Ouverture de l'application" }, { t: "2026-04-07 09:10", u: "Amina El Idrissi", a: "Creation", m: "NC", x: "NC-2026-001 ajoutee" }] };
+    const D = { u: { name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, org: { name: "QUALI by ENNAJEH", fiscal: "MF-2026-001", acc: "Accredite", accDate: "2026-01-15", validDate: "2027-01-15", manager: "John Doe", phone: "+216 71 000 000", fax: "+216 71 000 001", mail: "contact@QUALI.tn", address: "Zone industrielle, Tunis, Tunisie", docs: "Manuel qualite\nCertificat d'accreditation\nAnnexe technique\nPolitique qualite de l'organisme" }, diag: { person: "", date: "", answers: {}, notes: {}, updated: "" }, repo: { folderName: "QUALI_Documents", linked: false, files: [], selected: "", mode: "Aucune liaison active" }, docs: [{ id: 1, ref: "PRO-LAB-001", title: "Programme d'etalonnage", p: "Processus support", type: "Procedure", v: "2.1", st: "A valider", o: "Resp. qualite", d: "2026-04-01" }, { id: 2, ref: "INS-LAB-004", title: "Utilisation balance analytique", p: "Processus operationnel", type: "Instruction", v: "1.3", st: "Valide", o: "Technicien senior", d: "2026-03-18" }], orgDocs: [{ id: 101, ref: "PRO-PIL-001", title: "Audit client", ie: "IE-01", p: "Processus pilotage", type: "Procedure", page: "1/3", v: "1.0", st: "Valide", o: "Direction", d: "2026-03-12" }, { id: 102, ref: "INS-OPE-002", title: "Reception et traitement des echantillons", ie: "IE-02", p: "Processus operationnel", type: "Instruction", page: "1/2", v: "2.0", st: "A valider", o: "Chef laboratoire", d: "2026-04-02" }, { id: 103, ref: "FOR-SUP-003", title: "Demande d'achat de consommables", ie: "IE-03", p: "Processus support", type: "Formulaire", page: "1/1", v: "1.4", st: "Valide", o: "Service achats", d: "2026-02-20" }, { id: 104, ref: "ENR-SUP-004", title: "Fiche de maintenance preventive", ie: "IE-04", p: "Processus support", type: "Enregistrement", page: "1/1", v: "3.1", st: "Valide", o: "Metrologie", d: "2026-03-25" }], eq: [{ id: "EQ-001", n: "Balance analytique", m: "Mettler XS-205", sn: "SN-1234", l: "2026-01-10", nx: "2026-04-10", st: "A etalonner", ciq: "Quotidien", u: "+/- 0.1 mg" }, { id: "EQ-002", n: "pH-metre", m: "Metrohm 914", sn: "SN-5678", l: "2026-02-01", nx: "2026-08-01", st: "Valide", ciq: "Avant usage", u: "+/- 0.01 pH" }], nc: [{ ref: "NC-2026-001", desc: "Certificat manquant", g: "Critique", act: "Bloquer l'equipement", st: "Ouverte", o: "Resp. qualite", due: "2026-04-10" }, { ref: "NC-2026-002", desc: "Rapport incomplet", g: "Majeure", act: "Corriger modele", st: "En cours", o: "Technicien", due: "2026-04-15" }], aud: [{ ref: "AI-2026-001", ty: "Audit interne", sc: "Equipements et tracabilite", o: "A. Bensalem", d: "2026-04-20", st: "Planifie", f: "-" }, { ref: "AC-2026-001", ty: "Audit externe (client)", sc: "Systeme complet", o: "Direction", d: "2026-05-05", st: "En cours", f: "2 actions" }], revc: [], prest: [{ id: "PREST-2026-001", ref: "PREST-2026-001", name: "Lab Expert Services", service: "Maintenance et qualification", contact: "Sami Trabelsi", mail: "contact@labexpert.tn", phone: "+216 71 123 456", scope: "Maintenance preventive des equipements critiques", d: "2026-04-08", st: "Actif", obs: "Intervention sous 48h" }, { id: "PREST-2026-002", ref: "PREST-2026-002", name: "Metrology Support", service: "Etalonnage externe", contact: "Nadia Ben Amor", mail: "support@metrology.tn", phone: "+216 70 555 222", scope: "Etalonnage balance, pipettes et sondes", d: "2026-04-15", st: "A evaluer", obs: "Dossier fournisseur a completer" }], aci: [{ id: "ACI-001", no: "AC-2026-001", date: "2026-04-20", requester: "Responsable qualite", dept: "Qualite", contact: "qualite@qualilab.tn", docTitle: "Procedure maitrise documentaire", docRef: "PRO-DOC-001", version: "2.0", versionDate: "2026-03-01", type: "Mise a jour", desc: "Ajout des exigences de tracabilite des demandes de modification.", part: "Chapitre 6 et annexe historique", reason: "Amelioration", goal: "Renforcer la conformite ISO 9001 et ISO 17025.", impactProcess: "Pilotage documentaire", impactService: "Aucun impact direct sur le service client", impactPeople: "Brief de sensibilisation", impactEquip: "Aucun", criticality: "Moyenne", qualityManager: "Responsable qualite", processOwner: "Pilote documentaire", decision: "Acceptee", validationDate: "2026-04-22", implOwner: "Assistant qualite", plannedDate: "2026-04-25", revisedVersion: "2.1", effectiveDate: "2026-04-28", verification: "Verification en revue documentaire", traceAction: "AC-2026-014", traceAudit: "AI-2026-001", traceComplaint: "-", archive: "Archive documentaire / version precedente" }], plan: [{ id: "PLAN-IC-001", type: "Inter-comparaison", ref: "PIC-2026-001", lab: "Laboratoire chimie", scope: "Programme inter-comparaison eau potable et solutions etalon", resp: "Responsable technique", start: "2026-05-10", end: "2026-05-20", freq: "Annuel", status: "Planifie", notes: "Coordination avec organisme externe et preparation des echantillons" }, { id: "PLAN-AUD-001", type: "Audit interne", ref: "PAI-2026-001", lab: "Systeme management qualite", scope: "Audit interne de tous les processus du laboratoire", resp: "Responsable qualite", start: "2026-06-01", end: "2026-06-05", freq: "Semestriel", status: "Planifie", notes: "Couvrir documentation, equipements, competences et reclamations" }, { id: "PLAN-HAB-001", type: "Maintien habilitation personnel", ref: "PHAB-2026-001", lab: "Personnel technique", scope: "Suivi des habilitations, observations terrain et reevaluations", resp: "Chef laboratoire", start: "2026-05-02", end: "2026-05-30", freq: "Trimestriel", status: "En cours", notes: "Verifier les techniciens actifs sur chaque methode" }, { id: "PLAN-RD-001", type: "Revue de direction", ref: "PRD-2026-001", lab: "Direction", scope: "Preparation des indicateurs, actions, risques et satisfaction client", resp: "Direction generale", start: "2026-07-10", end: "2026-07-15", freq: "Annuel", status: "Planifie", notes: "Inclure bilan objectifs qualite et besoins en ressources" }, { id: "PLAN-ETA-001", type: "Etalonnage laboratoire", ref: "PETA-2026-001", lab: "Laboratoire metrologie", scope: "Balance analytique, pipettes, thermometres, masses et verrerie", resp: "Metrologue interne", start: "2026-05-12", end: "2026-05-28", freq: "Mensuel", status: "Planifie", notes: "Plan par instrument avec echeances et priorites critiques" }], stat: [{ id: "STAT-001", ref: "AFF-2026-001", region: "Sousse", country: "Tunisie", month: "Janvier", year: "2026", prestations: 12, note: "Prestations du debut d'annee" }, { id: "STAT-002", ref: "AFF-2025-014", region: "Tunis", country: "Tunisie", month: "Mars", year: "2025", prestations: 8, note: "Activite client secteur industriel" }], disc: [], usr: [{ name: "John Doe", email: "john.doe@ener.tn", role: "Administrateur", dept: "Direction", ini: "JD" }, { name: "Amina El Idrissi", email: "amina@ener.tn", role: "Responsable qualite", dept: "Qualite", ini: "AE" }], trailWeek: "", trailArchive: [], trail: [{ t: "2026-04-07 09:30", u: "John Doe", a: "Connexion", m: "Session", x: "Ouverture de l'application" }, { t: "2026-04-07 09:10", u: "Amina El Idrissi", a: "Creation", m: "NC", x: "NC-2026-001 ajoutee" }] };
+    Object.assign(D, {
+      u: { name: "Pilote QUALI", email: "karimennajeh@gmail.com", role: "Administrateur", dept: "Pilotage application", ini: "PQ", pilot: true },
+      org: { name: "QUALI by ENNAJEH", fiscal: "", acc: "", accDate: "", validDate: "", manager: "", phone: "", fax: "", mail: "", address: "", docs: "" },
+      diag: { person: "", date: "", answers: {}, notes: {}, updated: "" },
+      eq: [],
+      nc: [],
+      ncAudits: [],
+      aud: [],
+      revc: [],
+      prest: [],
+      aci: [],
+      plan: [],
+      stat: [],
+      disc: [],
+      usr: [],
+      trailWeek: "",
+      trailArchive: [],
+      trail: [],
+      risk: [],
+      swot: [],
+      sat: [],
+      recl: [],
+      personnel: [],
+      personnelHab: [],
+      personnelQual: [],
+      planAudit: [],
+      planInter: [],
+      planNotifDone: {}
+    });
+    RISK_DEFAULTS.length = 0;
+    PERSONNEL_DEFAULTS.length = 0;
+    RECL_DEFAULTS.length = 0;
+    ACI_DEFAULTS.length = 0;
     const MAIN_PILOT_EMAIL = "karimennajeh@gmail.com";
     function authNormEmail(v) { return String(v || "").trim().toLowerCase() }
     function pilotDataKey(email) { const e = authNormEmail(email); return !e || e === MAIN_PILOT_EMAIL ? K : `${K}__${encodeURIComponent(e)}` }
@@ -13754,8 +13793,21 @@
     function renderRiskNoteCards() { [["p", "riskP", "riskPCardGroup", riskProbLabel], ["g", "riskG", "riskGCardGroup", riskGravLabel]].forEach(([type, inputId, groupId, labelFn]) => { const input = document.getElementById(inputId), group = document.getElementById(groupId); if (!input || !group) return; const current = riskNumber(input.value); group.innerHTML = [1, 2, 3, 4, 5].map(v => `<button type="button" class="risk-note-card ${current === v ? "on" : ""}" data-risk-note="${type}" data-risk-note-value="${v}"><strong>${v}</strong><span>${esc(labelFn(v))}</span></button>`).join("") }) }
     function selectRiskNote(type, value) { const input = document.getElementById(type === "g" ? "riskG" : "riskP"); if (!input) return; input.value = String(value || ""); renderRiskNoteCards(); updateRiskComputedScores(); scheduleRiskAutosave() }
     let s = load();
+    const DEMO_CLEAN_VERSION = "demo-clean-20260607";
+    function cleanDemoState(target) {
+      if (!target || typeof target !== "object") return target;
+      Object.assign(target, {
+        revc: [], eq: [], nc: [], ncAudits: [], aud: [], risk: [], swot: [], sat: [], recl: [], personnel: [],
+        personnelHab: [], personnelQual: [], prest: [], aci: [], plan: [], planAudit: [], planInter: [], stat: [],
+        disc: [], usr: [], trail: [], trailArchive: [], trailWeek: "", planNotifDone: {}, notifications: [], alerts: [],
+        diag: { person: "", date: "", answers: {}, notes: {}, updated: "" },
+        org: { name: "QUALI by ENNAJEH", fiscal: "", acc: "", accDate: "", validDate: "", manager: "", phone: "", fax: "", mail: "", address: "", docs: "" }
+      });
+      return target;
+    }
+    try { if (localStorage.getItem(DEMO_CLEAN_VERSION) !== "1") { cleanDemoState(s); localStorage.setItem(DEMO_CLEAN_VERSION, "1"); persistLocalState() } } catch (e) { cleanDemoState(s) }
     try { normalizeRiskStore(); persistLocalState() } catch (e) { s.risk = [] }
-    const CLIENT_LIST_VERSION = "client-list-20260420";
+    const CLIENT_LIST_VERSION = "client-list-20260607-clean";
     try { if (localStorage.getItem(CLIENT_LIST_VERSION) !== "1") { s.revc = c(D.revc); localStorage.setItem(CLIENT_LIST_VERSION, "1"); ss(K, JSON.stringify(s)) } } catch (e) { s.revc = c(D.revc) }
     let repoHandle = null, repoFilesMap = new Map(), previewUrl = "";
     let orgHandle = null, orgFilesMap = new Map(), orgPreviewUrl = "", activeOrgProc = "", orgRootName = "QUALI_Organisme", orgFiles = [], activeOrgType = "", activeOrgStatus = "";
@@ -14441,7 +14493,8 @@
       $("#cpEmail").value = account.email || "";
       $("#cpEmail2").value = account.email || "";
       $("#cpPwd").value = "";
-      $("#cpPwd2").value = "";
+      $("#cpPwd2").value = "";
+
       if ($("#cpManageLookupEmail")) $("#cpManageLookupEmail").value = account.email || "";
       setPilotCreateStep(1);
       syncPilotManageButtons()
@@ -14666,7 +14719,38 @@
       }
     }
     function applyAccessUi() { const visible = new Set(["hub", ...MODULE_ACCESS_CONFIG.filter(mod => canViewModule(mod.id)).map(mod => mod.id)]); $all("#nav button[data-p]").forEach(btn => btn.classList.toggle("is-hidden", !visible.has(btn.dataset.p))); $all("[data-go]").forEach(btn => btn.classList.toggle("is-hidden", !visible.has(btn.dataset.go))); }
-    function render() { s.usr = (s.usr || []).map(normalizeUserAccount); s.u = normalizeUserAccount(s.u || {}); dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); discussionView(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); statView(); repoView(); applyDbPanelUi(); applyAccessUi(); enhanceDocumentationLayout(); updateModuleHeadTitles(); updateModuleRails(); ensureModulesShortcutButtons(); ensureRefreshButtons(); updateNotificationBadges(); updateMessageBadges(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; scheduleInitButtons(); applyModuleDataState(currentPage) }
+    function applyCleanEmptyLabels() {
+      const emptyText = "Aucune donnÃ©e enregistrÃ©e";
+      const countText = "0 Ã©lÃ©ment";
+      const setCount = id => { const el = document.getElementById(id); if (el) el.textContent = countText };
+      const setTable = (id, colspan = 12) => { const el = document.getElementById(id); if (el) el.innerHTML = `<tr><td colspan="${colspan}" class="e">${emptyText}</td></tr>` };
+      const isEmpty = key => !Array.isArray(s[key]) || s[key].length === 0;
+      [
+        ["eq", "ec", "etab", 9],
+        ["nc", "ncn", "ntab", 9],
+        ["aud", "ac", "atab", 9],
+        ["revc", "rc", "rtab", 8],
+        ["prest", "pxc", "pxtab", 10],
+        ["risk", "riskCount", "riskTab", 15],
+        ["swot", "swotCount", "swotTab", 7],
+        ["sat", "satCount", "satTab", 8],
+        ["recl", "recCount", "recTab", 10],
+        ["personnel", "perCount", "perTab", 9],
+        ["aci", "aciCount", "aciTab", 8],
+        ["stat", "statCount", "statTab", 8]
+      ].forEach(([key, countId, tableId, colspan]) => {
+        if (!isEmpty(key)) return;
+        setCount(countId);
+        setTable(tableId, colspan);
+      });
+      if (isEmpty("plan")) setCount("planCount");
+      if (!Array.isArray(s.ncAudits) || !s.ncAudits.length) setCount("naCount");
+      ["swotForces", "swotFaiblesses", "swotOpportunites", "swotMenaces"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && isEmpty("swot")) el.innerHTML = `<div class="e">${emptyText}</div>`;
+      });
+    }
+    function render() { s.usr = (s.usr || []).map(normalizeUserAccount); s.u = normalizeUserAccount(s.u || {}); dashboardStats(); alerts(); trail(); quick(); docs(); orgDocsView(); eq(); nc(); aud(); revc(); prestView(); usr(); discussionView(); settings(); diagView(); riskView(); swotView(); satView(); reclamationView(); personnelView(); ameliorationView(); planningView(); statView(); repoView(); applyCleanEmptyLabels(); applyDbPanelUi(); applyAccessUi(); enhanceDocumentationLayout(); updateModuleHeadTitles(); updateModuleRails(); ensureModulesShortcutButtons(); ensureRefreshButtons(); updateNotificationBadges(); updateMessageBadges(); $("#uname").textContent = s.u.name; $("#urole").textContent = s.u.role + " - " + s.u.dept; scheduleInitButtons(); applyModuleDataState(currentPage) }
     function dashboardBarCard(title, value, max, color, note = "") { const pct = max > 0 ? Math.max(8, Math.min(100, Math.round((value / max) * 100))) : 0; return `<div class="mini" style="padding:14px 16px"><strong>${esc(title)}</strong><span class="bl">${esc(String(value))}</span><div style="margin-top:10px;height:10px;border-radius:999px;background:#edf3ff;overflow:hidden"><div style="width:${pct}%;height:100%;background:${color};border-radius:999px"></div></div>${note ? `<p class="mut" style="margin:8px 0 0">${esc(note)}</p>` : ""}</div>` }
     function dashboardSparkline(values, color = "#3f6fd8", width = 280, height = 110) { const list = (values || []).map(v => Number(v) || 0), max = Math.max(...list, 1), min = Math.min(...list, 0), pad = 12, usableW = width - pad * 2, usableH = height - pad * 2, step = list.length > 1 ? usableW / (list.length - 1) : usableW, norm = v => { const ratio = max === min ? 0.5 : (v - min) / (max - min); return height - pad - (ratio * usableH) }, pts = list.map((v, i) => `${pad + i * step},${norm(v)}`), area = [`${pad},${height - pad}`, ...pts, `${pad + usableW},${height - pad}`].join(" "), line = pts.join(" "); return `<svg viewBox="0 0 ${width} ${height}" aria-label="Courbe de suivi"><defs><linearGradient id="dashFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".28"></stop><stop offset="100%" stop-color="${color}" stop-opacity=".04"></stop></linearGradient></defs><polyline points="${area}" fill="url(#dashFill)" stroke="none"></polyline><polyline points="${line}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>${pts.map(p => { const [x, y] = p.split(","); return `<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"></circle>` }).join("")}</svg>` }
     function dashboardDonut(values, colors, size = 150) { const total = Math.max(values.reduce((n, v) => n + (Number(v) || 0), 0), 1), r = size * 0.34, c = size / 2, stroke = size * 0.16; let offset = 0; const segs = values.map((v, i) => { const value = Number(v) || 0, len = (value / total) * (Math.PI * 2 * r), dash = `${len} ${Math.PI * 2 * r - len}`, part = `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${colors[i] || "#3f6fd8"}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${c} ${c})"></circle>`; offset += len; return part }).join(""); return `<svg viewBox="0 0 ${size} ${size}" aria-label="Diagramme circulaire"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef3ff" stroke-width="${stroke}"></circle>${segs}<text x="${c}" y="${c - 2}" text-anchor="middle" font-size="26" font-weight="800" fill="#1f2d4d">${values.reduce((n, v) => n + (Number(v) || 0), 0)}</text><text x="${c}" y="${c + 20}" text-anchor="middle" font-size="11" fill="#6c7a96">elements</text></svg>` }
@@ -16064,11 +16148,11 @@
     function eqItem(x) { return { ...x, dom: x.dom || x.domain || x.domaine || "-", n: x.n || x.designation || "-", brand: x.brand || x.b || x.marque || "-", m: x.m || x.model || x.modele || "-", sn: x.sn || x.serial || x.serie || "-", code: x.code || x.id || "-", l: x.l || x.start || x.mise || "-", st: x.st || "Valide" } }
     function eqUpdateDomainFilter() { const el = $("#edomf"); if (!el) return; const current = el.value || "all", base = ["Metrologie", "Production", "Qualite", "Maintenance", "Laboratoire"], domains = [...new Set([...base, ...(s.eq || []).map(x => eqItem(x).dom).filter(v => v && v !== "-")])].sort((a, b) => String(a).localeCompare(String(b), "fr")); el.innerHTML = '<option value="all">Tous les domaines</option>' + domains.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(""); el.value = domains.some(v => docFilterMatch(v, current)) ? current : "all" }
     function filteredEq() { const q = (($("#es") && $("#es").value) || "").trim().toLowerCase(), f = (($("#ef") && $("#ef").value) || "all"), domain = (($("#edomf") && $("#edomf").value) || "all"); return (s.eq || []).map(eqItem).filter(x => [x.dom, x.n, x.brand, x.m, x.sn, x.code, x.l, x.st].join(" ").toLowerCase().includes(q) && (f === "all" || x.st === f) && (domain === "all" || docFilterMatch(x.dom, domain))) }
-    function eqRows(items, actions = true) { const emptyColspan = actions ? 9 : 8; return items.length ? items.map(x => `<tr><td>${esc(x.dom)}</td><td><b>${esc(x.n)}</b></td><td>${esc(x.brand)}</td><td>${esc(x.m)}</td><td>${esc(x.sn)}</td><td>${esc(x.code)}</td><td>${esc(x.l)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td>${actions ? `<td><div class="doc-row-actions"><button class="btn2 btn" data-ee="${esc(x.code)}" type="button">Modifier</button><button class="btn2 btn" data-et="${esc(x.code)}" type="button">Changer statut</button><button class="btn3 btn" data-ed="${esc(x.code)}" type="button">Supprimer</button></div></td>` : ""}</tr>`).join("") : `<tr><td colspan="${emptyColspan}" class="e">Aucun equipement.</td></tr>` }
+    function eqRows(items, actions = true) { const emptyColspan = actions ? 9 : 8; return items.length ? items.map(x => `<tr><td>${esc(x.dom)}</td><td><b>${esc(x.n)}</b></td><td>${esc(x.brand)}</td><td>${esc(x.m)}</td><td>${esc(x.sn)}</td><td>${esc(x.code)}</td><td>${esc(x.l)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td>${actions ? `<td><div class="doc-row-actions"><button class="btn2 btn" data-ee="${esc(x.code)}" type="button">Modifier</button><button class="btn2 btn" data-et="${esc(x.code)}" type="button">Changer statut</button><button class="btn3 btn" data-ed="${esc(x.code)}" type="button">Supprimer</button></div></td>` : ""}</tr>`).join("") : `<tr><td colspan="${emptyColspan}" class="e">Aucune donnÃ©e enregistrÃ©e</td></tr>` }
     function eqExportHtml(items) { const rows = items.map(x => `<tr><td>${esc(x.dom)}</td><td>${esc(x.n)}</td><td>${esc(x.brand)}</td><td>${esc(x.m)}</td><td>${esc(x.sn)}</td><td>${esc(x.code)}</td><td>${esc(x.l)}</td><td>${esc(x.st)}</td></tr>`).join("") || '<tr><td colspan="8">Aucun equipement.</td></tr>'; return `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Liste des equipements</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#24324a;padding:24px}h1{color:#245ccc}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:8px;border:1px solid #dbe6f5;text-align:left;vertical-align:top}th{background:#eef4ff}</style><body><h1>Liste des equipements</h1><p><b>Date d'edition :</b> ${esc(now())}<br><b>Nombre d'equipements :</b> ${items.length}</p><table><thead><tr><th>Domaine</th><th>Designation</th><th>Marque</th><th>Modele</th><th>N de serie</th><th>Code</th><th>Date mise en service</th><th>Statut</th></tr></thead><tbody>${rows}</tbody></table></body></html>` }
     function printEq() { if (!requirePerm("Exporter")) return; const html = eqExportHtml(filteredEq()), w = window.open("", "_blank", "width=1200,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer la liste des equipements"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Liste des equipements prete a imprimer") }
     function downloadEq() { if (!requirePerm("Telecharger")) return; downloadText("Liste_des_equipements_" + stamp() + ".xls", eqExportHtml(filteredEq()), "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Equipements", "Liste des equipements exportee"); save("Liste des equipements telechargee") }
-    function eq() { eqUpdateDomainFilter(); const arr = filteredEq(); if ($("#ec")) $("#ec").textContent = arr.length + " equipement" + (arr.length > 1 ? "s" : ""); if ($("#etab")) $("#etab").innerHTML = eqRows(arr, true) }
+    function eq() { eqUpdateDomainFilter(); const arr = filteredEq(); if ($("#ec")) $("#ec").textContent = arr.length ? arr.length + " equipement" + (arr.length > 1 ? "s" : "") : "0 Ã©lÃ©ment"; if ($("#etab")) $("#etab").innerHTML = eqRows(arr, true) }
     function ncAudits() { if (!Array.isArray(s.ncAudits)) s.ncAudits = []; return s.ncAudits }
     function auditDuration(start, end) { if (!start || !end) return ""; const a = new Date(start), b = new Date(end); if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime()) || b < a) return ""; const days = Math.round((b - a) / 86400000) + 1; return days + " jour" + (days > 1 ? "s" : "") }
     function updateAuditDuration() { const el = $("#naDuration"); if (el) el.value = auditDuration($("#naStart").value, $("#naEnd").value) }
@@ -16092,9 +16176,9 @@
     function handleNcAuditExport(ref, mode, listOnly = false) { const a = ncAudits().find(x => x.ref === ref); if (!a) return; const rows = s.nc.filter(x => x.auditId === ref), html = listOnly ? `<!doctype html><html lang="fr"><meta charset="utf-8"><title>Liste NC Ref ${esc(ref)}</title><style>body{font:13px Segoe UI,Arial,sans-serif;color:#25324b;padding:24px}h1{margin:0 0 12px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #dbe6f5;padding:8px 10px;text-align:left;vertical-align:top}th{background:#f7f9fd}</style><body><h1>Liste de non conformite - Audit : Ref ${esc(ref)}</h1><table><thead><tr><th>Ref</th><th>Description</th><th>Gravite</th><th>Action</th><th>Statut</th><th>Resp.</th><th>Echeance</th></tr></thead><tbody>${ncRowsPlain(rows)}</tbody></table></body></html>` : auditReportHtml(a, rows, false); if (mode === "print") { const w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); return } downloadText((listOnly ? "Liste_NC_" : "Audit_NC_") + ref.replace(/[^a-z0-9_-]+/gi, "_") + "_" + stamp() + ".xls", html, "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Non-conformites", (listOnly ? "Liste NC " : "Rapport audit ") + ref); save("Export audit non-conformites genere") }
     function handleNcClosedExport(mode) { const rows = ncClosedItems(), html = ncClosedHtml(rows); if (mode === "print") { const w = window.open("", "_blank", "width=1100,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); return } downloadText("NC_cloturees_soldees_" + stamp() + ".xls", html, "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Non-conformites", "Liste des NC cloturees/soldees"); save("Export des NC cloturees genere") }
     function aud() { const q = $("#as").value.trim().toLowerCase(), f = $("#af").value, arr = s.aud.filter(x => [x.ref, x.ty, x.sc, x.o].join(" ").toLowerCase().includes(q) && (f === "all" || x.st === f)); $("#ac").textContent = arr.length + " audit" + (arr.length > 1 ? "s" : ""); $("#atab").innerHTML = arr.length ? arr.map(x => `<tr><td>${esc(x.ref)}</td><td>${esc(x.ty)}</td><td>${esc(x.sc)}</td><td>${esc(x.o)}</td><td>${esc(x.d)}</td><td><span class="${tag(x.st)}">${esc(x.st)}</span></td><td>${esc(x.f)}</td><td><button class="btn2 btn" data-ae="${esc(x.ref)}">Modifier</button> <button class="btn2 btn" data-at="${esc(x.ref)}">Avancer</button> <button class="btn2 btn" data-acreatenc="${esc(x.ref)}">Creer NC</button> <button class="btn3 btn" data-ad="${esc(x.ref)}">Supprimer</button></td></tr>`).join("") : `<tr><td colspan="9" class="e">Aucun audit.</td></tr>` }
-    function revcRows(items, actions = true) { const emptyColspan = actions ? 8 : 7; return items.length ? items.map(x => { const address = x.address || x.dem || "-", city = x.city || x.resp || "-", phone = x.phone || "-", fax = x.fax || "-", mail = x.mail || x.scope || "-", mainRow = `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.client)}</b></td><td>${esc(address)}</td><td>${esc(city)}</td><td>${esc(phone)}</td><td>${esc(fax)}</td><td>${esc(mail)}</td>${actions ? "<td></td>" : ""}</tr>`; return actions ? mainRow + `<tr class="doc-action-row"><td colspan="8"><div class="doc-row-actions"><button class="btn2 btn" data-re-edit="${esc(x.ref)}" type="button">Modifier</button><button class="btn3 btn" data-rd="${esc(x.ref)}" type="button">Supprimer</button></div></td></tr>` : mainRow }).join("") : `<tr><td colspan="${emptyColspan}" class="e">Aucun client.</td></tr>` }
+    function revcRows(items, actions = true) { const emptyColspan = actions ? 8 : 7; return items.length ? items.map(x => { const address = x.address || x.dem || "-", city = x.city || x.resp || "-", phone = x.phone || "-", fax = x.fax || "-", mail = x.mail || x.scope || "-", mainRow = `<tr><td>${esc(x.ref)}</td><td><b>${esc(x.client)}</b></td><td>${esc(address)}</td><td>${esc(city)}</td><td>${esc(phone)}</td><td>${esc(fax)}</td><td>${esc(mail)}</td>${actions ? "<td></td>" : ""}</tr>`; return actions ? mainRow + `<tr class="doc-action-row"><td colspan="8"><div class="doc-row-actions"><button class="btn2 btn" data-re-edit="${esc(x.ref)}" type="button">Modifier</button><button class="btn3 btn" data-rd="${esc(x.ref)}" type="button">Supprimer</button></div></td></tr>` : mainRow }).join("") : `<tr><td colspan="${emptyColspan}" class="e">Aucune donnÃ©e enregistrÃ©e</td></tr>` }
     function revcUpdateCityFilter() { const el = $("#rf"); if (!el) return; const current = el.value || "all", cities = [...new Set((s.revc || []).map(x => x.city || x.resp || "").filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), "fr")); el.innerHTML = `<option value="all">Tous</option>` + cities.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(""); el.value = cities.includes(current) ? current : "all" }
-    function revc() { revcUpdateCityFilter(); const q = (($("#rs") && $("#rs").value) || "").trim().toLowerCase(), f = (($("#rf") && $("#rf").value) || "all").toLowerCase(), arr = (s.revc || []).filter(x => { const address = x.address || x.dem || "-", city = x.city || x.resp || "-", phone = x.phone || "-", fax = x.fax || "-", mail = x.mail || x.scope || "-", hay = [x.ref, x.client, address, city, phone, fax, mail].join(" ").toLowerCase(); return hay.includes(q) && (f === "all" || city.toLowerCase() === f) }); $("#rc").textContent = arr.length + " client" + (arr.length > 1 ? "s" : ""); $("#rtab").innerHTML = revcRows(arr, true) }
+    function revc() { revcUpdateCityFilter(); const q = (($("#rs") && $("#rs").value) || "").trim().toLowerCase(), f = (($("#rf") && $("#rf").value) || "all").toLowerCase(), arr = (s.revc || []).filter(x => { const address = x.address || x.dem || "-", city = x.city || x.resp || "-", phone = x.phone || "-", fax = x.fax || "-", mail = x.mail || x.scope || "-", hay = [x.ref, x.client, address, city, phone, fax, mail].join(" ").toLowerCase(); return hay.includes(q) && (f === "all" || city.toLowerCase() === f) }); $("#rc").textContent = arr.length ? arr.length + " client" + (arr.length > 1 ? "s" : "") : "0 Ã©lÃ©ment"; $("#rtab").innerHTML = revcRows(arr, true) }
     const PLANNING_TYPES = ["Inter-comparaison", "Audit interne", "Maintien habilitation personnel", "Revue de direction", "Etalonnage laboratoire"];
     const PLAN_MONTHS_FULL = ["Janv.", "Fev.", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Sep.", "Oct.", "Nov.", "Dec."];
     const PLAN_MONTHS_SHORT = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
@@ -16115,6 +16199,7 @@
     function planNotifStore() { if (!s.planNotifDone || typeof s.planNotifDone !== "object") s.planNotifDone = {}; return s.planNotifDone }
     function planningNotifications() {
       const out = [];
+      if ((!Array.isArray(s.plan) || !s.plan.length) && (!Array.isArray(s.planAudit) || !s.planAudit.length) && (!Array.isArray(s.planInter) || !s.planInter.length)) return out;
       const done = planNotifStore();
       const classify = days => days === null ? "" : days < 0 ? "overdue" : days <= 30 ? "soon" : "";
       const add = (state, due, title, text) => { if (!state) return; const key = `${title}||${text}`; if (done[key]) return; out.push({ key, state, due, title, text, page: "plan" }) };
@@ -16150,7 +16235,7 @@
     function sendDiscussionMessage() { const peer = discussionPeerEmail(), body = ($("#discMessage") && $("#discMessage").value || "").trim(); if (!peer) { sync("Choisis un destinataire pour envoyer un message"); return } if (!body) { sync("Ecris un message avant l'envoi"); return } const me = s.u || {}, recipient = discussionPeers().find(x => String(x.email || "").toLowerCase() === peer); discussionItems().push(markSaved({ id: "DISC-" + stamp() + "-" + Math.random().toString(36).slice(2, 6), fromEmail: me.email || "-", fromName: me.name || "Utilisateur", toEmail: recipient ? recipient.email : peer, toName: recipient ? recipient.name : peer, body, createdAt: now(), readBy: [discussionCurrentEmail()] })); log("Creation", "Discussion", "Message envoye a " + (recipient ? recipient.name : peer)); save("Message envoye"); if ($("#discMessage")) $("#discMessage").value = ""; render(); const thread = $("#discThread"); if (thread) thread.scrollTop = thread.scrollHeight }
     function openDiscussionRecipient() { const target = $("#discRecipient"); if (!target || !target.value) { sync("Choisis un destinataire"); return } openDiscussionWith(target.value) }
     function planLegendHtml() { return `<div class="acts"><span class="ok">Planifie / realise</span><span class="wa">Planifie</span><span class="er">Reporte</span><span class="bl">1ere habilitation</span></div>` }
-    function planAuditItems() { if (!Array.isArray(s.planAudit)) s.planAudit = c(PLAN_AUDIT_TEMPLATE.rows); return s.planAudit }
+    function planAuditItems() { if (!Array.isArray(s.planAudit)) s.planAudit = []; return s.planAudit }
     function planAuditOptionsHtml() { const items = planAuditItems(); return `<option value="">Ligne a modifier / supprimer</option>` + items.map(x => `<option value="${esc(x.id)}">${esc(x.activity)} - ${esc(x.year || PLAN_AUDIT_TEMPLATE.year)}</option>`).join("") }
     function planAuditActivityList() { if (!Array.isArray(s.planAuditActivities) || !s.planAuditActivities.length) s.planAuditActivities = [...PLAN_AUDIT_ACTIVITY_DEFAULTS]; return s.planAuditActivities }
     function planAuditActivityOptionsHtml() { return planAuditActivityList().map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("") }
@@ -16158,7 +16243,7 @@
     function syncPlanAuditActivity(source = "form") { const form = $("#planAuditActivity"), top = $("#planAuditActivityTop"), remove = $("#planAuditActivityRemove"); if (!form || !top) return; if (source === "top") form.value = top.value; else top.value = form.value; if (remove) remove.value = form.value }
     function addPlanAuditActivity() { if (!requirePerm("Ajouter")) return; const input = $("#planAuditActivityNew"); if (!input) return; const name = input.value.trim().toUpperCase(); if (!name) { sync("Renseigne le nouveau domaine a ajouter"); return } const items = planAuditActivityList(); if (items.includes(name)) { sync("Ce domaine existe deja"); return } items.push(name); input.value = ""; renderPlanAuditActivities(name); $("#planAuditActivity").value = name; syncPlanAuditActivity(); save("Domaine audit interne ajoute"); render() }
     function deletePlanAuditActivity() { if (!requirePerm("Supprimer")) return; const input = $("#planAuditActivityRemove"); if (!input) return; const name = input.value.trim().toUpperCase(); const items = planAuditActivityList(); if (!name) { sync("Renseigne le domaine a supprimer"); return } if (!items.includes(name)) { sync("Ce domaine est introuvable"); return } if (items.length === 1) { sync("Le dernier domaine ne peut pas etre supprime"); return } s.planAuditActivities = items.filter(x => x !== name); const next = s.planAuditActivities[0] || "IPFNA"; renderPlanAuditActivities(next); $("#planAuditActivity").value = next; syncPlanAuditActivity(); input.value = next; save("Domaine audit interne supprime"); render() }
-    function planInterItems() { if (!Array.isArray(s.planInter)) s.planInter = c(PLAN_INTERCOMP_TEMPLATE).map((x, i) => { const legacy = [["IPFNA", x.pesage], ["PRESSION", x.pression], ["TEMPERATURE", x.temperature], ["DIMENSIONNEL", x.dimensionnelle], ["ELECTRIQUE", x.electrique]].find(v => v[1] && v[1] !== "-") || ["IPFNA", "-"]; return { id: x.id || ("PIC-00" + (i + 1)).slice(-7), year: x.year || "", activity: x.activity || "-", scope: x.scope || legacy[0], specify: x.specify || legacy[1] || "-", note: x.note || "-", months: x.months || {} } }); return s.planInter }
+    function planInterItems() { if (!Array.isArray(s.planInter)) s.planInter = []; return s.planInter }
     function planInterOptionsHtml() { const items = planInterItems(); return `<option value="">Ligne a modifier / supprimer</option>` + items.map(x => `<option value="${esc(x.id)}">${esc((x.year || "-") + " - " + (x.scope || "-"))}</option>`).join("") }
     function syncPlanInterOptionPreview() { const select = $("#planInterEditRow"); if (!select || !select.value) return; const option = [...select.options].find(o => o.value === select.value); if (!option) return; const year = ($("#planInterYear") && $("#planInterYear").value.trim()) || "-"; const scope = ($("#planInterScope") && $("#planInterScope").value.trim()) || "-"; option.textContent = `${year || "-"} - ${scope || "-"}`; option.title = `${year || "-"} - ${scope || "-"}` }
     function planInterScopeList() { if (!Array.isArray(s.planInterScopes) || !s.planInterScopes.length) s.planInterScopes = [...PLAN_INTER_SCOPE_DEFAULTS]; return s.planInterScopes }
@@ -16912,6 +16997,167 @@
     function filteredRevc() { const q = (($("#rs") && $("#rs").value) || "").trim().toLowerCase(), f = (($("#rf") && $("#rf").value) || "all").toLowerCase(); return (s.revc || []).filter(x => { const address = x.address || x.dem || "-", city = x.city || x.resp || "-", phone = x.phone || "-", fax = x.fax || "-", mail = x.mail || x.scope || "-", hay = [x.ref, x.client, address, city, phone, fax, mail].join(" ").toLowerCase(); return hay.includes(q) && (f === "all" || city.toLowerCase() === f) }) }
     function printRevc() { if (!requirePerm("Exporter")) return; const html = revcExportHtml(filteredRevc()), w = window.open("", "_blank", "width=1200,height=900"); if (!w) { sync("Autorise les fenetres popup pour imprimer la liste client"); return } w.document.open(); w.document.write(html); w.document.close(); w.onload = () => setTimeout(() => w.print(), 250); sync("Liste client prete a imprimer") }
     function downloadRevc() { if (!requirePerm("Telecharger")) return; downloadText("Liste_client_" + stamp() + ".xls", revcExportHtml(filteredRevc()), "application/vnd.ms-excel;charset=utf-8"); log("Telechargement", "Liste client", "Liste client exportee sous Excel"); save("Liste client telechargee") }
+    function revcImportNotice(message) { sync(message); const el = $("#rImportStatus"); if (el) el.textContent = message }
+    function openRevcImport() { if (!requirePerm("Importer")) return; const input = $("#rImportFile"); if (!input) { revcImportNotice("Champ d'import introuvable"); return } input.value = ""; revcImportNotice("Choisis un fichier Excel ou CSV"); input.click() }
+    function revcImportHeaderKey(v) { return String(v || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "") }
+    function revcImportColumnKey(v) { const k = revcImportHeaderKey(v); if (["codeclient", "code", "ref", "reference", "id", "clientref"].includes(k)) return "ref"; if (["designation", "client", "nomclient", "raison_sociale", "raisonsociale", "societe"].includes(k)) return "client"; if (["adresse", "address"].includes(k)) return "address"; if (["ville", "city"].includes(k)) return "city"; if (["telephone", "tel", "phone", "mobile"].includes(k)) return "phone"; if (k === "fax") return "fax"; if (["email", "mail", "courriel"].includes(k)) return "mail"; return "" }
+    function revcImportSplitLine(line, delimiter) {
+      const out = [];
+      let cur = "", quoted = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { if (quoted && line[i + 1] === '"') { cur += '"'; i++ } else quoted = !quoted }
+        else if (ch === delimiter && !quoted) { out.push(cur); cur = "" }
+        else cur += ch
+      }
+      out.push(cur);
+      return out.map(v => v.trim())
+    }
+    function revcImportDelimitedRows(text) {
+      const clean = String(text || "").replace(/^\uFEFF/, ""), lines = clean.split(/\r?\n/).filter(x => x.trim());
+      if (!lines.length) return [];
+      const sample = lines.slice(0, 5).join("\n"), delimiter = [[";", (sample.match(/;/g) || []).length], [",", (sample.match(/,/g) || []).length], ["\t", (sample.match(/\t/g) || []).length]].sort((a, b) => b[1] - a[1])[0][0];
+      return lines.map(line => revcImportSplitLine(line, delimiter))
+    }
+    function revcRowsFromHtmlTable(text) {
+      const doc = new DOMParser().parseFromString(String(text || ""), "text/html"), table = doc.querySelector("table");
+      if (!table) return [];
+      return [...table.querySelectorAll("tr")].map(tr => [...tr.children].map(td => td.textContent.trim())).filter(row => row.some(Boolean))
+    }
+    function revcZipU16(view, offset) { return view.getUint16(offset, true) }
+    function revcZipU32(view, offset) { return view.getUint32(offset, true) }
+    async function revcInflateRaw(bytes) {
+      if (!("DecompressionStream" in window)) throw new Error("Lecture XLSX indisponible dans ce navigateur");
+      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      return new Uint8Array(await new Response(stream).arrayBuffer())
+    }
+    async function revcReadZipEntries(buffer) {
+      const view = new DataView(buffer), bytes = new Uint8Array(buffer), end = Math.max(0, bytes.length - 66000);
+      let eocd = -1;
+      for (let i = bytes.length - 22; i >= end; i--) if (revcZipU32(view, i) === 0x06054b50) { eocd = i; break }
+      if (eocd < 0) throw new Error("Fichier XLSX invalide");
+      const count = revcZipU16(view, eocd + 10), dirOffset = revcZipU32(view, eocd + 16), entries = {};
+      const decoder = new TextDecoder("utf-8");
+      for (let p = dirOffset, i = 0; i < count; i++) {
+        if (revcZipU32(view, p) !== 0x02014b50) break;
+        const method = revcZipU16(view, p + 10), compSize = revcZipU32(view, p + 20), nameLen = revcZipU16(view, p + 28), extraLen = revcZipU16(view, p + 30), commentLen = revcZipU16(view, p + 32), localOffset = revcZipU32(view, p + 42);
+        const name = decoder.decode(bytes.slice(p + 46, p + 46 + nameLen));
+        if (revcZipU32(view, localOffset) === 0x04034b50) {
+          const localNameLen = revcZipU16(view, localOffset + 26), localExtraLen = revcZipU16(view, localOffset + 28), dataStart = localOffset + 30 + localNameLen + localExtraLen, data = bytes.slice(dataStart, dataStart + compSize);
+          entries[name] = method === 0 ? data : method === 8 ? await revcInflateRaw(data) : new Uint8Array()
+        }
+        p += 46 + nameLen + extraLen + commentLen
+      }
+      return entries
+    }
+    function revcXmlText(node) { return node ? node.textContent || "" : "" }
+    function revcXmlFirstSheetPath(entries) {
+      const workbookBytes = entries["xl/workbook.xml"], relBytes = entries["xl/_rels/workbook.xml.rels"];
+      if (!workbookBytes || !relBytes) return "xl/worksheets/sheet1.xml";
+      const parser = new DOMParser(), workbook = parser.parseFromString(new TextDecoder().decode(workbookBytes), "application/xml"), rels = parser.parseFromString(new TextDecoder().decode(relBytes), "application/xml"), first = workbook.getElementsByTagName("sheet")[0];
+      const rid = first && (first.getAttribute("r:id") || first.getAttribute("id"));
+      const rel = rid ? [...rels.getElementsByTagName("Relationship")].find(x => x.getAttribute("Id") === rid) : null;
+      const target = rel && rel.getAttribute("Target");
+      if (!target) return "xl/worksheets/sheet1.xml";
+      return target.startsWith("/") ? target.slice(1) : "xl/" + target.replace(/^(\.\/)+/, "")
+    }
+    function revcRowsFromWorksheetXml(sheetXml, shared) {
+      const doc = new DOMParser().parseFromString(sheetXml, "application/xml");
+      return [...doc.getElementsByTagName("row")].map(row => {
+        const cells = [];
+        [...row.getElementsByTagName("c")].forEach(cel => {
+          const ref = cel.getAttribute("r") || "", letters = (ref.match(/[A-Z]+/i) || [""])[0].toUpperCase();
+          let col = 0;
+          for (const ch of letters) col = col * 26 + ch.charCodeAt(0) - 64;
+          const idx = Math.max(0, col - 1), t = cel.getAttribute("t"), v = cel.getElementsByTagName("v")[0];
+          let value = v ? revcXmlText(v) : revcXmlText(cel.getElementsByTagName("t")[0]);
+          if (t === "s") value = shared[Number(value)] || "";
+          cells[idx] = value
+        });
+        return Array.from({ length: cells.length }, (_, i) => String(cells[i] || "").trim())
+      }).filter(row => row.some(Boolean))
+    }
+    async function revcRowsFromXlsx(file) {
+      const entries = await revcReadZipEntries(await file.arrayBuffer()), decoder = new TextDecoder("utf-8");
+      const sharedXml = entries["xl/sharedStrings.xml"] ? decoder.decode(entries["xl/sharedStrings.xml"]) : "", sharedDoc = sharedXml ? new DOMParser().parseFromString(sharedXml, "application/xml") : null;
+      const shared = sharedDoc ? [...sharedDoc.getElementsByTagName("si")].map(si => si.textContent || "") : [], sheetPath = revcXmlFirstSheetPath(entries), sheet = entries[sheetPath] || entries["xl/worksheets/sheet1.xml"];
+      if (!sheet) throw new Error("Aucune feuille Excel lisible");
+      return revcRowsFromWorksheetXml(decoder.decode(sheet), shared)
+    }
+    function revcNormalizeImportRow(row) {
+      let cells = Array.from({ length: (row || []).length }, (_, i) => String(row[i] || "").trim());
+      if (cells.length === 1 && /[\t;,]/.test(cells[0])) cells = revcImportDelimitedRows(cells[0])[0] || cells;
+      if (cells.length >= 8 && !cells[3] && cells.slice(0, 8).some(Boolean)) cells.splice(3, 1);
+      return cells
+    }
+    function revcImportHeaderScore(row) { return row.map(revcImportColumnKey).filter(Boolean).length }
+    function revcLooksLikeClientHeader(row) {
+      const joined = revcImportHeaderKey(row.join(" "));
+      return joined.includes("codeclient") && (joined.includes("designation") || joined.includes("client"))
+    }
+    function revcItemsFromRows(rows) {
+      const clean = rows.map(revcNormalizeImportRow).filter(row => row.some(Boolean));
+      if (!clean.length) return [];
+      let headerIndex = clean.findIndex(row => revcImportHeaderScore(row) >= 2 || revcLooksLikeClientHeader(row));
+      const hasHeader = headerIndex >= 0, header = hasHeader ? clean[headerIndex] : [], headerKeys = header.map(revcImportColumnKey);
+      const positionalKeys = ["ref", "client", "address", "city", "phone", "fax", "mail"];
+      const keys = hasHeader && headerKeys.filter(Boolean).length >= 2 ? headerKeys : positionalKeys;
+      const dataRows = hasHeader ? clean.slice(headerIndex + 1) : clean;
+      return dataRows.map(row => {
+        const item = { ref: "", client: "", address: "-", city: "-", phone: "-", fax: "-", mail: "-", st: "Actif" };
+        const normalizedRow = revcNormalizeImportRow(row);
+        normalizedRow.forEach((value, i) => { const key = keys[i] || positionalKeys[i]; if (key) item[key] = value || "-" });
+        item.ref = String(item.ref || "").trim();
+        item.client = String(item.client || "").trim();
+        item.address = String(item.address || "-").trim() || "-";
+        item.city = String(item.city || "-").trim() || "-";
+        item.phone = String(item.phone || "-").trim() || "-";
+        item.fax = String(item.fax || "-").trim() || "-";
+        item.mail = String(item.mail || "-").trim() || "-";
+        return item.ref && item.client ? markSaved(item) : null
+      }).filter(Boolean)
+    }
+    async function readRevcImportRows(file) {
+      const name = String(file && file.name || "").toLowerCase();
+      if (name.endsWith(".xlsx")) return revcRowsFromXlsx(file);
+      const text = await file.text();
+      if (/^\s*</.test(text) && /<table[\s>]/i.test(text)) return revcRowsFromHtmlTable(text);
+      if (name.endsWith(".xls") && !/[\n\r,;\t]/.test(text.slice(0, 500))) throw new Error("Ancien format .xls binaire non pris en charge. Ouvre-le dans Excel puis Enregistrer sous .xlsx ou .csv.");
+      return revcImportDelimitedRows(text)
+    }
+    async function readRevcImportFile(file) {
+      const rows = await readRevcImportRows(file);
+      return { rows, items: revcItemsFromRows(rows) }
+    }
+    async function handleRevcImportFile(e) {
+      if (!requirePerm("Importer")) return;
+      const file = e && e.target && e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        revcImportNotice("Lecture du fichier : " + file.name);
+        const result = await readRevcImportFile(file), items = result.items, rowsRead = (result.rows || []).length;
+        if (!items.length) { revcImportNotice(`Aucun client valide trouve (${rowsRead} ligne(s) lue(s)). Verifie que la ligne Code client / Designation est suivie par les clients.`); return }
+        s.revc = Array.isArray(s.revc) ? s.revc : [];
+        let added = 0, updated = 0, mysqlErrors = 0;
+        for (const item of items) {
+          const i = s.revc.findIndex(x => String(x.ref) === String(item.ref));
+          if (i >= 0) { s.revc[i] = { ...s.revc[i], ...item }; updated++ } else { s.revc.unshift(item); added++ }
+          try { await saveClientToMysql(item) } catch (err) { console.error(err); mysqlErrors++ }
+        }
+        if ($("#rs")) $("#rs").value = "";
+        if ($("#rf")) $("#rf").value = "all";
+        persistLocalState();
+        log("Importation", "Liste client", items.length + " client(s) importe(s) depuis " + file.name);
+        save("Import Excel liste client effectue");
+        revc();
+        revcImportNotice(`${added} client(s) ajoute(s), ${updated} mis a jour${mysqlErrors ? " - affiches localement, MySQL indisponible pour " + mysqlErrors + " ligne(s)" : " et enregistre(s) dans MySQL localhost"}`)
+      } catch (err) {
+        console.error(err);
+        revcImportNotice(err.message || "Import Excel client impossible")
+      } finally {
+        if (e && e.target) e.target.value = ""
+      }
+    }
     async function addRevc() { if (!requirePerm(editingRevcId ? "Modifier" : "Ajouter")) return; const ref = $("#rr").value.trim(), client = $("#rcli").value.trim(), address = $("#raddr").value.trim(); if (!ref || !client || !address) { sync("Renseigne le code client, la designation et l'adresse"); return } const list = s.revc || (s.revc = []), oldRef = editingRevcId ? String(editingRevcId) : "", currentIndex = list.findIndex(x => String(x.ref) === String(oldRef || ref)), duplicateIndex = list.findIndex(x => String(x.ref) === String(ref)); if (duplicateIndex >= 0 && currentIndex >= 0 && duplicateIndex !== currentIndex) { sync("Ce code client existe deja"); return } const item = markSaved({ ref, client, address, city: $("#rville").value.trim() || "-", phone: $("#rphone").value.trim() || "-", fax: $("#rfax").value.trim() || "-", mail: $("#remail").value.trim() || "-", st: "Actif" }); if (currentIndex >= 0) { list[currentIndex] = { ...list[currentIndex], ...item }; log("Modification", "Liste client", ref + " mis a jour"); save("Liste client modifie automatiquement") } else { list.unshift(item); log("Creation", "Liste client", ref + " ajoute"); save("Liste client enregistree automatiquement") } try { await saveClientToMysql(item); if (oldRef && oldRef !== String(ref)) await deleteClientFromMysql(oldRef); sync("Client enregistre dans MySQL localhost et affiche dans le tableau") } catch (e) { console.error(e); sync("Client affiche localement, mais MySQL localhost est indisponible") } if ($("#rs")) $("#rs").value = ""; if ($("#rf")) $("#rf").value = "all"; resetRevcForm(); revc() }
     function resetPrestForm() { editingPrestId = ""; clearFields(["#pxr", "#pxn", "#pxsvc", "#pxcontact", "#pxmail", "#pxphone", "#pxdate", "#pxscope", "#pxobs", "#pxqual", "#pxcomm", "#pxdelay", "#pxglobal", "#pxdecision", "#pxtech"]); $("#pxst").value = "Actif"; const retained = $("#pxretained"); if (retained) { retained.textContent = "Decision finale"; retained.className = "bl"; retained.style.display = "flex"; retained.style.alignItems = "center"; retained.style.justifyContent = "center"; retained.style.minHeight = "44px"; retained.style.borderRadius = "14px"; retained.style.fontWeight = "800" } const btn = $("#pxsv"); if (btn) btn.textContent = "Enregistrer"; updatePrestEvaluation() }
     function addPrest() { if (!requirePerm(editingPrestId ? "Modifier" : "Ajouter")) return; const ref = $("#pxr").value.trim(), name = $("#pxn").value.trim(), service = $("#pxsvc").value.trim(); if (!ref || !name || !service) { sync("Renseigne la reference, le nom et le service du prestataire"); return } const evalQuality = Number($("#pxqual").value || 0), evalComm = Number($("#pxcomm").value || 0), evalDelay = Number($("#pxdelay").value || 0), evalGlobal = prestScore(evalQuality, evalComm, evalDelay), evalDecision = prestDecision(evalGlobal), evalRetention = prestRetention(evalGlobal); const x = markSaved({ id: editingPrestId || "PREST-" + stamp(), ref, name, service, contact: $("#pxcontact").value.trim() || "-", mail: $("#pxmail").value.trim() || "-", phone: $("#pxphone").value.trim() || "-", st: $("#pxst").value, d: $("#pxdate").value || now().slice(0, 10), scope: $("#pxscope").value.trim() || "-", obs: $("#pxobs").value.trim() || "-", evalQuality, evalComm, evalDelay, evalGlobal, evalDecision, evalRetention, evalTech: $("#pxtech").value.trim() || "-" }); const items = prestItems(), i = items.findIndex(v => v.id === editingPrestId); if (i >= 0) { items[i] = { ...items[i], ...x }; log("Modification", "Prestataire externe", ref + " mis a jour"); save("Prestataire externe modifie automatiquement") } else { items.unshift(x); log("Creation", "Prestataire externe", ref + " ajoute"); save("Prestataire externe enregistre automatiquement") } resetPrestForm(); render() }
@@ -17095,6 +17341,7 @@
     ["edomf", "ef"].forEach(id => { const el = $("#" + id); if (el) el.addEventListener("change", () => eq()) });
     bindClick("planCalAddLab", addPlanCalLab); bindClick("planCalDeleteLab", deletePlanCalLab); bindClick("planCalCreate", savePlanCalInstrument); bindClick("planCalUpdate", updatePlanCalInstrument); bindClick("planCalDelete", deletePlanCalInstrument);
     bindClick("dsearch", () => refreshMasterDocuments("Recherche documentaire actualisee")); bindClick("drefresh", () => refreshMasterDocuments("Maitrise documentaire synchronisee avec DMS/uploads")); bindClick("dImportBtn", openDocMasterImportDialog); bindClick("dNewBtn", openDocMasterNewDialog); bindClick("dSaveChangesBtn", saveDocMasterChanges); bindClick("dsv", addDoc); bindClick("dprint", printDocsTable); bindClick("ddownload", downloadDocsTable); bindClick("odCleanupBtn", () => loadDocumentationCleanupLibrary(true)); bindClick("odServerRefresh", () => refreshDocumentationCentral("Depot documentaire central actualise")); bindClick("odServerScan", scanDocumentationCentralRepository); bindClick("odServerBootstrap", async () => { const pilotEmail = pilotEmailForApi(); if (!pilotEmail) return; try { await apiRequest("/pilots/" + encodeURIComponent(authNormEmail(pilotEmail)) + "/documentation/bootstrap", { method: "POST", body: { actorName: (s.u && s.u.name) || "Pilote" } }); await refreshDocumentationCentral("Depot documentaire initialise") } catch (e) { console.error(e); sync(e.message || "Initialisation documentaire impossible") } }); bindClick("odHierarchySave", saveDocumentationHierarchy); bindClick("odCreateFolderBtn", createDocumentationCentralFolder); bindClick("odCentralPickBtn", pickDocumentationCentralFile); bindClick("odCentralImportBtn", importDocumentationCentralFile); ["odadd", "odsv"].forEach(id => bindClick(id, addOrgDoc)); bindClick("odImportBtn", () => { $("#odImportFile").value = ""; $("#odImportFile").click() }); const dImportInput = $("#dImportFile"); if (dImportInput) dImportInput.addEventListener("change", handleDocMasterImportFile); const odFileInput = $("#odImportFile"); if (odFileInput) odFileInput.addEventListener("change", e => { if (e.target.files && e.target.files.length) importOrgDocs(e.target.files) }); const odCentralFileInput = $("#odCentralFile"); if (odCentralFileInput) odCentralFileInput.addEventListener("change", e => { if (e.target.files && e.target.files[0]) handleDocumentationCentralFile(e.target.files[0]) }); bindClick("eadd", () => { eq(); sync("Recherche equipements actualisee") }); bindClick("esv", addEq); bindClick("eprint", printEq); bindClick("edownload", downloadEq); bindClick("nadd", () => { nc(); sync("Recherche non-conformites actualisee") }); bindClick("nsv", addNc); bindClick("naSave", addNcAudit); bindClick("naSaveInline", addNcAudit); bindClick("aadd", () => { aud(); sync("Recherche audits actualisee") }); bindClick("asv", addAud); bindClick("radd", () => { revc(); sync("Recherche clients actualisee") }); bindClick("rsv", addRevc); bindClick("rprint", printRevc); bindClick("rdownload", downloadRevc); bindClick("pxadd", () => { prestView(); sync("Recherche prestataires actualisee") }); bindClick("pxsv", addPrest); bindClick("pxprint", printPrest); bindClick("pxdownload", downloadPrestPdf); bindClick("planAuditCreate", createPlanAudit); bindClick("planAuditSave", savePlanAudit); bindClick("planAuditDelete", deletePlanAudit); bindClick("planInterCreate", createPlanInter); bindClick("planInterSave", savePlanInter); bindClick("planInterDelete", deletePlanInter); const planInterSelect = $("#planInterEditRow"); if (planInterSelect) { planInterSelect.addEventListener("input", loadPlanInterForEdit); planInterSelect.addEventListener("change", loadPlanInterForEdit) } bindClick("planSave", savePlanning); bindClick("planPrint", printPlanning); bindClick("planDownload", downloadPlanning); bindClick("planSearchBtn", () => { planningView(); sync("Recherche planning actualisee") }); bindClick("uApplyProfile", () => applyUserProfile((($("#uProfile") && $("#uProfile").value) || "Lecture seule"))); bindClick("usv", addUsr); bindClick("diagSave", () => { const st = diagState(); st.updated = now(); save("Diagnostic ISO 17025 enregistre"); render() }); bindClick("riskSave", addRisk); bindClick("riskCancel", () => { resetRiskForm(false); sync("Formulaire de risque vide") }); bindClick("riskCreateBtn", openRiskCreateForm); bindClick("riskEditSelectedBtn", editSelectedRisk); bindClick("riskPrint", printRiskRegister); bindClick("riskDownload", downloadRiskExcel); bindClick("riskSearchBtn", () => { riskView(); sync("Recherche risques actualisee") }); bindClick("swotSave", addSwot); bindClick("swotPrint", printSwotRegister); bindClick("swotDownload", downloadSwotExcel); bindClick("swotSearchBtn", () => { swotView(); sync("Recherche SWOT actualisee") }); bindClick("satSave", saveSat); bindClick("satSearchBtn", () => { satView(); sync("Recherche satisfaction actualisee") }); bindClick("satPrint", printSatList); bindClick("satDownload", downloadSatList); bindClick("recSave", saveReclamation); bindClick("recSearchBtn", () => { reclamationView(); sync("Recherche reclamations actualisee") }); bindClick("recPrint", printReclamations); bindClick("recDownload", downloadReclamations); bindClick("recStatsPrint", printReclamationStats); bindClick("recStatsDownload", downloadReclamationStats); bindClick("perSave", addPersonnel); bindClick("perSearchBtn", () => { personnelView(); sync("Recherche personnel actualisee") }); bindClick("perPrint", printPersonnel); bindClick("perDownload", downloadPersonnel); bindClick("perHabSave", addPersonnelHab); bindClick("perHabPrint", () => printPersonnelGrid("hab")); bindClick("perHabDownload", () => downloadPersonnelGrid("hab")); bindClick("perQualSave", addPersonnelQual); bindClick("perQualPrint", () => printPersonnelGrid("qual")); bindClick("perQualDownload", () => downloadPersonnelGrid("qual")); bindClick("aciRequesterSave", () => saveAciDraftSection("requester")); bindClick("aciRequestSave", () => saveAciDraftSection("request")); bindClick("aciTreatmentSave", () => saveAciDraftSection("treatment")); bindClick("aciCurrentDownload", downloadAciCurrentReport); bindClick("aciSave", saveAci); bindClick("aciSearchBtn", () => { ameliorationView(); sync("Recherche amelioration continue actualisee") }); bindClick("aciPrint", printAci); bindClick("aciDownload", downloadAci); bindClick("statSave", saveStat); bindClick("statSearchBtn", () => { statView(); sync("Recherche statistique actualisee") }); bindClick("statPrint", printStat); bindClick("statDownload", downloadStat); bindClick("fsearch", () => { repoView(); sync("Recherche fichiers actualisee") });
+    bindClick("rimport", openRevcImport); const rImportInput = $("#rImportFile"); if (rImportInput) rImportInput.onchange = handleRevcImportFile;
     bindClick("dwordOpen", () => showWordCreator()); bindClick("wordCreateClose", hideWordCreator); bindClick("wordCreateBtn", createWordDocumentFromForm); bindClick("odWordOpen", () => showWordCreator());
     bindClick("odResetFilters", resetDocumentationCentralCounterFilter);
     bindClick("odInitStructureBtn", initDocumentationStructure); bindClick("odPreviewOrganizationBtn", () => organizeDocumentationDocuments(false)); bindClick("odRunOrganizationBtn", () => organizeDocumentationDocuments(true)); bindClick("odScanAfterOrganizationBtn", scanDocumentationCentralRepository);
