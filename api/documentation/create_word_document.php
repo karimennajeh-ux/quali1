@@ -28,7 +28,7 @@ function word_process_folder(string $processus): string
 {
     $key = mb_strtolower(trim($processus), 'UTF-8');
     if (str_contains($key, 'pilotage')) return 'Processus pilotage';
-    if (str_contains($key, 'operationnel') || str_contains($key, 'opérationnel')) return 'Processus opérationnel';
+    if (str_contains($key, 'opérationnel') || str_contains($key, 'opérationnel')) return 'Processus opérationnel';
     if (str_contains($key, 'support')) return 'Processus support';
     return trim($processus) !== '' ? trim($processus) : 'Processus support';
 }

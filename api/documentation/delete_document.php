@@ -12,7 +12,7 @@ if (empty($data['confirmApplicationDelete'])) {
 }
 
 $doc = doc_fetch($pdo, $id);
-$actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Systeme')) ?: 'Systeme';
+$actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Système')) ?: 'Système';
 doc_delete_application($pdo, $doc, $actor);
-doc_json(['message' => "Fiche documentaire supprimee. Le fichier Windows n'a pas ete supprime."]);
+doc_json(['message' => "Fiche documentaire supprimée. Le fichier Windows n'a pas été supprimé."]);
 ?>

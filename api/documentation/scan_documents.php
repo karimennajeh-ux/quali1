@@ -5,7 +5,7 @@ require_once __DIR__ . '/_documentation.php';
 
 $pdo = doc_pdo();
 $data = doc_input();
-$actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Systeme')) ?: 'Systeme';
+$actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Système')) ?: 'Système';
 $root = doc_root();
 if (!is_dir($root)) doc_error("Dossier documentaire introuvable : {$root}", 404);
 doc_ensure_all_main_lifecycle_folders();
@@ -222,7 +222,7 @@ foreach ($allDocs as $doc) {
     $missing++;
 }
 
-doc_log($pdo, null, 'scan', "Scan local termine : {$scanned} fichier(s), {$added} ajoute(s), {$updated} mis a jour, {$missing} fichier(s) introuvable(s), {$missingFolders} dossier(s) introuvable(s).", $actor);
+doc_log($pdo, null, 'scan', "Scan local terminé : {$scanned} fichier(s), {$added} ajouté(s), {$updated} mis à jour, {$missing} fichier(s) introuvable(s), {$missingFolders} dossier(s) introuvable(s).", $actor);
 if ($pdo->inTransaction()) {
     $pdo->commit();
 }

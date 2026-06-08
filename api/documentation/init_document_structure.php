@@ -46,7 +46,7 @@ function create_template_docx(string $path, string $title): bool
 
 $pdo = doc_pdo();
 $input = doc_input();
-$actor = trim((string) ($input['actorName'] ?? $input['acteur'] ?? 'Systeme')) ?: 'Systeme';
+$actor = trim((string) ($input['actorName'] ?? $input['acteur'] ?? 'Système')) ?: 'Système';
 $root = doc_root();
 if (!is_dir($root)) doc_error("Dossier documentaire introuvable : {$root}", 404);
 $rootReal = realpath($root);
@@ -84,8 +84,8 @@ foreach (org_structure_paths() as $relativeUnix) {
 }
 
 $templateNames = [
-    'Modele_Manuel_Qualite.docx' => 'Modele Manuel Qualite',
-    'Modele_Politique_Qualite.docx' => 'Modele Politique Qualite',
+    'Modele_Manuel_Qualite.docx' => 'Modele Manuel Qualité',
+    'Modele_Politique_Qualite.docx' => 'Modele Politique Qualité',
     'Modele_Procedure.docx' => 'Modele Procedure',
     'Modele_Instruction.docx' => 'Modele Instruction',
     'Modele_Formulaire.docx' => 'Modele Formulaire',
@@ -98,7 +98,7 @@ foreach ($templateNames as $file => $title) {
     if (create_template_docx($path, $title)) $templatesCreated++;
 }
 
-doc_log($pdo, null, 'Initialisation organisation documentaire', count($created) . ' dossier(s) cree(s), ' . count($existing) . ' deja existant(s).', $actor);
+doc_log($pdo, null, 'Initialisation organisation documentaire', count($created) . ' dossier(s) créé(s), ' . count($existing) . ' déjà existant(s).', $actor);
 doc_json([
     'summary' => [
         'createdCount' => count($created),

@@ -63,7 +63,7 @@ if ($action === 'rename') {
     $newName = dms_item_safe_name((string) ($input['newName'] ?? ''));
     if ($newName === '') dms_item_json(['success' => false, 'error' => 'Nouveau nom invalide'], 400);
     $destination = dirname($source) . DIRECTORY_SEPARATOR . $newName;
-    if (file_exists($destination)) dms_item_json(['success' => false, 'error' => 'Un element avec ce nom existe deja'], 409);
+    if (file_exists($destination)) dms_item_json(['success' => false, 'error' => 'Un élément avec ce nom existe déjà.'], 409);
     if (!rename($source, $destination)) dms_item_json(['success' => false, 'error' => 'Renommage impossible'], 500);
     $newRelative = str_replace('\\', '/', substr($destination, strlen($root) + 1));
 } elseif ($action === 'move') {
@@ -78,7 +78,7 @@ if ($action === 'rename') {
     $targetReal = realpath($targetDir);
     if (!$targetReal || strpos($targetReal, $root) !== 0) dms_item_json(['success' => false, 'error' => 'Dossier cible refuse'], 403);
     $destination = $targetReal . DIRECTORY_SEPARATOR . basename($source);
-    if (file_exists($destination)) dms_item_json(['success' => false, 'error' => 'Un element existe deja dans le dossier cible'], 409);
+    if (file_exists($destination)) dms_item_json(['success' => false, 'error' => 'Un élément existe déjà dans le dossier cible.'], 409);
     if (!rename($source, $destination)) dms_item_json(['success' => false, 'error' => 'Deplacement impossible'], 500);
     $newRelative = str_replace('\\', '/', substr($destination, strlen($root) + 1));
 } elseif ($action === 'delete') {
@@ -114,7 +114,7 @@ if ($action === 'rename') {
         $sets[] = "{$column} = :{$key}";
         $params[":{$key}"] = trim((string) $metadata[$key]);
     }
-    if (!$sets) dms_item_json(['success' => false, 'error' => 'Aucune metadonnee a enregistrer'], 400);
+    if (!$sets) dms_item_json(['success' => false, 'error' => 'Aucune métadonnée à enregistrer.'], 400);
     $sets[] = 'updated_at = CURRENT_TIMESTAMP';
     $stmt = $pdo->prepare('UPDATE documents SET ' . implode(', ', $sets) . ' WHERE chemin_relatif = :rel OR file_path = :rel');
     $stmt->execute($params);
@@ -127,6 +127,6 @@ dms_item_json([
     'ok' => true,
     'action' => $action,
     'path' => $newRelative,
-    'message' => 'Action DMS effectuee avec succes',
+    'message' => 'Action DMS effectuee avec succès',
 ]);
 ?>

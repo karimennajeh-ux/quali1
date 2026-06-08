@@ -26,33 +26,33 @@ if ($q !== '') {
     $params[':q'] = "%{$q}%";
 }
 if ($processus !== '' && $processus !== 'all') {
-    if ($processus === 'Documents gÃ©nÃ©raux' || $processus === 'Documents generaux') {
-        $where[] = "(processus LIKE :processus_general OR chemin_relatif LIKE :processus_general_path OR type_document IN ('Manuel qualitÃ©', 'Manuel qualite', 'Politique qualitÃ©', 'Politique QualitÃ©', 'Politique qualite'))";
+    if ($processus === 'Documents généraux' || $processus === 'Documents generaux') {
+        $where[] = "(processus LIKE :processus_general OR chemin_relatif LIKE :processus_general_path OR type_document IN ('Manuel qualité', 'Manuel qualité', 'Politique qualité', 'Politique Qualité', 'Politique qualité'))";
         $params[':processus_general'] = '%Documents%';
         $params[':processus_general_path'] = '00_Documents_generaux%';
     } else {
         $where[] = "processus IN (:processus, :processus_alt)";
         $params[':processus'] = $processus;
-        $params[':processus_alt'] = str_replace(['opÃ©rationnel', 'gÃ©nÃ©raux'], ['operationnel', 'generaux'], $processus);
+        $params[':processus_alt'] = str_replace(['opérationnel', 'généraux'], ['opérationnel', 'generaux'], $processus);
     }
 }
 if ($type !== '' && $type !== 'all') {
     if ($type === 'Autre') {
-        $where[] = "(type_document IS NULL OR type_document NOT IN ('Manuel qualitÃ©','Manuel qualite','Politique qualitÃ©','Politique QualitÃ©','Politique qualite','ProcÃ©dure','Procedure','Instruction','Formulaire','Enregistrement','Rapport','Image'))";
-    } elseif ($type === 'ProcÃ©dure') {
-        $where[] = "type_document IN ('ProcÃ©dure', 'Procedure')";
-    } elseif ($type === 'Manuel qualitÃ©') {
-        $where[] = "type_document IN ('Manuel qualitÃ©', 'Manuel qualite')";
-    } elseif ($type === 'Politique qualitÃ©') {
-        $where[] = "type_document IN ('Politique qualitÃ©', 'Politique QualitÃ©', 'Politique qualite')";
+        $where[] = "(type_document IS NULL OR type_document NOT IN ('Manuel qualité','Manuel qualité','Politique qualité','Politique Qualité','Politique qualité','Procédure','Procedure','Instruction','Formulaire','Enregistrement','Rapport','Image'))";
+    } elseif ($type === 'Procédure') {
+        $where[] = "type_document IN ('Procédure', 'Procedure')";
+    } elseif ($type === 'Manuel qualité') {
+        $where[] = "type_document IN ('Manuel qualité', 'Manuel qualité')";
+    } elseif ($type === 'Politique qualité') {
+        $where[] = "type_document IN ('Politique qualité', 'Politique Qualité', 'Politique qualité')";
     } else {
         $where[] = "type_document = :type";
         $params[':type'] = $type;
     }
 }
 if ($cycle !== '' && $cycle !== 'all') {
-    if ($cycle === 'ModÃ¨les' || $cycle === 'Modeles') {
-        $where[] = "(cycle_documentaire IN ('ModÃ¨les', 'Modeles', 'ModÃ¨le', 'Modele') OR dossier_statut = '01_Modeles')";
+    if ($cycle === 'Modèles' || $cycle === 'Modeles') {
+        $where[] = "(cycle_documentaire IN ('Modèles', 'Modeles', 'Modèle', 'Modele') OR dossier_statut = '01_Modeles')";
     } elseif ($cycle === 'Archives') {
         $where[] = "(cycle_documentaire IN ('Archives', 'Archive') OR dossier_statut = '04_Archives')";
     } else {
@@ -87,14 +87,14 @@ if ($cleanup) {
     $where[] = "statut = :cleanup_missing";
     $params[':cleanup_missing'] = 'Fichier introuvable';
 } elseif ($statut !== '' && $statut !== 'all') {
-    if (in_array($statut, doc_archived_statuses(), true) || $statut === 'ArchivÃ©') {
+    if (in_array($statut, doc_archived_statuses(), true) || $statut === 'Archivé') {
         $where[] = "statut IN (:statut_archive_1, :statut_archive_2)";
-        $params[':statut_archive_1'] = 'ArchivÃ©';
+        $params[':statut_archive_1'] = 'Archivé';
         $params[':statut_archive_2'] = 'Archive';
-    } elseif ($statut === 'ApprouvÃ©') {
-        $where[] = "statut IN ('ApprouvÃ©', 'Approuve')";
-    } elseif ($statut === 'DiffusÃ©') {
-        $where[] = "statut IN ('DiffusÃ©', 'Diffuse')";
+    } elseif ($statut === 'Approuvé') {
+        $where[] = "statut IN ('Approuvé', 'Approuve')";
+    } elseif ($statut === 'Diffusé') {
+        $where[] = "statut IN ('Diffusé', 'Diffuse')";
     } else {
         $where[] = "statut = :statut";
         $params[':statut'] = $statut;

@@ -163,7 +163,7 @@ $bmp.Dispose()
 const imageDefs = [
   {
     name: "step1_creer_dossier.png",
-    header: "Etape 1 - Creer un dossier documentaire",
+    header: "Etape 1 - Créer un dossier documentaire",
     subheader: "Configurer la hierarchie puis lancer la creation du dossier sur D:",
     stepTag: "1 / 4",
     width: 1200,
@@ -180,7 +180,7 @@ $g.DrawString("Processus pilotage", $bodyFont, $accent, 104, 274)
 $g.DrawString("Processus 2", $smallFont, $muted, 82, 334)
 $g.FillPath($soft, (RR 82 360 220 52 14))
 $g.DrawPath($panelBorder, (RR 82 360 220 52 14))
-$g.DrawString("Processus operationnel", $bodyFont, $accent, 96, 376)
+$g.DrawString("Processus opérationnel", $bodyFont, $accent, 96, 376)
 $g.DrawString("Processus 3", $smallFont, $muted, 82, 436)
 $g.FillPath($soft, (RR 82 462 220 52 14))
 $g.DrawPath($panelBorder, (RR 82 462 220 52 14))
@@ -205,9 +205,9 @@ $g.FillPath($soft, (RR 634 398 150 54 14))
 $g.DrawPath($panelBorder, (RR 634 398 150 54 14))
 $g.DrawString("v_1_0", $bodyFont, $accent, 684, 414)
 $g.FillPath($accent, (RR 634 494 314 64 18))
-$g.DrawString("Creer le dossier sur D:", (New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)), ([System.Drawing.Brushes]::White), 704, 515)
+$g.DrawString("Créer le dossier sur D:", (New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)), ([System.Drawing.Brushes]::White), 704, 515)
 $g.DrawString("Resultat attendu", $subFont, $accent, 634, 602)
-$g.DrawString("documents > pilote > processus > type > reference > version", $smallFont, $muted, 634, 638)
+$g.DrawString("documents > pilote > processus > type > référence > version", $smallFont, $muted, 634, 638)
 `
   },
   {
@@ -222,14 +222,14 @@ $panel = RR 58 150 1084 556 30
 $g.FillPath($panelFill, $panel)
 $g.DrawPath($panelBorder, $panel)
 $g.DrawString("4. Importation vers la bibliotheque centrale", $subFont, $accent, 86, 178)
-$g.DrawString("Reference", $smallFont, $muted, 86, 234)
+$g.DrawString("Référence", $smallFont, $muted, 86, 234)
 $g.FillPath($soft, (RR 86 260 200 52 14))
 $g.DrawPath($panelBorder, (RR 86 260 200 52 14))
 $g.DrawString("PRO-SUP-001", $bodyFont, $accent, 126, 276)
 $g.DrawString("Titre", $smallFont, $muted, 314, 234)
 $g.FillPath($soft, (RR 314 260 420 52 14))
 $g.DrawPath($panelBorder, (RR 314 260 420 52 14))
-$g.DrawString("Procedure de maitrise documentaire", $bodyFont, $accent, 340, 276)
+$g.DrawString("Procedure de maîtrise documentaire", $bodyFont, $accent, 340, 276)
 $g.DrawString("Processus", $smallFont, $muted, 760, 234)
 $g.FillPath($soft, (RR 760 260 300 52 14))
 $g.DrawPath($panelBorder, (RR 760 260 300 52 14))
@@ -245,7 +245,7 @@ $g.DrawString("1.0", $bodyFont, $accent, 340, 380)
 $g.DrawString("Proprietaire", $smallFont, $muted, 452, 338)
 $g.FillPath($soft, (RR 452 364 284 52 14))
 $g.DrawPath($panelBorder, (RR 452 364 284 52 14))
-$g.DrawString("Responsable qualite", $bodyFont, $accent, 520, 380)
+$g.DrawString("Responsable qualité", $bodyFont, $accent, 520, 380)
 $g.DrawString("Statut", $smallFont, $muted, 760, 338)
 $g.FillPath($soft, (RR 760 364 186 52 14))
 $g.DrawPath($panelBorder, (RR 760 364 186 52 14))
@@ -256,8 +256,8 @@ $g.DrawPath($panelBorder, (RR 86 468 660 58 14))
 $g.DrawString("procedure_documentaire_v1.docx", $bodyFont, $accent, 132, 486)
 $g.FillPath($accent, (RR 774 468 270 58 18))
 $g.DrawString("Importer dans la bibliotheque", $bodyFont, ([System.Drawing.Brushes]::White), 826, 486)
-$g.DrawString("Apres validation", $subFont, $accent, 86, 582)
-$g.DrawString("Le document est copie sur D:, enregistre en base et visible dans la bibliotheque.", $smallFont, $muted, 86, 618)
+$g.DrawString("Après validation", $subFont, $accent, 86, 582)
+$g.DrawString("Le document est copie sur D:, enregistré en base et visible dans la bibliotheque.", $smallFont, $muted, 86, 618)
 `
   },
   {
@@ -285,7 +285,7 @@ $g.FillPath($soft, (RR 968 236 146 54 14))
 $g.DrawPath($panelBorder, (RR 968 236 146 54 14))
 $g.DrawString("Brouillon", $bodyFont, $accent, 1004, 252)
 $rows = @(
-  @{ y = 332; ref = 'PRO-SUP-001'; title = 'Procedure de maitrise documentaire'; status = 'Brouillon' },
+  @{ y = 332; ref = 'PRO-SUP-001'; title = 'Procedure de maîtrise documentaire'; status = 'Brouillon' },
   @{ y = 420; ref = 'INS-SUP-004'; title = 'Instruction de classement'; status = 'Diffuse' }
 )
 foreach ($row in $rows) {
@@ -301,7 +301,7 @@ foreach ($row in $rows) {
   $g.DrawPath($panelBorder, (RR 1038 ($row.y + 10) 64 44 14))
   $g.DrawString("Fiche", $smallFont, $accent, 1054, ($row.y + 23))
 }
-$g.DrawString("Tu retrouves ensuite le document par reference, processus, type ou statut.", $smallFont, $muted, 84, 644)
+$g.DrawString("Tu retrouves ensuite le document par référence, processus, type ou statut.", $smallFont, $muted, 84, 644)
 `
   },
   {
@@ -316,7 +316,7 @@ $panel = RR 68 150 1064 556 30
 $g.FillPath($panelFill, $panel)
 $g.DrawPath($panelBorder, $panel)
 $g.DrawString("Documents de tete de la pyramide (optionnel)", $subFont, $accent, 96, 178)
-$g.DrawString("Ce bloc sert seulement si l'organisme souhaite suivre le manuel qualite et la politique qualite dans l'application.", $smallFont, $muted, 96, 214)
+$g.DrawString("Ce bloc sert seulement si l'organisme souhaite suivre le manuel qualité et la politique qualité dans l'application.", $smallFont, $muted, 96, 214)
 
 $card1 = RR 96 276 474 202 22
 $card2 = RR 628 276 474 202 22
@@ -325,8 +325,8 @@ $g.FillPath($panelFill, $card2)
 $g.DrawPath($panelBorder, $card1)
 $g.DrawPath($panelBorder, $card2)
 
-$g.DrawString("Manuel qualite", $subFont, $accent, 126, 304)
-$g.DrawString("A utiliser seulement si ce document fait partie du systeme documentaire de l'organisme.", $smallFont, $muted, 126, 338)
+$g.DrawString("Manuel qualité", $subFont, $accent, 126, 304)
+$g.DrawString("A utiliser seulement si ce document fait partie du système documentaire de l'organisme.", $smallFont, $muted, 126, 338)
 $g.FillPath($soft, (RR 126 384 120 46 14))
 $g.DrawPath($panelBorder, (RR 126 384 120 46 14))
 $g.DrawString("Voir le modele", $smallFont, $accent, 146, 398)
@@ -336,7 +336,7 @@ $g.FillPath($soft, (RR 392 384 118 46 14))
 $g.DrawPath($panelBorder, (RR 392 384 118 46 14))
 $g.DrawString("Selectionner", $smallFont, $accent, 416, 398)
 
-$g.DrawString("Politique qualite", $subFont, $accent, 658, 304)
+$g.DrawString("Politique qualité", $subFont, $accent, 658, 304)
 $g.DrawString("Si ce document n'est pas gere ici, tu peux laisser ce bloc sans action.", $smallFont, $muted, 658, 338)
 $g.FillPath($soft, (RR 658 384 120 46 14))
 $g.DrawPath($panelBorder, (RR 658 384 120 46 14))
@@ -356,7 +356,7 @@ $g.DrawString("Ce bloc est un raccourci guide. Il n'empeche pas l'importation, l
   {
     name: "step5_diffuser_reseau.png",
     header: "Etape 5 - Diffuser aux autres appareils",
-    subheader: "Le PC serveur centralise les donnees, puis telephone, tablette et PC consultent la meme bibliotheque",
+    subheader: "Le PC serveur centralise les données, puis téléphone, tablette et PC consultent la meme bibliotheque",
     stepTag: "5 / 5",
     width: 1200,
     height: 760,
@@ -374,7 +374,7 @@ $g.DrawString("http://IP_DU_PC:3000", $bodyFont, ([System.Drawing.Brushes]::Whit
 $phone = RR 640 172 142 272 28
 $g.FillPath($panelFill, $phone)
 $g.DrawPath($panelBorder, $phone)
-$g.DrawString("Telephone", $subFont, $accent, 668, 204)
+$g.DrawString("Téléphone", $subFont, $accent, 668, 204)
 $g.FillRectangle($soft, 670, 236, 84, 146)
 $g.DrawRectangle($panelBorder, 670, 236, 84, 146)
 $g.DrawString("Documentation", $smallFont, $muted, 676, 400)
@@ -434,21 +434,21 @@ const body = [
 
   paragraph("1. Objet", { style: "Heading1", keepNext: true, pageBreakBefore: true }),
   paragraph(
-    "Ce mode operatoire explique pas a pas comment utiliser le module Documentation pour creer un dossier documentaire, importer un document, le retrouver dans la bibliotheque centralisee puis le rendre accessible aux autres appareils relies au meme reseau local.",
+    "Ce mode operatoire explique pas a pas comment utiliser le module Documentation pour créer un dossier documentaire, importer un document, le retrouver dans la bibliotheque centralisee puis le rendre accessible aux autres appareils relies au meme reseau local.",
     { style: "BodyText" }
   ),
 
   paragraph("2. Conditions prealables", { style: "Heading1", keepNext: true }),
   bullets([
     "Le serveur local doit etre demarre avec la commande npm start.",
-    "Le compte pilote ou le responsable qualite doit etre connecte a l'application.",
+    "Le compte pilote ou le responsable qualité doit etre connecte a l'application.",
     "Le poste principal doit rester allume pendant l'utilisation multi-appareils.",
     "Les autres appareils doivent etre connectes au meme reseau local."
   ]),
 
-  paragraph("3. Etape 1 - Creer un dossier documentaire", { style: "Heading1", keepNext: true }),
+  paragraph("3. Etape 1 - Créer un dossier documentaire", { style: "Heading1", keepNext: true }),
   paragraph(
-    "Dans le module Documentation, commencer par definir la hierarchie documentaire puis utiliser la zone de creation des dossiers. Renseigner le processus, le type, la reference et la version, puis cliquer sur le bouton de creation.",
+    "Dans le module Documentation, commencer par definir la hierarchie documentaire puis utiliser la zone de creation des dossiers. Renseigner le processus, le type, la référence et la version, puis cliquer sur le bouton de creation.",
     { style: "BodyText" }
   ),
   imageParagraph("rId3", 5486400, 3474720, "Etape 1", "Figure 1 - Exemple de creation d'un dossier documentaire depuis le module Documentation."),
@@ -456,20 +456,20 @@ const body = [
     "Ouvrir le bloc 'Hierarchie documentaire sur D:'.",
     "Verifier ou ajuster les processus documentaires.",
     "Ouvrir ensuite 'Creation des dossiers documentaires'.",
-    "Renseigner le processus, le type, la reference et la version.",
+    "Renseigner le processus, le type, la référence et la version.",
     "Cliquer sur le bouton de creation pour generer le dossier sur D:."
   ]),
 
   paragraph("4. Etape 2 - Importer un document", { style: "Heading1", keepNext: true, pageBreakBefore: true }),
   paragraph(
-    "Apres la creation du dossier, utiliser le bloc d'importation pour selectionner le fichier et saisir les metadonnees. L'application copie alors le document dans le depot central et l'enregistre dans la base.",
+    "Après la creation du dossier, utiliser le bloc d'importation pour selectionner le fichier et saisir les metadonnees. L'application copie alors le document dans le depot central et l'enregistré dans la base.",
     { style: "BodyText" }
   ),
-  imageParagraph("rId4", 5486400, 3474720, "Etape 2", "Figure 2 - Importation d'un document avec reference, titre, processus, type, version et statut."),
+  imageParagraph("rId4", 5486400, 3474720, "Etape 2", "Figure 2 - Importation d'un document avec référence, titre, processus, type, version et statut."),
   bullets([
     "Cliquer sur la zone de selection du fichier.",
     "Choisir le document Word, PDF, Excel ou autre fichier autorise.",
-    "Renseigner la reference, le titre, le processus, le type, le proprietaire et le statut.",
+    "Renseigner la référence, le titre, le processus, le type, le proprietaire et le statut.",
     "Valider l'importation vers la bibliotheque centrale."
   ]),
 
@@ -480,7 +480,7 @@ const body = [
   ),
   imageParagraph("rId5", 5486400, 3474720, "Etape 3", "Figure 3 - Recherche et consultation d'un document dans la bibliotheque documentaire centralisee."),
   bullets([
-    "Saisir la reference ou une partie du titre dans la recherche.",
+    "Saisir la référence ou une partie du titre dans la recherche.",
     "Filtrer par processus si necessaire.",
     "Filtrer par type ou par statut pour reduire les resultats.",
     "Utiliser 'Lire' pour ouvrir le document ou 'Fiche' pour consulter ses informations."
@@ -488,10 +488,10 @@ const body = [
 
   paragraph("6. Etape 4 - Comprendre le bloc optionnel", { style: "Heading1", keepNext: true, pageBreakBefore: true }),
   paragraph(
-    "Le bloc 'Documents de tete de la pyramide' n'est pas obligatoire. Il sert uniquement si l'organisme souhaite preparer ou suivre le manuel qualite et la politique qualite dans l'application.",
+    "Le bloc 'Documents de tete de la pyramide' n'est pas obligatoire. Il sert uniquement si l'organisme souhaite preparer ou suivre le manuel qualité et la politique qualité dans l'application.",
     { style: "BodyText" }
   ),
-  imageParagraph("rId6", 5486400, 3474720, "Etape 4", "Figure 4 - Bloc optionnel pour le manuel qualite et la politique qualite dans le module Documentation."),
+  imageParagraph("rId6", 5486400, 3474720, "Etape 4", "Figure 4 - Bloc optionnel pour le manuel qualité et la politique qualité dans le module Documentation."),
   bullets([
     "Tu peux laisser ce bloc sans action si ton besoin principal est le depot documentaire central.",
     "Utiliser 'Voir le modele' pour consulter un exemple de structure.",
@@ -501,22 +501,22 @@ const body = [
 
   paragraph("7. Etape 5 - Diffuser aux autres appareils", { style: "Heading1", keepNext: true, pageBreakBefore: true }),
   paragraph(
-    "Le PC principal joue le role de serveur local. Les autres appareils consultent les memes donnees en ouvrant l'application via l'adresse reseau du poste principal. Ainsi, la bibliotheque documentaire reste centralisee.",
+    "Le PC principal joue le role de serveur local. Les autres appareils consultent les memes données en ouvrant l'application via l'adresse reseau du poste principal. Ainsi, la bibliotheque documentaire reste centralisee.",
     { style: "BodyText" }
   ),
-  imageParagraph("rId7", 5486400, 3474720, "Etape 5", "Figure 5 - Principe de diffusion du depot documentaire local vers telephone, tablette et autres PC."),
+  imageParagraph("rId7", 5486400, 3474720, "Etape 5", "Figure 5 - Principe de diffusion du depot documentaire local vers téléphone, tablette et autres PC."),
   bullets([
     "Lancer le serveur local avec npm start sur le PC principal.",
     "Relever l'adresse du type http://IP_DU_PC:3000.",
-    "Ouvrir cette adresse depuis le telephone, la tablette ou un autre PC connecte au meme reseau.",
+    "Ouvrir cette adresse depuis le téléphone, la tablette ou un autre PC connecte au meme reseau.",
     "Verifier que les documents, statuts et historiques sont visibles sur tous les appareils."
   ]),
 
   paragraph("8. Bonnes pratiques", { style: "Heading1", keepNext: true }),
   bullets([
-    "Creer les dossiers et importer les documents uniquement via l'application.",
+    "Créer les dossiers et importer les documents uniquement via l'application.",
     "Eviter de renommer manuellement les dossiers dans l'explorateur Windows.",
-    "Eviter de deplacer directement un fichier deja enregistre dans la bibliotheque.",
+    "Eviter de deplacer directement un fichier deja enregistré dans la bibliotheque.",
     "Utiliser les statuts documentaires pour garder un cycle de vie clair et traçable."
   ]),
 
@@ -530,7 +530,7 @@ const body = [
     { style: "BodyText", italic: true, color: "1F4E79" }
   ),
   paragraph(
-    "L'application cree ensuite la structure documents > pilote > processus > type > reference > version pour organiser les fichiers de l'organisme.",
+    "L'application cree ensuite la structure documents > pilote > processus > type > référence > version pour organiser les fichiers de l'organisme.",
     { style: "BodyText" }
   ),
 
@@ -571,7 +571,7 @@ const core = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <dc:subject>Documentation centralisee</dc:subject>
   <dc:creator>OpenAI Codex</dc:creator>
   <cp:keywords>documentation; dossier; import; reseau; guide illustre</cp:keywords>
-  <dc:description>Mode operatoire illustre pour creer un dossier, importer un document, le retrouver et le diffuser sur le reseau local.</dc:description>
+  <dc:description>Mode operatoire illustre pour créer un dossier, importer un document, le retrouver et le diffuser sur le reseau local.</dc:description>
   <cp:lastModifiedBy>OpenAI Codex</cp:lastModifiedBy>
   <dcterms:created xsi:type="dcterms:W3CDTF">2026-05-08T00:00:00Z</dcterms:created>
   <dcterms:modified xsi:type="dcterms:W3CDTF">2026-05-08T00:00:00Z</dcterms:modified>

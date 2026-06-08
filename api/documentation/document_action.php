@@ -7,7 +7,7 @@ $pdo = doc_pdo();
 $data = doc_input();
 $id = (int) ($data['id'] ?? 0);
 $action = trim((string) ($data['action'] ?? ''));
-$actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Systeme')) ?: 'Systeme';
+$actor = trim((string) ($data['actorName'] ?? $data['acteur'] ?? 'Système')) ?: 'Système';
 
 if ($id <= 0) doc_error('Identifiant document manquant.', 422);
 if ($action === '') doc_error('Action documentaire manquante.', 422);
@@ -21,10 +21,10 @@ switch ($action) {
             $doc,
             doc_archived_status(),
             'Archiver',
-            'Document archive dans MySQL. Fichier Windows conserve : ' . ($doc['chemin_fichier'] ?? ''),
+            'Document archivé dans MySQL. Fichier Windows conservé : ' . ($doc['chemin_fichier'] ?? ''),
             $actor
         );
-        doc_json(['message' => 'Document archive. Le fichier Windows est conserve.', 'item' => doc_item($updated)]);
+        doc_json(['message' => 'Document archivé. Le fichier Windows est conservé.', 'item' => doc_item($updated)]);
         break;
 
     case 'exclude':
@@ -33,10 +33,10 @@ switch ($action) {
             $doc,
             'Exclu',
             'Exclure',
-            'Document exclu de la liste principale. Fichier Windows conserve : ' . ($doc['chemin_fichier'] ?? ''),
+            'Document exclu de la liste principale. Fichier Windows conservé : ' . ($doc['chemin_fichier'] ?? ''),
             $actor
         );
-        doc_json(['message' => 'Document exclu de la liste principale. Le fichier Windows est conserve.', 'item' => doc_item($updated)]);
+        doc_json(['message' => 'Document exclu de la liste principale. Le fichier Windows est conservé.', 'item' => doc_item($updated)]);
         break;
 
     case 'restore':
@@ -57,19 +57,19 @@ switch ($action) {
             doc_error("Confirmation requise pour supprimer la fiche de l'application.", 422);
         }
         doc_delete_application($pdo, $doc, $actor);
-        doc_json(['message' => "Fiche supprimee de l'application. Le fichier Windows est conserve."]);
+        doc_json(['message' => "Fiche supprimée de l'application. Le fichier Windows est conservé."]);
         break;
 
     case 'delete_permanent':
         $phrase = trim((string) ($data['confirmPhrase'] ?? ''));
         if (empty($data['confirmPermanent']) || $phrase !== 'SUPPRIMER DEFINITIVEMENT') {
-            doc_error('Double confirmation requise pour supprimer definitivement le fichier Windows.', 422);
+            doc_error('Double confirmation requise pour supprimer définitivement le fichier Windows.', 422);
         }
         $fileDeleted = doc_delete_permanent($pdo, $doc, $actor);
         doc_json([
             'message' => $fileDeleted
-                ? 'Fiche MySQL et fichier Windows supprimes definitivement.'
-                : 'Fiche MySQL supprimee. Le fichier Windows etait deja introuvable.',
+                ? 'Fiche MySQL et fichier Windows supprimés définitivement.'
+                : 'Fiche MySQL supprimée. Le fichier Windows était déjà introuvable.',
             'fileDeleted' => $fileDeleted,
         ]);
         break;

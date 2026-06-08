@@ -13,7 +13,7 @@ function org_process_folder(string $processus): string
 {
     $key = org_norm($processus);
     if (str_contains($key, 'pilotage')) return '01_Processus_pilotage';
-    if (str_contains($key, 'operationnel')) return '02_Processus_operationnel';
+    if (str_contains($key, 'opérationnel')) return '02_Processus_operationnel';
     if (str_contains($key, 'support')) return '03_Processus_support';
     return '03_Processus_support';
 }
@@ -75,7 +75,7 @@ function org_unique_destination(string $dir, string $fileName, string $currentRe
 
 $pdo = doc_pdo();
 $input = doc_input();
-$actor = trim((string) ($input['actorName'] ?? $input['acteur'] ?? 'Systeme')) ?: 'Systeme';
+$actor = trim((string) ($input['actorName'] ?? $input['acteur'] ?? 'Système')) ?: 'Système';
 $execute = filter_var($input['execute'] ?? false, FILTER_VALIDATE_BOOLEAN);
 $root = doc_root();
 $rootReal = realpath($root);
@@ -121,7 +121,7 @@ foreach ($docs as $doc) {
             'oldRelativePath' => doc_relative_path($oldPath),
             'newRelativePath' => doc_relative_path($targetDir . DIRECTORY_SEPARATOR . $fileName),
             'status' => $status,
-            'action' => 'Fichier introuvable - aucun deplacement',
+            'action' => 'Fichier introuvable - aucun déplacement',
         ];
         continue;
     }
@@ -146,7 +146,7 @@ foreach ($docs as $doc) {
     $targetCheck = dirname($targetPath);
     $targetRealForCheck = is_dir($targetCheck) ? realpath($targetCheck) : false;
     if ($targetRealForCheck && !doc_path_is_inside_root($targetRealForCheck . DIRECTORY_SEPARATOR . 'check.tmp', $rootReal)) {
-        doc_error('Destination refusee hors dossier documentaire autorise.', 403);
+        doc_error('Destination refusée hors dossier documentaire autorisé.', 403);
     }
     $same = strcasecmp($oldReal, $targetPath) === 0 || (realpath($targetPath) && strcasecmp($oldReal, (string) realpath($targetPath)) === 0);
     $action = $same ? 'Deja classe' : ($execute ? 'Deplace' : 'Deplacement propose');
@@ -193,7 +193,7 @@ foreach ($docs as $doc) {
 }
 
 if ($execute) {
-    doc_log($pdo, null, 'Organisation automatique des documents', "{$moved} fichier(s) deplace(s), {$skipped} deja classe(s), {$missing} introuvable(s).", $actor);
+    doc_log($pdo, null, 'Organisation automatique des documents', "{$moved} fichier(s) déplacé(s), {$skipped} déjà classé(s), {$missing} introuvable(s).", $actor);
 }
 
 doc_json([

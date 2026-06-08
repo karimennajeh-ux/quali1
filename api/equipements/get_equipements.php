@@ -1,1 +1,1 @@
-<?php require_once __DIR__ . '/../_module.php'; quali_module_get('equipements'); ?>
+<?php require_once __DIR__ . '/../_module.php'; quali_module_get('équipements'); ?>

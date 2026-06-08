@@ -22,7 +22,7 @@ function versioned_ref(PDO $pdo, string $ref, string $version): string
         $stmt->execute([$try]);
         if ((int) $stmt->fetchColumn() === 0) return $try;
     }
-    doc_error('Reference de nouvelle version indisponible.', 500);
+    doc_error('Référence de nouvelle version indisponible.', 500);
 }
 
 $pdo = doc_pdo();

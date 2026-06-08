@@ -14,6 +14,21 @@ const docSharepointState = {
   userRole: 'Viewers' // Can be: Administrators, Approvers, Editors, Viewers
 };
 
+function qualiInfo(message) {
+  if (window.showQualiModal) window.showQualiModal({ type: 'info', title: 'Information', message, confirmText: 'OK' });
+  else console.info(message);
+}
+
+function qualiError(message) {
+  if (window.showQualiModal) window.showQualiModal({ type: 'error', title: 'Erreur', message, confirmText: 'OK' });
+  else console.error(message);
+}
+
+function qualiConfirm(options) {
+  if (window.showQualiModal) return window.showQualiModal({ showCancel: true, ...options, type: options && options.type === 'error' ? 'confirm-delete' : ((options && options.type) || 'warning') });
+  return Promise.resolve(false);
+}
+
 /**
  * Load documents with permissions
  */
@@ -265,7 +280,7 @@ async function grantPermission(docId) {
   const permLevel = document.getElementById('permLevel').value;
   
   if (!userName || !userEmail || !permLevel) {
-    alert('Veuillez remplir tous les champs');
+    qualiError('Veuillez remplir tous les champs');
     return;
   }
   
@@ -293,11 +308,11 @@ async function grantPermission(docId) {
       await loadDocumentPermissions(docId);
       openDocumentPermissions(docId, 'Document');
     } else {
-      alert('Erreur lors de l\'ajout de la permission');
+      qualiError('Erreur lors de l\'ajout de la permission');
     }
   } catch (error) {
     console.error('Error granting permission:', error);
-    alert('Erreur lors de l\'ajout de la permission');
+    qualiError('Erreur lors de l\'ajout de la permission');
   }
 }
 
@@ -305,7 +320,7 @@ async function grantPermission(docId) {
  * Revoke permission
  */
 async function revokePermission(permId) {
-  if (!confirm('Êtes-vous sûr?')) return;
+  if (!await qualiConfirm({ title: 'Retirer la permission', message: 'Êtes-vous sûr de vouloir retirer cette permission ?', confirmText: 'Retirer', cancelText: 'Annuler', type: 'warning' })) return;
   
   try {
     const response = await fetch('api/documentation/manage_permissions.php?action=revoke', {
@@ -327,15 +342,15 @@ async function revokePermission(permId) {
  * Edit document
  */
 function editDocument(docId) {
-  alert('Édition du document ' + docId + ' - À implémenter');
+  qualiInfo('Edition du document ' + docId + ' - A implementer');
 }
 
 /**
  * Delete document
  */
-function deleteDocument(docId) {
-  if (!confirm('Êtes-vous sûr de vouloir supprimer ce document?')) return;
-  alert('Suppression du document ' + docId + ' - À implémenter');
+async function deleteDocument(docId) {
+  if (!await qualiConfirm({ title: 'Supprimer le document', message: 'Êtes-vous sûr de vouloir supprimer ce document ?', confirmText: 'Supprimer', cancelText: 'Annuler', type: 'error' })) return;
+  qualiInfo('Suppression du document ' + docId + ' - A implementer');
 }
 
 // Initialize on page load

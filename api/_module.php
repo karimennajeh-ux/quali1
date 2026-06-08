@@ -5,13 +5,13 @@ require_once __DIR__ . '/db.php';
 
 const QUALI_MODULES = [
     'clients' => ['table' => 'clients', 'public' => 'client_ref'],
-    'equipements' => ['table' => 'equipements', 'public' => 'code_interne'],
+    'équipements' => ['table' => 'équipements', 'public' => 'code_interne'],
     'audits' => ['table' => 'audits', 'public' => 'audit_ref'],
     'non_conformites' => ['table' => 'non_conformites', 'public' => 'nc_ref', 'relations' => ['audit_ref', 'audit_id']],
     'diagnostic' => ['table' => 'diagnostic_iso', 'public' => 'diagnostic_ref'],
     'utilisateurs' => ['table' => 'utilisateurs', 'public' => 'email', 'relations' => ['personnel_ref']],
     'discussion' => ['table' => 'discussion_messages', 'public' => 'message_ref', 'relations' => ['from_email', 'to_email']],
-    'parametres' => ['table' => 'parametres', 'public' => 'param_ref'],
+    'paramètres' => ['table' => 'paramètres', 'public' => 'param_ref'],
     'risques' => ['table' => 'risques_api', 'public' => 'risque_ref'],
     'swot' => ['table' => 'swot', 'public' => 'swot_ref'],
     'satisfaction' => ['table' => 'satisfaction_client', 'public' => 'satisfaction_ref', 'relations' => ['client_ref']],
@@ -155,6 +155,6 @@ function quali_module_delete(string $module): void
     if ($id === '') quali_api_json_error('Identifiant manquant.', 422);
     $stmt = $pdo->prepare("DELETE FROM `{$cfg['table']}` WHERE `{$cfg['public']}` = ?");
     $stmt->execute([$id]);
-    quali_module_response(['message' => 'Suppression terminée.', 'id' => $id]);
+    quali_module_response(['message' => 'Donnée supprimée avec succès.', 'id' => $id]);
 }
 ?>

@@ -19,9 +19,9 @@ $folderCount = (int) $pdo->query("SELECT COUNT(*) FROM dossiers_documentaires WH
 $docStmt->execute();
 $folderStmt->execute();
 
-doc_log($pdo, null, 'Nettoyage des introuvables', "Fiches MySQL supprimees uniquement : {$docCount} document(s), {$folderCount} dossier(s). Aucun fichier Windows supprime.", $actor);
+doc_log($pdo, null, 'Nettoyage des introuvables', "Fiches MySQL supprimées uniquement : {$docCount} document(s), {$folderCount} dossier(s). Aucun fichier Windows supprimé.", $actor);
 doc_json([
-    'message' => 'Nettoyage des introuvables termine. Aucun fichier Windows supprime.',
+    'message' => 'Nettoyage des introuvables terminé. Aucun fichier Windows supprimé.',
     'deletedDocuments' => $docCount,
     'deletedFolders' => $folderCount,
 ]);

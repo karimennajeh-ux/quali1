@@ -191,7 +191,7 @@ const body = [
 
   paragraph("4. Définitions", { style: "Heading1", keepNext: true }),
   bullets([
-    "Dépôt documentaire central : dossier physique sur D: dans lequel l’application enregistre les documents.",
+    "Dépôt documentaire central : dossier physique sur D: dans lequel l’application enregistré les documents.",
     "Bibliothèque documentaire centralisée : vue applicative des documents stockés dans le dépôt central.",
     "Journal documentaire : historique temps réel des actions effectuées sur les documents.",
     "Hiérarchie documentaire : structure de classement basée sur le processus, le type, la référence et la version."
@@ -255,7 +255,7 @@ const body = [
 
   paragraph("7.5 Lire ou ouvrir un document", { style: "Heading2", keepNext: true }),
   paragraph(
-    "Depuis la bibliothèque documentaire centralisée, utiliser Lire ou Ouvrir pour consulter le document. L’application enregistre automatiquement l’action dans le journal documentaire en temps réel.",
+    "Depuis la bibliothèque documentaire centralisée, utiliser Lire ou Ouvrir pour consulter le document. L’application enregistré automatiquement l’action dans le journal documentaire en temps réel.",
     { style: "BodyText" }
   ),
 

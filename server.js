@@ -50,7 +50,7 @@ const DEFAULT_DOC_PROCESS_FOLDERS = ["Processus_pilotage", "Processus_operationn
 const TOP_PYRAMID_DOC_TYPES = ["Manuel qualité", "Politique Qualité"];
 const TOP_PYRAMID_ARCHIVE_STATUSES = ["Archive"];
 const DEFAULT_DOC_HIERARCHY = {
-  levels: ["process", "type", "reference", "version"],
+  levels: ["process", "type", "référence", "version"],
   processFolders: DEFAULT_DOC_PROCESS_FOLDERS
 };
 
@@ -68,31 +68,31 @@ const MAIN_PILOT = {
   status: "Actif"
 };
 
-const MODULE_ACTIONS = ["Voir", "Ajouter", "Modifier", "Supprimer", "Valider", "Telecharger", "Imprimer"];
+const MODULE_ACTIONS = ["Voir", "Ajouter", "Modifier", "Supprimer", "Valider", "Télécharger", "Imprimer"];
 const MODULE_ACCESS_CONFIG = [
   { id: "db", label: "Tableau de bord" },
-  { id: "docs", label: "Maitrise documentaire" },
+  { id: "docs", label: "Maîtrise documentaire" },
   { id: "docorg", label: "Documentation" },
   { id: "revc", label: "Liste client" },
   { id: "prest", label: "Prestataire externe" },
-  { id: "eq", label: "Gestion des equipements" },
-  { id: "nc", label: "Non-conformites" },
+  { id: "eq", label: "Gestion des équipements" },
+  { id: "nc", label: "Non-conformités" },
   { id: "aud", label: "Audits" },
-  { id: "risk", label: "Analyse de risque" },
+  { id: "risk", label: "Analyse des risques" },
   { id: "swot", label: "Analyse SWOT" },
   { id: "sat", label: "Satisfaction client" },
-  { id: "recl", label: "Reclamation client" },
+  { id: "recl", label: "Réclamation client" },
   { id: "pers", label: "Personnel" },
   { id: "plan", label: "Planning" },
   { id: "stat", label: "Statistique" },
-  { id: "aci", label: "Amelioration continue" },
+  { id: "aci", label: "Amélioration continue" },
   { id: "diag", label: "Diagnostic ISO 17025" },
   { id: "disc", label: "Discussion" },
   { id: "repo", label: "Dossier principal" },
   { id: "usr", label: "Utilisateurs" },
-  { id: "set", label: "Parametres" }
+  { id: "set", label: "Paramètres" }
 ];
-const PERMS = ["Ajouter", "Modifier", "Supprimer", "Valider", "Telecharger", "Importer", "Exporter", "Parametres", "Comptes"];
+const PERMS = ["Ajouter", "Modifier", "Supprimer", "Valider", "Télécharger", "Importer", "Exporter", "Paramètres", "Comptes"];
 const LOCAL_CORS_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/i;
 const liveReloadClients = new Set();
 const documentationEventClients = new Map();
@@ -763,7 +763,7 @@ function getDocumentationSettingsByPilotId(pilotId) {
   };
 }
 
-function upsertDocumentationFolder(pilotId, folder, actorName = "Systeme", parentId = null) {
+function upsertDocumentationFolder(pilotId, folder, actorName = "Système", parentId = null) {
   const timestamp = now();
   db.prepare(`
     INSERT INTO doc_folders (
@@ -804,7 +804,7 @@ function upsertDocumentationFolder(pilotId, folder, actorName = "Systeme", paren
   `).get(pilotId, folder.absPath);
 }
 
-function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme", options = {}) {
+function ensureDocumentationBootstrapForPilot(pilot, actorName = "Système", options = {}) {
   if (!pilot || !pilot.id) {
     const error = new Error("Compte pilote introuvable pour l'initialisation documentaire");
     error.status = 404;
@@ -819,7 +819,7 @@ function ensureDocumentationBootstrapForPilot(pilot, actorName = "Systeme", opti
     || DEFAULT_DOC_PROCESS_FOLDERS
   );
   const hierarchy = {
-    levels: ["process", "type", "reference", "version"],
+    levels: ["process", "type", "référence", "version"],
     processFolders
   };
   const structure = buildPilotDocumentationPaths(pilot, processFolders);
@@ -1049,7 +1049,7 @@ function decodeDataUrl(dataUrl) {
   const raw = String(dataUrl || "");
   const match = raw.match(/^data:([^;]+);base64,(.+)$/);
   if (!match) {
-    const error = new Error("Fichier invalide : donnees base64 introuvables");
+    const error = new Error("Fichier invalide : données base64 introuvables.");
     error.status = 400;
     throw error;
   }
@@ -1134,7 +1134,7 @@ function collectFilesRecursive(rootDir) {
   return files;
 }
 
-function ensureDocumentationFolderRowsForExistingFile(pilot, settings, absFilePath, actorName = "Systeme") {
+function ensureDocumentationFolderRowsForExistingFile(pilot, settings, absFilePath, actorName = "Système") {
   const pilotRootFolder = getFolderByPilotAndPath(pilot.id, settings.pilotRoot);
   const relDir = path.relative(settings.pilotRoot, path.dirname(absFilePath));
   const segments = relDir.split(path.sep).filter(Boolean);
@@ -1149,7 +1149,7 @@ function ensureDocumentationFolderRowsForExistingFile(pilot, settings, absFilePa
       : index === 1
         ? (isTopPyramid ? (segment === "document en archive" ? "top_doc_archive" : "top_doc_current") : "type")
         : index === 2
-          ? "reference"
+          ? "référence"
           : "version";
     deepest = upsertDocumentationFolder(pilot.id, {
       folderKey: slugifySegment(segment, `${role}_${index + 1}`),
@@ -1207,7 +1207,7 @@ function buildDocumentationScanPayload(absPath, settings) {
   };
 }
 
-function registerExistingDocumentationFile(pilot, payload = {}, actorName = "Systeme") {
+function registerExistingDocumentationFile(pilot, payload = {}, actorName = "Système") {
   const absPath = String(payload.absPath || "").trim();
   if (!absPath || !fs.existsSync(absPath)) return null;
   const stat = fs.statSync(absPath);
@@ -1282,7 +1282,7 @@ function registerExistingDocumentationFile(pilot, payload = {}, actorName = "Sys
   return mapDocumentationRow(db.prepare(`SELECT * FROM documents WHERE id = ?`).get(documentId));
 }
 
-function scanDocumentationRepository(pilot, actorName = "Systeme") {
+function scanDocumentationRepository(pilot, actorName = "Système") {
   const settings = getDocumentationSettingsByPilotId(pilot.id) || ensureDocumentationBootstrapForPilot(pilot, actorName);
   const files = collectFilesRecursive(settings.pilotRoot);
   const existingPaths = new Set(
@@ -1324,7 +1324,7 @@ function scanDocumentationRepository(pilot, actorName = "Systeme") {
   };
 }
 
-function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Systeme") {
+function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Système") {
   const settings = ensureDocumentationBootstrapForPilot(pilot, actorName);
   const hierarchy = settings.hierarchy || DEFAULT_DOC_HIERARCHY;
   const processName = String(payload.processName || hierarchy.processFolders[0] || DEFAULT_DOC_PROCESS_FOLDERS[0]).trim();
@@ -1370,7 +1370,7 @@ function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Sy
   const refFolder = upsertDocumentationFolder(pilot.id, {
     folderKey: slugifySegment(docRef, "ref"),
     folderLabel: docRef,
-    folderRole: "reference",
+    folderRole: "référence",
     absPath: refPath,
     relPath: relFromDocServer(refPath),
     depth: 3,
@@ -1405,7 +1405,7 @@ function ensureDocumentationFolderStructure(pilot, payload = {}, actorName = "Sy
   };
 }
 
-function createDocumentationFolderOnly(pilot, payload = {}, actorName = "Systeme") {
+function createDocumentationFolderOnly(pilot, payload = {}, actorName = "Système") {
   const target = ensureDocumentationFolderStructure(pilot, payload, actorName);
   return {
     processName: target.processName,
@@ -1417,7 +1417,7 @@ function createDocumentationFolderOnly(pilot, payload = {}, actorName = "Systeme
   };
 }
 
-function createDocumentationImport(pilot, payload = {}, actorName = "Systeme") {
+function createDocumentationImport(pilot, payload = {}, actorName = "Système") {
   const title = String(payload.title || "").trim();
   const fileName = String(payload.fileName || "").trim();
   const dataUrl = String(payload.dataUrl || "").trim();
@@ -1555,7 +1555,7 @@ function createDocumentationImport(pilot, payload = {}, actorName = "Systeme") {
   return mapped;
 }
 
-function archiveDocumentationDocument(pilot, documentId, actorName = "Systeme") {
+function archiveDocumentationDocument(pilot, documentId, actorName = "Système") {
   const row = db.prepare(`
     SELECT *
     FROM documents
@@ -1607,7 +1607,7 @@ function archiveDocumentationDocument(pilot, documentId, actorName = "Systeme") 
   return mapped;
 }
 
-function updateDocumentationDocumentStatus(pilot, documentId, nextStatus, actorName = "Systeme") {
+function updateDocumentationDocumentStatus(pilot, documentId, nextStatus, actorName = "Système") {
   const allowed = ["Brouillon", "En revue", "A corriger", "Approuve", "Diffuse", "Archive"];
   const status = String(nextStatus || "").trim();
   if (!allowed.includes(status)) {
@@ -1632,12 +1632,12 @@ function updateDocumentationDocumentStatus(pilot, documentId, nextStatus, actorN
     SET status = ?, archived_at = NULL, updated_at = ?
     WHERE id = ?
   `).run(status, timestamp, row.id);
-  appendDocumentEvent(row.id, "status", "Statut documentaire mis a jour", actorName, `${row.doc_ref} -> ${status}`, timestamp);
+  appendDocumentEvent(row.id, "status", "Statut documentaire mis à jour", actorName, `${row.doc_ref} -> ${status}`, timestamp);
   const updated = mapDocumentationRow(db.prepare(`SELECT * FROM documents WHERE id = ?`).get(row.id));
   emitDocumentationEvent(pilot.email, "documentation-status", {
     documentId: row.id,
     eventType: "status",
-    eventLabel: "Statut documentaire mis a jour",
+    eventLabel: "Statut documentaire mis à jour",
     ref: updated.ref,
     title: updated.title,
     status: updated.status,
@@ -1649,7 +1649,7 @@ function updateDocumentationDocumentStatus(pilot, documentId, nextStatus, actorN
   return updated;
 }
 
-function registerDocumentationOpen(pilot, documentId, actorName = "Systeme", mode = "read") {
+function registerDocumentationOpen(pilot, documentId, actorName = "Système", mode = "read") {
   const row = db.prepare(`
     SELECT *
     FROM documents
@@ -1661,7 +1661,7 @@ function registerDocumentationOpen(pilot, documentId, actorName = "Systeme", mod
     throw error;
   }
   const eventType = mode === "open" ? "open" : mode === "download" ? "download" : "read";
-  const eventLabel = mode === "open" ? "Ouverture du document central" : mode === "download" ? "Telechargement du document central" : "Lecture du document central";
+  const eventLabel = mode === "open" ? "Ouverture du document central" : mode === "download" ? "Telechargement du document central" : "Consultation du document central";
   appendDocumentEvent(row.id, eventType, eventLabel, actorName, `${row.doc_ref} | ${row.file_name}`, now());
   const mapped = mapDocumentationRow(row);
   emitDocumentationEvent(pilot.email, "documentation-read", {
@@ -1679,7 +1679,7 @@ function registerDocumentationOpen(pilot, documentId, actorName = "Systeme", mod
   return mapped;
 }
 
-function revealDocumentationDocument(pilot, documentId, actorName = "Systeme") {
+function revealDocumentationDocument(pilot, documentId, actorName = "Système") {
   const row = db.prepare(`
     SELECT *
     FROM documents
@@ -1723,7 +1723,7 @@ function updateExistingPilotAccount(email, payload = {}) {
     throw error;
   }
   if (target === normEmail(MAIN_PILOT.email)) {
-    const error = new Error("Le compte pilote principal ne peut pas etre modifie depuis cet ecran");
+    const error = new Error("Le compte pilote principal ne peut pas être modifié depuis cet écran.");
     error.status = 403;
     throw error;
   }
@@ -1750,7 +1750,7 @@ function removePilotAccount(email) {
     throw error;
   }
   if (target === normEmail(MAIN_PILOT.email)) {
-    const error = new Error("Le compte pilote principal ne peut pas etre supprime");
+    const error = new Error("Le compte pilote principal ne peut pas être supprimé.");
     error.status = 403;
     throw error;
   }
@@ -1816,7 +1816,7 @@ function upsertPilotAccount(payload) {
   }
 
   const savedPilot = getPilotByEmail(pilot.email);
-  if (savedPilot) ensureDocumentationBootstrapForPilot(savedPilot, "Systeme");
+  if (savedPilot) ensureDocumentationBootstrapForPilot(savedPilot, "Système");
   return savedPilot;
 }
 
@@ -1849,7 +1849,7 @@ function createUserForPilot(pilotEmail, payload) {
     throw error;
   }
   if (getUserByPilotAndEmail(pilot.email, user.email)) {
-    const error = new Error("Cette adresse e-mail existe deja dans la base");
+    const error = new Error("Cette adresse e-mail existe déjà dans la base.");
     error.status = 409;
     throw error;
   }
@@ -1892,7 +1892,7 @@ function createUserForPilot(pilotEmail, payload) {
 initDatabase();
 if (dbReady && db) {
   const mainPilot = getPilotByEmail(MAIN_PILOT.email);
-  if (mainPilot) ensureDocumentationBootstrapForPilot(mainPilot, "Systeme");
+  if (mainPilot) ensureDocumentationBootstrapForPilot(mainPilot, "Système");
 }
 
 app.use((req, res, next) => {
@@ -1960,7 +1960,7 @@ app.use("/api", (_req, res, next) => {
   if (dbReady && db) return next();
   return res.status(503).json({
     ok: false,
-    message: "Base de donnees indisponible",
+    message: "Base de données indisponible.",
     detail: dbInitError ? dbInitError.message : ""
   });
 });
@@ -2052,7 +2052,7 @@ app.post("/api/pilots/register", (req, res) => {
   try {
     const email = normEmail(req.body && req.body.email);
     if (!email) return res.status(400).json({ ok: false, message: "Adresse e-mail pilote obligatoire" });
-    if (getPilotByEmail(email)) return res.status(409).json({ ok: false, message: "Ce compte pilote existe deja" });
+    if (getPilotByEmail(email)) return res.status(409).json({ ok: false, message: "Ce compte pilote existe déjà." });
     const pilot = upsertPilotAccount({ ...(req.body || {}), email, status: (req.body && req.body.status) || "Actif" });
     res.status(201).json({
       ok: true,
@@ -2083,7 +2083,7 @@ app.post("/api/otp/send", (req, res) => {
       ok: true,
       sent: false,
       smtpConfigured: false,
-      message: "Code de reinitialisation genere en local. Il expire dans 5 minutes.",
+      message: "Code de réinitialisation généré en local. Il expire dans 5 minutes.",
       ...(String(process.env.NODE_ENV || "development").toLowerCase() === "development" ? { code } : {})
     });
   } catch (error) {
@@ -2315,7 +2315,7 @@ app.post("/api/pilots/:pilotEmail/documentation/folders", (req, res) => {
     const actorName = String((req.body && req.body.actorName) || pilot.name || "Pilote").trim() || "Pilote";
     const item = createDocumentationFolderOnly(pilot, req.body || {}, actorName);
     emitDocumentationEvent(pilot.email, "documentation-folder", {
-      eventLabel: "Dossier documentaire cree",
+      eventLabel: "Dossier documentaire créé",
       actorName,
       ref: item.docRef,
       processName: item.processName,

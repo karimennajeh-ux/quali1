@@ -42,7 +42,7 @@ $storageType = 'local_server';
 $uploadDate = date('Y-m-d H:i:s');
 $uploadedBy = trim((string) ($input['uploaded_by'] ?? $input['uploadedBy'] ?? $actor));
 if ($title === '' || $ref === '' || $fileName === '' || ($dataUrl === '' && empty($_FILES['document']['tmp_name']))) {
-    doc_error('Titre, reference et fichier obligatoires.', 422);
+    doc_error('Titre, référence et fichier obligatoires.', 422);
 }
 
 $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));

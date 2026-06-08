@@ -23,13 +23,13 @@ if (!$rootReal || !$fileReal || !is_file($fileReal)) {
 $rootCheck = rtrim(strtolower(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $rootReal)), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 $fileCheck = strtolower(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $fileReal));
 if (strpos($fileCheck, $rootCheck) !== 0) {
-    doc_log($pdo, $id, 'ouverture_refusee', 'Tentative d ouverture hors dossier documentaire.');
+    doc_log($pdo, $id, 'ouverture_refusee', "Tentative d'ouverture hors dossier documentaire.");
     doc_error('Acces refuse : le fichier est hors du dossier documentaire autorise.', 403);
 }
 
 $extension = strtolower(pathinfo($fileReal, PATHINFO_EXTENSION));
 if (!in_array($extension, QUALI_DOCUMENT_EXTENSIONS, true)) {
-    doc_log($pdo, $id, 'ouverture_refusee', 'Extension non autorisee : ' . $extension);
+    doc_log($pdo, $id, 'ouverture_refusee', 'Extension non autorisée : ' . $extension);
     doc_error('Type de fichier non autorise.', 403);
 }
 

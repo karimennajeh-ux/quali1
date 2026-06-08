@@ -35,7 +35,7 @@ foreach ($fields as $col => $value) {
     $sets[] = "{$col} = :{$col}";
     $params[":{$col}"] = trim((string) $value);
 }
-if (!$sets) doc_error('Aucune donnee a modifier.', 422);
+if (!$sets) doc_error('Aucune donnée à modifier.', 422);
 
 $nextProcess = trim((string) ($fields['processus'] ?? $old['processus'] ?? ''));
 $nextType = trim((string) ($fields['type_document'] ?? $old['type_document'] ?? ''));

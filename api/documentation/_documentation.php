@@ -46,7 +46,7 @@ function doc_upload_document_folder(string $documentNumber, string $type): strin
     $documentNumber = trim($documentNumber) !== '' ? preg_replace('/[^A-Za-z0-9_-]+/', '_', trim($documentNumber)) : 'DOC_000';
     $folder = $root . DIRECTORY_SEPARATOR . $category . DIRECTORY_SEPARATOR . $documentNumber;
     if (!is_dir($folder) && !mkdir($folder, 0775, true) && !is_dir($folder)) {
-        doc_error('Impossible de creer le dossier du document.', 500);
+        doc_error('Impossible de créer le dossier du document.', 500);
     }
     $real = realpath($folder);
     if (!$real) {
@@ -179,7 +179,7 @@ function doc_bootstrap(PDO $pdo): void
           id INT AUTO_INCREMENT PRIMARY KEY,
           document_id INT NULL,
           action VARCHAR(100) NOT NULL,
-          acteur VARCHAR(255) DEFAULT 'Systeme',
+          acteur VARCHAR(255) DEFAULT 'Système',
           detail TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           CONSTRAINT fk_journal_documentaire_document
@@ -365,7 +365,7 @@ function doc_process_folder_name(string $processus): string
     if (str_contains($key, 'manuel')) return 'manuel qualité';
     if (str_contains($key, 'politique')) return 'Politique qualité';
     if (str_contains($key, 'pilotage')) return 'Procesus Pilotage';
-    if (str_contains($key, 'operationnel')) return 'Procesus Operationnel';
+    if (str_contains($key, 'opérationnel')) return 'Procesus Opérationnel';
     if (str_contains($key, 'support')) return 'Procesus support';
     $clean = trim((string) preg_replace('/[<>:"\/\\\\|?*\x00-\x1F]+/', '_', $processus));
     return $clean !== '' ? $clean : 'Procesus support';
@@ -477,13 +477,13 @@ function doc_ref_from_file(string $relative): string
     return $prefix . '-' . strtoupper(substr(sha1($relative), 0, 10));
 }
 
-function doc_log(PDO $pdo, ?int $documentId, string $action, string $detail = '', string $actor = 'Systeme'): void
+function doc_log(PDO $pdo, ?int $documentId, string $action, string $detail = '', string $actor = 'Système'): void
 {
     $stmt = $pdo->prepare("INSERT INTO journal_documentaire (document_id, action, acteur, detail) VALUES (?, ?, ?, ?)");
     $stmt->execute([$documentId, $action, $actor, $detail]);
 }
 
-function doc_log_activity(PDO $pdo, ?int $documentId, string $action, array $meta = [], string $actor = 'Systeme'): void
+function doc_log_activity(PDO $pdo, ?int $documentId, string $action, array $meta = [], string $actor = 'Système'): void
 {
     $stmt = $pdo->prepare("
         INSERT INTO journal_documentaire
@@ -513,7 +513,7 @@ function doc_fetch(PDO $pdo, int $id): array
     return $doc;
 }
 
-function doc_update_lifecycle_status(PDO $pdo, array $doc, string $nextStatus, string $action, string $detail, string $actor = 'Systeme'): array
+function doc_update_lifecycle_status(PDO $pdo, array $doc, string $nextStatus, string $action, string $detail, string $actor = 'Système'): array
 {
     $id = (int) $doc['id'];
     $current = trim((string) ($doc['statut'] ?? ''));
@@ -549,10 +549,10 @@ function doc_update_lifecycle_status(PDO $pdo, array $doc, string $nextStatus, s
     return doc_fetch($pdo, $id);
 }
 
-function doc_delete_application(PDO $pdo, array $doc, string $actor = 'Systeme'): void
+function doc_delete_application(PDO $pdo, array $doc, string $actor = 'Système'): void
 {
     $id = (int) $doc['id'];
-    doc_log($pdo, $id, "Supprimer de l'application", 'Fiche MySQL supprimee uniquement. Fichier Windows conserve : ' . ($doc['chemin_fichier'] ?? ''), $actor);
+    doc_log($pdo, $id, "Supprimer de l'application", 'Fiche MySQL supprimée uniquement. Fichier Windows conservé : ' . ($doc['chemin_fichier'] ?? ''), $actor);
     $stmt = $pdo->prepare("DELETE FROM documents WHERE id = ?");
     $stmt->execute([$id]);
 }
@@ -564,11 +564,11 @@ function doc_path_is_inside_root(string $fileReal, string $rootReal): bool
     return strpos($fileCheck, $rootCheck) === 0;
 }
 
-function doc_delete_permanent(PDO $pdo, array $doc, string $actor = 'Systeme'): bool
+function doc_delete_permanent(PDO $pdo, array $doc, string $actor = 'Système'): bool
 {
     $path = (string) ($doc['chemin_fichier'] ?? '');
     if ($path !== '' && is_dir($path)) {
-        doc_error('Suppression refusee : le chemin pointe vers un dossier.', 403);
+        doc_error('Suppression refusée : le chemin pointe vers un dossier.', 403);
     }
 
     $rootReal = realpath(doc_root());
@@ -580,21 +580,21 @@ function doc_delete_permanent(PDO $pdo, array $doc, string $actor = 'Systeme'): 
     $fileReal = $path !== '' ? realpath($path) : false;
     if ($fileReal !== false) {
         if (!is_file($fileReal)) {
-            doc_error('Suppression refusee : seul un fichier peut etre supprime.', 403);
+            doc_error('Suppression refusée : seul un fichier peut être supprimé.', 403);
         }
         if (!doc_path_is_inside_root($fileReal, $rootReal)) {
-            doc_error('Suppression refusee : le fichier est hors du dossier documentaire autorise.', 403);
+            doc_error('Suppression refusée : le fichier est hors du dossier documentaire autorisé.', 403);
         }
         if (!unlink($fileReal)) {
             doc_error('Suppression du fichier Windows impossible.', 500);
         }
         $fileDeleted = true;
     } elseif ((string) ($doc['statut'] ?? '') !== 'Fichier introuvable') {
-        doc_error("Suppression definitive refusee : le fichier Windows est introuvable. Utilisez la suppression de l'application si vous voulez seulement retirer la fiche.", 404);
+        doc_error("Suppression définitive refusée : le fichier Windows est introuvable. Utilisez la suppression de l'application si vous voulez seulement retirer la fiche.", 404);
     }
 
     $id = (int) $doc['id'];
-    $detail = ($fileDeleted ? 'Fichier Windows supprime definitivement : ' : 'Fichier Windows deja introuvable : ') . $path;
+    $detail = ($fileDeleted ? 'Fichier Windows supprimé définitivement : ' : 'Fichier Windows déjà introuvable : ') . $path;
     doc_log($pdo, $id, 'Supprimer définitivement', $detail, $actor);
     $stmt = $pdo->prepare("DELETE FROM documents WHERE id = ?");
     $stmt->execute([$id]);

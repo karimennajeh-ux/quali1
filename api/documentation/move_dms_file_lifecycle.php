@@ -42,7 +42,7 @@ function dms_infer_document_class(array $parts, string $fileName, array $classes
 $steps = ['1-créer', '2-Vérifier', '3-Approuver', '4-Réviser', '5-Archiver', '6-Supprimer'];
 $legacy = [
     'Créer' => '1-créer',
-    'Creer' => '1-créer',
+    'Créer' => '1-créer',
     'Vérifier' => '2-Vérifier',
     'Verifier' => '2-Vérifier',
     'Approuver' => '3-Approuver',
@@ -53,7 +53,7 @@ $legacy = [
     'Archiver' => '5-Archiver',
     'Supprimer' => '6-Supprimer',
 ];
-$processRoots = ['Procesus Operationnel', 'Procesus Pilotage', 'Procesus support'];
+$processRoots = ['Procesus Opérationnel', 'Procesus Pilotage', 'Procesus support'];
 $documentClasses = ['Procédure', 'Instruction', 'Formulaire', 'Enregistrement'];
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

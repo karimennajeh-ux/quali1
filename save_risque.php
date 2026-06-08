@@ -10,11 +10,11 @@ quali_risk_validate($payload);
 $sql = "
     INSERT INTO risques (
       chapitre, risque, probabilite_initiale, gravite_initiale, criticite_initiale,
-      actions, delai, responsable, suivi, probabilite_residuelle, gravite_residuelle,
+      actions, délai, responsable, suivi, probabilite_residuelle, gravite_residuelle,
       criticite_residuelle, critere_evaluation, efficacite, statut
     ) VALUES (
       :chapitre, :risque, :probabilite_initiale, :gravite_initiale, :criticite_initiale,
-      :actions, :delai, :responsable, :suivi, :probabilite_residuelle, :gravite_residuelle,
+      :actions, :délai, :responsable, :suivi, :probabilite_residuelle, :gravite_residuelle,
       :criticite_residuelle, :critere_evaluation, :efficacite, :statut
     )
 ";

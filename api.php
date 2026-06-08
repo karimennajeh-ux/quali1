@@ -47,7 +47,7 @@ function pilot_public(array $row): array {
         'orgName' => $row['org_name'] ?? '',
         'status' => $row['status'] ?? 'Actif',
         'pilot' => true,
-        'perms' => ['Ajouter', 'Modifier', 'Supprimer', 'Valider', 'Telecharger', 'Importer', 'Exporter', 'Parametres', 'Comptes'],
+        'perms' => ['Ajouter', 'Modifier', 'Supprimer', 'Valider', 'Télécharger', 'Importer', 'Exporter', 'Paramètres', 'Comptes'],
         'profile' => 'Administrateur'
     ];
 }
@@ -122,12 +122,12 @@ function upsert_pilot(mysqli $conn, array $data): array {
 }
 
 function verification_subject(string $purpose): string {
-    return $purpose === 'reset' ? 'Code de reinitialisation QUALI' : 'Code de validation QUALI';
+    return $purpose === 'reset' ? 'Code de réinitialisation QUALI' : 'Code de validation QUALI';
 }
 
 function verification_body(string $code, string $purpose): string {
-    $label = $purpose === 'reset' ? 'reinitialisation du mot de passe' : 'validation du compte pilote';
-    return "Bonjour,\n\nVotre code QUALI est : {$code}\n\nCe code expire dans 5 minutes.\nObjet : {$label}\n\nSi vous n'etes pas a l'origine de cette demande, ignorez ce message.";
+    $label = $purpose === 'reset' ? 'réinitialisation du mot de passe' : 'validation du compte pilote';
+    return "Bonjour,\n\nVotre code QUALI est : {$code}\n\nCe code expire dans 5 minutes.\nObjet : {$label}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.";
 }
 
 function create_verification_code(mysqli $conn, string $email, string $purpose): array {
@@ -222,7 +222,7 @@ try {
         $data = body_json();
         $email = norm_email($data['email'] ?? '');
         if ($email === '') respond(['ok' => false, 'message' => 'Adresse e-mail pilote obligatoire'], 400);
-        if (get_pilot($conn, $email)) respond(['ok' => false, 'message' => 'Ce compte pilote existe deja.'], 409);
+        if (get_pilot($conn, $email)) respond(['ok' => false, 'message' => 'Ce compte pilote existe déjà.'], 409);
         $data['email'] = $email;
         $data['status'] = trim((string) ($data['status'] ?? 'Actif')) ?: 'Actif';
         unset($data['verificationCode']);
@@ -237,8 +237,8 @@ try {
         }
         $result = create_verification_code($conn, (string) ($data['email'] ?? ''), $purpose);
         $msg = $result['sent']
-            ? 'Code envoye par e-mail. Il expire dans 5 minutes.'
-            : 'Code genere, mais l e-mail SMTP n a pas pu etre envoye. Verifiez la configuration PHPMailer/SMTP.';
+            ? 'Code envoyé par e-mail. Il expire dans 5 minutes.'
+            : "Code généré, mais l'e-mail SMTP n'a pas pu être envoyé. Vérifiez la configuration PHPMailer/SMTP.";
         respond(['ok' => $result['sent'], 'message' => $msg, 'smtpConfigured' => $result['smtpConfigured']], $result['sent'] ? 200 : 503);
     }
 
@@ -352,7 +352,7 @@ try {
         }
 
         if (($parts[2] ?? '') === 'documentation') {
-            $empty = ['ok' => true, 'mode' => 'xampp', 'items' => [], 'settings' => null, 'summary' => ['created' => 0], 'message' => 'Documentation centralisee serveur indisponible en mode XAMPP pur'];
+            $empty = ['ok' => true, 'mode' => 'xampp', 'items' => [], 'settings' => null, 'summary' => ['created' => 0], 'message' => 'Documentation centralisée serveur indisponible en mode XAMPP pur.'];
             respond($empty);
         }
     }

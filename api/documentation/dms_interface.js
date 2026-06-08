@@ -1,4 +1,4 @@
-﻿/**
+/**
  * DMS Files Management - SharePoint Style Interface
  * Displays files from DMS/uploads in a professional table format
  */
@@ -20,22 +20,42 @@ const dmsState = {
   lastSaveMessage: 'Toutes les modifications sont enregistrées'
 };
 
+function qualiInfo(message) {
+  if (window.showQualiModal) window.showQualiModal({ type: 'info', title: 'Information', message, confirmText: 'OK' });
+  else console.info(message);
+}
+
+function qualiError(message) {
+  if (window.showQualiModal) window.showQualiModal({ type: 'error', title: 'Erreur', message, confirmText: 'OK' });
+  else console.error(message);
+}
+
+function qualiConfirm(options) {
+  if (window.showQualiModal) return window.showQualiModal({ showCancel: true, ...options, type: options && options.type === 'error' ? 'confirm-delete' : ((options && options.type) || 'warning') });
+  return Promise.resolve(false);
+}
+
+function qualiPrompt(options) {
+  if (window.showQualiModal) return window.showQualiModal({ showCancel: true, input: true, ...options, type: 'info' });
+  return Promise.resolve(null);
+}
+
 const DMS_ROOT_ORDER = [
   'manuel qualité',
   'Politique qualité',
-  'Procesus Operationnel',
+  'Procesus Opérationnel',
   'Procesus Pilotage',
   'Procesus support'
 ];
 
 const DMS_PROCESS_ROOTS = [
-  'Procesus Operationnel',
+  'Procesus Opérationnel',
   'Procesus Pilotage',
   'Procesus support'
 ];
 
 const DMS_FOLDER_LABELS = {
-  'Procesus Operationnel': 'Processus Opérationnel',
+  'Procesus Opérationnel': 'Processus Opérationnel',
   'Procesus Pilotage': 'Processus Pilotage',
   'Procesus support': 'Processus support',
   'Politique qualité': 'Politique qualité',
@@ -67,7 +87,7 @@ const DMS_DOCUMENT_CLASS_KEYS = {
 
 const DMS_LEGACY_LIFECYCLE_MAP = {
   'Créer': '1-créer',
-  'Creer': '1-créer',
+  'Créer': '1-créer',
   'Vérifier': '2-Vérifier',
   'Verifier': '2-Vérifier',
   'Approuver': '3-Approuver',
@@ -78,6 +98,13 @@ const DMS_LEGACY_LIFECYCLE_MAP = {
   'Archiver': '5-Archiver',
   'Supprimer': '6-Supprimer'
 };
+
+function removeDmsDocumentPreviewModal() {
+  document.querySelectorAll('#dmsPreviewOverlay, .dms-preview-overlay, .dms-preview-content').forEach(element => {
+    const overlay = element.closest('.dms-modal-overlay') || element;
+    overlay.remove();
+  });
+}
 
 const DMS_PHYSICAL_ROOT = "D:\\stage prjet fin d'étude 2026\\xampp\\htdocs\\QUALI\\DMS\\uploads";
 
@@ -104,6 +131,8 @@ const DMS_FOLDER_TYPE = {
  */
 async function initDmsFileDisplay() {
   try {
+    removeDmsDocumentPreviewModal();
+
     // Check if we're on the documentation page
     const docContainer = document.getElementById('docSharepointList');
     if (!docContainer) return;
@@ -1114,7 +1143,7 @@ function renderDmsFileItem(file) {
   const actionPath = file.relPath || file.path;
 
   return `
-    <div class="dms-tree-file-item" data-file-path="${escapeAttr(file.path)}">
+    <div class="dms-tree-file-item" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}">
       ${renderDmsDocumentIcon(file.type)}
       <span class="dms-file-name" title="${fileName}">${fileName}</span>
       <span class="dms-file-meta">${size}</span>
@@ -1189,6 +1218,20 @@ function handleDmsDelegatedButtonClick(event) {
   } else if (action === 'delete') {
     deleteDmsFile(filePath, fileName);
   }
+
+  return;
+}
+
+function handleDmsDocumentDirectOpen(event) {
+  const row = event.target.closest('.dms-tree-file-item, .dms-file-row');
+  if (!row || event.target.closest('[data-dms-action]')) return false;
+
+  const filePath = row.dataset.filePath;
+  const fileName = row.dataset.fileName || row.querySelector('.dms-file-name')?.textContent || 'Document';
+  if (!filePath) return false;
+
+  openDmsFile(filePath, fileName);
+  return true;
 }
 
 function initDmsButtons(root = document) {
@@ -1201,7 +1244,10 @@ window.initDmsButtons = initDmsButtons;
 function setupDmsTreeListeners(container) {
   if (!container || container.dataset.dmsDelegated === '1') return;
   container.dataset.dmsDelegated = '1';
-  container.addEventListener('click', handleDmsDelegatedButtonClick);
+  container.addEventListener('click', event => {
+    handleDmsDelegatedButtonClick(event);
+    if (!event.defaultPrevented) handleDmsDocumentDirectOpen(event);
+  });
 }
 /**
  * Render a single file row
@@ -1216,7 +1262,7 @@ function renderDmsFileRowLegacy(file) {
   const actionPath = file.relPath || file.path;
   
   return `
-    <tr class="dms-file-row" data-file-path="${escapeAttr(file.path)}">
+    <tr class="dms-file-row" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}">
       <td class="col-icon">${renderDmsDocumentIcon(file.type)}</td>
       <td class="col-name">
         <div class="dms-file-info">
@@ -1255,7 +1301,7 @@ function renderDmsFileRow(file) {
   const actionPath = file.relPath || file.path;
 
   return `
-    <tr class="dms-file-row" data-file-path="${escapeAttr(actionPath)}">
+    <tr class="dms-file-row" data-file-path="${escapeAttr(actionPath)}" data-file-name="${escapeAttr(file.name)}">
       <td class="col-icon">${renderDmsDocumentIcon(file.type)}</td>
       <td class="col-name">
         <div class="dms-file-info">
@@ -1299,7 +1345,7 @@ function downloadDmsFileLegacy(filePath, fileName) {
     document.body.removeChild(link);
   } catch (error) {
     console.error('Erreur lors du téléchargement du fichier:', error);
-    alert('Erreur lors du téléchargement du fichier');
+    qualiError('Erreur lors du telechargement du fichier');
   }
 }
 
@@ -1312,7 +1358,7 @@ function openDmsFileLegacy(filePath, fileName) {
     window.open(path, '_blank');
   } catch (error) {
     console.error("Erreur lors de l'ouverture du fichier:", error);
-    alert('Erreur lors de l\'ouverture du fichier');
+    qualiError('Erreur lors de l\'ouverture du fichier');
   }
 }
 
@@ -1320,15 +1366,15 @@ function openDmsFileLegacy(filePath, fileName) {
  * Share DMS file
  */
 function shareDmsFile(filePath, fileName) {
-  alert('Partage de fichier: ' + fileName + '\n\nCette fonctionnalité sera bientôt disponible.');
+  qualiInfo('Partage de fichier : ' + fileName + '\n\nCette fonctionnalité sera bientôt disponible.');
 }
 
 /**
  * Delete DMS file
  */
-function deleteDmsFileLegacy(filePath, fileName) {
-  if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`)) {
-    alert('Suppression de fichier: ' + fileName + '\n\nCette fonctionnalité sera bientôt disponible.');
+async function deleteDmsFileLegacy(filePath, fileName) {
+  if (await qualiConfirm({ title: 'Supprimer le fichier', message: `Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`, confirmText: 'Supprimer', cancelText: 'Annuler', type: 'error' })) {
+    qualiInfo('Suppression de fichier : ' + fileName + '\n\nCette fonctionnalité sera bientôt disponible.');
   }
 }
 
@@ -1364,22 +1410,17 @@ function downloadDmsFile(filePath, fileName) {
     document.body.removeChild(link);
   } catch (error) {
     console.error('Erreur lors du téléchargement du fichier:', error);
-    alert('Erreur lors du téléchargement du fichier');
+    qualiError('Erreur lors du telechargement du fichier');
   }
 }
 
 function openDmsFile(filePath, fileName) {
   try {
-    showDmsFilePreview(filePath, fileName);
+    window.open(getDmsFileUrl(filePath), '_blank', 'noopener');
   } catch (error) {
     console.error("Erreur lors de l'ouverture du fichier:", error);
-    alert('Erreur lors de l\'ouverture du fichier');
+    qualiError('Erreur lors de l\'ouverture du fichier');
   }
-}
-
-function closeDmsPreviewModal() {
-  const modal = document.getElementById('dmsPreviewOverlay');
-  if (modal) modal.remove();
 }
 
 function showDmsLifecycleModal(filePath, fileName) {
@@ -1425,7 +1466,7 @@ async function moveDmsFileLifecycle(relativePath, fileName, targetStep) {
     const result = await response.json();
 
     if (!result.success) {
-      alert('Erreur : ' + (result.error || 'Impossible de modifier le cycle de vie'));
+      qualiError('Erreur : ' + (result.error || 'Impossible de modifier le cycle de vie'));
       return;
     }
 
@@ -1437,154 +1478,8 @@ async function moveDmsFileLifecycle(relativePath, fileName, targetStep) {
     showDmsInfoModal('Document déplacé', `"${fileName}" déplacé vers "${targetStep}".`);
   } catch (error) {
     console.error('Erreur lors du changement de cycle:', error);
-    alert('Erreur lors du changement de cycle de vie');
+    qualiError('Erreur lors du changement de cycle de vie');
   }
-}
-
-async function showDmsFilePreview(filePath, fileName) {
-  closeDmsPreviewModal();
-
-  const fileUrl = getDmsFileUrl(filePath);
-  const extension = getDmsFileExtension(filePath, fileName);
-  const modal = document.createElement('div');
-  modal.className = 'dms-modal-overlay dms-preview-overlay';
-  modal.id = 'dmsPreviewOverlay';
-
-  modal.innerHTML = `
-    <div class="dms-modal-content dms-preview-content">
-      <div class="dms-modal-header">
-        <h3 title="${escapeAttr(fileName)}">${escapeHtml(fileName)}</h3>
-        <button class="dms-modal-close" type="button" onclick="closeDmsPreviewModal()">x</button>
-      </div>
-      <div class="dms-preview-body">
-        ${renderDmsPreviewBody(fileUrl, fileName, extension, {
-          title: fileName,
-          type: getDmsPreviewTypeLabel(extension),
-          subtitle: fileName,
-          ref: extension ? extension.toUpperCase() : 'FICHIER',
-          ie: '-',
-          date: formatDate(Math.floor(Date.now() / 1000)),
-          page: '1/1'
-        })}
-      </div>
-      <div class="dms-modal-footer">
-        <button class="btn btn-secondary" type="button" onclick="downloadDmsFile(${escapeJsArg(filePath)}, ${escapeJsArg(fileName)})">Télécharger</button>
-        <button class="btn btn-secondary" type="button" onclick="closeDmsPreviewModal()">Fermer</button>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(modal);
-
-  if (['txt', 'csv', 'tsv', 'json', 'xml', 'md', 'log', 'docx', 'xlsx'].includes(extension)) {
-    loadDmsReadablePreview(modal, filePath);
-  }
-}
-
-async function loadDmsReadablePreview(modal, filePath) {
-  const preview = modal.querySelector('[data-dms-readable-preview]');
-  if (!preview) return;
-
-  try {
-    const response = await fetch(`api/documentation/preview_dms_file.php?path=${encodeURIComponent(getDmsRelativeFilePath(filePath))}`, {
-      headers: { 'Accept': 'application/json' }
-    });
-    const result = await response.json();
-
-    if (!response.ok || !result.success) {
-      preview.innerHTML = `<div class="dms-preview-note">${escapeHtml(result.error || 'Aperçu indisponible pour ce fichier.')}</div>`;
-      return;
-    }
-
-    preview.innerHTML = `<pre class="dms-preview-text">${escapeHtml(result.text)}</pre>`;
-  } catch (error) {
-    console.error("Erreur lors du chargement de l'aperçu du fichier:", error);
-    preview.innerHTML = '<div class="dms-preview-note">Aperçu indisponible pour ce fichier.</div>';
-  }
-}
-
-function renderDmsPreviewBody(fileUrl, fileName, extension, identifier = {}) {
-  const content = renderDmsPreviewContent(fileUrl, fileName, extension);
-  const fileType = getDmsPreviewTypeLabel(extension);
-  const meta = [
-    ['Nom', fileName],
-    ['Type', fileType],
-    ['Format', extension ? `.${extension}` : 'Fichier']
-  ];
-
-  return `
-    <section class="dms-preview-document-shell">
-      <div class="dms-preview-document-header">
-        ${renderDmsIdentifierCard(identifier)}
-        <div class="dms-preview-meta-bar">
-          ${meta.map(([label, value]) => `
-            <span><b>${escapeHtml(label)}</b>${escapeHtml(value)}</span>
-          `).join('')}
-        </div>
-      </div>
-      <div class="dms-preview-document-content dms-preview-kind-${escapeAttr(extension || 'file')}">
-        ${content}
-      </div>
-    </section>
-  `;
-}
-
-function renderDmsPreviewContent(fileUrl, fileName, extension) {
-  if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)) {
-    return `<img class="dms-preview-image" src="${fileUrl}" alt="${escapeAttr(fileName)}">`;
-  }
-
-  if (['txt', 'csv', 'tsv', 'json', 'xml', 'md', 'log'].includes(extension)) {
-    return `<div class="dms-readable-preview" data-dms-readable-preview>Chargement du contenu...</div>`;
-  }
-
-  if (extension === 'pdf') {
-    return `<iframe class="dms-preview-frame" src="${fileUrl}" title="${escapeAttr(fileName)}"></iframe>`;
-  }
-
-  if (extension === 'docx') {
-    return `
-      <div class="dms-readable-preview" data-dms-readable-preview>
-        Chargement du contenu du document...
-      </div>
-    `;
-  }
-
-  if (extension === 'doc') {
-    return renderDmsPreviewUnavailable(fileName, extension, "Le format .doc ancien ne peut pas être lu directement par le navigateur. Téléchargez le fichier pour l'ouvrir avec Word.");
-  }
-
-  if (extension === 'xlsx') {
-    return `
-      <div class="dms-readable-preview" data-dms-readable-preview>
-        Chargement du contenu du classeur...
-      </div>
-    `;
-  }
-
-  if (extension === 'xls') {
-    return `
-      <object class="dms-preview-frame" data="${fileUrl}" type="${getDmsPreviewMimeType(extension)}">
-        ${renderDmsPreviewUnavailable(fileName, extension, "Le navigateur ne peut pas toujours afficher Excel directement. Le fichier reste disponible au téléchargement.")}
-      </object>
-    `;
-  }
-
-  if (['ppt', 'pptx'].includes(extension)) {
-    return renderDmsPreviewUnavailable(fileName, extension, "Le navigateur ne peut pas afficher PowerPoint directement. Téléchargez le fichier pour l'ouvrir.");
-  }
-
-  return renderDmsPreviewUnavailable(fileName, extension, 'Aperçu indisponible pour ce type de fichier.');
-}
-
-function renderDmsPreviewUnavailable(fileName, extension, message) {
-  return `
-    <div class="dms-preview-unavailable">
-      <span class="dms-preview-unavailable-icon">${renderDmsDocumentIcon(extension)}</span>
-      <strong>${escapeHtml(fileName)}</strong>
-      <span>${escapeHtml(message)}</span>
-    </div>
-  `;
 }
 
 function getDmsPreviewTypeLabel(extension) {
@@ -1613,16 +1508,6 @@ function getDmsPreviewTypeLabel(extension) {
   };
 
   return labels[extension] || 'Fichier';
-}
-
-function getDmsPreviewMimeType(extension) {
-  const types = {
-    pdf: 'application/pdf',
-    xls: 'application/vnd.ms-excel',
-    xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  };
-
-  return types[extension] || 'application/octet-stream';
 }
 
 function renderDmsIdentifierCard(identifier = {}) {
@@ -1656,7 +1541,7 @@ function renderDmsIdentifierCard(identifier = {}) {
 }
 
 async function deleteDmsFile(filePath, fileName) {
-  if (!confirm(`Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`)) {
+  if (!await qualiConfirm({ title: 'Supprimer le fichier', message: `Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`, confirmText: 'Supprimer', cancelText: 'Annuler', type: 'error' })) {
     return;
   }
 
@@ -1669,7 +1554,7 @@ async function deleteDmsFile(filePath, fileName) {
 
     const result = await response.json();
     if (!result.success) {
-      alert('Erreur: ' + (result.error || 'Impossible de supprimer le fichier'));
+      qualiError('Erreur : ' + (result.error || 'Impossible de supprimer le fichier.'));
       return;
     }
 
@@ -1678,7 +1563,7 @@ async function deleteDmsFile(filePath, fileName) {
     showDmsInfoModal('Fichier supprimé', `Fichier "${fileName}" supprimé avec succès.`);
   } catch (error) {
     console.error('Erreur lors de la suppression du fichier:', error);
-    alert('Erreur lors de la suppression du fichier');
+    qualiError('Erreur lors de la suppression du fichier');
   }
 }
 
@@ -1709,7 +1594,7 @@ async function runDmsItemAction(action, payload, successMessage) {
 }
 
 async function renameDmsItem(filePath, fileName) {
-  const newName = prompt('Nouveau nom du fichier:', fileName);
+  const newName = await qualiPrompt({ title: 'Renommer le fichier', message: 'Nouveau nom du fichier:', defaultValue: fileName, confirmText: 'Renommer', cancelText: 'Annuler', type: 'info' });
   if (!newName || newName.trim() === fileName) return;
   await runDmsItemAction('rename', {
     path: getDmsRelativeFilePath(filePath),
@@ -1719,7 +1604,7 @@ async function renameDmsItem(filePath, fileName) {
 
 async function moveDmsItem(filePath, fileName) {
   const currentFolder = getDmsCurrentFolder();
-  const targetFolder = prompt('Dossier de destination dans DMS/uploads:', currentFolder);
+  const targetFolder = await qualiPrompt({ title: 'Deplacer le fichier', message: 'Dossier de destination dans DMS/uploads:', defaultValue: currentFolder, confirmText: 'Deplacer', cancelText: 'Annuler', type: 'info' });
   if (!targetFolder || !targetFolder.trim()) return;
   await runDmsItemAction('move', {
     path: getDmsRelativeFilePath(filePath),
@@ -1728,15 +1613,15 @@ async function moveDmsItem(filePath, fileName) {
 }
 
 async function editDmsMetadata(filePath, fileName) {
-  const title = prompt('Titre du document:', fileName.replace(/\.[^.]+$/, ''));
+  const title = await qualiPrompt({ title: 'Métadonnées du document', message: 'Titre du document :', defaultValue: fileName.replace(/\.[^.]+$/, ''), confirmText: 'Continuer', cancelText: 'Annuler', type: 'info' });
   if (title === null) return;
-  const reference = prompt('Référence documentaire:', '');
-  if (reference === null) return;
+  const référence = await qualiPrompt({ title: 'Métadonnées du document', message: 'Référence documentaire :', defaultValue: '', confirmText: 'Enregistrer', cancelText: 'Annuler', type: 'info' });
+  if (référence === null) return;
   await runDmsItemAction('metadata', {
     path: getDmsRelativeFilePath(filePath),
     metadata: {
       titre_document: title.trim() || fileName.replace(/\.[^.]+$/, ''),
-      reference_documentaire: reference.trim() || fileName.replace(/\.[^.]+$/, ''),
+      reference_documentaire: référence.trim() || fileName.replace(/\.[^.]+$/, ''),
       observation: `Métadonnées modifiées depuis DMS le ${new Date().toLocaleString('fr-FR')}`
     }
   }, `Métadonnées de "${fileName}" enregistrées.`);
@@ -1979,7 +1864,7 @@ function handleImportWithFolder(folder) {
  * Handle new folder with selected parent folder
  */
 async function handleNewFolderWithParent(parentFolder) {
-  const folderName = prompt('Nom du nouveau dossier:');
+  const folderName = await qualiPrompt({ title: 'Nouveau dossier', message: 'Nom du nouveau dossier:', defaultValue: '', confirmText: 'Créer', cancelText: 'Annuler', type: 'info' });
   if (!folderName) return;
 
   try {
@@ -1994,7 +1879,7 @@ async function handleNewFolderWithParent(parentFolder) {
 
     const result = await response.json();
     if (!result.success) {
-      alert('Erreur: ' + (result.error || 'Impossible de créer le dossier'));
+      qualiError('Erreur : ' + (result.error || 'Impossible de créer le dossier.'));
       return;
     }
 
@@ -2006,7 +1891,7 @@ async function handleNewFolderWithParent(parentFolder) {
     showDmsInfoModal('Dossier créé', `Dossier "${folderName}" créé avec succès dans "${parentFolder}".`);
   } catch (error) {
     console.error('Erreur lors de la création du dossier:', error);
-    alert('Erreur lors de la création du dossier');
+    qualiError('Erreur lors de la creation du dossier');
   }
 }
 
@@ -2157,7 +2042,7 @@ async function submitNewDocumentName(event, folder) {
     logoDataUrl = await readDmsFileAsDataUrl(logoFile);
   } catch (error) {
     console.error("Erreur lors de la lecture du logo d'en-tête:", error);
-    alert('Erreur lors de la lecture du logo');
+    qualiError('Erreur lors de la lecture du logo');
     return;
   }
 
@@ -2223,7 +2108,7 @@ function docProcessFromFolder(folder) {
   const first = String(folder || '').split(/[\\/]/).filter(Boolean)[0] || '';
   const key = first.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   if (key.includes('pilotage')) return 'Processus pilotage';
-  if (key.includes('operationnel')) return 'Processus opérationnel';
+  if (key.includes('opérationnel')) return 'Processus opérationnel';
   if (key.includes('support')) return 'Processus support';
   if (key.includes('politique')) return 'Politique Qualité';
   if (key.includes('manuel')) return 'Manuel qualité';
@@ -2248,7 +2133,7 @@ async function createNewDocumentFile(fileName, content, folder, documentType, id
     
     const result = await response.json();
     if (!result.success) {
-      alert('Erreur: ' + (result.error || 'Impossible de créer le document'));
+      qualiError('Erreur : ' + (result.error || 'Impossible de créer le document.'));
       return;
     }
     
@@ -2264,7 +2149,7 @@ async function createNewDocumentFile(fileName, content, folder, documentType, id
       });
       const saveResult = await saveResponse.json();
       if (!saveResult.success) {
-        alert('Document créé, mais fiche Maîtrise documentaire non enregistrée: ' + (saveResult.error || 'Erreur inconnue'));
+        qualiError('Document créé, mais fiche Maîtrise documentaire non enregistrée : ' + (saveResult.error || 'Erreur inconnue.'));
       }
     }
     // Refresh the file list
@@ -2274,31 +2159,14 @@ async function createNewDocumentFile(fileName, content, folder, documentType, id
     showDmsInfoModal('Document créé', `Document "${fileName}" créé avec succès dans "${folder}".`);
   } catch (error) {
     console.error('Erreur lors de la création du document:', error);
-    alert('Erreur lors de la création du document');
+    qualiError('Erreur lors de la creation du document');
   }
 }
 
 function showDmsInfoModal(title, message) {
   closeFolderSelectionModal();
-
-  const modal = document.createElement('div');
-  modal.className = 'dms-modal-overlay';
-  modal.id = 'dmsModalOverlay';
-  modal.innerHTML = `
-    <div class="dms-modal-content dms-info-modal-content">
-      <div class="dms-modal-header">
-        <h3>${escapeHtml(title)}</h3>
-        <button class="dms-modal-close" type="button" onclick="closeFolderSelectionModal()">x</button>
-      </div>
-      <div class="dms-modal-body">
-        <p>${escapeHtml(message)}</p>
-      </div>
-      <div class="dms-modal-footer">
-        <button class="btn btn-primary" type="button" onclick="closeFolderSelectionModal()">OK</button>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
+  if (window.showQualiModal) window.showQualiModal({ type: title && title.toLowerCase().includes('erreur') ? 'error' : 'info', title, message, confirmText: 'OK' });
+  else console.info(title, message);
 }
 
 /**
@@ -2341,7 +2209,9 @@ function resetDmsFilters() {
 
 // Initialize when document is ready
 document.addEventListener('DOMContentLoaded', () => {
+  removeDmsDocumentPreviewModal();
   setTimeout(() => {
+    removeDmsDocumentPreviewModal();
     initDmsFileDisplay();
     initDmsButtons();
     if (typeof window.initButtons === 'function') window.initButtons();
